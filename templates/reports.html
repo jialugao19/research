@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}报告目录 · Jialu Gao Research{% endblock %}
+{% block content %}
+<section class="page-hero shell">
+  <p class="eyebrow">PUBLIC REPORT CATALOG</p>
+  <h1>精选研究报告</h1>
+  <p class="lead">每份报告都是经过验证和脱敏的静态快照。历史链接保持不变。</p>
+</section>
+<section class="shell section compact">
+  <div class="filter-bar">
+    <label><span>搜索</span><input id="report-search" type="search" placeholder="标题、项目或标签"></label>
+    <label><span>项目</span><select id="project-filter"><option value="">全部项目</option>{% for project in catalog.projects %}{% if catalog.reports_for_project(project.id) %}<option value="{{ project.id }}">{{ project.title }}</option>{% endif %}{% endfor %}</select></label>
+  </div>
+  <div id="report-catalog" class="catalog-grid">
+    {% for report in reports %}
+    <article class="catalog-card" data-project="{{ report.project }}" data-search="{{ report.title|lower }} {{ report.project }} {{ report.tags|join(' ') }}">
+      <div class="project-card-top"><time>{{ report.display_date }}</time><span>{{ projects[report.project].title }}</span></div>
+      <h2><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h2>
+      <p>{{ report.summary }}</p>
+      <div class="tags">{% for tag in report.tags %}<span>{{ tag }}</span>{% endfor %}</div>
+    </article>
+    {% endfor %}
+  </div>
+  <p id="no-results" class="empty-state" hidden>没有匹配的公开报告。</p>
+</section>
+{% endblock %}

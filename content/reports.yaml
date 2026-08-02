@@ -1,0 +1,72 @@
+schema_version: 1
+reports:
+  - id: 0502-index-6backtest
+    project: index500-predict
+    title: Index500 Predict 研究报告
+    source_file: 0502-index-6backtest.html
+    date: 2026-05-02
+    summary: 六组回测、篮子预测与 ETF 对照的阶段性研究结果。
+    tags: [index500, backtest, etf]
+    featured: true
+    match_method: sha256
+    match_evidence: index500-predict/report/0502/index.html
+    source_sha256: 222757be5cc148b9cf105492d01b977417de897f09b1fc0e87cd1ac68b9eab10
+  - id: 0702-l2-ablation
+    project: prediction-nn
+    subproject: l2-features
+    title: L2 Features Ablation vs Stock1m Baseline
+    source_file: 0702-13_l2_ablation_vs_baseline_comparison_report.html
+    date: 2026-07-02
+    summary: L2 衍生特征相对 Stock1m baseline 的多实验消融对比。
+    tags: [prediction-nn, l2, ablation]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/l2-features/report/070213_l2_ablation_vs_baseline_comparison_report.html
+    source_sha256: c49ed23759a2718de8e278149aa47d083ec574868d1dfbb1226ff2a3bad69b78
+  - id: 0725-1min-model-screening
+    project: prediction-nn
+    subproject: optimize-1min-model
+    title: 1min Model Structure Screening
+    source_file: 0725-1min-compare-model.html
+    date: 2026-07-25
+    summary: 一分钟输入下 GRU 与 MLP 结构、容量和 checkpoint 表现的筛选研究。
+    tags: [prediction-nn, 1min, architecture]
+    featured: true
+    match_method: title-and-project-intent
+    match_evidence: exp-nn/optimize-1min-model
+    source_sha256: 8a59f9bc5a7fdabcec33d3973ca9502e82c43cb8e4e2df77a917e69d62ee8b70
+  - id: 0730-stock1s-feature-health
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    title: Stock1s Feature Health Research
+    source_file: 0730-nn-1s-features-2.html
+    date: 2026-07-30
+    summary: feature_superset_v1 在不同切分和月份上的覆盖、分布与稳定性诊断。
+    tags: [prediction-nn, stock1s, features]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/baseline-1s-0720/report/feature_superset_v1_health_research_20260730
+    source_sha256: 3c1821070768e817e879521e6143fc741e2c83da7146e202db3af7e523d44b1e
+  - id: 0731-limit-t1-strategy
+    project: limit-0729
+    title: T+1 打板策略研究报告
+    source_file: 0731-limit-report.html
+    date: 2026-07-31
+    summary: 首次触板候选、交易路径和 T+1 组合表现的静态研究报告。
+    tags: [limit-up, t1, strategy]
+    featured: true
+    match_method: sha256
+    match_evidence: limit-0729/artifacts/strategy/report/report.html
+    source_sha256: 9c406af6bef9f4d5be22743e5e90733c0e9c09788d96ec40d11eac3590f7ce67
+  - id: 0802-stock1s-gru384
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    title: Stock1s GRU384 / MLP512×512 Evaluation
+    source_file: 0802-nn1s-fold0_67_gru384_mlp512x512.html
+    date: 2026-08-02
+    summary: Stock1s fold0 去重特征、GRU384 与双层 MLP512 的正式评估结果。
+    tags: [prediction-nn, stock1s, gru]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/baseline-1s-0720/report/fold0_dedup67_gru384_mlp512x512
+    source_sha256: c9bfe87a9ca6165b86bacdecff42886b288fa5ec6919be8b32db165623ef7350

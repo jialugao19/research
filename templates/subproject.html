@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}{{ subproject.title }} · {{ project.title }}{% endblock %}
+{% block content %}
+<section class="page-hero shell">
+  <p class="breadcrumb"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a> / 研究方向</p>
+  <div class="page-title-line"><div><p class="eyebrow">{{ subproject.id }}</p><h1>{{ subproject.title }}</h1></div><strong>{{ reports|length }}</strong></div>
+</section>
+<section class="shell section compact">
+  {% if reports %}
+  <div class="report-list">
+    {% for report in reports %}
+    <article class="report-row">
+      <time datetime="{{ report.display_date }}">{{ report.display_date }}</time>
+      <div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div>
+      <a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><strong>暂无公开报告</strong><p>该方向已登记，但还没有通过公开发布门禁的报告。</p></div>
+  {% endif %}
+</section>
+{% endblock %}

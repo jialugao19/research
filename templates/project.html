@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ project.title }} · Jialu Gao Research{% endblock %}
+{% block content %}
+<section class="page-hero shell">
+  <p class="breadcrumb"><a href="{{ base_url }}">项目</a> / {{ catalog.category_by_id[project.category].title }}</p>
+  <div class="page-title-line">
+    <div><span class="status status-{{ project.status }}">{{ project.status }}</span><h1>{{ project.title }}</h1></div>
+    <strong>{{ reports|length }}</strong>
+  </div>
+  <p class="lead">{{ project.description }}</p>
+</section>
+
+{% if project.subprojects %}
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">DIRECTIONS</p><h2>研究方向</h2></div></div>
+  <div class="subproject-grid">
+    {% for subproject in project.subprojects %}
+    {% set sub_reports = reports|selectattr('subproject', 'equalto', subproject.id)|list %}
+    <a class="subproject-card" href="{{ base_url }}projects/{{ project.id }}/{{ subproject.id }}/">
+      <span>{{ sub_reports|length }} reports</span>
+      <strong>{{ subproject.title }}</strong>
+      <small>{{ subproject.id }}</small>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">REPORT TIMELINE</p><h2>公开报告</h2></div></div>
+  {% if reports %}
+  <div class="report-list">
+    {% for report in reports %}
+    <article class="report-row">
+      <time datetime="{{ report.display_date }}">{{ report.display_date }}</time>
+      <div><p class="meta">{% if report.subproject %}{{ report.subproject }}{% else %}project report{% endif %}</p><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div>
+      <a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a>
+    </article>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><strong>暂无公开报告</strong><p>项目仍保留在研究地图中；只有经过审核的静态报告才会出现在这里。</p></div>
+  {% endif %}
+</section>
+{% endblock %}

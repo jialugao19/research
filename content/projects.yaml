@@ -1,0 +1,133 @@
+schema_version: 1
+categories:
+  - id: research
+    title: 研究模型与策略
+    description: 预测、因子与交易策略研究。
+  - id: data
+    title: 数据基础设施
+    description: 市场数据构建、校验与索引工具。
+  - id: platform
+    title: 可视化与研究平台
+    description: 面向研究流程的可视化和交互平台。
+  - id: tools
+    title: 工具
+    description: 支持研究环境稳定运行的辅助工具。
+projects:
+  - id: prediction-nn
+    title: Prediction-NN
+    category: research
+    status: active
+    description: A 股分钟及秒级神经网络收益预测、评估与交易回测研究。
+    source_refs: [prediction-NN-main, exp-nn]
+    subprojects:
+      - id: reference-baseline
+        title: Reference Baseline
+      - id: l2-features
+        title: L2 特征
+      - id: generalization
+        title: 泛化与稳健性
+      - id: baseline-1s-0720
+        title: 1 秒数据基线
+      - id: limit-pool
+        title: 涨跌停样本池
+      - id: near-zero-filter
+        title: 近零过滤
+      - id: prediction-calibration
+        title: 预测校准
+      - id: capacity-robust-sampling
+        title: 容量稳健采样
+      - id: optimize-1min-model
+        title: 1 分钟模型结构优化
+      - id: feature-cleaning
+        title: 特征清洗
+  - id: index500-predict
+    title: Index500 Predict
+    category: research
+    status: active
+    description: 中证 500 成分股与 ETF 分钟级收益预测、篮子合成和策略研究。
+    source_refs: [index500-predict, exp-index]
+    subprojects: []
+  - id: limit-0729
+    title: Limit / T+1
+    category: research
+    status: active
+    description: 沪深 A 股涨停板质量分层、首次触板评分与次日交易研究。
+    source_refs: [limit-0729]
+    subprojects: []
+  - id: shouban2
+    title: First Board Top-K
+    category: research
+    status: maintained
+    description: 首板与弱转强连续评分、Top-K 组合约束和回测研究。
+    source_refs: [shouban2]
+    subprojects: []
+  - id: alphas
+    title: Crypto Alphas
+    category: research
+    status: archived
+    description: 数字货币分钟级择时因子与收益预测能力研究。
+    source_refs: [alphas]
+    subprojects: []
+  - id: genetic-factor-auto-3
+    title: Genetic Factor Mining
+    category: research
+    status: maintained
+    description: 面向数字货币市场的 GPU 遗传算法因子挖掘系统。
+    source_refs: [genetic-factor-auto-3]
+    subprojects: []
+  - id: factor-daily
+    title: Daily Factor Research
+    category: research
+    status: maintained
+    description: 日频因子统计、IC、分组收益和回测报告体系。
+    source_refs: [factor-daily]
+    subprojects: []
+  - id: aq2
+    title: AQ2 Order Book Reconstruction
+    category: data
+    status: active
+    description: 基于逐笔成交、委托与十档快照的订单簿重建和逐 tick 校验。
+    source_refs: [AQ2]
+    subprojects: []
+  - id: ashare-1s
+    title: A-share 1s
+    category: data
+    status: active
+    description: 从逐笔和快照数据构建带版本与覆盖审计的 A 股一秒数据产品。
+    source_refs: [ashare-1s]
+    subprojects: []
+  - id: get-index-data
+    title: Index Data Loader
+    category: data
+    status: maintained
+    description: 指数与 ETF 权重数据获取、配置和落盘工具。
+    source_refs: [get-index-data]
+    subprojects: []
+  - id: get-data
+    title: Market Data Pipeline
+    category: data
+    status: maintained
+    description: 日频、分钟、交易日历和市场镜像数据维护工具。
+    source_refs: [get_data]
+    subprojects: []
+  - id: snapshot-visualizer2
+    title: Snapshot Visualizer
+    category: platform
+    status: maintained
+    description: 订单簿快照、价差、深度和 imbalance 的交互式可视化工具。
+    source_refs: [snapshot-visualizer2]
+    subprojects: []
+  - id: webpage5
+    title: Factor Research Platform
+    category: platform
+    status: active
+    description: 表达式驱动的量化因子计算、回测、产物管理与 Web 展示平台。
+    source_refs: [webpage5]
+    subprojects: []
+  - id: ipcheck
+    title: IP Check
+    category: tools
+    status: maintained
+    description: 检测内外网 IP 变化并按变化推送通知的单次运行工具。
+    source_refs: [ipcheck]
+    subprojects: []
