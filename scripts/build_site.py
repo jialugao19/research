@@ -21,7 +21,10 @@ def main() -> int:
         build_site(catalog, site_root, output, args.base_url)
     except CatalogError as exc:
         parser.error(str(exc))
-    print(f"built {len(catalog.projects)} projects and {len(catalog.reports)} reports at {output}")
+    print(
+        f"built {len(catalog.projects)} projects, {len(catalog.studies)} studies, "
+        f"and {len(catalog.reports)} reports at {output}"
+    )
     return 0
 
 

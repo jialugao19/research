@@ -27,28 +27,77 @@ SANITIZE_REPLACEMENTS = (
 )
 SECRET_PATTERNS = (
     re.compile(rb"AKIA[0-9A-Z]{16}"),
-    re.compile(rb"ghp_[A-Za-z0-9]{30,}"),
+    re.compile(rb"gh[oprsu]_[A-Za-z0-9]{30,}"),
+    re.compile(rb"github_pat_[A-Za-z0-9_]{20,}"),
+    re.compile(rb"glpat-[A-Za-z0-9_-]{20,}"),
+    re.compile(rb"xox[baprs]-[A-Za-z0-9-]{10,}"),
     re.compile(rb"sk-[A-Za-z0-9_-]{32,}"),
+    re.compile(rb"-----BEGIN (?:[A-Z ]+ )?PRIVATE KEY-----"),
 )
 HOME_PATH_RE = re.compile(rb"/home/[^/\s\"'<>]+/")
+CSS_URL_RE = re.compile(r"url\(\s*([\"']?)(.*?)\1\s*\)", re.IGNORECASE | re.DOTALL)
+RESOURCE_ATTRIBUTES = {
+    "audio": ("src",),
+    "base": ("href",),
+    "embed": ("src",),
+    "iframe": ("src",),
+    "image": ("href", "xlink:href"),
+    "img": ("src", "srcset"),
+    "input": ("src",),
+    "object": ("data",),
+    "script": ("src",),
+    "source": ("src", "srcset"),
+    "track": ("src",),
+    "use": ("href", "xlink:href"),
+    "video": ("src", "poster"),
+}
+RENDERING_LINK_RELS = {"icon", "manifest", "modulepreload", "prefetch", "preload", "stylesheet"}
 
 
 class _RenderingResourceScanner(HTMLParser):
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self.errors: list[str] = []
+        self._in_style = False
+
+    def _check_resource(self, tag: str, attribute: str, value: str | None) -> None:
+        if not value:
+            return
+        normalized = value.strip()
+        if not normalized or normalized.lower().startswith("data:") or normalized.startswith("#"):
+            return
+        self.errors.append(f"external rendering resource <{tag}> {attribute}={value!r}")
+
+    def _check_css(self, tag: str, css: str | None) -> None:
+        if not css:
+            return
+        for match in CSS_URL_RE.finditer(css):
+            self._check_resource(tag, "url", match.group(2))
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
-        candidates: list[tuple[str, str | None]] = []
-        if tag in {"img", "script", "iframe", "source", "video", "audio"}:
-            candidates.append(("src", values.get("src")))
-        if tag == "link" and (values.get("rel") or "").lower() == "stylesheet":
-            candidates.append(("href", values.get("href")))
-        for attribute, value in candidates:
-            if not value or value.startswith(("data:", "#")):
-                continue
-            self.errors.append(f"external rendering resource <{tag}> {attribute}={value!r}")
+        for attribute in RESOURCE_ATTRIBUTES.get(tag, ()):
+            self._check_resource(tag, attribute, values.get(attribute))
+        if tag == "link":
+            rels = set((values.get("rel") or "").lower().split())
+            if rels & RENDERING_LINK_RELS:
+                self._check_resource(tag, "href", values.get("href"))
+        if tag == "meta" and (values.get("http-equiv") or "").lower() == "refresh":
+            content = values.get("content") or ""
+            match = re.search(r"(?:^|;)\s*url\s*=\s*(.+)", content, re.IGNORECASE)
+            if match:
+                self._check_resource(tag, "content", match.group(1).strip(" \t\"'"))
+        self._check_css(tag, values.get("style"))
+        if tag == "style":
+            self._in_style = True
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "style":
+            self._in_style = False
+
+    def handle_data(self, data: str) -> None:
+        if self._in_style:
+            self._check_css("style", data)
 
 
 @dataclass(frozen=True)

@@ -21,7 +21,10 @@ def main() -> int:
         validate_built_site(catalog, site_root, output, args.base_url)
     except CatalogError as exc:
         parser.error(str(exc))
-    print(f"site valid: {len(catalog.projects)} projects, {len(catalog.reports)} reports at {output}")
+    print(
+        f"site valid: {len(catalog.projects)} projects, {len(catalog.studies)} studies, "
+        f"{len(catalog.reports)} reports at {output}"
+    )
     return 0
 
 

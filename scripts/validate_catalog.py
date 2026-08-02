@@ -15,7 +15,10 @@ def main() -> int:
         catalog = load_catalog(args.site_root.resolve() / "content")
     except CatalogError as exc:
         parser.error(str(exc))
-    print(f"catalog valid: {len(catalog.projects)} projects, {len(catalog.reports)} reports")
+    print(
+        f"catalog valid: {len(catalog.projects)} projects, "
+        f"{len(catalog.studies)} studies, {len(catalog.reports)} reports"
+    )
     return 0
 
 

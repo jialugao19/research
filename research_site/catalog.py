@@ -12,6 +12,9 @@ import yaml
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 ALLOWED_MATCH_METHODS = {"sha256", "central-catalog", "path-evidence", "title-and-project-intent", "manual"}
+ALLOWED_STUDY_STATUSES = {"doing", "completed", "archived"}
+ALLOWED_MATURITIES = {"decision-ready", "signal-only", "developmental", "diagnostic", "blocked", "archived"}
+ALLOWED_METRIC_FORMATS = {"decimal", "percent", "integer", "number", "bps"}
 
 
 class CatalogError(ValueError):
@@ -26,9 +29,20 @@ class Category:
 
 
 @dataclass(frozen=True)
+class Track:
+    id: str
+    title: str
+    description: str
+    objective: str
+
+
+@dataclass(frozen=True)
 class Subproject:
     id: str
     title: str
+    track: str
+    description: str
+    objective: str
 
 
 @dataclass(frozen=True)
@@ -38,11 +52,70 @@ class Project:
     category: str
     status: str
     description: str
+    objective: str
+    review_summary: str
     source_refs: tuple[str, ...]
+    tracks: tuple[Track, ...] = field(default_factory=tuple)
     subprojects: tuple[Subproject, ...] = field(default_factory=tuple)
+
+    def track(self, track_id: str) -> Track | None:
+        return next((item for item in self.tracks if item.id == track_id), None)
 
     def subproject(self, subproject_id: str) -> Subproject | None:
         return next((item for item in self.subprojects if item.id == subproject_id), None)
+
+    def subprojects_for_track(self, track_id: str) -> tuple[Subproject, ...]:
+        return tuple(item for item in self.subprojects if item.track == track_id)
+
+
+@dataclass(frozen=True)
+class Metric:
+    id: str
+    label: str
+    value: int | float
+    format: str
+    decimals: int
+    context: str
+    unit: str | None = None
+
+    @property
+    def display_value(self) -> str:
+        value = float(self.value)
+        if self.format == "integer":
+            rendered = f"{value:,.0f}"
+        elif self.format == "number":
+            rendered = f"{value:,.{self.decimals}f}"
+        elif self.format == "percent":
+            rendered = f"{value:,.{self.decimals}f}%"
+        elif self.format == "bps":
+            rendered = f"{value:,.{self.decimals}f} bps"
+        else:
+            rendered = f"{value:.{self.decimals}f}"
+        return f"{rendered} {self.unit}" if self.unit else rendered
+
+
+@dataclass(frozen=True)
+class Study:
+    id: str
+    project: str
+    title: str
+    status: str
+    maturity: str
+    updated_at: date
+    objective: str
+    summary: str
+    decision: str
+    caveats: tuple[str, ...]
+    metrics: tuple[Metric, ...]
+    report_ids: tuple[str, ...]
+    evidence_ref: str
+    featured: bool
+    track: str | None = None
+    subproject: str | None = None
+
+    @property
+    def display_date(self) -> str:
+        return self.updated_at.isoformat()
 
 
 @dataclass(frozen=True)
@@ -74,6 +147,7 @@ class Catalog:
     categories: tuple[Category, ...]
     projects: tuple[Project, ...]
     reports: tuple[Report, ...]
+    studies: tuple[Study, ...] = field(default_factory=tuple)
 
     @property
     def project_by_id(self) -> dict[str, Project]:
@@ -83,12 +157,33 @@ class Catalog:
     def category_by_id(self) -> dict[str, Category]:
         return {category.id: category for category in self.categories}
 
+    @property
+    def report_by_id(self) -> dict[str, Report]:
+        return {report.id: report for report in self.reports}
+
+    @property
+    def study_by_id(self) -> dict[str, Study]:
+        return {study.id: study for study in self.studies}
+
     def reports_for_project(self, project_id: str) -> list[Report]:
         return sorted(
             (report for report in self.reports if report.project == project_id),
             key=lambda report: (report.date, report.id),
             reverse=True,
         )
+
+    def studies_for_project(self, project_id: str) -> list[Study]:
+        return sorted(
+            (study for study in self.studies if study.project == project_id),
+            key=lambda study: (study.updated_at, study.id),
+            reverse=True,
+        )
+
+    def studies_for_track(self, project_id: str, track_id: str) -> list[Study]:
+        return [study for study in self.studies_for_project(project_id) if study.track == track_id]
+
+    def studies_for_subproject(self, project_id: str, subproject_id: str) -> list[Study]:
+        return [study for study in self.studies_for_project(project_id) if study.subproject == subproject_id]
 
 
 def _load_yaml(path: Path) -> dict[str, Any]:
@@ -115,6 +210,14 @@ def _require_text(value: Any, field_name: str) -> str:
     return value.strip()
 
 
+def _require_relative_reference(value: Any, field_name: str) -> str:
+    text = _require_text(value, field_name)
+    path = PurePath(text)
+    if path.is_absolute() or ".." in path.parts:
+        raise CatalogError(f"{field_name} must be relative without parent traversal")
+    return text
+
+
 def _unique(values: list[str], field_name: str) -> None:
     duplicates = sorted({value for value in values if values.count(value) > 1})
     if duplicates:
@@ -130,6 +233,18 @@ def _parse_date(value: Any, field_name: str) -> date:
         except ValueError as exc:
             raise CatalogError(f"{field_name} must be YYYY-MM-DD") from exc
     raise CatalogError(f"{field_name} must be a date")
+
+
+def _require_text_list(value: Any, field_name: str) -> tuple[str, ...]:
+    if not isinstance(value, list):
+        raise CatalogError(f"{field_name} must be a list of text")
+    return tuple(_require_text(item, f"{field_name}[{index}]") for index, item in enumerate(value))
+
+
+def _require_number(value: Any, field_name: str) -> int | float:
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise CatalogError(f"{field_name} must be numeric")
+    return value
 
 
 def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...]]:
@@ -162,19 +277,46 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
         if category not in category_ids:
             raise CatalogError(f"project {project_id} references unknown category {category}")
         raw_refs = item.get("source_refs", [])
+        raw_tracks = item.get("tracks", [])
         raw_subprojects = item.get("subprojects", [])
-        if not isinstance(raw_refs, list) or not all(isinstance(ref, str) and ref for ref in raw_refs):
+        if not isinstance(raw_refs, list):
             raise CatalogError(f"project {project_id} source_refs must be a list of names")
+        source_refs = tuple(
+            _require_relative_reference(ref, f"project {project_id} source_refs[{ref_index}]")
+            for ref_index, ref in enumerate(raw_refs)
+        )
+        if not isinstance(raw_tracks, list):
+            raise CatalogError(f"project {project_id} tracks must be a list")
+        tracks: list[Track] = []
+        for track_index, track in enumerate(raw_tracks):
+            if not isinstance(track, dict):
+                raise CatalogError(f"project {project_id} tracks[{track_index}] must be a mapping")
+            tracks.append(
+                Track(
+                    id=_require_slug(track.get("id"), f"project {project_id} track id"),
+                    title=_require_text(track.get("title"), f"project {project_id} track title"),
+                    description=_require_text(track.get("description"), f"project {project_id} track description"),
+                    objective=_require_text(track.get("objective"), f"project {project_id} track objective"),
+                )
+            )
+        _unique([track.id for track in tracks], f"track ids in {project_id}")
+        track_ids = {track.id for track in tracks}
         if not isinstance(raw_subprojects, list):
             raise CatalogError(f"project {project_id} subprojects must be a list")
         subprojects: list[Subproject] = []
         for sub_index, sub in enumerate(raw_subprojects):
             if not isinstance(sub, dict):
                 raise CatalogError(f"project {project_id} subprojects[{sub_index}] must be a mapping")
+            track = _require_slug(sub.get("track"), f"project {project_id} subproject track")
+            if track not in track_ids:
+                raise CatalogError(f"project {project_id} subproject references unknown track {track}")
             subprojects.append(
                 Subproject(
                     id=_require_slug(sub.get("id"), f"project {project_id} subproject id"),
                     title=_require_text(sub.get("title"), f"project {project_id} subproject title"),
+                    track=track,
+                    description=_require_text(sub.get("description"), f"project {project_id} subproject description"),
+                    objective=_require_text(sub.get("objective"), f"project {project_id} subproject objective"),
                 )
             )
         _unique([sub.id for sub in subprojects], f"subproject ids in {project_id}")
@@ -185,7 +327,10 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
                 category=category,
                 status=_require_slug(item.get("status"), f"projects[{index}].status"),
                 description=_require_text(item.get("description"), f"projects[{index}].description"),
-                source_refs=tuple(raw_refs),
+                objective=_require_text(item.get("objective"), f"projects[{index}].objective"),
+                review_summary=_require_text(item.get("review_summary"), f"projects[{index}].review_summary"),
+                source_refs=source_refs,
+                tracks=tuple(tracks),
                 subprojects=tuple(subprojects),
             )
         )
@@ -236,7 +381,9 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ..
                 tags=tuple(tag.strip() for tag in tags),
                 featured=bool(item.get("featured", False)),
                 match_method=match_method,
-                match_evidence=_require_text(item.get("match_evidence"), f"report {report_id}.match_evidence"),
+                match_evidence=_require_relative_reference(
+                    item.get("match_evidence"), f"report {report_id}.match_evidence"
+                ),
                 source_sha256=source_sha256,
             )
         )
@@ -245,8 +392,120 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ..
     return tuple(reports)
 
 
+def _load_studies(
+    path: Path,
+    projects: tuple[Project, ...],
+    reports: tuple[Report, ...],
+) -> tuple[Study, ...]:
+    raw = _load_yaml(path)
+    raw_studies = raw.get("studies")
+    if not isinstance(raw_studies, list):
+        raise CatalogError(f"{path} must define a studies list")
+    project_by_id = {project.id: project for project in projects}
+    report_by_id = {report.id: report for report in reports}
+    studies: list[Study] = []
+    linked_report_ids: list[str] = []
+    for index, item in enumerate(raw_studies):
+        if not isinstance(item, dict):
+            raise CatalogError(f"studies[{index}] must be a mapping")
+        study_id = _require_slug(item.get("id"), f"studies[{index}].id")
+        project_id = _require_slug(item.get("project"), f"study {study_id}.project")
+        project = project_by_id.get(project_id)
+        if project is None:
+            raise CatalogError(f"study {study_id} references unknown project {project_id}")
+        track_value = item.get("track")
+        track = None if track_value is None else _require_slug(track_value, f"study {study_id}.track")
+        if track and project.track(track) is None:
+            raise CatalogError(f"study {study_id} references unknown track {project_id}/{track}")
+        subproject_value = item.get("subproject")
+        subproject = None if subproject_value is None else _require_slug(
+            subproject_value, f"study {study_id}.subproject"
+        )
+        if subproject:
+            topic = project.subproject(subproject)
+            if topic is None:
+                raise CatalogError(f"study {study_id} references unknown subproject {project_id}/{subproject}")
+            if track != topic.track:
+                raise CatalogError(f"study {study_id} track must match subproject {subproject}")
+        status = _require_slug(item.get("status"), f"study {study_id}.status")
+        if status not in ALLOWED_STUDY_STATUSES:
+            raise CatalogError(f"study {study_id} has unsupported status {status}")
+        maturity = _require_slug(item.get("maturity"), f"study {study_id}.maturity")
+        if maturity not in ALLOWED_MATURITIES:
+            raise CatalogError(f"study {study_id} has unsupported maturity {maturity}")
+        raw_metrics = item.get("metrics", [])
+        if not isinstance(raw_metrics, list):
+            raise CatalogError(f"study {study_id}.metrics must be a list")
+        metrics: list[Metric] = []
+        for metric_index, metric in enumerate(raw_metrics):
+            if not isinstance(metric, dict):
+                raise CatalogError(f"study {study_id}.metrics[{metric_index}] must be a mapping")
+            metric_id = _require_slug(metric.get("id"), f"study {study_id} metric id")
+            metric_format = _require_slug(metric.get("format"), f"study {study_id} metric {metric_id}.format")
+            if metric_format not in ALLOWED_METRIC_FORMATS:
+                raise CatalogError(f"study {study_id} metric {metric_id} has unsupported format {metric_format}")
+            decimals = metric.get("decimals", 0)
+            if isinstance(decimals, bool) or not isinstance(decimals, int) or not 0 <= decimals <= 6:
+                raise CatalogError(f"study {study_id} metric {metric_id}.decimals must be between 0 and 6")
+            unit_value = metric.get("unit")
+            unit = None if unit_value is None else _require_text(unit_value, f"study {study_id} metric {metric_id}.unit")
+            metrics.append(
+                Metric(
+                    id=metric_id,
+                    label=_require_text(metric.get("label"), f"study {study_id} metric {metric_id}.label"),
+                    value=_require_number(metric.get("value"), f"study {study_id} metric {metric_id}.value"),
+                    format=metric_format,
+                    decimals=decimals,
+                    context=_require_text(metric.get("context"), f"study {study_id} metric {metric_id}.context"),
+                    unit=unit,
+                )
+            )
+        _unique([metric.id for metric in metrics], f"metric ids in study {study_id}")
+        raw_report_ids = item.get("report_ids", [])
+        if not isinstance(raw_report_ids, list):
+            raise CatalogError(f"study {study_id}.report_ids must be a list")
+        report_ids = tuple(
+            _require_slug(report_id, f"study {study_id}.report_ids[{report_index}]")
+            for report_index, report_id in enumerate(raw_report_ids)
+        )
+        _unique(list(report_ids), f"report ids in study {study_id}")
+        for report_id in report_ids:
+            report = report_by_id.get(report_id)
+            if report is None:
+                raise CatalogError(f"study {study_id} references unknown report {report_id}")
+            if report.project != project_id:
+                raise CatalogError(f"study {study_id} report {report_id} belongs to another project")
+            if subproject and report.subproject and report.subproject != subproject:
+                raise CatalogError(f"study {study_id} report {report_id} belongs to another subproject")
+        linked_report_ids.extend(report_ids)
+        studies.append(
+            Study(
+                id=study_id,
+                project=project_id,
+                track=track,
+                subproject=subproject,
+                title=_require_text(item.get("title"), f"study {study_id}.title"),
+                status=status,
+                maturity=maturity,
+                updated_at=_parse_date(item.get("updated_at"), f"study {study_id}.updated_at"),
+                objective=_require_text(item.get("objective"), f"study {study_id}.objective"),
+                summary=_require_text(item.get("summary"), f"study {study_id}.summary"),
+                decision=_require_text(item.get("decision"), f"study {study_id}.decision"),
+                caveats=_require_text_list(item.get("caveats", []), f"study {study_id}.caveats"),
+                metrics=tuple(metrics),
+                report_ids=report_ids,
+                evidence_ref=_require_relative_reference(item.get("evidence_ref"), f"study {study_id}.evidence_ref"),
+                featured=bool(item.get("featured", False)),
+            )
+        )
+    _unique([study.id for study in studies], "study ids")
+    _unique(linked_report_ids, "report links across studies")
+    return tuple(studies)
+
+
 def load_catalog(content_root: Path) -> Catalog:
-    """Load and validate public project and report metadata."""
+    """Load and validate public project, study, and report metadata."""
     categories, projects = _load_projects(content_root / "projects.yaml")
     reports = _load_reports(content_root / "reports.yaml", projects)
-    return Catalog(categories=categories, projects=projects, reports=reports)
+    studies = _load_studies(content_root / "studies.yaml", projects, reports)
+    return Catalog(categories=categories, projects=projects, reports=reports, studies=studies)

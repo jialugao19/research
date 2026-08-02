@@ -1,0 +1,68 @@
+{% macro study_card(study, catalog, base_url, maturity_labels, status_labels) %}
+<article class="study-card maturity-{{ study.maturity }}" id="study-{{ study.id }}">
+  <div class="study-card-top">
+    <div class="badges">
+      <span class="evidence-badge">{{ maturity_labels[study.maturity] }}</span>
+      <span class="status-text">{{ status_labels[study.status] }}</span>
+    </div>
+    <time datetime="{{ study.display_date }}">{{ study.display_date }}</time>
+  </div>
+  <h3>{{ study.title }}</h3>
+  <p class="study-objective">{{ study.objective }}</p>
+  <p class="study-summary">{{ study.summary }}</p>
+  {% if study.metrics %}
+  <dl class="metric-grid">
+    {% for metric in study.metrics %}
+    <div>
+      <dt>{{ metric.label }}</dt>
+      <dd>{{ metric.display_value }}</dd>
+      <small>{{ metric.context }}</small>
+    </div>
+    {% endfor %}
+  </dl>
+  {% endif %}
+  <div class="decision-box"><strong>当前决策</strong><p>{{ study.decision }}</p></div>
+  {% if study.caveats %}
+  <div class="caveat-box"><strong>限制</strong><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>
+  {% endif %}
+  {% if study.report_ids %}
+  <div class="study-reports">
+    <strong>关联报告</strong>
+    {% for report_id in study.report_ids %}
+    {% set report = catalog.report_by_id[report_id] %}
+    <a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</article>
+{% endmacro %}
+
+{% macro study_timeline(studies, catalog, base_url, maturity_labels, status_labels) %}
+<div class="study-timeline">
+  {% for study in studies %}
+  <details class="study-entry maturity-{{ study.maturity }}">
+    <summary>
+      <span class="timeline-date">{{ study.display_date }}</span>
+      <span class="timeline-main"><strong>{{ study.title }}</strong><small>{{ maturity_labels[study.maturity] }} · {{ status_labels[study.status] }}</small></span>
+      <span class="timeline-toggle" aria-hidden="true">＋</span>
+    </summary>
+    <div class="timeline-body">
+      <p><strong>目标：</strong>{{ study.objective }}</p>
+      <p><strong>结果：</strong>{{ study.summary }}</p>
+      <p><strong>决策：</strong>{{ study.decision }}</p>
+      {% if study.metrics %}
+      <dl class="metric-grid compact-metrics">
+        {% for metric in study.metrics %}
+        <div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>
+        {% endfor %}
+      </dl>
+      {% endif %}
+      {% if study.caveats %}<ul class="timeline-caveats">{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul>{% endif %}
+      {% if study.report_ids %}
+      <p class="timeline-reports">{% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}</p>
+      {% endif %}
+    </div>
+  </details>
+  {% endfor %}
+</div>
+{% endmacro %}

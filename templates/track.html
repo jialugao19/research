@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% from "_study.html" import study_card, study_timeline %}
+{% block title %}{{ track.title }} · {{ project.title }}{% endblock %}
+{% block content %}
+<section class="page-hero shell">
+  <p class="breadcrumb"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a> / 子项目</p>
+  <div class="page-title-line"><div><p class="eyebrow">{{ track.id }}</p><h1>{{ track.title }}</h1></div><strong>{{ studies|length }}</strong></div>
+  <p class="lead">{{ track.description }}</p>
+</section>
+
+<section class="shell section compact review-overview single-overview">
+  <article><p class="eyebrow">OBJECTIVE</p><h2>研究目标</h2><p>{{ track.objective }}</p></article>
+</section>
+
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">LATEST EVIDENCE</p><h2>当前结论</h2></div></div>
+  <div class="study-grid">{% for study in featured_studies %}{{ study_card(study, catalog, base_url, maturity_labels, status_labels) }}{% endfor %}</div>
+</section>
+
+{% if subprojects %}
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">TOPICS</p><h2>实验专题</h2></div></div>
+  <div class="subproject-grid">
+    {% for subproject in subprojects %}
+    {% set topic_studies = catalog.studies_for_subproject(project.id, subproject.id) %}
+    <a class="subproject-card" href="{{ base_url }}projects/{{ project.id }}/{{ subproject.id }}/">
+      <span>{{ topic_studies|length }} studies</span>
+      <strong>{{ subproject.title }}</strong>
+      <small>{{ subproject.description }}</small>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">EXPERIMENT TIMELINE</p><h2>完整实验记录</h2></div><p>不同数据、split 或选择政策的结果会明确标记为不可比较。</p></div>
+  {{ study_timeline(studies, catalog, base_url, maturity_labels, status_labels) }}
+</section>
+
+<section class="shell section compact">
+  <div class="section-heading"><div><p class="eyebrow">REPORTS</p><h2>关联报告</h2></div></div>
+  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time>{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>暂无公开报告</strong><p>该研究线已有实验记录，但还没有通过公开发布门禁的静态报告。</p></div>{% endif %}
+</section>
+{% endblock %}

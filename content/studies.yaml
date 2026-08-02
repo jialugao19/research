@@ -1,0 +1,1087 @@
+schema_version: 1
+studies:
+  - id: reference-baseline
+    project: prediction-nn
+    track: one-minute
+    subproject: reference-baseline
+    title: Reference Baseline
+    status: completed
+    maturity: signal-only
+    updated_at: 2026-07-01
+    objective: 建立 checkpoint、测试全集和报告产物完整的分钟级参考基线。
+    summary: 稳健 selector 选择 20k checkpoint，test pooled IC 为 0.07034。
+    decision: 作为历史 close-label 信号比较锚点，不作为组合成本和容量证明。
+    caveats:
+      - 仅证明信号质量，尚未证明成本后组合收益。
+    metrics:
+      - id: test-pooled-ic
+        label: Test pooled IC
+        value: 0.0703447025
+        format: decimal
+        decimals: 4
+        context: test_full，单次参考基线
+      - id: selected-checkpoint
+        label: Selected checkpoint
+        value: 20000
+        format: integer
+        context: robust selector
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/reference-baseline/results.yaml
+    featured: false
+
+  - id: reference-baseline-v2
+    project: prediction-nn
+    track: one-minute
+    subproject: reference-baseline
+    title: B+VWAP Signal Baseline
+    status: completed
+    maturity: signal-only
+    updated_at: 2026-07-21
+    objective: 在完全相同的 paired_vwap_valid 行集合上比较 VWAP 标签和 close control。
+    summary: B+VWAP seed13 test IC 为 0.07445，相同样本 close control 为 0.06051，三 seed 配对差值均为正。
+    decision: 晋升为当前信号基线，但不晋升为 execution-ready 组合基线。
+    caveats:
+      - 缺少原生 inference_test manifest，当前执行与成本门槛未通过。
+      - 10m 成本后年化收益为负，不能用 gross 结果替代。
+    metrics:
+      - id: vwap-test-ic
+        label: B+VWAP test IC
+        value: 0.0744533729
+        format: decimal
+        decimals: 4
+        context: seed13，paired_vwap_valid
+      - id: close-control-ic
+        label: Paired close IC
+        value: 0.0605061430
+        format: decimal
+        decimals: 4
+        context: seed13，同一行集合
+      - id: ic-delta
+        label: Paired IC delta
+        value: 0.0139472299
+        format: decimal
+        decimals: 4
+        context: VWAP minus close
+      - id: net-annual-return
+        label: 10m 成本后年化
+        value: -99.48
+        format: percent
+        decimals: 2
+        context: portfolio gate，seed13
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/reference-baseline-v2/results.yaml
+    featured: true
+
+  - id: optimize-1min-model
+    project: prediction-nn
+    track: one-minute
+    subproject: optimize-1min-model
+    title: 1min Model Structure Final Evaluation
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-07-25
+    objective: 在多 seed 最终评估中比较 last-hidden 与 attention，并控制模型容量。
+    summary: GRU192×2 last-hidden 在三个 seed 的 test pooled IC 和 Rank IC 上全部胜出，且参数量约为旧大模型的五分之一。
+    decision: 保留 GRU192×2 MLP[] last-hidden；不晋升 attention 或 TCN。
+    caveats:
+      - 该结论是结构与信号选择，不是成本后交易证明。
+    metrics:
+      - id: test-pooled-ic
+        label: Test pooled IC mean
+        value: 0.0789459452
+        format: decimal
+        decimals: 5
+        context: seeds 7/11/13
+      - id: test-rank-ic
+        label: Test Rank IC mean
+        value: 0.0465149687
+        format: decimal
+        decimals: 5
+        context: seeds 7/11/13
+      - id: attention-test-ic
+        label: Attention test IC
+        value: 0.0706621299
+        format: decimal
+        decimals: 5
+        context: 三 seed 对照
+      - id: parameters
+        label: Trainable parameters
+        value: 342337
+        format: integer
+        context: retained last-hidden model
+    report_ids: [0725-1min-model-screening]
+    evidence_ref: exp-nn/0-select&report/experiments/optimize-1min-model/results.yaml
+    featured: true
+
+  - id: loss-function-1min
+    project: prediction-nn
+    track: one-minute
+    subproject: loss-function-1min
+    title: 1min Loss Function Stage B
+    status: completed
+    maturity: developmental
+    updated_at: 2026-07-25
+    objective: 比较 MSE、相关性、moment 与预测尺度约束损失。
+    summary: 单 seed Stage B 中 mse_std_floor_0p1 的 test IC 为 0.07776，高于 MSE control 的 0.06888。
+    decision: 只晋升到多 seed Stage C 候选，不作为最终默认损失。
+    caveats:
+      - 当前是 seed7 筛选；所有方案的预测波动仍明显低于目标波动。
+    metrics:
+      - id: candidate-test-ic
+        label: Candidate test IC
+        value: 0.0777618206
+        format: decimal
+        decimals: 5
+        context: mse_std_floor_0p1，seed7
+      - id: mse-test-ic
+        label: MSE control IC
+        value: 0.0688795701
+        format: decimal
+        decimals: 5
+        context: seed7，同协议 control
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/loss-function-1min/results.yaml
+    featured: false
+
+  - id: baseline-1s-0720
+    project: prediction-nn
+    track: one-second
+    subproject: baseline-1s-0720
+    title: Stock1s Fold0 GRU384 Evaluation
+    status: doing
+    maturity: developmental
+    updated_at: 2026-08-02
+    objective: 建立 stock1s/v2 特征、模型、fold 评估和成本换手的独立基线。
+    summary: 最新 fold0 test pooled IC 为 0.09842、Rank IC 为 0.09469；当前成本后方案仍显著为负。
+    decision: 保持 1s 独立研究线，修正选择协议并降低换手后再讨论晋升。
+    caveats:
+      - 成本换手候选使用 test 参与选择，不能作为正式晋升证据。
+      - 10m 成本后日均收益和 Sharpe 为负，gross 表现不可单独引用。
+    metrics:
+      - id: test-pooled-ic
+        label: Test pooled IC
+        value: 0.0984152803
+        format: decimal
+        decimals: 5
+        context: fold0，7,947,567 rows
+      - id: test-rank-ic
+        label: Test Rank IC
+        value: 0.0946858020
+        format: decimal
+        decimals: 5
+        context: fold0，7,947,567 rows
+      - id: net-daily-return
+        label: 10m 成本后日均收益
+        value: -0.1679929498
+        format: percent
+        decimals: 3
+        context: c60_top05，test-selected
+      - id: net-sharpe
+        label: 10m 成本后 Sharpe
+        value: -18.2703766
+        format: number
+        decimals: 2
+        context: 59 个交易日
+      - id: daily-turnover
+        label: 日均换手
+        value: 7.9912119
+        format: number
+        decimals: 2
+        unit: x
+        context: c60_top05
+    report_ids: [0730-stock1s-feature-health, 0802-stock1s-gru384]
+    evidence_ref: public-report/0802-stock1s-gru384
+    featured: true
+
+  - id: baseline-main-20260622
+    project: prediction-nn
+    track: one-minute
+    subproject: reference-baseline
+    title: Mainline Baseline Placeholder
+    status: doing
+    maturity: blocked
+    updated_at: 2026-07-25
+    objective: 登记 mainline baseline 的配置、运行和 artifact 事实。
+    summary: 尚未找到完成且可复刻的 run、配置、指标和 artifact 记录。
+    decision: 不用于任何比较，完成登记后再恢复。
+    caveats:
+      - checkout 在登记时为 dirty，当前只有报告提纲。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/baseline-main-20260622/results.yaml
+    featured: false
+
+  - id: test-all
+    project: prediction-nn
+    track: one-minute
+    subproject: limit-pool
+    title: Touch Test-All Diagnostic
+    status: archived
+    maturity: diagnostic
+    updated_at: 2026-07-25
+    objective: 记录 touch 训练过滤、unfiltered test 的诊断性结果。
+    summary: 观察到 test IC 0.08884，但测试全集与主矩阵不同。
+    decision: 只保留为 limit-pool 诊断 provenance，不参与 all/touch/limit 排名。
+    caveats:
+      - 同时改变测试 universe 和 source checkout，不能直接比较。
+    metrics:
+      - id: diagnostic-test-ic
+        label: Diagnostic test IC
+        value: 0.088842
+        format: decimal
+        decimals: 5
+        context: unfiltered supervised test
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/test-all/results.yaml
+    featured: false
+
+  - id: limit-pool
+    project: prediction-nn
+    track: one-minute
+    subproject: limit-pool
+    title: Limit-State Sample Pool Comparison
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-07-11
+    objective: 在同协议下比较 all、touch 和 limit 监督样本池。
+    summary: touch 在主矩阵中取得最高 test IC、top prediction return 和 ETF top95 hit。
+    decision: 主矩阵优先 touch；test-all 仅作为不可比诊断。
+    caveats:
+      - 策略指标仍依赖报告中的成本和执行代理。
+    metrics:
+      - id: touch-test-ic
+        label: Touch test IC
+        value: 0.0691368300
+        format: decimal
+        decimals: 5
+        context: all/touch/limit 主矩阵
+      - id: top-return
+        label: Top prediction return
+        value: 9.2415430
+        format: bps
+        decimals: 2
+        context: touch variant
+      - id: etf-hit
+        label: ETF top95 hit
+        value: 54.7272727
+        format: percent
+        decimals: 2
+        context: touch variant
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/limit-pool/results.yaml
+    featured: false
+
+  - id: near-zero-filter
+    project: prediction-nn
+    track: one-minute
+    subproject: near-zero-filter
+    title: Near-Zero Filter Comparison
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-06-17
+    objective: 比较精确零和近零收益特征过滤对信号与样本保留率的影响。
+    summary: ret-ge2-nz5e-4 的 test IC 与 top return 最高；flat-ret123-oc 的 top95 命中率最高。
+    decision: 把 IC/return 与 hit-rate 两类目标分开保留，不宣称单一全局赢家。
+    caveats:
+      - 交易与成本指标仍是 proxy，不等同实盘收益。
+    metrics:
+      - id: best-test-ic
+        label: Best test IC
+        value: 0.0707367617
+        format: decimal
+        decimals: 5
+        context: ret-ge2-nz5e-4
+      - id: best-top-return
+        label: Best top return
+        value: 10.2584750
+        format: bps
+        decimals: 2
+        context: ret-ge2-nz5e-4
+      - id: best-etf-hit
+        label: Best ETF top95 hit
+        value: 55.3337306
+        format: percent
+        decimals: 2
+        context: flat-ret123-oc
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/near-zero-filter/results.yaml
+    featured: false
+
+  - id: learning-rate
+    project: prediction-nn
+    track: one-minute
+    subproject: learning-rate
+    title: Learning Rate and Scheduler
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-06-26
+    objective: 固定 final-step 协议，选择稳定学习率和调度器。
+    summary: warmup_cosine、lr=0.009 在 seeds 7/11/19 上平均 test IC 为 0.07354。
+    decision: 后续同模型、batch、数据和训练长度使用 warmup_cosine + 0.009。
+    caveats:
+      - 架构、batch、split 或训练长度变化后应重跑局部学习率邻域。
+    metrics:
+      - id: mean-test-ic
+        label: Mean test IC
+        value: 0.0735400370
+        format: decimal
+        decimals: 5
+        context: seeds 7/11/19
+      - id: test-ic-std
+        label: Test IC std
+        value: 0.0019912445
+        format: decimal
+        decimals: 5
+        context: 三 seed
+      - id: final-iter
+        label: Final iteration
+        value: 110000
+        format: integer
+        context: fixed final-step protocol
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/learning-rate/results.yaml
+    featured: false
+
+  - id: rolling-purged-val
+    project: prediction-nn
+    track: one-minute
+    subproject: validation
+    title: Rolling/Purged Validation Stability
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-06-28
+    objective: 检查三个滚动时期的 validation IC 是否出现明显衰减。
+    summary: 三折 validation pooled IC 均值 0.06590，范围 0.00455，没有观察到明显晚期崩塌。
+    decision: 当前无需仅因时期衰减而更换架构；交易决策仍需组合级验证。
+    caveats:
+      - test 只保留作 pipeline contract，不作为选择或交易证据。
+    metrics:
+      - id: validation-ic-mean
+        label: Validation IC mean
+        value: 0.065898
+        format: decimal
+        decimals: 5
+        context: 3 rolling/purged folds
+      - id: validation-ic-range
+        label: Validation IC range
+        value: 0.004547
+        format: decimal
+        decimals: 5
+        context: max minus min
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/rolling-purged-val/results.yaml
+    featured: false
+
+  - id: val-select
+    project: prediction-nn
+    track: one-minute
+    subproject: validation
+    title: Robust Checkpoint Selector
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-06-29
+    objective: 用多时期 validation 证据替代 validation argmax。
+    summary: 三折、最后 20 日、IC mean−0.5 std、earliest top-2 选择 20k checkpoint，test regret 为 0。
+    decision: 使用 20k robust default；30k 只保留为 aggressive comparison。
+    caveats:
+      - 同一 test audit 不应被反复用于继续调 selector。
+    metrics:
+      - id: selected-checkpoint
+        label: Robust checkpoint
+        value: 20000
+        format: integer
+        context: earliest top-2
+      - id: mean-test-ic
+        label: Mean test IC
+        value: 0.059220
+        format: decimal
+        decimals: 5
+        context: robust 20k winner
+      - id: top-decile-return
+        label: Mean top-decile return
+        value: 5.235391
+        format: bps
+        decimals: 2
+        context: robust 20k winner
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/val-select/results.yaml
+    featured: true
+
+  - id: capacity-robust-sampling
+    project: prediction-nn
+    track: one-minute
+    subproject: capacity-robust-sampling
+    title: Capacity and Robust Sampling
+    status: completed
+    maturity: developmental
+    updated_at: 2026-06-28
+    objective: 判断降容量、dropout、稳健损失和去相关采样能否缓解早期过拟合。
+    summary: 五个方案均在 10k 达到最佳 validation IC；降容量改善晚期保持率，但没有推迟峰值。
+    decision: 后续优先验证更小容量和早停；不扩展 Huber/clip 或当前去相关采样。
+    caveats:
+      - 只覆盖一个 validation 时期，仍需 rolling/purged 复核。
+    metrics:
+      - id: small-model-best-val-ic
+        label: Small model best val IC
+        value: 0.0793455647
+        format: decimal
+        decimals: 5
+        context: GRU192 + MLP256，10k
+      - id: small-model-gap-60k
+        label: Train–val gap at 60k
+        value: 0.2915384650
+        format: decimal
+        decimals: 4
+        context: reduced-capacity variant
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/capacity-robust-sampling/results.yaml
+    featured: false
+
+  - id: prediction-calibration
+    project: prediction-nn
+    track: one-minute
+    subproject: prediction-calibration
+    title: Label Noise and Prediction Calibration
+    status: completed
+    maturity: developmental
+    updated_at: 2026-07-08
+    objective: 在配对样本上检验 VWAP 端点和稳健标签处理的信号与校准效果。
+    summary: VWAP endpoint 相对 paired close 同时改善 IC、Rank IC、top-bottom spread 和 calibration error；A3 方案均未通过晋升门槛。
+    decision: 保留 A2 VWAP 方向并进入多 seed 验证，不晋升 A3 稳健标签方案。
+    caveats:
+      - 当前筛选为单 seed；波动率归一化方案还改变了有效行集合。
+    metrics:
+      - id: vwap-test-ic
+        label: VWAP paired test IC
+        value: 0.0761556237
+        format: decimal
+        decimals: 5
+        context: vwap_vwap_intersection
+      - id: close-test-ic
+        label: Close paired test IC
+        value: 0.0532774338
+        format: decimal
+        decimals: 5
+        context: control_close_intersection
+      - id: spread-delta
+        label: Top-bottom spread delta
+        value: 1.9782819
+        format: bps
+        decimals: 2
+        context: VWAP minus paired close
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/prediction-calibration/results.yaml
+    featured: false
+
+  - id: generalization-rolling-stride
+    project: prediction-nn
+    track: one-minute
+    subproject: generalization
+    title: Rolling Year and Endpoint Stride
+    status: completed
+    maturity: developmental
+    updated_at: 2026-07-11
+    objective: 检查自然年滚动重训和 endpoint stride 对跨期信号的影响。
+    summary: stride5 接近标准参考结果；rolling-year 表现差异明显，原 stride10 selector 选择 iter0 后失败。
+    decision: 保留 stride5 为开发候选，stride10 的 10k 恢复只作为 post-hoc 诊断。
+    caveats:
+      - 不同 variant 的测试年份不同，且全部为 seed7，不能给出统一相对 baseline 结论。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/generalization-rolling-stride/results.yaml
+    featured: false
+
+  - id: generalization-adjacent-window
+    project: prediction-nn
+    track: one-minute
+    subproject: generalization
+    title: Adjacent-Window Sampling
+    status: completed
+    maturity: developmental
+    updated_at: 2026-07-10
+    objective: 比较 dense 与 block60/block70 endpoint sampling。
+    summary: 单 seed 中 dense pooled IC 最高，block70 epoch 的 rank IC 和报告 gap 较好。
+    decision: block70 仅作为开发建议，不替换 dense。
+    caveats:
+      - 单 seed 且只覆盖部分 2024 测试期。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window/results.yaml
+    featured: false
+
+  - id: generalization-adjacent-window-multiseed
+    project: prediction-nn
+    track: one-minute
+    subproject: generalization
+    title: Adjacent-Window Multi-Seed Check
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-07-11
+    objective: 用 seeds 7/17/27 复核 Dense 与 Block70 epoch 的稳定性。
+    summary: Dense 的 test IC 均值更高且标准差显著更低，Block70 只在 seed7 缩小 gap。
+    decision: 当前协议下不晋升 Block70 epoch，保留 Dense。
+    caveats:
+      - OOS 日期仍属于开发 folds；比较按 optimizer step 而非有效 exposure 匹配。
+    metrics:
+      - id: dense-test-ic
+        label: Dense test IC mean
+        value: 0.0779182436
+        format: decimal
+        decimals: 5
+        context: seeds 7/17/27
+      - id: block70-test-ic
+        label: Block70 test IC mean
+        value: 0.0642507174
+        format: decimal
+        decimals: 5
+        context: seeds 7/17/27
+      - id: dense-ic-std
+        label: Dense IC std
+        value: 0.0001382819
+        format: decimal
+        decimals: 5
+        context: 三 seed
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window-multiseed/results.yaml
+    featured: false
+
+  - id: generalization-block70-checkpoint-curve
+    project: prediction-nn
+    track: one-minute
+    subproject: generalization
+    title: Block70 Checkpoint Curve Diagnostic
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-07-11
+    objective: 观察 Block70 epoch 的 11 个 checkpoint 曲线和过训练形态。
+    summary: 30k 后 test IC 下降且 generalization gap 扩大。
+    decision: 只用于诊断过训练，不用于生产 checkpoint 选择。
+    caveats:
+      - 全部 checkpoint 的 test 指标已被查看，存在 test exposure。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/generalization-block70-checkpoint-curve/results.yaml
+    featured: false
+
+  - id: main-combo-integration
+    project: prediction-nn
+    track: one-minute
+    subproject: integration
+    title: Main Combo Integration Matrix
+    status: completed
+    maturity: blocked
+    updated_at: 2026-07-11
+    objective: 在同一 seed7 矩阵中组合 touch、ret-ge2 和两者叠加。
+    summary: 未过滤 baseline 胜出，三个改造均未改善 test pooled IC。
+    decision: 保留负结果；因注册 run root 已被清理，如需继续比较必须重跑。
+    caveats:
+      - 当前只剩报告证据，登记的 cache run roots 均不存在。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/main-combo-integration/results.yaml
+    featured: false
+
+  - id: zero-aware-normalization
+    project: prediction-nn
+    track: one-minute
+    subproject: zero-aware-normalization
+    title: Zero-Aware Transform Comparison
+    status: completed
+    maturity: blocked
+    updated_at: 2026-07-11
+    objective: 比较四种零值感知特征变换。
+    summary: 三个 F24 方案 test IC 聚集在约 0.0722–0.0725，但缺少无变换 control。
+    decision: 不作提升结论，补齐 off control 和模型卡一致性后再比较。
+    caveats:
+      - F24 model-card metadata 与 prepared data 不一致。
+    metrics: []
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/zero-aware-normalization/results.yaml
+    featured: false
+
+  - id: l2-features
+    project: prediction-nn
+    track: one-minute
+    subproject: l2-features
+    title: L2 Feature Attribution
+    status: archived
+    maturity: blocked
+    updated_at: 2026-07-11
+    objective: 评估 snapshot fast12 L2 特征相对 stock1m baseline 的贡献。
+    summary: all_fast12 观察到 test IC 约 0.0805，但不同实验臂使用了 11-vs-1-vs-11 checkpoint 候选政策。
+    decision: 保存观察值，阻止跨臂贡献归因结论。
+    caveats:
+      - 特征内容与 checkpoint 训练程度相互混淆，必须按统一政策重跑。
+    metrics:
+      - id: observed-all-fast12-ic
+        label: Observed all_fast12 IC
+        value: 0.0805
+        format: decimal
+        decimals: 4
+        context: 不可归因的观察值
+    report_ids: [0702-l2-ablation]
+    evidence_ref: exp-nn/0-select&report/experiments/l2-features/results.yaml
+    featured: false
+
+  - id: feature-cleaning-bundle-0609
+    project: prediction-nn
+    track: one-minute
+    subproject: feature-cleaning
+    title: Historical Feature Cleaning Bundle
+    status: archived
+    maturity: archived
+    updated_at: 2026-07-11
+    objective: 保存历史 F15 特征清洗 run 的结果和复刻缺口。
+    summary: 历史 test IC 为 0.07389，但精确启动 override 和 artifact 已缺失。
+    decision: 不作为当前 baseline，只保留 provenance。
+    caveats:
+      - 缺少当前 artifact root 和精确 NN_* 启动配置。
+    metrics:
+      - id: historical-test-ic
+        label: Historical test IC
+        value: 0.073889
+        format: decimal
+        decimals: 5
+        context: archived F15 run
+      - id: historical-top-hit
+        label: Historical top95 hit
+        value: 47.60
+        format: percent
+        decimals: 2
+        context: archived report
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/feature-cleaning-bundle-0609/results.yaml
+    featured: false
+
+  - id: combo-touch-nz-lr
+    project: prediction-nn
+    track: one-minute
+    subproject: integration
+    title: Touch + Near-Zero + LR Combo
+    status: archived
+    maturity: archived
+    updated_at: 2026-07-11
+    objective: 检验 lr=0.009 下 touch 与 near-zero 组合。
+    summary: 预定主组合没有完成，只有旧学习率臂复现了 0.06248 的既有结果。
+    decision: 由 main-combo-integration 取代，不参与当前比较。
+    caveats:
+      - 目标 lr=0.009 组合没有可用证据，观察 run root 已缺失。
+    metrics:
+      - id: old-lr-test-ic
+        label: Old-LR observed IC
+        value: 0.062477
+        format: decimal
+        decimals: 5
+        context: superseded arm
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/combo-touch-nz-lr/results.yaml
+    featured: false
+
+  - id: index500-clean-benchmark
+    project: index500-predict
+    title: Index500 Clean Benchmark
+    status: completed
+    maturity: developmental
+    updated_at: 2026-05-02
+    objective: 验证个股 alpha、篮子合成、基差模型、ETF 预测和 30 分钟非重叠回测链路。
+    summary: ETF test IC 为 0.10765；validation 选择的 piecewise 映射收益 70.62%，高于 close-path long ETF 的 59.55%。
+    decision: 保留 piecewise 为当前候选，下一步优先加入成本、滑点和滚动验证。
+    caveats:
+      - 当前收益没有交易成本和滑点，不能视为可交易结果。
+      - 报告中两种 excess benchmark 的定义不同，不跨表混用。
+    metrics:
+      - id: etf-test-ic
+        label: ETF test IC
+        value: 0.107647
+        format: decimal
+        decimals: 5
+        context: 2024-02 至 2025-12
+      - id: etf-rank-ic
+        label: ETF Rank IC
+        value: 0.037103
+        format: decimal
+        decimals: 5
+        context: selected two-stage model
+      - id: strategy-return
+        label: Piecewise return
+        value: 70.62
+        format: percent
+        decimals: 2
+        context: 无成本和滑点
+      - id: max-drawdown
+        label: Max drawdown
+        value: -6.70
+        format: percent
+        decimals: 2
+        context: piecewise mapping
+    report_ids: [0502-index-6backtest]
+    evidence_ref: public-report/0502-index-6backtest
+    featured: true
+
+  - id: limit-t1-strategy
+    project: limit-0729
+    title: T+1 Strategy Gate Review
+    status: completed
+    maturity: developmental
+    updated_at: 2026-07-31
+    objective: 在规则、成交和机械退出固定后检验 20/30/50bp 压力成本及仿真盘门槛。
+    summary: 30bp 下 validation+test 年化 2.85%、胜率 60%，收益门槛未通过。
+    decision: 当前不进入仿真盘，先扩大冻结测试并改善成本后收益。
+    caveats:
+      - 冻结测试只有 1 笔交易，不能据此判断稳定性。
+      - 2025-06-30 之后缺少真实 L2，成交结果包含模型外推。
+    metrics:
+      - id: annual-return
+        label: 30bp 年化收益
+        value: 2.85
+        format: percent
+        decimals: 2
+        context: validation + frozen test，15 trades
+      - id: win-rate
+        label: Win rate
+        value: 60.00
+        format: percent
+        decimals: 2
+        context: validation + frozen test，15 trades
+      - id: max-drawdown
+        label: Max drawdown
+        value: -2.26
+        format: percent
+        decimals: 2
+        context: 30bp pressure cost
+      - id: frozen-test-trades
+        label: Frozen-test trades
+        value: 1
+        format: integer
+        context: 2025–2026 frozen test
+    report_ids: [0731-limit-t1-strategy]
+    evidence_ref: public-report/0731-limit-t1-strategy
+    featured: true
+
+  - id: shouban-report-gate
+    project: shouban2
+    title: Historical Report Publication Gate
+    status: doing
+    maturity: blocked
+    updated_at: 2026-08-02
+    objective: 确认首板 Top-K 历史结果的项目归属并重建可独立查看的静态报告。
+    summary: 已发现 0310 MHTML 候选，但文件引用本地 Streamlit 资源，当前无法作为静态报告发布。
+    decision: 保留项目入口；从源产物重建 self-contained HTML 后再提取量化结论。
+    caveats:
+      - 不从 MHTML 文件名推断最终结果或胜率。
+    metrics: []
+    report_ids: []
+    evidence_ref: archive-audit/0310-shouban2-firstboard-topk-v1
+    featured: true
+
+  - id: crypto-alpha-archive
+    project: alphas
+    title: Historical Evidence Inventory
+    status: archived
+    maturity: archived
+    updated_at: 2026-08-02
+    objective: 盘点数字货币 alpha 历史代码、报告和可复刻证据。
+    summary: 当前没有通过审核的量化快照或静态报告。
+    decision: 保持归档状态，后续只在来源和评价口径明确时补录结果。
+    caveats:
+      - 目录存在不代表实验已完成或结果可复用。
+    metrics: []
+    report_ids: []
+    evidence_ref: workspace-audit/alphas
+    featured: true
+
+  - id: genetic-factor-0327
+    project: genetic-factor-auto-3
+    title: Genetic Factor Search and Re-evaluation
+    status: completed
+    maturity: developmental
+    updated_at: 2026-03-27
+    objective: 衡量 GPU 遗传算法搜索吞吐，并对小样本优胜因子做 250 日大样本复评。
+    summary: 30 代平均吞吐约 21,218 factors/s；小样本最佳 IC 0.10487，在 200 个候选的 250 日复评中最佳 IC 降至 0.04252。
+    decision: 保留大样本复评后的候选，不把小样本最佳 IC 作为最终因子质量。
+    caveats:
+      - 现有 HTML 为表格型报告，未通过包含嵌入图像的严格报告门禁。
+    metrics:
+      - id: generations
+        label: Generations
+        value: 30
+        format: integer
+        context: GPU genetic search
+      - id: factors-per-second
+        label: Average throughput
+        value: 21217.9314
+        format: number
+        decimals: 1
+        unit: factors/s
+        context: 30 generations
+      - id: small-sample-ic
+        label: Best small-sample IC
+        value: 0.1048683152
+        format: decimal
+        decimals: 5
+        context: search sample
+      - id: large-sample-ic
+        label: Best 250-day IC
+        value: 0.0425236635
+        format: decimal
+        decimals: 5
+        context: 200 candidates re-evaluated
+    report_ids: []
+    evidence_ref: genetic-factor-auto-3/report/report.html
+    featured: true
+
+  - id: factor-daily-topk-0407
+    project: factor-daily
+    title: Daily Factor Top10 Backtest
+    status: completed
+    maturity: developmental
+    updated_at: 2026-04-07
+    objective: 在统一流动性过滤、winsorize、rank、Top10 和换手成本口径下比较日频因子。
+    summary: 2021–2024 的 8 个因子成本后总收益均为负；最佳 Sharpe 仍为 -0.0266。
+    decision: 保留负结果，重新检查组合构造、换手和因子方向后再扩展。
+    caveats:
+      - 正 IC 不自动意味着成本后 Top10 组合盈利。
+    metrics:
+      - id: factor-count
+        label: Factors evaluated
+        value: 8
+        format: integer
+        context: 2021–2024 Top10 report
+      - id: best-total-return
+        label: Best total return
+        value: -3.0460
+        format: percent
+        decimals: 2
+        context: volatility_trend_composite
+      - id: best-sharpe
+        label: Best Sharpe
+        value: -0.026593
+        format: number
+        decimals: 3
+        context: volatility_trend_composite
+      - id: best-max-drawdown
+        label: Max drawdown
+        value: -63.6763
+        format: percent
+        decimals: 2
+        context: best-Sharpe factor
+    report_ids: []
+    evidence_ref: factor-daily/reports/0407/topk_backtest_report.html
+    featured: true
+
+  - id: aq2-v16
+    project: aq2
+    title: Cross-Day Full-Market Reconstruction v16
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-07-29
+    objective: 在冻结源码和同分母下复核有效范围与开盘集合竞价规则修订。
+    summary: 14,025 个证券日、54,176,260 个 tick 全部完成，处理错误和 invariant 为 0；候选错行减少 89,103 行。
+    decision: 保留 v16 作为当前规则回归基准，继续优先排查开盘竞价与可见量残差。
+    caveats:
+      - 候选口径使用当期真值选择合法边界，不是独立预测准确率。
+      - 24.0992% 的候选错行率说明重建仍有显著剩余问题。
+    metrics:
+      - id: security-days
+        label: Security-days
+        value: 14025
+        format: integer
+        context: 3 full-market dates
+      - id: snapshot-ticks
+        label: Snapshot ticks
+        value: 54176260
+        format: integer
+        context: v16 full rerun
+      - id: candidate-mismatch
+        label: Candidate mismatch
+        value: 24.0992
+        format: percent
+        decimals: 4
+        context: truth-assisted legal boundary
+      - id: reduced-rows
+        label: Reduced mismatches
+        value: 89103
+        format: integer
+        context: v16 versus v13
+    report_ids: []
+    evidence_ref: AQ2/README.md
+    featured: true
+
+  - id: ashare-1s-coverage
+    project: ashare-1s
+    title: Stock1s/v2 Coverage Snapshot
+    status: doing
+    maturity: developmental
+    updated_at: 2026-08-02
+    objective: 盘点日级文件、manifest、审计和年度覆盖缺口。
+    summary: 当前有 960 个覆盖文件和 manifest、956 个审计结果；日期从 2021-01-04 到 2025-12-31。
+    decision: 数据产品继续维护；在用于正式跨年实验前解释并补齐 2024 年覆盖缺口。
+    caveats:
+      - 2024 年只有 4 个覆盖文件，不能把首末日期解释为连续完整覆盖。
+    metrics:
+      - id: coverage-files
+        label: Coverage files
+        value: 960
+        format: integer
+        context: 2021-01-04 至 2025-12-31
+      - id: manifests
+        label: Daily manifests
+        value: 960
+        format: integer
+        context: stock1s/v2
+      - id: audits
+        label: Daily audits
+        value: 956
+        format: integer
+        context: four fewer than coverage files
+      - id: coverage-2024
+        label: 2024 coverage files
+        value: 4
+        format: integer
+        context: 显著年度缺口
+    report_ids: []
+    evidence_ref: workspace-audit/ashare-1s-v2-2026-08-02
+    featured: true
+
+  - id: index-data-evidence
+    project: get-index-data
+    title: Data Coverage Evidence Backlog
+    status: doing
+    maturity: blocked
+    updated_at: 2026-08-02
+    objective: 为指数成分、权重和 ETF 映射建立覆盖率与更新时间快照。
+    summary: 当前未登记经过审核的覆盖和更新成功率指标。
+    decision: 保留数据入口，补齐指标后再展示数据健康结论。
+    caveats:
+      - 不从目录或配置存在推断数据已经完整更新。
+    metrics: []
+    report_ids: []
+    evidence_ref: workspace-audit/get-index-data
+    featured: true
+
+  - id: market-data-evidence
+    project: get-data
+    title: Pipeline Coverage Evidence Backlog
+    status: doing
+    maturity: blocked
+    updated_at: 2026-08-02
+    objective: 统一登记日频、分钟、交易日历和市场镜像的覆盖与最近成功运行。
+    summary: 当前没有统一、可公开的数据覆盖快照。
+    decision: 项目继续作为基础设施入口；后续按数据集补充日期、缺口和更新时间。
+    caveats:
+      - 不把 pipeline 代码存在解释为数据当前无缺口。
+    metrics: []
+    report_ids: []
+    evidence_ref: workspace-audit/get-data
+    featured: true
+
+  - id: tdx-data-source-v1
+    project: tdx-data-source
+    title: TDX Data Source v1 Capability Review
+    status: doing
+    maturity: developmental
+    updated_at: 2026-08-02
+    objective: 提供 A 股发现、实时逐笔和历史逐笔的一致数据接口。
+    summary: v1 已实现多 endpoint 长连接、实时 NDJSON/WebSocket 和历史逐笔查询。
+    decision: 作为数据基础设施继续测试；不在缺少运行审计时声明吞吐、延迟或市场覆盖率。
+    caveats:
+      - v1 不内置 auth/TLS，对外暴露前需要可信代理。
+    metrics:
+      - id: quorum-threshold
+        label: History quorum
+        value: 2
+        format: integer
+        unit: / 3
+        context: exact response agreement
+    report_ids: []
+    evidence_ref: tdx-data-source/README.md
+    featured: true
+
+  - id: snapshot-visualizer-evidence
+    project: snapshot-visualizer2
+    title: Visualization Evidence Backlog
+    status: doing
+    maturity: blocked
+    updated_at: 2026-08-02
+    objective: 为订单簿快照诊断页面建立稳定的静态示例和审阅说明。
+    summary: 当前只确认应用与构建产物存在，尚无经过审核的静态研究报告。
+    decision: 保留交互工具入口；后续选择一个可脱敏样本生成静态演示。
+    caveats:
+      - Next 构建文件不是研究结果，不能作为公开报告直接复制。
+    metrics: []
+    report_ids: []
+    evidence_ref: workspace-audit/snapshot-visualizer2
+    featured: true
+
+  - id: webpage5-factor-reports
+    project: webpage5
+    title: Factor Report Output Inventory
+    status: doing
+    maturity: developmental
+    updated_at: 2026-08-02
+    objective: 盘点表达式因子从计算到报告输出的完整链路。
+    summary: 当前项目目录中有 7 份因子评估 HTML 输出。
+    decision: 先展示平台产物规模；确认 factor-generation 缓存 provenance 后再合并批量统计。
+    caveats:
+      - 报告数量不等于因子有效性，效果结论仍需按报告逐项审核。
+    metrics:
+      - id: factor-reports
+        label: Factor report outputs
+        value: 7
+        format: integer
+        context: project-local HTML reports
+    report_ids: []
+    evidence_ref: webpage5/factors
+    featured: true
+
+  - id: deep-ml-content
+    project: deep-ml
+    title: Knowledge Package Snapshot
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-08-02
+    objective: 验证知识内容包的概念、文章、关系和学习路径规模。
+    summary: 内容包包含 597 个 Concept、597 篇原创中文文章、1,974 条关系和 18 条课程路径。
+    decision: 作为知识工程项目纳入主页；后续更新同时展示质量门禁通过状态。
+    caveats:
+      - 这些是内容规模指标，不是机器学习模型性能指标。
+    metrics:
+      - id: concepts
+        label: Concepts
+        value: 597
+        format: integer
+        context: current content package
+      - id: articles
+        label: Published articles
+        value: 597
+        format: integer
+        context: original Chinese content
+      - id: relations
+        label: Graph relations
+        value: 1974
+        format: integer
+        context: confidence-weighted edges
+      - id: learning-paths
+        label: Learning paths
+        value: 18
+        format: integer
+        context: course views
+    report_ids: []
+    evidence_ref: deep-ml/README.md
+    featured: true
+
+  - id: ipcheck-evidence
+    project: ipcheck
+    title: Operational Evidence Backlog
+    status: doing
+    maturity: blocked
+    updated_at: 2026-08-02
+    objective: 记录最近检查时间、地址变化和通知投递是否成功。
+    summary: 当前没有经过审核的运行成功率或通知投递指标。
+    decision: 保留工具入口，后续仅发布脱敏后的运行健康摘要。
+    caveats:
+      - 不公开具体 IP、通知目标或凭据。
+    metrics: []
+    report_ids: []
+    evidence_ref: workspace-audit/ipcheck
+    featured: true

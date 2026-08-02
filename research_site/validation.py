@@ -46,10 +46,25 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
     validate_public_reports(catalog, site_root / "public" / "reports")
     expected = [output_root / "index.html", output_root / "reports" / "index.html", output_root / "catalog.json"]
     expected.extend(output_root / "projects" / project.id / "index.html" for project in catalog.projects)
+    expected.extend(
+        output_root / "projects" / project.id / track.id / "index.html"
+        for project in catalog.projects
+        for track in project.tracks
+    )
+    expected.extend(
+        output_root / "projects" / project.id / subproject.id / "index.html"
+        for project in catalog.projects
+        for subproject in project.subprojects
+    )
     expected.extend(output_root / report.route / "index.html" for report in catalog.reports)
     missing = [path for path in expected if not path.is_file()]
     if missing:
         raise CatalogError("missing built site files: " + ", ".join(str(path) for path in missing[:5]))
+
+    catalog_data = (output_root / "catalog.json").read_bytes()
+    for forbidden in FORBIDDEN_PUBLIC_BYTES:
+        if forbidden in catalog_data:
+            raise CatalogError(f"catalog.json contains forbidden public token {forbidden!r}")
 
     link_errors: list[str] = []
     for html_path in output_root.rglob("*.html"):

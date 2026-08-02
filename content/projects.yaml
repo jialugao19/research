@@ -8,7 +8,7 @@ categories:
     description: 市场数据构建、校验与索引工具。
   - id: platform
     title: 可视化与研究平台
-    description: 面向研究流程的可视化和交互平台。
+    description: 面向研究流程的可视化、知识和交互平台。
   - id: tools
     title: 工具
     description: 支持研究环境稳定运行的辅助工具。
@@ -17,117 +17,212 @@ projects:
     title: Prediction-NN
     category: research
     status: active
-    description: A 股分钟及秒级神经网络收益预测、评估与交易回测研究。
+    description: 面向 A 股分钟级与秒级收益预测的神经网络研究总入口，分别维护 1min 和 1s 的数据、模型、验证与交易评估证据。
+    objective: 建立可复刻、可比较并明确区分信号质量与交易可行性的神经网络研究体系。
+    review_summary: 1min 已形成多 seed 模型结构与 checkpoint 选择结论；1s 最新 fold0 信号 IC 较高，但成本后结果为负且存在 test 参与选择的问题。
     source_refs: [prediction-NN-main, exp-nn]
+    tracks:
+      - id: one-minute
+        title: 1min 预测研究
+        description: 基于 stock1m 的标签、模型结构、损失函数、采样、checkpoint 选择与泛化研究。
+        objective: 在统一数据、切分与选择协议下建立可复用的分钟级信号基线，并逐步验证成本和执行可行性。
+      - id: one-second
+        title: 1s 预测研究
+        description: 基于 stock1s/v2 的秒级特征、模型、fold 评估以及换手和成本研究。
+        objective: 建立与 1min 完全分离的秒级实验体系，在信号、稳定性和成本门槛同时满足后再讨论晋升。
     subprojects:
       - id: reference-baseline
         title: Reference Baseline
-      - id: l2-features
-        title: L2 特征
+        track: one-minute
+        description: 分钟级参考基线、标签端点和当前可比较信号锚点。
+        objective: 固定可复刻基线，并明确从信号基线到执行基线仍缺少的门槛。
+      - id: optimize-1min-model
+        title: 1 分钟模型结构
+        track: one-minute
+        description: 比较 GRU、pooling、MLP 和 TCN 结构的容量、稳定性与测试表现。
+        objective: 在多 seed 证据下选择更小、更稳定的分钟级模型结构。
+      - id: loss-function-1min
+        title: 1 分钟损失函数
+        track: one-minute
+        description: 比较 MSE、相关性、moment 和输出尺度约束损失。
+        objective: 改善信号 IC 与预测尺度，同时避免单 seed 结果被误当作最终晋升。
+      - id: learning-rate
+        title: 学习率与调度器
+        track: one-minute
+        description: 固定训练步数下的学习率、多 seed 稳定性和调度器筛选。
+        objective: 为后续实验固定稳定的优化器学习率与 scheduler 配置。
+      - id: validation
+        title: 验证与 Checkpoint 选择
+        track: one-minute
+        description: rolling/purged 验证、窗口选择和稳健 checkpoint selector。
+        objective: 避免 validation argmax 和重复查看 test 造成的选择偏差。
+      - id: capacity-robust-sampling
+        title: 容量与稳健采样
+        track: one-minute
+        description: 研究模型容量、dropout、稳健损失和去相关采样对早期过拟合的影响。
+        objective: 判断哪些机制能减缓晚期 checkpoint 退化，并为多时期验证提供候选。
+      - id: prediction-calibration
+        title: 标签与预测校准
+        track: one-minute
+        description: 比较 close、VWAP、波动率归一化与 impact 权重对 IC 和校准的影响。
+        objective: 在相同行样本上降低标签噪声，并把信号提升与校准门槛分开判断。
       - id: generalization
         title: 泛化与稳健性
-      - id: baseline-1s-0720
-        title: 1 秒数据基线
+        track: one-minute
+        description: 滚动年份、采样步长、相邻窗口、多 seed 和 checkpoint 曲线诊断。
+        objective: 验证研究结论能否跨时间和 seed 保持，并标记 test 暴露的诊断结果。
       - id: limit-pool
         title: 涨跌停样本池
+        track: one-minute
+        description: 比较 all、touch 和 limit 样本池以及测试全集诊断。
+        objective: 判断涨跌停历史过滤能否在相同评价口径下改善信号质量。
       - id: near-zero-filter
         title: 近零过滤
-      - id: prediction-calibration
-        title: 预测校准
-      - id: capacity-robust-sampling
-        title: 容量稳健采样
-      - id: optimize-1min-model
-        title: 1 分钟模型结构优化
+        track: one-minute
+        description: 比较收益特征精确零和近零样本过滤对 IC、命中率与样本保留率的影响。
+        objective: 找到能够提高预测质量且不过度改变有效样本分布的过滤规则。
+      - id: zero-aware-normalization
+        title: 零值感知归一化
+        track: one-minute
+        description: 比较零值指示、分段标准化、hurdle 和 jitter 变换。
+        objective: 评估零值结构的建模方式，并要求无变换 control 后再做提升结论。
+      - id: l2-features
+        title: L2 特征
+        track: one-minute
+        description: 研究 snapshot fast12 等 L2 衍生特征相对 stock1m baseline 的贡献。
+        objective: 在一致 checkpoint 候选政策下完成可归因的 L2 特征消融。
       - id: feature-cleaning
         title: 特征清洗
+        track: one-minute
+        description: 历史特征清洗 bundle 与数据质量研究。
+        objective: 保存历史证据，并在复刻配置和 artifact 完整时才恢复为当前基线。
+      - id: integration
+        title: 组合集成
+        track: one-minute
+        description: 把 touch、near-zero、学习率等单项改进放入统一矩阵验证。
+        objective: 检验局部改进能否组合成立，并保留负结果和重跑要求。
+      - id: baseline-1s-0720
+        title: 1 秒数据基线
+        track: one-second
+        description: stock1s/v2 数据、特征健康、GRU 模型、fold 评估和成本换手研究。
+        objective: 建立秒级独立基线，并在预声明选择和成本后收益通过前保持研究状态。
   - id: index500-predict
     title: Index500 Predict
     category: research
     status: active
-    description: 中证 500 成分股与 ETF 分钟级收益预测、篮子合成和策略研究。
+    description: 围绕中证 500 成分股和 510500 ETF，研究从个股 alpha、篮子合成、基差修正到 30 分钟交易映射的完整预测链路。
+    objective: 建立从个股信号到 ETF 可交易映射的闭环，并用滚动验证、成本和滑点检验其稳健性。
+    review_summary: ETF 预测和篮子合成均有显著 IC；piecewise 映射优于旧的直接做空解释，但当前报告尚未加入交易成本和滑点。
     source_refs: [index500-predict, exp-index]
-    subprojects: []
   - id: limit-0729
     title: Limit / T+1
     category: research
     status: active
-    description: 沪深 A 股涨停板质量分层、首次触板评分与次日交易研究。
+    description: 研究 A 股首次触板候选的规则漏斗、walk-forward 排序、成交约束与机械 T+1 退出，评估压力成本下能否进入仿真盘。
+    objective: 在无时间穿越、成交假设可审计和压力成本可接受的前提下形成可进入仿真盘的打板策略。
+    review_summary: 最新方案在回撤和相对门槛上可接受，但 30bp 年化收益门槛未通过，冻结测试样本也过少，当前不进入仿真盘。
     source_refs: [limit-0729]
-    subprojects: []
   - id: shouban2
     title: First Board Top-K
     category: research
     status: maintained
-    description: 首板与弱转强连续评分、Top-K 组合约束和回测研究。
+    description: 研究首板与弱转强候选的连续评分、Top-K 组合约束、成交实现和分层回测。
+    objective: 验证排序稳定性、组合约束与真实成交假设能否共同支持首板策略。
+    review_summary: 已发现一份历史 MHTML 候选报告，但它依赖本地 Streamlit 资源且尚未通过归属与静态发布门禁，暂不展示量化结论。
     source_refs: [shouban2]
-    subprojects: []
   - id: alphas
     title: Crypto Alphas
     category: research
     status: archived
-    description: 数字货币分钟级择时因子与收益预测能力研究。
+    description: 研究数字货币分钟级价量因子的择时、横截面预测与稳健性；当前作为历史研究档案维护。
+    objective: 保存数字货币 alpha 研究脉络，并在证据口径可复核时恢复关键结果。
+    review_summary: 当前没有经过审核的静态报告或量化快照，页面只保留项目定位和归档状态。
     source_refs: [alphas]
-    subprojects: []
   - id: genetic-factor-auto-3
     title: Genetic Factor Mining
     category: research
     status: maintained
-    description: 面向数字货币市场的 GPU 遗传算法因子挖掘系统。
+    description: 使用 GPU 加速遗传算法在数字货币市场中搜索、变异和复评公式因子，并评估跨样本期 IC 与挖掘吞吐。
+    objective: 高吞吐搜索数字货币因子，并用更长样本复评抑制小样本选择偏差。
+    review_summary: 30 代搜索达到较高吞吐；小样本最佳 IC 明显高于 250 日复评结果，说明跨样本衰减必须作为主要结论。
     source_refs: [genetic-factor-auto-3]
-    subprojects: []
   - id: factor-daily
     title: Daily Factor Research
     category: research
     status: maintained
-    description: 日频因子统计、IC、分组收益和回测报告体系。
+    description: 日频价量因子研究与批量评估，产出公式、Rank IC、分组收益和回测证据。
+    objective: 统一日频因子的覆盖、IC、分组收益、换手和成本后回测评价。
+    review_summary: 最新 Top10 汇总中的 8 个因子成本后收益均为负，当前证据支持保留为负结果并重新审查组合构造和换手。
     source_refs: [factor-daily]
-    subprojects: []
   - id: aq2
     title: AQ2 Order Book Reconstruction
     category: data
     status: active
-    description: 基于逐笔成交、委托与十档快照的订单簿重建和逐 tick 校验。
+    description: 从逐笔委托和成交确定性重建订单簿，并与交易所十档快照逐 tick 校验，定位事件顺序、竞价和可见量残差。
+    objective: 在不使用未来真值污染回放的前提下解释订单簿差异，并形成可回归的交易所规则状态机。
+    review_summary: v16 跨三日全市场复扫无处理错误和盘口不变量违规，候选错行继续下降；候选口径使用当期真值，不能表述为预测准确率。
     source_refs: [AQ2]
-    subprojects: []
   - id: ashare-1s
     title: A-share 1s
     category: data
     status: active
-    description: 从逐笔和快照数据构建带版本与覆盖审计的 A 股一秒数据产品。
+    description: 从 A 股 L2 逐笔与快照构建版本化 stock1s/v2 数据产品，维护日级覆盖、manifest 和质量审计。
+    objective: 形成可复刻、可审计并可供 1s 模型独立使用的秒级数据产品。
+    review_summary: 当前有 960 个日级覆盖文件和 956 个审计结果；2024 年只有 4 个覆盖文件，是必须解释的数据缺口。
     source_refs: [ashare-1s]
-    subprojects: []
   - id: get-index-data
     title: Index Data Loader
     category: data
     status: maintained
-    description: 指数与 ETF 权重数据获取、配置和落盘工具。
+    description: 获取并落盘指数成分、权重和 ETF 映射，为指数研究提供可复现的数据输入。
+    objective: 稳定维护指数研究需要的成分、权重、版本和落盘契约。
+    review_summary: 当前未登记独立量化效果报告；项目页记录其数据职责，后续补充覆盖率和更新时间审计。
     source_refs: [get-index-data]
-    subprojects: []
   - id: get-data
     title: Market Data Pipeline
     category: data
     status: maintained
-    description: 日频、分钟、交易日历和市场镜像数据维护工具。
+    description: 维护日频、分钟、交易日历和市场镜像数据的获取、更新与落盘链路。
+    objective: 为研究项目提供稳定、可检查且可增量更新的市场数据基础设施。
+    review_summary: 当前未登记统一的数据覆盖快照；后续应补充数据集、日期范围、缺口和最近成功更新时间。
     source_refs: [get_data]
-    subprojects: []
+  - id: tdx-data-source
+    title: TDX Data Source
+    category: data
+    status: active
+    description: Clean-room Go 实现的 A 股数据源，提供标的发现、实时逐笔流和基于 2-of-3 exact quorum 的历史逐笔查询。
+    objective: 提供连接、重连、并发和数据一致性规则显式可控的 TDX 实时与历史逐笔接口。
+    review_summary: 已实现实时 snapshot、WebSocket 和历史逐笔查询；当前页面展示实现能力，不宣称未经运行审计的吞吐或覆盖结果。
+    source_refs: [tdx-data-source]
   - id: snapshot-visualizer2
     title: Snapshot Visualizer
     category: platform
     status: maintained
-    description: 订单簿快照、价差、深度和 imbalance 的交互式可视化工具。
+    description: 交互查看订单簿快照、价差、深度、imbalance 和时间演化，用于 L2 数据诊断与复核。
+    objective: 降低订单簿与快照异常的人工定位成本，并提供可重复的可视化入口。
+    review_summary: 当前存在应用构建产物但没有经过审核的静态研究报告；页面先记录功能边界和待补证据。
     source_refs: [snapshot-visualizer2]
-    subprojects: []
   - id: webpage5
     title: Factor Research Platform
     category: platform
     status: active
-    description: 表达式驱动的量化因子计算、回测、产物管理与 Web 展示平台。
+    description: 表达式驱动的因子生成、批量评估、回测、产物管理和 Web 展示平台。
+    objective: 用统一表达式和 artifact contract 串联因子生成、评估、比较和展示。
+    review_summary: 项目目录中已有 7 份因子评估报告输出；批量缓存的项目归属仍需确认后再纳入公开统计。
     source_refs: [webpage5]
-    subprojects: []
+  - id: deep-ml
+    title: Deep-ML Knowledge Base
+    category: platform
+    status: active
+    description: 将机器学习知识整理为概念图谱、原创中文学习单元、课程路径和质量评估的知识工程项目。
+    objective: 建立可发布、可验证并与临时发现来源隔离的机器学习知识内容包。
+    review_summary: 当前内容包包含 597 个概念、597 篇原创文章、1974 条关系和 18 条学习路径。
+    source_refs: [deep-ml]
   - id: ipcheck
     title: IP Check
     category: tools
     status: maintained
-    description: 检测内外网 IP 变化并按变化推送通知的单次运行工具。
+    description: 检测内外网 IP 变化并按变化发送通知，支持研究环境服务可达性维护。
+    objective: 用一次性、可审计的运行检查降低服务地址变化造成的访问中断。
+    review_summary: 当前没有研究效果指标；页面保留工具用途，后续可补充最近检查时间和通知成功率。
     source_refs: [ipcheck]
-    subprojects: []
