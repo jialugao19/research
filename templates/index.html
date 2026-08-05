@@ -5,7 +5,7 @@
   <div class="home-hero-copy">
     <p class="eyebrow">FEATURED RESEARCH <span>精选研究</span></p>
     {% if featured_report %}
-    <p class="hero-meta"><span class="status status-{{ featured_project.status }}">{{ featured_project.status }}</span><time datetime="{{ featured_report.display_date }}">{{ featured_report.display_date }}</time></p>
+    <p class="hero-meta"><span class="status status-{{ featured_project.status }}">{{ featured_project.status }}</span><span>{{ featured_project.title }}</span><time datetime="{{ featured_report.display_date }}">{{ featured_report.display_date }}</time></p>
     <h1><a href="{{ base_url }}{{ featured_report.route }}">{{ featured_report.title }}</a></h1>
     <p class="hero-copy">{{ featured_report.summary }}</p>
     <p class="hero-actions"><a class="text-link" href="{{ base_url }}{{ featured_report.route }}">阅读完整报告 <span aria-hidden="true">→</span></a><a class="text-link text-link-muted" href="#projects">浏览项目目录 <span aria-hidden="true">↓</span></a></p>

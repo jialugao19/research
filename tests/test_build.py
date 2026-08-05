@@ -24,7 +24,7 @@ def test_build_produces_project_and_report_routes(tmp_path: Path) -> None:
     assert (output / "reports" / "prediction-nn" / "0702-l2-ablation-v2" / "index.html").is_file()
     assert (output / "reports" / "live-predictor" / "0805-live-predictor-quality" / "index.html").is_file()
     assert (
-        output / "assets" / "report-heroes" / "0805-live-predictor-quality.png"
+        output / "assets" / "report-heroes" / "0802-stock1s-gru384-v2.png"
     ).is_file()
     validate_built_site(catalog, SITE_ROOT, output, "/research/")
 
@@ -38,8 +38,8 @@ def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
     reports = (output / "reports" / "index.html").read_text(encoding="utf-8")
 
     assert "FEATURED RESEARCH" in index
-    assert "Live Predictor 实时预测质量报告" in index
-    assert "assets/report-heroes/0805-live-predictor-quality.png" in index
+    assert '<h1><a href="/reports/prediction-nn/0802-stock1s-gru384-v2/">Stock1s GRU384 / MLP512×512 Evaluation</a></h1>' in index
+    assert "assets/report-heroes/0802-stock1s-gru384-v2.png" in index
     assert "从研究问题到" not in index
     assert "尚无公开报告的项目仍保留项目入口。" in index
     assert "39</dt><dd>实验快照" in index

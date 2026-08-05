@@ -106,18 +106,7 @@ def build_site(
         for project in catalog.projects
         if (project_reports := reports_by_project[project.id])
     ]
-    featured_candidates = sorted(
-        (report for report in catalog.current_reports if report.featured),
-        key=lambda report: (report.date, report.id),
-        reverse=True,
-    )
-    if not featured_candidates:
-        featured_candidates = sorted(
-            catalog.current_reports,
-            key=lambda report: (report.date, report.id),
-            reverse=True,
-        )
-    featured_report = featured_candidates[0] if featured_candidates else None
+    featured_report = catalog.featured_report
     featured_hero_url = None
     if featured_report and featured_report.is_markdown:
         featured_source = load_report_source(site_root / "content" / str(featured_report.content_file))

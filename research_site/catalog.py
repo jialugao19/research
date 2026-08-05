@@ -163,6 +163,7 @@ class Catalog:
     projects: tuple[Project, ...]
     reports: tuple[Report, ...]
     studies: tuple[Study, ...] = field(default_factory=tuple)
+    featured_report_id: str | None = None
 
     @property
     def project_by_id(self) -> dict[str, Project]:
@@ -179,6 +180,12 @@ class Catalog:
     @property
     def study_by_id(self) -> dict[str, Study]:
         return {study.id: study for study in self.studies}
+
+    @property
+    def featured_report(self) -> Report | None:
+        if self.featured_report_id is None:
+            return None
+        return self.report_by_id.get(self.featured_report_id)
 
     @property
     def current_reports(self) -> tuple[Report, ...]:
@@ -375,8 +382,9 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
     return tuple(categories), tuple(projects)
 
 
-def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ...]:
+def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Report, ...], str]:
     raw = _load_yaml(path, supported_versions=(2,))
+    featured_report_id = _require_slug(raw.get("featured_report"), "featured_report")
     raw_reports = raw.get("reports")
     if not isinstance(raw_reports, list):
         raise CatalogError(f"{path} must define a reports list")
@@ -507,7 +515,12 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ..
             cursor = report_by_id.get(cursor.revision_of)  # type: ignore[assignment]
             if cursor is None:
                 break
-    return tuple(reports)
+    featured_report = report_by_id.get(featured_report_id)
+    if featured_report is None:
+        raise CatalogError(f"featured_report references unknown report {featured_report_id}")
+    if featured_report_id in successors:
+        raise CatalogError(f"featured_report must select a current report, not {featured_report_id}")
+    return tuple(reports), featured_report_id
 
 
 def _load_studies(
@@ -624,6 +637,12 @@ def _load_studies(
 def load_catalog(content_root: Path) -> Catalog:
     """Load and validate public project, study, and report metadata."""
     categories, projects = _load_projects(content_root / "projects.yaml")
-    reports = _load_reports(content_root / "reports.yaml", projects)
+    reports, featured_report_id = _load_reports(content_root / "reports.yaml", projects)
     studies = _load_studies(content_root / "studies.yaml", projects, reports)
-    return Catalog(categories=categories, projects=projects, reports=reports, studies=studies)
+    return Catalog(
+        categories=categories,
+        projects=projects,
+        reports=reports,
+        studies=studies,
+        featured_report_id=featured_report_id,
+    )

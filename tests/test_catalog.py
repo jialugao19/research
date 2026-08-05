@@ -20,6 +20,8 @@ def test_repository_catalog_is_valid() -> None:
     assert len(catalog.studies) == 39
     assert len(catalog.reports) == 13
     assert len(catalog.current_reports) == 7
+    assert catalog.featured_report_id == "0802-stock1s-gru384-v2"
+    assert catalog.featured_report is catalog.report_by_id["0802-stock1s-gru384-v2"]
     assert catalog.report_by_id["0802-stock1s-gru384-v2"].revision_of == "0802-stock1s-gru384"
     assert catalog.report_by_id["0805-live-predictor-quality"].project == "live-predictor"
     assert catalog.report_by_id["0805-live-predictor-quality"].hero_image == (
@@ -41,6 +43,19 @@ def test_report_routes_are_unique() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     routes = [report.route for report in catalog.reports]
     assert len(routes) == len(set(routes))
+
+
+def test_featured_report_must_be_current(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    reports = (tmp_path / "reports.yaml").read_text(encoding="utf-8")
+    reports = reports.replace(
+        "featured_report: 0802-stock1s-gru384-v2",
+        "featured_report: 0802-stock1s-gru384",
+        1,
+    )
+    (tmp_path / "reports.yaml").write_text(reports, encoding="utf-8")
+    with pytest.raises(CatalogError, match="must select a current report"):
+        load_catalog(tmp_path)
 
 
 def test_report_bundle_hash_is_immutable(tmp_path: Path) -> None:

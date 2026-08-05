@@ -66,6 +66,9 @@ python3 -m http.server 8888 --bind 0.0.0.0 --directory _preview
 `source_file` 与 `source_sha256`，其公开字节和原有 URL 均保持不变。目录页
 默认只展示每条修订链的最新版，旧 URL 仍可直接访问。
 
+首页精选研究由 `content/reports.yaml` 顶层的 `featured_report` 手工指定，
+必须引用当前修订链中的公开报告；不会再根据日期或报告 front matter 自动选择。
+
 研究线需要分别登记展开后的目标、数据结构和当前结论；实验专题使用 `group`
 按研究问题组织。实验快照中的指标以紧凑文本呈现，不再为少量重复指标生成
 摘要图；需要图形证据时，应在正式研究报告中提供完整的口径、图注和上下文。
