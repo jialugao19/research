@@ -1,30 +1,15 @@
 from __future__ import annotations
 
-from collections import defaultdict
 import json
-from pathlib import Path
 import shutil
+from collections import defaultdict
+from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
+from markupsafe import Markup
 
-from .catalog import Catalog, Project, Report, Study
-
-
-MATURITY_LABELS = {
-    "decision-ready": "可支持决策",
-    "signal-only": "仅信号证据",
-    "developmental": "开发中证据",
-    "diagnostic": "诊断结果",
-    "blocked": "暂不可比较",
-    "archived": "历史归档",
-}
-
-STATUS_LABELS = {
-    "doing": "进行中",
-    "completed": "已完成",
-    "archived": "已归档",
-}
-
+from .catalog import Catalog, Project, Report, Study, Subproject
+from .report_content import load_report_source, render_report_source
 
 def normalize_base_url(value: str) -> str:
     stripped = value.strip("/")
@@ -46,6 +31,8 @@ def _report_payload(report: Report, base_url: str) -> dict[str, object]:
         "summary": report.summary,
         "tags": list(report.tags),
         "featured": report.featured,
+        "format": report.format,
+        "revision_of": report.revision_of,
         "url": f"{base_url}{report.route}",
     }
 
@@ -74,6 +61,19 @@ def _study_payload(study: Study) -> dict[str, object]:
         ],
         "report_ids": list(study.report_ids),
     }
+
+
+def _group_subprojects(subprojects: tuple[Subproject, ...]) -> list[dict[str, object]]:
+    """Preserve catalog order while collecting related experiment topics."""
+    groups: list[dict[str, object]] = []
+    by_title: dict[str, list[Subproject]] = {}
+    for subproject in subprojects:
+        if subproject.group not in by_title:
+            items: list[Subproject] = []
+            by_title[subproject.group] = items
+            groups.append({"title": subproject.group, "subprojects": items})
+        by_title[subproject.group].append(subproject)
+    return groups
 
 
 def build_site(
@@ -106,28 +106,64 @@ def build_site(
         for project in catalog.projects
         if (project_reports := reports_by_project[project.id])
     ]
+    featured_candidates = sorted(
+        (report for report in catalog.current_reports if report.featured),
+        key=lambda report: (report.date, report.id),
+        reverse=True,
+    )
+    if not featured_candidates:
+        featured_candidates = sorted(
+            catalog.current_reports,
+            key=lambda report: (report.date, report.id),
+            reverse=True,
+        )
+    featured_report = featured_candidates[0] if featured_candidates else None
+    featured_hero_url = None
+    if featured_report and featured_report.is_markdown:
+        featured_source = load_report_source(site_root / "content" / str(featured_report.content_file))
+        if featured_report.hero_image:
+            featured_hero_source = (
+                featured_source.path.parent / featured_report.hero_image
+            ).resolve()
+        else:
+            featured_hero_source = featured_source.referenced_assets[0]
+        featured_hero_name = f"{featured_report.id}{featured_hero_source.suffix.lower()}"
+        featured_hero_target = output_root / "assets" / "report-heroes" / featured_hero_name
+        featured_hero_target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(featured_hero_source, featured_hero_target)
+        featured_hero_url = f"{base_url}assets/report-heroes/{featured_hero_name}"
+    dated_items = [report.date for report in catalog.current_reports]
+    dated_items.extend(study.updated_at for study in catalog.studies)
     common = {
         "base_url": base_url,
         "catalog": catalog,
-        "report_count": len(catalog.reports),
+        "report_count": len(catalog.current_reports),
         "project_count": len(catalog.projects),
         "study_count": len(catalog.studies),
-        "maturity_labels": MATURITY_LABELS,
-        "status_labels": STATUS_LABELS,
+        "site_updated": max(dated_items).isoformat() if dated_items else "",
     }
 
     index = environment.get_template("index.html").render(
         **common,
+        active_project=None,
+        active_report=None,
         category_projects=category_projects,
         latest_project_reports=latest_project_reports,
         reports_by_project=reports_by_project,
         studies_by_project=studies_by_project,
+        featured_report=featured_report,
+        featured_project=(
+            catalog.project_by_id[featured_report.project] if featured_report else None
+        ),
+        featured_hero_url=featured_hero_url,
     )
     _write(output_root / "index.html", index)
 
     report_index = environment.get_template("reports.html").render(
         **common,
-        reports=sorted(catalog.reports, key=lambda report: (report.date, report.id), reverse=True),
+        active_project=None,
+        active_report=None,
+        reports=sorted(catalog.current_reports, key=lambda report: (report.date, report.id), reverse=True),
         projects=catalog.project_by_id,
     )
     _write(output_root / "reports" / "index.html", report_index)
@@ -141,6 +177,8 @@ def build_site(
         featured_studies = [study for study in studies if study.featured] or studies[:1]
         project_page = project_template.render(
             **common,
+            active_project=project.id,
+            active_report=None,
             project=project,
             reports=reports,
             studies=studies,
@@ -155,9 +193,12 @@ def build_site(
             track_reports = [report for report in reports if report.subproject in subproject_ids]
             track_page = track_template.render(
                 **common,
+                active_project=project.id,
+                active_report=None,
                 project=project,
                 track=track,
                 subprojects=subprojects,
+                subproject_groups=_group_subprojects(subprojects),
                 reports=track_reports,
                 studies=track_studies,
                 featured_studies=track_featured_studies,
@@ -168,6 +209,8 @@ def build_site(
             subproject_studies = catalog.studies_for_subproject(project.id, subproject.id)
             subproject_page = subproject_template.render(
                 **common,
+                active_project=project.id,
+                active_report=None,
                 project=project,
                 subproject=subproject,
                 reports=subproject_reports,
@@ -177,9 +220,30 @@ def build_site(
 
     shutil.copytree(site_root / "assets", output_root / "assets", dirs_exist_ok=True)
     shutil.copytree(site_root / "public" / "reports", output_root / "reports", dirs_exist_ok=True)
+    report_template = environment.get_template("report.html")
+    inline_css = (site_root / "assets" / "site.css").read_text(encoding="utf-8")
+    inline_js = (site_root / "assets" / "site.js").read_text(encoding="utf-8")
+    for report in catalog.reports:
+        if not report.is_markdown:
+            continue
+        source = load_report_source(site_root / "content" / str(report.content_file))
+        rendered = render_report_source(source)
+        predecessor = catalog.report_by_id.get(report.revision_of) if report.revision_of else None
+        report_html = report_template.render(
+            **common,
+            report=report,
+            project=catalog.project_by_id[report.project],
+            predecessor=predecessor,
+            body_html=Markup(rendered.body_html),
+            toc=rendered.toc,
+            inline_css=Markup(inline_css),
+            inline_js=Markup(inline_js),
+            root_url="../../../",
+        )
+        _write(output_root / report.route / "index.html", report_html)
     _write(output_root / ".nojekyll", "")
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "base_url": base_url,
         "projects": [
             {
@@ -202,6 +266,12 @@ def build_site(
             for project in catalog.projects
         ],
         "studies": [_study_payload(study) for study in catalog.studies],
-        "reports": [_report_payload(report, base_url) for report in catalog.reports],
+        "reports": [
+            {
+                **_report_payload(report, base_url),
+                "is_current": report in catalog.current_reports,
+            }
+            for report in catalog.reports
+        ],
     }
     _write(output_root / "catalog.json", json.dumps(payload, ensure_ascii=False, indent=2) + "\n")

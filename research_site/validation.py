@@ -4,9 +4,13 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-from .catalog import Catalog, CatalogError
 from .build import normalize_base_url
-from .publication import FORBIDDEN_PUBLIC_BYTES, validate_public_reports
+from .catalog import Catalog, CatalogError
+from .publication import (
+    FORBIDDEN_PUBLIC_BYTES,
+    validate_public_reports,
+    validate_rendered_markdown_report,
+)
 
 
 class _LinkParser(HTMLParser):
@@ -61,6 +65,10 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
     if missing:
         raise CatalogError("missing built site files: " + ", ".join(str(path) for path in missing[:5]))
 
+    for report in catalog.reports:
+        if report.is_markdown:
+            validate_rendered_markdown_report(report, (output_root / report.route / "index.html").read_bytes())
+
     catalog_data = (output_root / "catalog.json").read_bytes()
     for forbidden in FORBIDDEN_PUBLIC_BYTES:
         if forbidden in catalog_data:
@@ -73,7 +81,9 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
             if forbidden in data:
                 raise CatalogError(f"{html_path} contains forbidden public token {forbidden!r}")
         relative_parts = html_path.relative_to(output_root).parts
-        if len(relative_parts) == 4 and relative_parts[0] == "reports":
+        report_id = relative_parts[2] if len(relative_parts) == 4 and relative_parts[0] == "reports" else None
+        report = catalog.report_by_id.get(report_id) if report_id else None
+        if report is not None and not report.is_markdown:
             continue
         parser = _LinkParser()
         parser.feed(data.decode("utf-8", errors="ignore"))

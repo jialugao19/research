@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import math
+import re
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path, PurePath
-import re
 from typing import Any
 
 import yaml
 
+from .report_content import ReportContentError, load_report_source
 
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -34,6 +36,9 @@ class Track:
     title: str
     description: str
     objective: str
+    objective_details: tuple[str, ...]
+    data_structure: tuple[str, ...]
+    conclusion: str
 
 
 @dataclass(frozen=True)
@@ -41,6 +46,7 @@ class Subproject:
     id: str
     title: str
     track: str
+    group: str
     description: str
     objective: str
 
@@ -123,15 +129,20 @@ class Report:
     id: str
     project: str
     title: str
-    source_file: str
     date: date
     summary: str
     tags: tuple[str, ...]
     featured: bool
     match_method: str
     match_evidence: str
-    source_sha256: str
     subproject: str | None = None
+    format: str = "legacy-html"
+    source_file: str | None = None
+    source_sha256: str | None = None
+    content_file: str | None = None
+    bundle_sha256: str | None = None
+    hero_image: str | None = None
+    revision_of: str | None = None
 
     @property
     def display_date(self) -> str:
@@ -140,6 +151,10 @@ class Report:
     @property
     def route(self) -> str:
         return f"reports/{self.project}/{self.id}/"
+
+    @property
+    def is_markdown(self) -> bool:
+        return self.format == "markdown"
 
 
 @dataclass(frozen=True)
@@ -165,7 +180,19 @@ class Catalog:
     def study_by_id(self) -> dict[str, Study]:
         return {study.id: study for study in self.studies}
 
+    @property
+    def current_reports(self) -> tuple[Report, ...]:
+        superseded = {report.revision_of for report in self.reports if report.revision_of}
+        return tuple(report for report in self.reports if report.id not in superseded)
+
     def reports_for_project(self, project_id: str) -> list[Report]:
+        return sorted(
+            (report for report in self.current_reports if report.project == project_id),
+            key=lambda report: (report.date, report.id),
+            reverse=True,
+        )
+
+    def all_reports_for_project(self, project_id: str) -> list[Report]:
         return sorted(
             (report for report in self.reports if report.project == project_id),
             key=lambda report: (report.date, report.id),
@@ -186,14 +213,14 @@ class Catalog:
         return [study for study in self.studies_for_project(project_id) if study.subproject == subproject_id]
 
 
-def _load_yaml(path: Path) -> dict[str, Any]:
+def _load_yaml(path: Path, supported_versions: tuple[int, ...] = (1,)) -> dict[str, Any]:
     try:
         value = yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
         raise CatalogError(f"cannot load {path}: {exc}") from exc
     if not isinstance(value, dict):
         raise CatalogError(f"{path} must contain a YAML mapping")
-    if value.get("schema_version") != 1:
+    if value.get("schema_version") not in supported_versions:
         raise CatalogError(f"{path} has unsupported schema_version")
     return value
 
@@ -242,8 +269,8 @@ def _require_text_list(value: Any, field_name: str) -> tuple[str, ...]:
 
 
 def _require_number(value: Any, field_name: str) -> int | float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise CatalogError(f"{field_name} must be numeric")
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise CatalogError(f"{field_name} must be a finite number")
     return value
 
 
@@ -297,6 +324,15 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
                     title=_require_text(track.get("title"), f"project {project_id} track title"),
                     description=_require_text(track.get("description"), f"project {project_id} track description"),
                     objective=_require_text(track.get("objective"), f"project {project_id} track objective"),
+                    objective_details=_require_text_list(
+                        track.get("objective_details"), f"project {project_id} track objective_details"
+                    ),
+                    data_structure=_require_text_list(
+                        track.get("data_structure"), f"project {project_id} track data_structure"
+                    ),
+                    conclusion=_require_text(
+                        track.get("conclusion"), f"project {project_id} track conclusion"
+                    ),
                 )
             )
         _unique([track.id for track in tracks], f"track ids in {project_id}")
@@ -315,6 +351,7 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
                     id=_require_slug(sub.get("id"), f"project {project_id} subproject id"),
                     title=_require_text(sub.get("title"), f"project {project_id} subproject title"),
                     track=track,
+                    group=_require_text(sub.get("group"), f"project {project_id} subproject group"),
                     description=_require_text(sub.get("description"), f"project {project_id} subproject description"),
                     objective=_require_text(sub.get("objective"), f"project {project_id} subproject objective"),
                 )
@@ -339,7 +376,7 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
 
 
 def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ...]:
-    raw = _load_yaml(path)
+    raw = _load_yaml(path, supported_versions=(2,))
     raw_reports = raw.get("reports")
     if not isinstance(raw_reports, list):
         raise CatalogError(f"{path} must define a reports list")
@@ -357,38 +394,119 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[Report, ..
         subproject = None if subproject_value is None else _require_slug(subproject_value, f"report {report_id}.subproject")
         if subproject and project.subproject(subproject) is None:
             raise CatalogError(f"report {report_id} references unknown subproject {project_id}/{subproject}")
-        source_file = _require_text(item.get("source_file"), f"report {report_id}.source_file")
-        if PurePath(source_file).name != source_file or Path(source_file).suffix.lower() != ".html":
-            raise CatalogError(f"report {report_id} source_file must be a basename ending in .html")
-        tags = item.get("tags", [])
-        if not isinstance(tags, list) or not all(isinstance(tag, str) and tag.strip() for tag in tags):
-            raise CatalogError(f"report {report_id} tags must be a list of text")
+        report_format = _require_slug(item.get("format", "legacy-html"), f"report {report_id}.format")
+        if report_format not in {"legacy-html", "markdown"}:
+            raise CatalogError(f"report {report_id} has unsupported format {report_format}")
         match_method = _require_text(item.get("match_method"), f"report {report_id}.match_method")
         if match_method not in ALLOWED_MATCH_METHODS:
             raise CatalogError(f"report {report_id} has unsupported match_method {match_method}")
-        source_sha256 = _require_text(item.get("source_sha256"), f"report {report_id}.source_sha256")
-        if not SHA256_RE.fullmatch(source_sha256):
-            raise CatalogError(f"report {report_id} source_sha256 must be lowercase SHA-256")
-        reports.append(
-            Report(
-                id=report_id,
-                project=project_id,
-                subproject=subproject,
+        revision_value = item.get("revision_of")
+        revision_of = None if revision_value is None else _require_slug(
+            revision_value, f"report {report_id}.revision_of"
+        )
+        common = {
+            "id": report_id,
+            "project": project_id,
+            "subproject": subproject,
+            "format": report_format,
+            "match_method": match_method,
+            "match_evidence": _require_relative_reference(
+                item.get("match_evidence"), f"report {report_id}.match_evidence"
+            ),
+            "revision_of": revision_of,
+        }
+        if report_format == "legacy-html":
+            source_file = _require_text(item.get("source_file"), f"report {report_id}.source_file")
+            if PurePath(source_file).name != source_file or Path(source_file).suffix.lower() != ".html":
+                raise CatalogError(f"report {report_id} source_file must be a basename ending in .html")
+            tags = item.get("tags", [])
+            if not isinstance(tags, list) or not all(isinstance(tag, str) and tag.strip() for tag in tags):
+                raise CatalogError(f"report {report_id} tags must be a list of text")
+            source_sha256 = _require_text(item.get("source_sha256"), f"report {report_id}.source_sha256")
+            if not SHA256_RE.fullmatch(source_sha256):
+                raise CatalogError(f"report {report_id} source_sha256 must be lowercase SHA-256")
+            report = Report(
+                **common,
                 title=_require_text(item.get("title"), f"report {report_id}.title"),
                 source_file=source_file,
+                source_sha256=source_sha256,
                 date=_parse_date(item.get("date"), f"report {report_id}.date"),
                 summary=_require_text(item.get("summary"), f"report {report_id}.summary"),
                 tags=tuple(tag.strip() for tag in tags),
                 featured=bool(item.get("featured", False)),
-                match_method=match_method,
-                match_evidence=_require_relative_reference(
-                    item.get("match_evidence"), f"report {report_id}.match_evidence"
-                ),
-                source_sha256=source_sha256,
             )
+        else:
+            content_file = _require_relative_reference(
+                item.get("content_file"), f"report {report_id}.content_file"
+            )
+            expected = PurePath("report-docs") / project_id / report_id / "report.md"
+            if PurePath(content_file) != expected:
+                raise CatalogError(f"report {report_id} content_file must be {expected.as_posix()}")
+            bundle_sha256 = _require_text(item.get("bundle_sha256"), f"report {report_id}.bundle_sha256")
+            if not SHA256_RE.fullmatch(bundle_sha256):
+                raise CatalogError(f"report {report_id} bundle_sha256 must be lowercase SHA-256")
+            try:
+                source = load_report_source(path.parent / content_file)
+            except ReportContentError as exc:
+                raise CatalogError(str(exc)) from exc
+            if source.bundle_sha256 != bundle_sha256:
+                raise CatalogError(
+                    f"report {report_id} bundle checksum changed: expected {bundle_sha256}, "
+                    f"got {source.bundle_sha256}"
+                )
+            hero_image_value = item.get("hero_image")
+            hero_image = None
+            if hero_image_value is not None:
+                hero_image = _require_relative_reference(
+                    hero_image_value, f"report {report_id}.hero_image"
+                )
+                hero_path = PurePath(hero_image)
+                if not hero_path.parts or hero_path.parts[0] != "images":
+                    raise CatalogError(f"report {report_id} hero_image must stay below images/")
+                resolved_hero = source.path.parent.joinpath(*hero_path.parts).resolve()
+                if resolved_hero not in source.referenced_assets:
+                    raise CatalogError(
+                        f"report {report_id} hero_image must reference an image used by the report"
+                    )
+            report = Report(
+                **common,
+                title=source.front_matter.title,
+                content_file=content_file,
+                bundle_sha256=bundle_sha256,
+                hero_image=hero_image,
+                date=source.front_matter.date,
+                summary=source.front_matter.summary,
+                tags=source.front_matter.tags,
+                featured=source.front_matter.featured,
+            )
+        reports.append(
+            report
         )
     _unique([item.id for item in reports], "report ids")
-    _unique([item.source_sha256 for item in reports], "report source hashes")
+    _unique([item.source_sha256 for item in reports if item.source_sha256], "report source hashes")
+    _unique([item.bundle_sha256 for item in reports if item.bundle_sha256], "report bundle hashes")
+    report_by_id = {report.id: report for report in reports}
+    successors: dict[str, str] = {}
+    for report in reports:
+        if not report.revision_of:
+            continue
+        predecessor = report_by_id.get(report.revision_of)
+        if predecessor is None:
+            raise CatalogError(f"report {report.id} revision_of references unknown report {report.revision_of}")
+        if predecessor.project != report.project or predecessor.subproject != report.subproject:
+            raise CatalogError(f"report {report.id} revision_of must keep project and subproject ownership")
+        if predecessor.id in successors:
+            raise CatalogError(f"report {predecessor.id} has multiple current successors")
+        successors[predecessor.id] = report.id
+        seen = {report.id}
+        cursor = predecessor
+        while cursor.revision_of:
+            if cursor.id in seen:
+                raise CatalogError(f"report revision chain contains a cycle at {cursor.id}")
+            seen.add(cursor.id)
+            cursor = report_by_id.get(cursor.revision_of)  # type: ignore[assignment]
+            if cursor is None:
+                break
     return tuple(reports)
 
 

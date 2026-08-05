@@ -1,0 +1,60 @@
+{% from "_navigation.html" import sidebar %}
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ report.summary }}">
+  <meta name="theme-color" content="#f7f8f5">
+  <title>{{ report.title }} · Jialu Gao Research</title>
+  <style>{{ inline_css }}</style>
+</head>
+<body class="report-page">
+  <a class="skip-link" href="#main-content">跳到正文</a>
+  <header class="site-header" data-auto-hide>
+    <a class="brand" href="{{ root_url }}"><span class="brand-mark">JG</span><span class="brand-copy"><strong>Jialu Gao</strong><small>Research index</small></span></a>
+    <nav class="top-nav" aria-label="主导航">
+      <a href="{{ root_url }}">研究</a>
+      <a class="is-active" aria-current="page" href="{{ root_url }}reports/">报告</a>
+      <a href="https://github.com/jialugao19">GitHub <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <details class="mobile-navigation">
+    <summary>研究目录</summary>
+    {{ sidebar(catalog, root_url, report.project, report.id, "reports") }}
+  </details>
+  <details class="mobile-toc-navigation">
+    <summary>本页章节</summary>
+    <nav>{% for item in toc %}<a class="toc-level-{{ item.level }}" href="#{{ item.anchor }}">{{ item.title }}</a>{% endfor %}</nav>
+  </details>
+  <div class="doc-layout">
+    <aside class="doc-sidebar">{{ sidebar(catalog, root_url, report.project, report.id, "reports") }}</aside>
+    <main id="main-content" class="doc-main">
+      <article class="report-document">
+        <p class="breadcrumb"><a href="{{ root_url }}reports/">研究报告</a> / <a href="{{ root_url }}projects/{{ project.id }}/">{{ project.title }}</a></p>
+        <header class="report-header">
+          <p class="eyebrow">RESEARCH REPORT <span>研究报告 · V2</span></p>
+          <h1>{{ report.title }}</h1>
+          <p class="lead">{{ report.summary }}</p>
+          <div class="report-meta">
+            <time datetime="{{ report.display_date }}">{{ report.display_date }}</time>
+            <span>{{ project.title }}</span>
+            {% if report.subproject %}<span>{{ report.subproject }}</span>{% endif %}
+            {% for tag in report.tags %}<span class="report-tag">#{{ tag }}</span>{% endfor %}
+          </div>
+          {% if predecessor %}<a class="history-link" href="{{ root_url }}{{ predecessor.route }}">查看历史原版 ↗</a>{% endif %}
+        </header>
+        <div class="report-body markdown">{{ body_html }}</div>
+      </article>
+      <footer class="site-footer"><p><span>Jialu Gao · Research index</span><span>数据更新 {{ site_updated }} · <a href="https://github.com/jialugao19">GitHub</a></span></p></footer>
+    </main>
+    <aside class="doc-toc" aria-label="本页目录">
+      <strong>本页目录</strong>
+      <nav>
+        {% for item in toc %}<a class="toc-level-{{ item.level }}" href="#{{ item.anchor }}">{{ item.title }}</a>{% endfor %}
+      </nav>
+    </aside>
+  </div>
+  <script>{{ inline_js }}</script>
+</body>
+</html>

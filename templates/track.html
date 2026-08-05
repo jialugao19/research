@@ -4,42 +4,59 @@
 {% block content %}
 <section class="page-hero shell">
   <p class="breadcrumb"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a> / 子项目</p>
-  <div class="page-title-line"><div><p class="eyebrow">{{ track.id }}</p><h1>{{ track.title }}</h1></div><strong>{{ studies|length }}</strong></div>
+  <div class="page-title-line"><div><h1>{{ track.title }}</h1></div></div>
   <p class="lead">{{ track.description }}</p>
 </section>
 
-<section class="shell section compact review-overview single-overview">
-  <article><p class="eyebrow">OBJECTIVE</p><h2>研究目标</h2><p>{{ track.objective }}</p></article>
+<section id="track-overview" class="shell section compact track-foundation">
+  <article>
+    <h2>研究目标</h2>
+    <p>{{ track.objective }}</p>
+    <ul class="prose-list">{% for detail in track.objective_details %}<li>{{ detail }}</li>{% endfor %}</ul>
+  </article>
+  <article id="track-data-structure">
+    <h2>数据结构</h2>
+    <ul class="prose-list">{% for detail in track.data_structure %}<li>{{ detail }}</li>{% endfor %}</ul>
+  </article>
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">LATEST EVIDENCE</p><h2>当前结论</h2></div></div>
-  <div class="study-grid">{% for study in featured_studies %}{{ study_card(study, catalog, base_url, maturity_labels, status_labels) }}{% endfor %}</div>
+<section id="track-evidence" class="shell section compact">
+  <div class="section-heading"><div><h2>当前结论</h2><p class="section-intro">{{ track.conclusion }}</p></div></div>
+  <div class="study-grid">{% for study in featured_studies %}{{ study_card(study, catalog, base_url) }}{% endfor %}</div>
 </section>
 
 {% if subprojects %}
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">TOPICS</p><h2>实验专题</h2></div></div>
-  <div class="subproject-grid">
-    {% for subproject in subprojects %}
-    {% set topic_studies = catalog.studies_for_subproject(project.id, subproject.id) %}
-    <a class="subproject-card" href="{{ base_url }}projects/{{ project.id }}/{{ subproject.id }}/">
-      <span>{{ topic_studies|length }} studies</span>
-      <strong>{{ subproject.title }}</strong>
-      <small>{{ subproject.description }}</small>
-    </a>
+<section id="track-topics" class="shell section compact">
+  <div class="section-heading"><div><h2>实验专题</h2><p class="section-intro">按研究问题分组，而不是按目录名平铺；每个专题保留独立的目标、实验记录和报告入口。</p></div></div>
+  <div class="topic-groups">
+    {% for group in subproject_groups %}
+    <section class="topic-group">
+      <div class="topic-group-heading"><h3>{{ group.title }}</h3><span>{{ group.subprojects|length }} 个专题</span></div>
+      <div class="subproject-grid">
+        {% for subproject in group.subprojects %}
+        {% set topic_studies = catalog.studies_for_subproject(project.id, subproject.id) %}
+        <a class="subproject-card" href="{{ base_url }}projects/{{ project.id }}/{{ subproject.id }}/">
+          <span>{{ topic_studies|length }} 个实验</span>
+          <strong>{{ subproject.title }}</strong>
+          <small>{{ subproject.description }}</small>
+        </a>
+        {% endfor %}
+      </div>
+    </section>
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">EXPERIMENT TIMELINE</p><h2>完整实验记录</h2></div><p>不同数据、split 或选择政策的结果会明确标记为不可比较。</p></div>
-  {{ study_timeline(studies, catalog, base_url, maturity_labels, status_labels) }}
+<section id="track-process" class="shell section compact">
+  <div class="section-heading"><div><h2>完整实验记录</h2></div><p>不同数据、split 或选择政策的结果会明确标记为不可比较。</p></div>
+  {{ study_timeline(studies, catalog, base_url) }}
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">REPORTS</p><h2>关联报告</h2></div></div>
-  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time>{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>暂无公开报告</strong><p>该研究线已有实验记录，但还没有通过公开发布门禁的静态报告。</p></div>{% endif %}
+<section id="track-reports" class="shell section compact">
+  <div class="section-heading"><div><h2>关联报告</h2></div></div>
+  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}" aria-label="阅读 {{ report.title }}">阅读</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>暂无公开报告</strong><p>该研究线已有实验记录，但还没有通过公开发布门禁的静态报告。</p></div>{% endif %}
 </section>
 {% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>本页目录</strong><nav><a href="#track-overview">研究目标</a><a href="#track-data-structure">数据结构</a><a href="#track-evidence">当前结论</a>{% if subprojects %}<a href="#track-topics">实验专题</a>{% endif %}<a href="#track-process">实验记录</a><a href="#track-reports">关联报告</a></nav>{% endblock %}

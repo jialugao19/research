@@ -5,20 +5,19 @@
 <section class="page-hero shell">
   <p class="breadcrumb"><a href="{{ base_url }}">项目</a> / {{ catalog.category_by_id[project.category].title }}</p>
   <div class="page-title-line">
-    <div><span class="status status-{{ project.status }}">{{ project.status }}</span><h1>{{ project.title }}</h1></div>
-    <strong>{{ studies|length }}</strong>
+    <div><h1>{{ project.title }}</h1></div>
   </div>
   <p class="lead">{{ project.description }}</p>
 </section>
 
-<section class="shell section compact review-overview">
-  <article><p class="eyebrow">OBJECTIVE</p><h2>研究目标</h2><p>{{ project.objective }}</p></article>
-  <article><p class="eyebrow">CURRENT REVIEW</p><h2>当前判断</h2><p>{{ project.review_summary }}</p></article>
+<section id="overview" class="shell section compact review-overview">
+  <article><h2>研究目标</h2><p>{{ project.objective }}</p></article>
+  <article><h2>当前判断</h2><p>{{ project.review_summary }}</p></article>
 </section>
 
 {% if project.tracks %}
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">RESEARCH TRACKS</p><h2>子项目</h2></div><p>1min 与 1s 使用独立实验时间线和评价口径。</p></div>
+<section id="tracks" class="shell section compact">
+  <div class="section-heading"><div><h2>子项目</h2></div><p>1min 与 1s 使用独立实验时间线和评价口径。</p></div>
   <div class="track-grid">
     {% for track in project.tracks %}
     {% set track_studies = catalog.studies_for_track(project.id, track.id) %}
@@ -26,36 +25,36 @@
       <span>{{ track_studies|length }} 个实验</span>
       <h3>{{ track.title }}</h3>
       <p>{{ track.description }}</p>
-      <strong>查看子项目 →</strong>
+      <strong>查看子项目</strong>
     </a>
     {% endfor %}
   </div>
 </section>
 {% endif %}
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">LATEST EVIDENCE</p><h2>最新结论与指标</h2></div><p>指标必须和样本、seed、成本与证据成熟度一起阅读。</p></div>
+<section id="evidence" class="shell section compact">
+  <div class="section-heading"><div><h2>最新结论与指标</h2></div><p>指标必须和样本、seed、成本与证据成熟度一起阅读。</p></div>
   <div class="study-grid">
     {% for study in featured_studies %}
-      {{ study_card(study, catalog, base_url, maturity_labels, status_labels) }}
+      {{ study_card(study, catalog, base_url) }}
     {% endfor %}
   </div>
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">EXPERIMENT TIMELINE</p><h2>研究过程</h2></div><p>展开查看历史、诊断、受阻和归档实验。</p></div>
-  {{ study_timeline(studies, catalog, base_url, maturity_labels, status_labels) }}
+<section id="process" class="shell section compact">
+  <div class="section-heading"><div><h2>研究过程</h2></div><p>展开查看历史、诊断、受阻和归档实验。</p></div>
+  {{ study_timeline(studies, catalog, base_url) }}
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">REPORT TIMELINE</p><h2>公开报告</h2></div></div>
+<section id="project-reports" class="shell section compact">
+  <div class="section-heading"><div><h2>公开报告</h2></div></div>
   {% if reports %}
   <div class="report-list">
     {% for report in reports %}
     <article class="report-row">
       <time datetime="{{ report.display_date }}">{{ report.display_date }}</time>
       <div><p class="meta">{% if report.subproject %}{{ report.subproject }}{% else %}project report{% endif %}</p><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div>
-      <a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a>
+      <a class="open-report" href="{{ base_url }}{{ report.route }}" aria-label="阅读 {{ report.title }}">阅读</a>
     </article>
     {% endfor %}
   </div>
@@ -64,3 +63,5 @@
   {% endif %}
 </section>
 {% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>本页目录</strong><nav><a href="#overview">研究目标</a>{% if project.tracks %}<a href="#tracks">子项目</a>{% endif %}<a href="#evidence">最新证据</a><a href="#process">研究过程</a><a href="#project-reports">公开报告</a></nav>{% endblock %}

@@ -33,12 +33,12 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: reference-baseline
-    title: B+VWAP Signal Baseline
+    title: B+VWAP 信号基线
     status: completed
     maturity: signal-only
     updated_at: 2026-07-21
-    objective: 在完全相同的 paired_vwap_valid 行集合上比较 VWAP 标签和 close control。
-    summary: B+VWAP seed13 test IC 为 0.07445，相同样本 close control 为 0.06051，三 seed 配对差值均为正。
+    objective: 旧基线使用 close 收益作为监督目标，但收盘价标签与可执行成交区间并不完全一致。为判断改进究竟来自标签定义还是样本变化，本实验固定 paired_vwap_valid 有效行集合，只把未来收益端点替换为 VWAP，并保留相同行集合上的 close 标签作为配对对照。
+    summary: 实验在相同数据切分和训练协议下分别训练 VWAP 与 close 版本，并用三个随机种子复核差值。seed13 的 VWAP test IC 为 0.07445，close control 为 0.06051，差值为 0.01395；其余两个 seed 的配对差值也为正。信号改善成立，但 10 分钟成本后年化收益仍为负，因此结果只支持更新信号基线。
     decision: 晋升为当前信号基线，但不晋升为 execution-ready 组合基线。
     caveats:
       - 缺少原生 inference_test manifest，当前执行与成本门槛未通过。
@@ -76,12 +76,12 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: optimize-1min-model
-    title: 1min Model Structure Final Evaluation
+    title: 分钟级模型结构最终评估
     status: completed
     maturity: decision-ready
     updated_at: 2026-07-25
-    objective: 在多 seed 最终评估中比较 last-hidden 与 attention，并控制模型容量。
-    summary: GRU192×2 last-hidden 在三个 seed 的 test pooled IC 和 Rank IC 上全部胜出，且参数量约为旧大模型的五分之一。
+    objective: 旧默认模型使用 GRU384×2 和两层 512 单元 MLP，约有 181 万个参数，但更大的容量没有自动带来更稳定的样本外信号。实验先在统一训练预算下筛选 18 个较小的 GRU/MLP 结构，再固定候选，用 seeds 7、11、13 比较 GRU192×2 的 last-hidden 表示与 attention 表示，确认结构收益不是单个随机种子的偶然结果。
+    summary: 三个随机种子的最终评估中，GRU192×2 last-hidden 的 test pooled IC 和 Rank IC 均高于 attention 对照；pooled IC 均值为 0.07895，Rank IC 均值为 0.04651，而 attention 的 test IC 为 0.07066。保留模型有 342,337 个参数，约为旧模型的五分之一，在缩小容量的同时提高了多 seed 信号表现。
     decision: 保留 GRU192×2 MLP[] last-hidden；不晋升 attention 或 TCN。
     caveats:
       - 该结论是结构与信号选择，不是成本后交易证明。
@@ -109,7 +109,7 @@ studies:
         value: 342337
         format: integer
         context: retained last-hidden model
-    report_ids: [0725-1min-model-screening]
+    report_ids: [0725-1min-model-screening-v2]
     evidence_ref: exp-nn/0-select&report/experiments/optimize-1min-model/results.yaml
     featured: true
 
@@ -147,12 +147,12 @@ studies:
     project: prediction-nn
     track: one-second
     subproject: baseline-1s-0720
-    title: Stock1s Fold0 GRU384 Evaluation
+    title: 秒级 GRU384 基线评估
     status: doing
     maturity: developmental
     updated_at: 2026-08-02
-    objective: 建立 stock1s/v2 特征、模型、fold 评估和成本换手的独立基线。
-    summary: 最新 fold0 test pooled IC 为 0.09842、Rank IC 为 0.09469；当前成本后方案仍显著为负。
+    objective: 秒级数据包含成交、盘口和委托流，信息量与噪声、换手都明显高于分钟级主线，因此不能沿用 1min 的结论。本实验先对 stock1s/v2 的 78 维去重特征完成 fold0 数据审计，再训练 GRU384 与双层 MLP512×512，并把逐样本信号、重要股票池聚合及 10 分钟成本后组合放在同一评价链路中。
+    summary: fold0 测试集包含约 794.8 万个有效评价行，test pooled IC 为 0.09842，Rank IC 为 0.09469，说明模型输出与未来收益存在较强横截面相关性。但成本后候选使用了 test 参与选择，且 10 分钟成本后日均收益为 -0.168%、Sharpe 为 -18.27；当前结果只能证明信号链路值得继续研究，不能证明可交易性。
     decision: 保持 1s 独立研究线，修正选择协议并降低换手后再讨论晋升。
     caveats:
       - 成本换手候选使用 test 参与选择，不能作为正式晋升证据。
@@ -189,7 +189,7 @@ studies:
         decimals: 2
         unit: x
         context: c60_top05
-    report_ids: [0730-stock1s-feature-health, 0802-stock1s-gru384]
+    report_ids: [0730-stock1s-feature-health-v2, 0802-stock1s-gru384-v2]
     evidence_ref: public-report/0802-stock1s-gru384
     featured: true
 
@@ -376,12 +376,12 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: validation
-    title: Robust Checkpoint Selector
+    title: 稳健 Checkpoint 选择规则
     status: completed
     maturity: decision-ready
     updated_at: 2026-06-29
-    objective: 用多时期 validation 证据替代 validation argmax。
-    summary: 三折、最后 20 日、IC mean−0.5 std、earliest top-2 选择 20k checkpoint，test regret 为 0。
+    objective: 如果直接选择单个 validation 窗口上 IC 最高的 checkpoint，结果容易追随短期噪声，并在反复查看 test 后形成隐性过拟合。本实验把 checkpoint 选择改为多时期规则：同时考察三个 rolling/purged validation fold 和最后 20 个交易日，用 IC 均值减去 0.5 倍标准差衡量表现与稳定性，再从前两名中选择更早的 checkpoint。
+    summary: 新规则在不读取 test 排名的情况下选择 20k checkpoint，并把 30k 保留为更激进的对照。一次性 test 审计中，20k 相对事后最优 checkpoint 的 regret 为 0，说明保守选择没有损失本次测试表现；这一结果支持固定 selector，但同一 test 不应继续用于迭代规则。
     decision: 使用 20k robust default；30k 只保留为 aggressive comparison。
     caveats:
       - 同一 test audit 不应被反复用于继续调 selector。
@@ -619,7 +619,7 @@ studies:
         format: decimal
         decimals: 4
         context: 不可归因的观察值
-    report_ids: [0702-l2-ablation]
+    report_ids: [0702-l2-ablation-v2]
     evidence_ref: exp-nn/0-select&report/experiments/l2-features/results.yaml
     featured: false
 
@@ -714,7 +714,7 @@ studies:
         format: percent
         decimals: 2
         context: piecewise mapping
-    report_ids: [0502-index-6backtest]
+    report_ids: [0502-index-6backtest-v2]
     evidence_ref: public-report/0502-index-6backtest
     featured: true
 
@@ -754,7 +754,7 @@ studies:
         value: 1
         format: integer
         context: 2025–2026 frozen test
-    report_ids: [0731-limit-t1-strategy]
+    report_ids: [0731-limit-t1-strategy-v2]
     evidence_ref: public-report/0731-limit-t1-strategy
     featured: true
 
@@ -892,6 +892,12 @@ studies:
         value: 54176260
         format: integer
         context: v16 full rerun
+      - id: v13-candidate-mismatch
+        label: v13 candidate mismatch
+        value: 24.2637
+        format: percent
+        decimals: 4
+        context: truth-assisted legal boundary
       - id: candidate-mismatch
         label: Candidate mismatch
         value: 24.0992
@@ -977,15 +983,17 @@ studies:
 
   - id: tdx-data-source-v1
     project: tdx-data-source
-    title: TDX Data Source v1 Capability Review
+    title: TDX Data Source Capability and Load Review
     status: doing
-    maturity: developmental
-    updated_at: 2026-08-02
-    objective: 提供 A 股发现、实时逐笔和历史逐笔的一致数据接口。
-    summary: v1 已实现多 endpoint 长连接、实时 NDJSON/WebSocket 和历史逐笔查询。
-    decision: 作为数据基础设施继续测试；不在缺少运行审计时声明吞吐、延迟或市场覆盖率。
+    maturity: diagnostic
+    updated_at: 2026-08-05
+    objective: 验证直接一分钟 K 线、能力感知实时逐笔、历史 quorum 归档和 ExHQ 期货服务的运行边界。
+    summary: 三个独立逐笔 endpoint 对 1,800 标的的连续 sweep 均为 1,800 非空、0 失败，p95 1.289 秒；5,211 只全市场 sweep 为 5,199 非空、12 合法空响应、0 失败，p95 3.638 秒。
+    decision: 逐笔池可按 10 秒 cadence 继续 audit；live-predictor 主链路仍使用直接一分钟 K 线，单有效 bar endpoint 不宣称高可用。
     caveats:
-      - v1 不内置 auth/TLS，对外暴露前需要可信代理。
+      - 直接 K 线当前只有一个有效 endpoint，属于单一 failure domain。
+      - 逐笔 snapshot 没有 trade id 或秒级交易时间，完整性仍依赖 overlap 与有界 backfill。
+      - 服务不内置 auth/TLS，对外暴露前需要可信代理。
     metrics:
       - id: quorum-threshold
         label: History quorum
@@ -993,8 +1001,27 @@ studies:
         format: integer
         unit: / 3
         context: exact response agreement
+      - id: transaction-endpoints
+        label: Valid transaction endpoints
+        value: 3
+        format: integer
+        context: independent endpoint failure domains
+      - id: basket-sweep-p95
+        label: 1,800-symbol sweep p95
+        value: 1.289
+        format: number
+        decimals: 3
+        unit: s
+        context: three consecutive complete sweeps
+      - id: market-sweep-p95
+        label: 5,211-symbol sweep p95
+        value: 3.638
+        format: number
+        decimals: 3
+        unit: s
+        context: 5,199 nonempty, 12 valid empty, 0 failed
     report_ids: []
-    evidence_ref: tdx-data-source/README.md
+    evidence_ref: tdx-data-source/doc/design.md
     featured: true
 
   - id: snapshot-visualizer-evidence
@@ -1032,6 +1059,47 @@ studies:
         context: project-local HTML reports
     report_ids: []
     evidence_ref: webpage5/factors
+    featured: true
+
+  - id: live-predictor-live-quality
+    project: live-predictor
+    title: 2026-08-05 Live Prediction Quality
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-08-05
+    objective: 验证 1,800 只成分股的直接分钟数据、模型推理、三 ETF 聚合和因果事后评价链路。
+    summary: 10:39–11:30 共生成 156 条三 ETF 预测，在 13:10 水位下全部成熟；1,800 只证券成功、0 失败，上午合计方向胜率 48.98%。
+    decision: 数据与评估链路通过本次门禁；模型保持 shadow_candidate 和 non-actionable，不进入纸面或实盘执行。
+    caveats:
+      - 只有一个有效直接 K 线 endpoint，吞吐通过不代表节点级高可用。
+      - 单日上午和互相重叠的十分钟窗口不能支持稳定性或显著性结论。
+      - 成分篮子收益不等于 ETF 实际可成交收益。
+    metrics:
+      - id: predictions
+        label: Matured predictions
+        value: 156
+        format: integer
+        context: 52 minutes × 3 ETFs
+      - id: successful-symbols
+        label: Successful symbols
+        value: 1800
+        format: integer
+        context: direct-bar backfill gate
+      - id: request-throughput
+        label: Direct-bar throughput
+        value: 542.35
+        format: number
+        decimals: 2
+        unit: symbols/s
+        context: one effective endpoint
+      - id: morning-win-rate
+        label: Morning direction win rate
+        value: 48.98
+        format: percent
+        decimals: 2
+        context: 48 correct / 98 decided
+    report_ids: [0805-live-predictor-quality]
+    evidence_ref: live-predictor/reports/20260805T140155+0800_report.html
     featured: true
 
   - id: deep-ml-content

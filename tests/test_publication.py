@@ -5,8 +5,11 @@ from pathlib import Path
 import pytest
 
 from research_site.catalog import Catalog, CatalogError, Report, load_catalog
-from research_site.publication import publish_reports, sanitize_report, validate_public_reports
-
+from research_site.publication import (
+    publish_reports,
+    sanitize_report,
+    validate_public_reports,
+)
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 
@@ -43,7 +46,9 @@ def test_sanitize_report_redacts_local_roots() -> None:
 def test_committed_public_reports_are_safe() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     results = validate_public_reports(catalog, SITE_ROOT / "public" / "reports")
-    assert {result.report_id for result in results} == {report.id for report in catalog.reports}
+    assert {result.report_id for result in results} == {
+        report.id for report in catalog.reports if not report.is_markdown
+    }
     assert all(len(result.published_sha256) == 64 for result in results)
 
 

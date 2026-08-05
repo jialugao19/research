@@ -25,85 +25,120 @@ projects:
       - id: one-minute
         title: 1min 预测研究
         description: 基于 stock1m 的标签、模型结构、损失函数、采样、checkpoint 选择与泛化研究。
-        objective: 在统一数据、切分与选择协议下建立可复用的分钟级信号基线，并逐步验证成本和执行可行性。
+        objective: 分钟级研究要回答的不是“某次训练能否得到较高 IC”，而是只使用预测时点之前可获得的 A 股行情，能否稳定预测未来一段持有期的横截面收益。研究先固定数据、标签、时间切分和 checkpoint 选择协议，再分别检验模型结构、损失函数、样本处理与特征扩展；信号相关性、成本后组合收益和执行可行性始终作为三个不同层级的证据。
+        objective_details:
+          - 可比较性：所有候选必须在相同样本行、时间切分、训练预算和选择规则下比较，避免把数据口径变化误判成模型改进。
+          - 稳健性：关键结论需要跨随机种子、滚动时期和相邻 checkpoint 复核，单次 test 最优值只作诊断，不直接决定默认方案。
+          - 可执行性：模型先通过 pooled IC 与 Rank IC 的信号门槛，再独立检查换手、交易成本、滑点和样本外稳定性；离线信号胜出不等于策略可以上线。
+        data_structure:
+          - 样本索引：基础数据按交易日、分钟和证券组织，每个样本都能追溯到确定的时间点与证券；训练、验证和测试按交易日分段，避免同一时间邻域跨集合泄漏。
+          - 模型输入：序列模型接收“批次 × 时间步 × 特征”的三维张量。模型结构实验使用 60 个分钟时间步和 14 个市场特征；其他专题若改变特征或窗口，会在各自实验记录中单独标明。
+          - 标签与对照：当前主线使用未来 10 分钟 VWAP 收益标签、1 分钟 entry lag 和 paired_vwap_valid 有效行集合，同时保留相同行集合上的 close 标签作为配对对照。
+          - 评估产物：每个实验保存配置、checkpoint、分集合预测与聚合指标。特征和标签归一化只从训练集估计，validation 用于选择，test 只用于最终审计。
+        conclusion: 当前证据支持以 B+VWAP 作为分钟级信号基线，以 GRU192×2 的 last-hidden 表示作为默认小模型，并使用 20k robust checkpoint 作为保守选择。三项结论都来自配对样本、多 seed 或多时期验证，但目前只能说明信号和选择协议更稳健；现有成本后结果尚未证明该模型可以进入交易执行。
       - id: one-second
         title: 1s 预测研究
         description: 基于 stock1s/v2 的秒级特征、模型、fold 评估以及换手和成本研究。
-        objective: 建立与 1min 完全分离的秒级实验体系，在信号、稳定性和成本门槛同时满足后再讨论晋升。
+        objective: 秒级研究用于判断更高频的逐秒成交、盘口和委托信息，是否能在分钟级主线之外提供稳定的增量预测能力。它使用独立的数据集、特征契约、fold 和成本评价，不把分钟级实验的参数或结论直接迁移过来；只有信号、选择稳定性和成本后表现同时通过，才讨论进一步晋升。
+        objective_details:
+          - 数据有效性：先验证逐秒文件、特征覆盖、缺失模式和标签端点，再进行模型比较，防止模型把数据缺口或市场时段编码成伪信号。
+          - 选择纪律：checkpoint、阈值和组合候选必须由 train/validation 决定，test 只保留作一次性评价，避免当前候选使用 test 参与选择的问题继续扩大。
+          - 交易门槛：除 pooled IC 与 Rank IC 外，同时报告换手、成本后日均收益和 Sharpe；高频信号若无法覆盖成本，不视为有效晋升。
+        data_structure:
+          - 样本索引：stock1s/v2 以交易日、秒级时间点和证券为主键，fold0 的 train、validation、test 分开保存和审计。
+          - 特征向量：当前基线包含 78 维去重特征，覆盖短窗收益与波动、成交强度、盘口价差与深度、报价质量以及委托流；各字段都保留缺失与可用性语义。
+          - 模型与标签：秒级特征序列输入 GRU384 与双层 MLP512×512 预测头，标签和评价端点按独立秒级协议生成，不与 1min 标签混用。
+          - 评价产物：除逐样本预测外，还生成分组信号指标、重要股票池聚合、换手和成本结果；这些产物共同决定实验是否具备继续比较的资格。
+        conclusion: fold0 的秒级模型已经显示较高的 test pooled IC 与 Rank IC，但组合候选曾使用 test 参与选择，且 10 分钟成本后日均收益和 Sharpe 仍为负。因此当前结论是“数据与信号链路值得继续研究”，而不是“秒级模型已经可交易”；下一步必须先修正选择协议并降低换手。
     subprojects:
       - id: reference-baseline
-        title: Reference Baseline
+        title: 参考基线
         track: one-minute
+        group: 基线与模型设计
         description: 分钟级参考基线、标签端点和当前可比较信号锚点。
         objective: 固定可复刻基线，并明确从信号基线到执行基线仍缺少的门槛。
       - id: optimize-1min-model
         title: 1 分钟模型结构
         track: one-minute
+        group: 基线与模型设计
         description: 比较 GRU、pooling、MLP 和 TCN 结构的容量、稳定性与测试表现。
         objective: 在多 seed 证据下选择更小、更稳定的分钟级模型结构。
       - id: loss-function-1min
         title: 1 分钟损失函数
         track: one-minute
+        group: 基线与模型设计
         description: 比较 MSE、相关性、moment 和输出尺度约束损失。
         objective: 改善信号 IC 与预测尺度，同时避免单 seed 结果被误当作最终晋升。
       - id: learning-rate
         title: 学习率与调度器
         track: one-minute
+        group: 基线与模型设计
         description: 固定训练步数下的学习率、多 seed 稳定性和调度器筛选。
         objective: 为后续实验固定稳定的优化器学习率与 scheduler 配置。
       - id: validation
         title: 验证与 Checkpoint 选择
         track: one-minute
+        group: 验证、选择与稳健性
         description: rolling/purged 验证、窗口选择和稳健 checkpoint selector。
         objective: 避免 validation argmax 和重复查看 test 造成的选择偏差。
       - id: capacity-robust-sampling
         title: 容量与稳健采样
         track: one-minute
+        group: 验证、选择与稳健性
         description: 研究模型容量、dropout、稳健损失和去相关采样对早期过拟合的影响。
         objective: 判断哪些机制能减缓晚期 checkpoint 退化，并为多时期验证提供候选。
       - id: prediction-calibration
         title: 标签与预测校准
         track: one-minute
+        group: 数据、标签与样本处理
         description: 比较 close、VWAP、波动率归一化与 impact 权重对 IC 和校准的影响。
         objective: 在相同行样本上降低标签噪声，并把信号提升与校准门槛分开判断。
       - id: generalization
         title: 泛化与稳健性
         track: one-minute
+        group: 验证、选择与稳健性
         description: 滚动年份、采样步长、相邻窗口、多 seed 和 checkpoint 曲线诊断。
         objective: 验证研究结论能否跨时间和 seed 保持，并标记 test 暴露的诊断结果。
       - id: limit-pool
         title: 涨跌停样本池
         track: one-minute
+        group: 数据、标签与样本处理
         description: 比较 all、touch 和 limit 样本池以及测试全集诊断。
         objective: 判断涨跌停历史过滤能否在相同评价口径下改善信号质量。
       - id: near-zero-filter
         title: 近零过滤
         track: one-minute
+        group: 数据、标签与样本处理
         description: 比较收益特征精确零和近零样本过滤对 IC、命中率与样本保留率的影响。
         objective: 找到能够提高预测质量且不过度改变有效样本分布的过滤规则。
       - id: zero-aware-normalization
         title: 零值感知归一化
         track: one-minute
+        group: 数据、标签与样本处理
         description: 比较零值指示、分段标准化、hurdle 和 jitter 变换。
         objective: 评估零值结构的建模方式，并要求无变换 control 后再做提升结论。
       - id: l2-features
         title: L2 特征
         track: one-minute
+        group: 特征扩展与组合验证
         description: 研究 snapshot fast12 等 L2 衍生特征相对 stock1m baseline 的贡献。
         objective: 在一致 checkpoint 候选政策下完成可归因的 L2 特征消融。
       - id: feature-cleaning
         title: 特征清洗
         track: one-minute
+        group: 数据、标签与样本处理
         description: 历史特征清洗 bundle 与数据质量研究。
         objective: 保存历史证据，并在复刻配置和 artifact 完整时才恢复为当前基线。
       - id: integration
         title: 组合集成
         track: one-minute
+        group: 特征扩展与组合验证
         description: 把 touch、near-zero、学习率等单项改进放入统一矩阵验证。
         objective: 检验局部改进能否组合成立，并保留负结果和重跑要求。
       - id: baseline-1s-0720
         title: 1 秒数据基线
         track: one-second
+        group: 秒级基线与执行验证
         description: stock1s/v2 数据、特征健康、GRU 模型、fold 评估和成本换手研究。
         objective: 建立秒级独立基线，并在预声明选择和成本后收益通过前保持研究状态。
   - id: index500-predict
@@ -190,9 +225,9 @@ projects:
     title: TDX Data Source
     category: data
     status: active
-    description: Clean-room Go 实现的 A 股数据源，提供标的发现、实时逐笔流和基于 2-of-3 exact quorum 的历史逐笔查询。
-    objective: 提供连接、重连、并发和数据一致性规则显式可控的 TDX 实时与历史逐笔接口。
-    review_summary: 已实现实时 snapshot、WebSocket 和历史逐笔查询；当前页面展示实现能力，不宣称未经运行审计的吞吐或覆盖结果。
+    description: Clean-room Go 市场数据源，提供 A 股发现、直接一分钟 K 线、能力感知实时逐笔、2-of-3 历史归档，以及独立的 ExHQ IF/IC/IM 期货服务。
+    objective: 提供能力、连接、重连、并发、完整性和一致性规则显式可控的 TDX 股票与股指期货接口。
+    review_summary: 08-05 三个独立逐笔 endpoint 的 1,800 标的连续 sweep 为 1,800 非空、0 失败，p95 1.289 秒；直接 K 线仍只有一个有效 endpoint，属于单点故障域。
     source_refs: [tdx-data-source]
   - id: snapshot-visualizer2
     title: Snapshot Visualizer
@@ -210,6 +245,14 @@ projects:
     objective: 用统一表达式和 artifact contract 串联因子生成、评估、比较和展示。
     review_summary: 项目目录中已有 7 份因子评估报告输出；批量缓存的项目归属仍需确认后再纳入公开统计。
     source_refs: [webpage5]
+  - id: live-predictor
+    title: Live Predictor
+    category: platform
+    status: active
+    description: 消费 TDX 一分钟数据，执行冻结的 Prediction-NN 模型，聚合三只 ETF 成分篮子预测，并记录因果事后收益、运行质量和研究报告。
+    objective: 建立从实时数据门禁、模型推理、持久化到 shadow 评价的可审计闭环，并在证据充分前保持 non-actionable。
+    review_summary: 08-05 上午 1,800 只证券全部通过数据门禁并生成 156 条已成熟预测；合计方向胜率 48.98%，历史极端尾部表现不一致，当前只支持研究监控。
+    source_refs: [live-predictor]
   - id: deep-ml
     title: Deep-ML Knowledge Base
     category: platform

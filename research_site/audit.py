@@ -82,7 +82,7 @@ def audit_report_ownership(
             for path in _html_files(workspace_root / source_ref, max_bytes=max_bytes):
                 current_by_hash[_hash(path)].append((project.id, path))
     central_by_hash = _central_catalog_by_hash(central_catalog)
-    manifest_by_file = {report.source_file: report for report in catalog.reports}
+    manifest_by_file = {report.source_file: report for report in catalog.reports if report.source_file}
     matches: list[AuditMatch] = []
     for source_path in sorted(archive_root.iterdir(), key=lambda path: path.name):
         if not source_path.is_file() or source_path.suffix.lower() not in {".html", ".mhtml"}:

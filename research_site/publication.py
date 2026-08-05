@@ -1,13 +1,12 @@
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass
 from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
-import re
 
 from .catalog import Catalog, CatalogError, Report
-
 
 MAX_REPORT_BYTES = 25 * 1024 * 1024
 FORBIDDEN_PUBLIC_BYTES = (
@@ -153,10 +152,24 @@ def _validate_public_copy(report: Report, data: bytes) -> None:
             raise CatalogError(f"report {report.id} public copy contains forbidden token {forbidden!r}")
 
 
+def validate_rendered_markdown_report(report: Report, data: bytes) -> None:
+    """Validate one generated Markdown report as a self-contained HTML document."""
+    _validate_public_copy(report, data)
+    scanner = _RenderingResourceScanner()
+    scanner.feed(data.decode("utf-8", errors="ignore"))
+    if scanner.errors:
+        raise CatalogError(f"report {report.id}: {scanner.errors[0]}")
+    if b"<img " not in data or b"data:image/" not in data:
+        raise CatalogError(f"report {report.id} generated page has no embedded raster report images")
+
+
 def publish_reports(catalog: Catalog, archive_root: Path, public_root: Path) -> list[PublicationResult]:
     """Create deterministic, sanitized public copies for every manifest report."""
     results: list[PublicationResult] = []
     for report in catalog.reports:
+        if report.is_markdown:
+            continue
+        assert report.source_file is not None and report.source_sha256 is not None
         source_path = archive_root / report.source_file
         try:
             source_data = source_path.read_bytes()
@@ -185,6 +198,9 @@ def validate_public_reports(catalog: Catalog, public_root: Path) -> list[Publica
     """Validate committed public copies against the immutable source hashes contract."""
     results: list[PublicationResult] = []
     for report in catalog.reports:
+        if report.is_markdown:
+            continue
+        assert report.source_file is not None and report.source_sha256 is not None
         destination_path = public_root / report.project / report.id / "index.html"
         try:
             data = destination_path.read_bytes()

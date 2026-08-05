@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 reports:
   - id: 0502-index-6backtest
     project: index500-predict
@@ -70,3 +70,63 @@ reports:
     match_method: sha256
     match_evidence: exp-nn/baseline-1s-0720/report/fold0_dedup67_gru384_mlp512x512
     source_sha256: c9bfe87a9ca6165b86bacdecff42886b288fa5ec6919be8b32db165623ef7350
+  - id: 0502-index-6backtest-v2
+    project: index500-predict
+    format: markdown
+    content_file: report-docs/index500-predict/0502-index-6backtest-v2/report.md
+    bundle_sha256: b41ae66089300c7ca607d913172913486fdce9e10498b283f0f726e9646ae128
+    revision_of: 0502-index-6backtest
+    match_method: manual
+    match_evidence: research-site/report-migration/0502-index-6backtest
+  - id: 0702-l2-ablation-v2
+    project: prediction-nn
+    subproject: l2-features
+    format: markdown
+    content_file: report-docs/prediction-nn/0702-l2-ablation-v2/report.md
+    bundle_sha256: 65e79f3fd811603e2b8434ec25deaa49c43f18b22bb96c0315ac8cea130bbd24
+    revision_of: 0702-l2-ablation
+    match_method: manual
+    match_evidence: research-site/report-migration/0702-l2-ablation
+  - id: 0725-1min-model-screening-v2
+    project: prediction-nn
+    subproject: optimize-1min-model
+    format: markdown
+    content_file: report-docs/prediction-nn/0725-1min-model-screening-v2/report.md
+    bundle_sha256: 4fc6c887adf55df702a9e1ad90f22e3719ba6f90beaef0ad54e4dd53c191ef1b
+    revision_of: 0725-1min-model-screening
+    match_method: manual
+    match_evidence: research-site/report-migration/0725-1min-model-screening
+  - id: 0730-stock1s-feature-health-v2
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    format: markdown
+    content_file: report-docs/prediction-nn/0730-stock1s-feature-health-v2/report.md
+    bundle_sha256: c8c5ea23093894182f08932582287b4b1f5c20cc6ad2a2d64f4b87b73addb448
+    revision_of: 0730-stock1s-feature-health
+    match_method: manual
+    match_evidence: research-site/report-migration/0730-stock1s-feature-health
+  - id: 0731-limit-t1-strategy-v2
+    project: limit-0729
+    format: markdown
+    content_file: report-docs/limit-0729/0731-limit-t1-strategy-v2/report.md
+    bundle_sha256: 99a1563334b10ae10cb6e2e7e6f33606217c3405db72101a7b69be26680b1faa
+    revision_of: 0731-limit-t1-strategy
+    match_method: manual
+    match_evidence: research-site/report-migration/0731-limit-t1-strategy
+  - id: 0802-stock1s-gru384-v2
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    format: markdown
+    content_file: report-docs/prediction-nn/0802-stock1s-gru384-v2/report.md
+    bundle_sha256: 2377703d6b068bd3df47c29658677cbd9a38388656912f4fb253bb296c4ad4f2
+    revision_of: 0802-stock1s-gru384
+    match_method: manual
+    match_evidence: research-site/report-migration/0802-stock1s-gru384
+  - id: 0805-live-predictor-quality
+    project: live-predictor
+    format: markdown
+    content_file: report-docs/live-predictor/0805-live-predictor-quality/report.md
+    hero_image: images/extreme-tail-performance.png
+    bundle_sha256: 5e5d500b9148388590ce9915faafb443f4be78a1f4e91b7bfc65a49c1e539446
+    match_method: path-evidence
+    match_evidence: live-predictor/reports/20260805T140155+0800_report.html

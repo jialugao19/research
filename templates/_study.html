@@ -1,15 +1,17 @@
-{% macro study_card(study, catalog, base_url, maturity_labels, status_labels) %}
+{% macro study_card(study, catalog, base_url) %}
 <article class="study-card maturity-{{ study.maturity }}" id="study-{{ study.id }}">
-  <div class="study-card-top">
-    <div class="badges">
-      <span class="evidence-badge">{{ maturity_labels[study.maturity] }}</span>
-      <span class="status-text">{{ status_labels[study.status] }}</span>
-    </div>
-    <time datetime="{{ study.display_date }}">{{ study.display_date }}</time>
-  </div>
+  <p class="study-kicker"><time datetime="{{ study.display_date }}">{{ study.display_date }}</time><span>{{ study.status }}</span><span>{{ study.maturity }}</span></p>
   <h3>{{ study.title }}</h3>
-  <p class="study-objective">{{ study.objective }}</p>
-  <p class="study-summary">{{ study.summary }}</p>
+  <div class="study-narrative">
+    <section>
+      <h4>研究问题与方法</h4>
+      <p>{{ study.objective }}</p>
+    </section>
+    <section>
+      <h4>观察结果</h4>
+      <p>{{ study.summary }}</p>
+    </section>
+  </div>
   {% if study.metrics %}
   <dl class="metric-grid">
     {% for metric in study.metrics %}
@@ -21,29 +23,31 @@
     {% endfor %}
   </dl>
   {% endif %}
-  <div class="decision-box"><strong>当前决策</strong><p>{{ study.decision }}</p></div>
+  <div class="decision-box"><h4>当前结论</h4><p>{{ study.decision }}</p></div>
   {% if study.caveats %}
-  <div class="caveat-box"><strong>限制</strong><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>
+  <div class="caveat-box"><h4>适用边界</h4><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>
   {% endif %}
   {% if study.report_ids %}
   <div class="study-reports">
-    <strong>关联报告</strong>
+    <h4>关联报告</h4>
+    <div class="study-report-links">
     {% for report_id in study.report_ids %}
     {% set report = catalog.report_by_id[report_id] %}
     <a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>
     {% endfor %}
+    </div>
   </div>
   {% endif %}
 </article>
 {% endmacro %}
 
-{% macro study_timeline(studies, catalog, base_url, maturity_labels, status_labels) %}
+{% macro study_timeline(studies, catalog, base_url) %}
 <div class="study-timeline">
   {% for study in studies %}
   <details class="study-entry maturity-{{ study.maturity }}">
     <summary>
       <span class="timeline-date">{{ study.display_date }}</span>
-      <span class="timeline-main"><strong>{{ study.title }}</strong><small>{{ maturity_labels[study.maturity] }} · {{ status_labels[study.status] }}</small></span>
+      <span class="timeline-main"><strong>{{ study.title }}</strong><small>{{ study.status }} · {{ study.maturity }}</small></span>
       <span class="timeline-toggle" aria-hidden="true">＋</span>
     </summary>
     <div class="timeline-body">

@@ -4,21 +4,23 @@
 {% block content %}
 <section class="page-hero shell">
   <p class="breadcrumb"><a href="{{ base_url }}projects/{{ project.id }}/{{ subproject.track }}/">{{ project.title }} / {{ project.track(subproject.track).title }}</a> / 实验专题</p>
-  <div class="page-title-line"><div><p class="eyebrow">{{ subproject.id }}</p><h1>{{ subproject.title }}</h1></div><strong>{{ studies|length }}</strong></div>
+  <div class="page-title-line"><div><h1>{{ subproject.title }}</h1></div></div>
   <p class="lead">{{ subproject.description }}</p>
 </section>
 
-<section class="shell section compact review-overview single-overview">
-  <article><p class="eyebrow">OBJECTIVE</p><h2>专题目标</h2><p>{{ subproject.objective }}</p></article>
+<section id="topic-overview" class="shell section compact review-overview single-overview">
+  <article><h2>专题目标</h2><p>{{ subproject.objective }}</p></article>
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">STUDIES</p><h2>实验记录</h2></div></div>
-  {% if studies %}{{ study_timeline(studies, catalog, base_url, maturity_labels, status_labels) }}{% else %}<div class="empty-state"><strong>暂无实验快照</strong><p>专题已登记，但尚未录入可审阅的实验结论。</p></div>{% endif %}
+<section id="topic-studies" class="shell section compact">
+  <div class="section-heading"><div><h2>实验记录</h2></div></div>
+  {% if studies %}{{ study_timeline(studies, catalog, base_url) }}{% else %}<div class="empty-state"><strong>暂无实验快照</strong><p>专题已登记，但尚未录入可审阅的实验结论。</p></div>{% endif %}
 </section>
 
-<section class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">REPORTS</p><h2>公开报告</h2></div></div>
-  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time>{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}">↗</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>暂无公开报告</strong><p>该专题已有研究记录，但还没有通过公开发布门禁的报告。</p></div>{% endif %}
+<section id="topic-reports" class="shell section compact">
+  <div class="section-heading"><div><h2>公开报告</h2></div></div>
+  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}" aria-label="阅读 {{ report.title }}">阅读</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>暂无公开报告</strong><p>该专题已有研究记录，但还没有通过公开发布门禁的报告。</p></div>{% endif %}
 </section>
 {% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>本页目录</strong><nav><a href="#topic-overview">专题目标</a><a href="#topic-studies">实验记录</a><a href="#topic-reports">公开报告</a></nav>{% endblock %}
