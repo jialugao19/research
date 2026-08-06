@@ -5,16 +5,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="JG Research Lab: systematic alpha research, model evaluation, market data, and execution evidence.">
-  <meta name="theme-color" content="#fafaf8">
+  <meta name="theme-color" content="#ffffff">
   <title>{% block title %}JG Research Lab{% endblock %}</title>
   <link rel="stylesheet" href="{{ base_url }}assets/site.css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <header class="site-header" data-auto-hide>
+  <header class="site-header">
     <a class="brand" href="{{ base_url }}">
       <span class="brand-mark">JG</span>
-      <span class="brand-copy"><strong>JG Research Lab</strong><small>Systematic alpha</small></span>
+      <span class="brand-copy"><strong>JG Research Lab</strong><small>Research documentation</small></span>
     </a>
     <nav class="top-nav" aria-label="Primary navigation">
       <a{% if nav_section|default('projects') == 'projects' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}">Research</a>
@@ -24,19 +24,23 @@
     </nav>
   </header>
   <details class="mobile-navigation">
-    <summary>Research index</summary>
+    <summary><span aria-hidden="true">☰</span> Documentation menu</summary>
     {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}
   </details>
   <div class="doc-layout">
     <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}</aside>
     <main id="main-content" class="doc-main">
       {% block content %}{% endblock %}
-      <footer class="site-footer">
-        <p><span>JG Research Lab · Systematic alpha research</span><span>Evidence updated {{ site_updated }} · <a href="https://github.com/jialugao19">GitHub</a></span></p>
-      </footer>
     </main>
     <aside class="doc-toc{% block toc_class %} doc-toc-empty{% endblock %}" aria-label="On this page">{% block toc %}{% endblock %}</aside>
   </div>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div><strong>JG Research Lab</strong><span>Systematic alpha research and engineering notes.</span></div>
+      <nav aria-label="Footer navigation"><a href="{{ base_url }}">Research</a><a href="{{ base_url }}knowledge/">Knowledge</a><a href="{{ base_url }}reports/">Publications</a><a href="https://github.com/jialugao19">GitHub</a></nav>
+      <p>Evidence updated {{ site_updated }}</p>
+    </div>
+  </footer>
   <script src="{{ base_url }}assets/site.js" defer></script>
 </body>
 </html>

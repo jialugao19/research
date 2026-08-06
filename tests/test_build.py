@@ -25,20 +25,26 @@ def test_subtopic_filter_and_anchor_behaviors_are_bundled() -> None:
     assert "target.open = true" in javascript
 
 
-def test_knowledge_article_spacing_is_compact() -> None:
+def test_x99_documentation_layout_and_article_spacing() -> None:
     stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    template = (SITE_ROOT / "templates" / "base.html").read_text(encoding="utf-8")
 
-    assert ".article-header { max-width: 960px; padding: clamp(72px, 8vw, 118px) 0 18px; }" in stylesheet
-    assert ".article-source-note { max-width: 960px; margin: 0; padding: 5px 0 4px;" in stylesheet
-    assert ".knowledge-prose { max-width: 840px; padding: 18px 0 40px;" in stylesheet
-    assert ".knowledge-prose h2 { margin: 24px 0 7px; padding-top: 7px;" in stylesheet
-    assert ".knowledge-prose h3 { margin: 12px 0 4px;" in stylesheet
-    assert ".knowledge-prose p { margin: 0 0 9px; }" in stylesheet
-    assert ".knowledge-prose ul, .knowledge-prose ol { margin: 0 0 8px;" in stylesheet
-    assert ".knowledge-prose pre { overflow: auto; margin: 8px 0;" in stylesheet
-    assert ".math-block { max-width: 100%; overflow-x: auto; margin: 9px 0;" in stylesheet
+    assert "--header-height: 60px;" in stylesheet
+    assert "--sidebar-width: 300px;" in stylesheet
+    assert "--toc-width: 252px;" in stylesheet
+    assert "--accent: #2e8555;" in stylesheet
+    assert '--sans: system-ui, -apple-system, "Segoe UI"' in stylesheet
+    assert ".article-header { max-width: 820px; padding: 36px 0 12px; }" in stylesheet
+    assert ".article-source-note { max-width: 820px; padding: 2px 0;" in stylesheet
+    assert ".knowledge-prose { max-width: 820px; padding: 12px 0 44px;" in stylesheet
+    assert ".knowledge-prose h2 { margin: 32px 0 12px; padding-top: 0; border-top: 0;" in stylesheet
+    assert ".knowledge-prose h3 { margin: 24px 0 8px;" in stylesheet
+    assert ".knowledge-prose p { margin: 0 0 12px; }" in stylesheet
+    assert ".knowledge-prose pre { margin: 14px 0; padding: 16px; border: 0; border-radius: 6px;" in stylesheet
     assert ".knowledge-next-page { position: fixed;" in stylesheet
-    assert ".related-concept-rows { display: grid; gap: 6px; }" in stylesheet
+    assert ".related-concept-rows { gap: 8px; }" in stylesheet
+    assert 'class="site-header"' in template
+    assert "data-auto-hide" not in template
 
 
 def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
