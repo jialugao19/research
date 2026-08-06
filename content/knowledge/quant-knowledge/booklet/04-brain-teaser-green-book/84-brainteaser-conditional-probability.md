@@ -1,4 +1,4 @@
-# Brain Teaser / Green Book：条件概率的基本公式、树状分解和面试题应用
+# Conditional Expectation
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 机器学习：sequence modeling 的输入窗口、标签对齐和防泄露评估
+# Sequence Modeling
 
 ## 核心概念
 

@@ -6,6 +6,7 @@
 {% block toc_class %}{% endblock %}
 {% block content %}
 <article class="knowledge-article" lang="zh-CN">
+  <a class="knowledge-next-page" href="{{ base_url }}{{ next_page.route }}" aria-label="Next page: {{ next_page.title }}"><span>Next page</span><strong>{{ next_page.title }}</strong><em aria-hidden="true">→</em></a>
   <header class="article-header">
     <nav class="knowledge-breadcrumb" aria-label="Knowledge hierarchy"><a href="{{ base_url }}knowledge/">Knowledge</a><span>/</span><a href="{{ base_url }}knowledge/{{ node.domain_id }}/">{{ node.domain_title }}</a><span>/</span><a href="{{ base_url }}knowledge/{{ node.domain_id }}/{{ node.topic_id }}/">{{ node.topic_title }}</a>{% if node.subtopic_id %}<span>/</span><a href="{{ base_url }}knowledge/{{ node.domain_id }}/{{ node.topic_id }}/#subtopic-{{ node.subtopic_id }}">{{ node.subtopic_title }}</a>{% endif %}</nav>
     <p class="eyebrow">{{ node.content_type }} · {{ node.level }}</p>
@@ -13,22 +14,17 @@
     <p class="article-deck">{{ node.summary }}</p>
     <div class="article-badges"><span>{{ node.domain_title }}</span><span>{{ node.topic_title }}</span>{% if node.subtopic_id %}<span>{{ node.subtopic_title }}</span>{% endif %}<span>{{ node.content_type }}</span></div>
   </header>
-  <aside class="article-evidence knowledge-card-record{% if node.subtopic_id %} has-subtopic{% endif %}" aria-label="Knowledge card metadata">
-    <p>Knowledge card</p>
-    <dl><div><dt>Domain</dt><dd>{{ node.domain_title }}</dd></div><div><dt>Topic</dt><dd>{{ node.topic_title }}</dd></div>{% if node.subtopic_id %}<div><dt>Subtopic</dt><dd>{{ node.subtopic_title }}</dd></div>{% endif %}<div><dt>Level</dt><dd>{{ node.level }}</dd></div><div><dt>Source</dt><dd>{{ node.source_label }}</dd></div></dl>
-    <small>{{ node.source_ref }}{% if node.source_domain %} · source class {{ node.source_domain }}{% endif %}{% if node.source_part %} · {{ node.source_part }}{% endif %}</small>
-  </aside>
+  <p class="article-source-note">{{ node.source_ref }}{% if node.source_domain %} · source class {{ node.source_domain }}{% endif %}{% if node.source_label != "DeepML" %} · {{ node.source_label }}{% endif %}{% if node.source_part %} · {{ node.source_part }}{% endif %}</p>
   <div class="knowledge-prose">{{ body_html }}</div>
-  <footer class="article-relations knowledge-node-relations">
-    <section><p class="eyebrow">Prerequisites</p>{% for item in prerequisites %}<a href="{{ base_url }}{{ item.route }}">{{ item.title }}</a>{% else %}<p>No explicit prerequisites.</p>{% endfor %}</section>
-    <section><p class="eyebrow">Related</p>{% for item in related %}<a href="{{ base_url }}{{ item.route }}">{{ item.title }}</a>{% else %}{% for item in topic_peers %}<a href="{{ base_url }}{{ item.route }}">{{ item.title }}</a>{% else %}<p>No related nodes yet.</p>{% endfor %}{% endfor %}</section>
-  </footer>
-  {% if next_nodes or research_links %}
-  <footer class="article-relations knowledge-node-relations">
-    <section><p class="eyebrow">Next concepts</p>{% for item in next_nodes[:12] %}<a href="{{ base_url }}{{ item.route }}">{{ item.title }}</a>{% else %}<p>No explicit next concepts.</p>{% endfor %}</section>
-    <section><p class="eyebrow">Research bridge</p>{% for link in research_links %}{% set project = catalog.project_by_id[link.project] %}<a href="{{ base_url }}projects/{{ project.id }}/">{{ link.label }}</a>{% else %}<p>No curated research bridge for this topic.</p>{% endfor %}</section>
+  {% if related_rows %}
+  <footer class="article-related-concepts" id="related-concepts">
+    <h2>相关概念</h2>
+    <div class="related-concept-rows">
+      {% for row in related_rows %}<div class="related-concept-row">{% for card in row %}{% if card.route %}<a href="{{ base_url }}{{ card.route }}"><span>{{ card.title }}</span><em aria-hidden="true">→</em></a>{% else %}<span class="related-concept-card"><span>{{ card.title }}</span></span>{% endif %}{% endfor %}</div>{% endfor %}
+    </div>
   </footer>
   {% endif %}
+  {% if research_links %}<footer class="knowledge-research-bridge"><p class="eyebrow">Research bridge</p>{% for link in research_links %}{% set project = catalog.project_by_id[link.project] %}<a href="{{ base_url }}projects/{{ project.id }}/">{{ link.label }} →</a>{% endfor %}</footer>{% endif %}
 </article>
 {% endblock %}
 {% block toc %}<nav><p class="toc-label">In this node</p>{% for item in toc %}<a href="#{{ item.id }}">{{ item.title }}</a>{% endfor %}</nav>{% endblock %}

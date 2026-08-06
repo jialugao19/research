@@ -1,4 +1,4 @@
-# 机器学习：树模型特征重要性的 impurity importance、permutation importance 和解释风险
+# Tree Feature Importance
 
 ## 核心概念
 

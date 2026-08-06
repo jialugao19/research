@@ -1,4 +1,4 @@
-# 机器学习：XGBoost 和 LightGBM 的 boosting、梯度、正则化和高效分裂
+# XGBoost & LightGBM
 
 ## 核心概念
 

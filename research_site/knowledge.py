@@ -220,6 +220,7 @@ class KnowledgeNode:
     subtopic_id: str = ""
     subtopic_title: str = ""
     subtopic_sequence: int = 0
+    logical_sequence: int = 0
 
     @property
     def route(self) -> str:
@@ -244,6 +245,9 @@ class KnowledgeCatalog:
     chapter_by_slug: dict[str, QuantKnowledgeChapter] = field(init=False, repr=False)
     node_by_id: dict[str, KnowledgeNode] = field(init=False, repr=False)
     node_by_slug: dict[str, KnowledgeNode] = field(init=False, repr=False)
+    node_by_title: dict[str, KnowledgeNode] = field(init=False, repr=False)
+    navigation_nodes: tuple[KnowledgeNode, ...] = field(init=False, repr=False)
+    next_page_by_id: dict[str, KnowledgeNode] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "concept_by_id", {item.id: item for item in self.concepts})
@@ -252,6 +256,43 @@ class KnowledgeCatalog:
         object.__setattr__(self, "chapter_by_slug", {item.slug: item for item in self.chapters})
         object.__setattr__(self, "node_by_id", {item.id: item for item in self.nodes})
         object.__setattr__(self, "node_by_slug", {item.slug: item for item in self.nodes})
+        nodes_by_title: dict[str, KnowledgeNode] = {}
+        for node in self.nodes:
+            for title in (node.title, *node.aliases):
+                nodes_by_title.setdefault(title.strip().casefold(), node)
+        object.__setattr__(self, "node_by_title", nodes_by_title)
+        domain_sequence = {
+            domain.id: domain.sequence
+            for domain in self.ontology_domains
+        }
+        topic_sequence = {
+            (topic.domain_id, topic.id): topic.sequence
+            for domain in self.ontology_domains
+            for topic in domain.topics
+        }
+        navigation_nodes = tuple(
+            sorted(
+                self.nodes,
+                key=lambda node: (
+                    domain_sequence[node.domain_id],
+                    topic_sequence[(node.domain_id, node.topic_id)],
+                    node.subtopic_sequence,
+                    node.logical_sequence,
+                    node.id,
+                ),
+            )
+        )
+        object.__setattr__(self, "navigation_nodes", navigation_nodes)
+        object.__setattr__(
+            self,
+            "next_page_by_id",
+            {
+                node.id: navigation_nodes[(index + 1) % len(navigation_nodes)]
+                for index, node in enumerate(navigation_nodes)
+            }
+            if navigation_nodes
+            else {},
+        )
 
     @property
     def counts(self) -> dict[str, int]:
@@ -304,6 +345,12 @@ class KnowledgeCatalog:
             and node.topic_id == topic_id
             and node.subtopic_id == subtopic_id
         )
+
+    def next_page_for(self, node_id: str) -> KnowledgeNode:
+        return self.next_page_by_id[node_id]
+
+    def node_for_title(self, title: str) -> KnowledgeNode | None:
+        return self.node_by_title.get(title.strip().casefold())
 
     def research_links_for(self, domain_id: str, topic_id: str | None = None) -> tuple[KnowledgeResearchLink, ...]:
         if self.ontology is None:
@@ -377,6 +424,7 @@ class KnowledgeCatalog:
 class RenderedKnowledgeArticle:
     html: str
     toc: tuple[dict[str, str], ...]
+    related_groups: tuple[tuple[str, ...], ...] = ()
 
 
 def load_knowledge(
@@ -526,6 +574,13 @@ def _render_markdown_document(title: str, body: str, context: str) -> RenderedKn
         return f"\n\n{token}\n\n"
 
     source = re.sub(r"^#\s+.+?\n+", "", body, count=1)
+    source = re.sub(
+        r"\A[^\n]+\n+关键词：[^\n]*(?:\n- [^\n]*)*(?:\n+|$)",
+        "",
+        source,
+        count=1,
+    )
+    source, related_groups = _normalize_knowledge_sections(source)
     markdown = re.sub(r"\$\$\s*(.*?)\s*\$\$", replace_math, source, flags=re.DOTALL)
     markdown = re.sub(r"(?<![\[(])(https?://[^\s。]+)", r"[\1](\1)", markdown)
     heading_titles = re.findall(r"^##\s+(.+?)\s*$", markdown, flags=re.MULTILINE)
@@ -537,7 +592,71 @@ def _render_markdown_document(title: str, body: str, context: str) -> RenderedKn
     for index, mathml in enumerate(math_blocks):
         token = f"DEEPMATHBLOCK{index:04d}"
         rendered = rendered.replace(f"<p>{token}</p>", f'<div class="math-block" role="math">{mathml}</div>')
-    return RenderedKnowledgeArticle(html=rendered, toc=toc)
+    return RenderedKnowledgeArticle(html=rendered, toc=toc, related_groups=related_groups)
+
+
+def _normalize_knowledge_sections(source: str) -> tuple[str, tuple[tuple[str, ...], ...]]:
+    """Apply presentation-only editorial rules to standard knowledge sections."""
+    matches = list(re.finditer(r"^##\s+(.+?)\s*$", source, flags=re.MULTILINE))
+    if not matches:
+        return source, ()
+
+    preamble = source[: matches[0].start()].strip()
+    sections: list[tuple[str | None, str]] = []
+    related_groups: tuple[tuple[str, ...], ...] = ()
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(source)
+        section_title = match.group(1).strip()
+        section_body = source[match.end() : end].strip()
+        if section_title.startswith("延伸阅读"):
+            continue
+        if section_title == "相关概念":
+            related_groups = _related_concept_groups(section_body)
+            continue
+        if section_title == "常见误区":
+            section_body = re.sub(
+                r"^###\s+(?:概念误解|数学误解|使用误区)\s*$\n*",
+                "",
+                section_body,
+                flags=re.MULTILINE,
+            ).strip()
+        sections.append((None if section_title == "为什么需要它" else section_title, section_body))
+
+    math_index = next((index for index, item in enumerate(sections) if item[0] == "数学定义"), None)
+    intuition_index = next((index for index, item in enumerate(sections) if item[0] == "核心直觉"), None)
+    if math_index is not None and intuition_index is not None and math_index > intuition_index:
+        math_section = sections.pop(math_index)
+        sections.insert(intuition_index, math_section)
+
+    fragments = [preamble] if preamble else []
+    for section_title, section_body in sections:
+        heading = f"## {section_title}\n\n" if section_title else ""
+        fragments.append(f"{heading}{section_body}".strip())
+    return "\n\n".join(fragment for fragment in fragments if fragment).strip(), related_groups
+
+
+def _related_concept_groups(source: str) -> tuple[tuple[str, ...], ...]:
+    seen: set[str] = set()
+    titles: list[str] = []
+    for value in re.findall(r"^-\s+(.+?)\s*$", source, flags=re.MULTILINE):
+        title = re.sub(r"\[([^\]]+)\]\([^)]+\)", r"\1", value)
+        title = re.sub(r"[*`_]", "", title).strip()
+        key = title.casefold()
+        if title and key not in seen:
+            seen.add(key)
+            titles.append(title)
+    if not titles:
+        return ()
+
+    row_count = min(3, len(titles))
+    base_size, extra = divmod(len(titles), row_count)
+    groups: list[tuple[str, ...]] = []
+    offset = 0
+    for row_index in range(row_count):
+        row_size = base_size + (1 if row_index < extra else 0)
+        groups.append(tuple(titles[offset : offset + row_size]))
+        offset += row_size
+    return tuple(groups)
 
 
 def _load_ontology(path: Path) -> KnowledgeOntology:
@@ -604,7 +723,7 @@ def _build_nodes(
     path_by_id = {path.id: path for path in paths}
     article_by_slug = {article.slug: article for article in articles}
     nodes: list[KnowledgeNode] = []
-    for concept in concepts:
+    for concept_index, concept in enumerate(concepts):
         article = article_by_slug[concept.article_slug]
         domain_id, topic_id = _ontology_mapping_for_deepml(ontology, concept.domain)
         topic = ontology.topic(domain_id, topic_id)
@@ -634,6 +753,12 @@ def _build_nodes(
                 subtopic_id=subtopic.id if subtopic else "",
                 subtopic_title=subtopic.title if subtopic else "",
                 subtopic_sequence=subtopic.sequence if subtopic else 0,
+                logical_sequence=_logical_node_sequence(
+                    subtopic,
+                    path_by_id,
+                    concept.id,
+                    concept_index,
+                ),
             )
         )
     for chapter in chapters:
@@ -653,7 +778,7 @@ def _build_nodes(
                 level=_chapter_level(chapter),
                 content_type="Chapter",
                 source_id="quant-knowledge",
-                source_label="Quant Knowledge",
+                source_label=_chapter_source_label(chapter),
                 summary=chapter.summary,
                 body=chapter.body,
                 keywords=tuple(
@@ -665,9 +790,32 @@ def _build_nodes(
                 subtopic_id=subtopic.id if subtopic else "",
                 subtopic_title=subtopic.title if subtopic else "",
                 subtopic_sequence=subtopic.sequence if subtopic else 0,
+                logical_sequence=_logical_node_sequence(
+                    subtopic,
+                    path_by_id,
+                    chapter.slug,
+                    chapter.sequence,
+                ),
             )
         )
-    return tuple(sorted(nodes, key=lambda node: (node.domain_id, node.topic_id, node.title.lower(), node.id)))
+    domain_sequence = {domain.id: domain.sequence for domain in ontology.domains}
+    topic_sequence = {
+        (topic.domain_id, topic.id): topic.sequence
+        for domain in ontology.domains
+        for topic in domain.topics
+    }
+    return tuple(
+        sorted(
+            nodes,
+            key=lambda node: (
+                domain_sequence[node.domain_id],
+                topic_sequence[(node.domain_id, node.topic_id)],
+                node.subtopic_sequence,
+                node.logical_sequence,
+                node.id,
+            ),
+        )
+    )
 
 
 def knowledge_payload(knowledge: KnowledgeCatalog, base_url: str) -> dict[str, Any]:
@@ -856,6 +1004,31 @@ def _resolve_subtopic(
     return matches[0]
 
 
+def _logical_node_sequence(
+    subtopic: KnowledgeSubtopic | None,
+    path_by_id: dict[str, KnowledgePath],
+    node_id: str,
+    fallback: int,
+) -> int:
+    if subtopic is None:
+        return fallback
+
+    offset = 0
+    for path_id, stage_name in subtopic.path_stages:
+        stage = next((stage for stage in path_by_id[path_id].stages if stage.name == stage_name), None)
+        if stage is None:
+            raise KnowledgeSyncError(
+                f"subtopic {subtopic.domain_id}/{subtopic.topic_id}/{subtopic.id} "
+                f"references unknown path stage {path_id}/{stage_name}"
+            )
+        if node_id in stage.topic_ids:
+            return offset + stage.topic_ids.index(node_id)
+        offset += len(stage.topic_ids)
+    if node_id in subtopic.node_ids:
+        return offset + subtopic.node_ids.index(node_id)
+    return offset + len(subtopic.node_ids) + fallback
+
+
 def _load_chapter_rules(value: Any) -> tuple[dict[str, Any], ...]:
     if not isinstance(value, list):
         raise KnowledgeSyncError("quant_chapter_rules must be a list")
@@ -989,6 +1162,12 @@ def _chapter_level(chapter: QuantKnowledgeChapter) -> str:
     if chapter.section_id == "07-market-microstructure":
         return "applied"
     return "practice"
+
+
+def _chapter_source_label(chapter: QuantKnowledgeChapter) -> str:
+    if chapter.section_id == "04-brain-teaser-green-book":
+        return "Green Book"
+    return "Quant Knowledge"
 
 
 def _validate_knowledge(knowledge: KnowledgeCatalog) -> None:

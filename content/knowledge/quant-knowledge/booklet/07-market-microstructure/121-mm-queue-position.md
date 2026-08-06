@@ -1,4 +1,4 @@
-# 市场微观结构：queue position 的排队优先级、成交概率和限价单风险
+# Queue Position
 
 ## 核心概念
 

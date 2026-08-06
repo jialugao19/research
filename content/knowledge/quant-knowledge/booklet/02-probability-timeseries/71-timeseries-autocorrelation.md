@@ -1,4 +1,4 @@
-# 时间序列：autocorrelation 自相关、ACF/PACF、检验与策略含义
+# Autocorrelation
 
 ## 核心概念
 

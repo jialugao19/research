@@ -1,4 +1,4 @@
-# 机器学习：attention 的 query/key/value、softmax 权重、多头注意力和解释边界
+# Attention
 
 ## 核心概念
 

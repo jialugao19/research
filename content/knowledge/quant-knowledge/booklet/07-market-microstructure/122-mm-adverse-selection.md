@@ -1,4 +1,4 @@
-# 市场微观结构：adverse selection 的信息不对称、被动成交风险和价差补偿
+# Adverse Selection
 
 ## 核心概念
 

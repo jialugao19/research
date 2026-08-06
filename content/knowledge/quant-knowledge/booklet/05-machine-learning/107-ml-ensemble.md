@@ -1,4 +1,4 @@
-# 机器学习：ensemble 的 bagging、boosting、stacking、blending 和模型组合风险
+# Ensemble Methods
 
 ## 核心概念
 

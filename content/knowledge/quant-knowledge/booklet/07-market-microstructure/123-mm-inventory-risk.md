@@ -1,4 +1,4 @@
-# 市场微观结构：inventory risk 的持仓暴露、报价偏移和做市风险控制
+# Inventory Risk
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# Brain Teaser / Green Book：期望的线性性、条件期望和常见面试题应用
+# Expectation
 
 ## 核心概念
 

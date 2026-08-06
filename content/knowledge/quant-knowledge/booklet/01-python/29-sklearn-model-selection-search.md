@@ -1,4 +1,4 @@
-# sklearn：model selection：GridSearchCV、RandomizedSearchCV 与泄露风险
+# GridSearchCV & RandomizedSearchCV
 
 ## 核心概念
 

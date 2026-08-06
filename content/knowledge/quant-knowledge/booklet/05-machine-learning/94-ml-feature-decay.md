@@ -1,4 +1,4 @@
-# 机器学习：feature decay 的信号衰减、半衰期、滞后评估和再训练节奏
+# Feature Decay
 
 ## 核心概念
 

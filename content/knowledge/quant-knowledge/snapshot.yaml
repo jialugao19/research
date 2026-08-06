@@ -241,7 +241,7 @@ chapters:
   source_path: booklet/01-python/24-scipy-sparse-matrices.md
 - slug: sklearn-estimator-api-pipeline
   sequence: 25
-  title: sklearn：estimator API：fit / predict / transform 与 Pipeline 基础
+  title: Estimator API & Pipeline
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -249,7 +249,7 @@ chapters:
   source_path: booklet/01-python/25-sklearn-estimator-api-pipeline.md
 - slug: sklearn-split-cv-timeseries
   sequence: 26
-  title: sklearn：train / test split、交叉验证与时间序列切分
+  title: Time Series Cross-Validation
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -257,7 +257,7 @@ chapters:
   source_path: booklet/01-python/26-sklearn-split-cv-timeseries.md
 - slug: sklearn-preprocessing-columntransformer
   sequence: 27
-  title: sklearn：preprocessing：StandardScaler、OneHotEncoder 与 ColumnTransformer
+  title: ColumnTransformer
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -273,7 +273,7 @@ chapters:
   source_path: booklet/01-python/28-sklearn-supervised-models-metrics.md
 - slug: sklearn-model-selection-search
   sequence: 29
-  title: sklearn：model selection：GridSearchCV、RandomizedSearchCV 与泄露风险
+  title: GridSearchCV & RandomizedSearchCV
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -281,7 +281,7 @@ chapters:
   source_path: booklet/01-python/29-sklearn-model-selection-search.md
 - slug: sklearn-feature-importance-explain
   sequence: 30
-  title: sklearn：feature importance、permutation importance 与模型解释
+  title: Model Explainability
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -297,7 +297,7 @@ chapters:
   source_path: booklet/01-python/31-sklearn-pandas-numpy-interop.md
 - slug: matplotlib-figure-axes-basic-plots
   sequence: 32
-  title: matplotlib：Figure / Axes 与基础 line、scatter、bar 图
+  title: Figure & Axes
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -369,7 +369,7 @@ chapters:
   source_path: booklet/01-python/40-statsmodels-regression-diagnostics-robust-se.md
 - slug: statsmodels-timeseries-arima-sarimax
   sequence: 41
-  title: statsmodels：时间序列模型接口：ARIMA / SARIMAX 基础与预测结果
+  title: ARIMA & SARIMAX
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -385,7 +385,7 @@ chapters:
   source_path: booklet/01-python/42-python-vectorization-concepts.md
 - slug: python-memory-layout
   sequence: 43
-  title: Python 理解项：memory layout 内存布局、连续性、视图与拷贝
+  title: Memory Layout
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -393,7 +393,7 @@ chapters:
   source_path: booklet/01-python/43-python-memory-layout.md
 - slug: python-multiprocessing
   sequence: 44
-  title: Python 理解项：multiprocessing 进程并行、数据传递与适用边界
+  title: Multiprocessing
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -425,7 +425,7 @@ chapters:
   source_path: booklet/01-python/47-python-rolling-window.md
 - slug: python-feature-pipeline
   sequence: 48
-  title: Python 理解项：feature pipeline 特征流水线的组织、复现与防错
+  title: Feature Pipeline
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -433,7 +433,7 @@ chapters:
   source_path: booklet/01-python/48-python-feature-pipeline.md
 - slug: python-backtest-leakage
   sequence: 49
-  title: Python 理解项：backtest leakage 回测泄露的来源、检测与修正
+  title: Backtest Leakage
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -441,7 +441,7 @@ chapters:
   source_path: booklet/01-python/49-python-backtest-leakage.md
 - slug: python-lookahead-bias
   sequence: 50
-  title: Python 理解项：lookahead bias 前视偏差的时点语义、识别与修正
+  title: Lookahead Bias
   section_id: 01-python
   section_title: Python & Data Stack
   part_id: ''
@@ -457,7 +457,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/51-statistics-ols.md
 - slug: statistics-regularization
   sequence: 52
-  title: 概率统计：regularization 正则化、偏差-方差权衡与岭回归 / Lasso 直觉
+  title: Regularization
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -473,7 +473,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/53-statistics-pca.md
 - slug: statistics-covariance-shrinkage
   sequence: 54
-  title: 概率统计：covariance shrinkage 协方差收缩的动机、Ledoit-Wolf 直觉与投资组合稳定性
+  title: Covariance Shrinkage
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -481,7 +481,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/54-statistics-covariance-shrinkage.md
 - slug: statistics-bootstrap
   sequence: 55
-  title: 概率统计：bootstrap 重采样估计不确定性、置信区间与时间序列注意事项
+  title: bootstrap
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -497,7 +497,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/56-statistics-bayesian-basics.md
 - slug: statistics-cross-sectional-regression
   sequence: 57
-  title: 概率统计：cross-sectional regression 横截面回归、因子收益与截面解释
+  title: Cross-Sectional Regression
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -577,7 +577,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/66-timeseries-garch-stationarity-autocorrelation-cointegration.md
 - slug: timeseries-kalman-filter
   sequence: 67
-  title: 时间序列：Kalman filter 的状态空间模型、预测更新与简单跟踪例子
+  title: Kalman Filter
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -609,7 +609,7 @@ chapters:
   source_path: booklet/02-probability-timeseries/70-timeseries-stationarity.md
 - slug: timeseries-autocorrelation
   sequence: 71
-  title: 时间序列：autocorrelation 自相关、ACF/PACF、检验与策略含义
+  title: Autocorrelation
   section_id: 02-probability-timeseries
   section_title: Probability, Statistics & Time Series
   part_id: ''
@@ -641,7 +641,7 @@ chapters:
   source_path: booklet/03-data-structures-algorithms/74-dsa-heap.md
 - slug: dsa-binary-search
   sequence: 75
-  title: 数据结构与算法：binary search 的边界模板、bisect 和有序数据查询
+  title: Binary Search
   section_id: 03-data-structures-algorithms
   section_title: Data Structures & Algorithms
   part_id: ''
@@ -673,7 +673,7 @@ chapters:
   source_path: booklet/03-data-structures-algorithms/78-dsa-graph-basics.md
 - slug: dsa-rolling-median
   sequence: 79
-  title: 数据结构与算法：rolling median 的双堆维护、延迟删除和滑动窗口应用
+  title: Rolling Median
   section_id: 03-data-structures-algorithms
   section_title: Data Structures & Algorithms
   part_id: ''
@@ -689,7 +689,7 @@ chapters:
   source_path: booklet/03-data-structures-algorithms/80-dsa-top-k.md
 - slug: dsa-stream-processing
   sequence: 81
-  title: 数据结构与算法：stream processing 的在线状态、窗口、乱序事件和增量计算
+  title: Stream Processing
   section_id: 03-data-structures-algorithms
   section_title: Data Structures & Algorithms
   part_id: ''
@@ -697,7 +697,7 @@ chapters:
   source_path: booklet/03-data-structures-algorithms/81-dsa-stream-processing.md
 - slug: dsa-order-book-simulation
   sequence: 82
-  title: 数据结构与算法：order book simulation 的价格档位、订单事件和撮合规则
+  title: Order Book Simulation
   section_id: 03-data-structures-algorithms
   section_title: Data Structures & Algorithms
   part_id: ''
@@ -713,7 +713,7 @@ chapters:
   source_path: booklet/03-data-structures-algorithms/83-dsa-interval-merge.md
 - slug: brainteaser-conditional-probability
   sequence: 84
-  title: Brain Teaser / Green Book：条件概率的基本公式、树状分解和面试题应用
+  title: Conditional Expectation
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -721,7 +721,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/84-brainteaser-conditional-probability.md
 - slug: brainteaser-bayes
   sequence: 85
-  title: Brain Teaser / Green Book：贝叶斯公式、基础率和反向条件概率应用
+  title: Bayes' Theorem
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -729,7 +729,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/85-brainteaser-bayes.md
 - slug: brainteaser-expectation
   sequence: 86
-  title: Brain Teaser / Green Book：期望的线性性、条件期望和常见面试题应用
+  title: Expectation
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -737,7 +737,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/86-brainteaser-expectation.md
 - slug: brainteaser-combinatorics
   sequence: 87
-  title: Brain Teaser / Green Book：combinatorics 的排列组合、补集法和计数面试题应用
+  title: Combinatorics
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -745,7 +745,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/87-brainteaser-combinatorics.md
 - slug: brainteaser-optimal-stopping
   sequence: 88
-  title: Brain Teaser / Green Book：optimal stopping 的阈值策略、秘书问题和停止规则应用
+  title: Optimal Stopping
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -753,7 +753,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/88-brainteaser-optimal-stopping.md
 - slug: brainteaser-game-theory
   sequence: 89
-  title: Brain Teaser / Green Book：game theory 的策略、纳什均衡和博弈面试题应用
+  title: Game Theory
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -761,7 +761,7 @@ chapters:
   source_path: booklet/04-brain-teaser-green-book/89-brainteaser-game-theory.md
 - slug: brainteaser-mental-math-estimation
   sequence: 90
-  title: Brain Teaser / Green Book：快速心算与估算的数量级、近似和市场规模题应用
+  title: Mental Math & Estimation
   section_id: 04-brain-teaser-green-book
   section_title: Brain Teaser & Green Book
   part_id: ''
@@ -793,7 +793,7 @@ chapters:
   source_path: booklet/05-machine-learning/93-ml-regime.md
 - slug: ml-feature-decay
   sequence: 94
-  title: 机器学习：feature decay 的信号衰减、半衰期、滞后评估和再训练节奏
+  title: Feature Decay
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -801,7 +801,7 @@ chapters:
   source_path: booklet/05-machine-learning/94-ml-feature-decay.md
 - slug: ml-transaction-cost
   sequence: 95
-  title: 机器学习：transaction cost 的手续费、滑点、冲击成本和净收益评估
+  title: Transaction Costs
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -809,7 +809,7 @@ chapters:
   source_path: booklet/05-machine-learning/95-ml-transaction-cost.md
 - slug: ml-decision-tree-split-criteria
   sequence: 96
-  title: 机器学习：决策树分裂准则的 Gini、entropy、MSE 和 split gain
+  title: Decision Tree Split Criteria
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -833,7 +833,7 @@ chapters:
   source_path: booklet/05-machine-learning/98-ml-random-forest.md
 - slug: ml-xgboost-lightgbm
   sequence: 99
-  title: 机器学习：XGBoost 和 LightGBM 的 boosting、梯度、正则化和高效分裂
+  title: XGBoost & LightGBM
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -841,7 +841,7 @@ chapters:
   source_path: booklet/05-machine-learning/99-ml-xgboost-lightgbm.md
 - slug: ml-tree-feature-importance
   sequence: 100
-  title: 机器学习：树模型特征重要性的 impurity importance、permutation importance 和解释风险
+  title: Tree Feature Importance
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -849,7 +849,7 @@ chapters:
   source_path: booklet/05-machine-learning/100-ml-tree-feature-importance.md
 - slug: ml-linear-model-baseline
   sequence: 101
-  title: 机器学习：linear model baseline 的线性回归、逻辑回归、L1/L2 正则和损失函数
+  title: Linear Model Baseline
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -873,7 +873,7 @@ chapters:
   source_path: booklet/05-machine-learning/103-ml-k-means.md
 - slug: ml-feature-importance
   sequence: 104
-  title: 机器学习：通用 feature importance 的 permutation、drop-column、SHAP、PDP/ICE 和解释稳定性
+  title: Feature Importance
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -881,7 +881,7 @@ chapters:
   source_path: booklet/05-machine-learning/104-ml-feature-importance.md
 - slug: ml-overfitting-diagnosis
   sequence: 105
-  title: 机器学习：overfitting diagnosis 的训练/验证差距、学习曲线、泄露排查和复杂度控制
+  title: Overfitting Diagnosis
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -889,7 +889,7 @@ chapters:
   source_path: booklet/05-machine-learning/105-ml-overfitting-diagnosis.md
 - slug: ml-hyperparameter-tuning
   sequence: 106
-  title: 机器学习：hyperparameter tuning 的搜索空间、验证集、随机搜索、贝叶斯优化和调参过拟合
+  title: Hyperparameter Tuning
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -897,7 +897,7 @@ chapters:
   source_path: booklet/05-machine-learning/106-ml-hyperparameter-tuning.md
 - slug: ml-ensemble
   sequence: 107
-  title: 机器学习：ensemble 的 bagging、boosting、stacking、blending 和模型组合风险
+  title: Ensemble Methods
   section_id: 05-machine-learning
   section_title: Machine Learning Practice
   part_id: ''
@@ -945,7 +945,7 @@ chapters:
   source_path: booklet/06-deep-learning/03-sequence-models/112-ml-lstm.md
 - slug: ml-gru
   sequence: 113
-  title: 机器学习：GRU 的 update gate、reset gate、候选隐藏状态和 LSTM 对比
+  title: GRU
   section_id: 06-deep-learning
   section_title: Deep Learning
   part_id: 03-sequence-models
@@ -953,7 +953,7 @@ chapters:
   source_path: booklet/06-deep-learning/03-sequence-models/113-ml-gru.md
 - slug: ml-sequence-modeling
   sequence: 114
-  title: 机器学习：sequence modeling 的输入窗口、标签对齐和防泄露评估
+  title: Sequence Modeling
   section_id: 06-deep-learning
   section_title: Deep Learning
   part_id: 03-sequence-models
@@ -961,7 +961,7 @@ chapters:
   source_path: booklet/06-deep-learning/03-sequence-models/114-ml-sequence-modeling.md
 - slug: ml-attention
   sequence: 115
-  title: 机器学习：attention 的 query/key/value、softmax 权重、多头注意力和解释边界
+  title: Attention
   section_id: 06-deep-learning
   section_title: Deep Learning
   part_id: 04-attention-transformers
@@ -969,7 +969,7 @@ chapters:
   source_path: booklet/06-deep-learning/04-attention-transformers/115-ml-attention.md
 - slug: ml-temporal-embedding
   sequence: 116
-  title: 机器学习：temporal embedding 的位置、日历、相对时间和防泄露表示
+  title: Temporal Embedding
   section_id: 06-deep-learning
   section_title: Deep Learning
   part_id: 04-attention-transformers
@@ -977,7 +977,7 @@ chapters:
   source_path: booklet/06-deep-learning/04-attention-transformers/116-ml-temporal-embedding.md
 - slug: ml-transformer-for-ts
   sequence: 117
-  title: 机器学习：Transformer for TS 的自注意力、位置编码、因果 mask 和时间序列预测
+  title: Transformer for Time Series
   section_id: 06-deep-learning
   section_title: Deep Learning
   part_id: 04-attention-transformers
@@ -1001,7 +1001,7 @@ chapters:
   source_path: booklet/07-market-microstructure/119-mm-bid-ask-spread.md
 - slug: mm-order-imbalance
   sequence: 120
-  title: 市场微观结构：order imbalance 的盘口数量不平衡和短期价格压力
+  title: Order Imbalance
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1009,7 +1009,7 @@ chapters:
   source_path: booklet/07-market-microstructure/120-mm-order-imbalance.md
 - slug: mm-queue-position
   sequence: 121
-  title: 市场微观结构：queue position 的排队优先级、成交概率和限价单风险
+  title: Queue Position
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1017,7 +1017,7 @@ chapters:
   source_path: booklet/07-market-microstructure/121-mm-queue-position.md
 - slug: mm-adverse-selection
   sequence: 122
-  title: 市场微观结构：adverse selection 的信息不对称、被动成交风险和价差补偿
+  title: Adverse Selection
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1025,7 +1025,7 @@ chapters:
   source_path: booklet/07-market-microstructure/122-mm-adverse-selection.md
 - slug: mm-inventory-risk
   sequence: 123
-  title: 市场微观结构：inventory risk 的持仓暴露、报价偏移和做市风险控制
+  title: Inventory Risk
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1033,7 +1033,7 @@ chapters:
   source_path: booklet/07-market-microstructure/123-mm-inventory-risk.md
 - slug: mm-market-impact
   sequence: 124
-  title: 市场微观结构：market impact 的临时/永久冲击、订单规模和执行成本
+  title: Market Impact
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1049,7 +1049,7 @@ chapters:
   source_path: booklet/07-market-microstructure/125-mm-vpin.md
 - slug: mm-opening-closing-auction
   sequence: 126
-  title: 市场微观结构：opening/closing auction 的集合竞价撮合价、订单不平衡和开收盘流动性
+  title: Opening & Closing Auction
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1057,7 +1057,7 @@ chapters:
   source_path: booklet/07-market-microstructure/126-mm-opening-closing-auction.md
 - slug: mm-factor-models-fama-french-barra
   sequence: 127
-  title: 市场微观结构扩展：Fama-French、Barra 风险因子、因子构造和中性化
+  title: Fama-French & Barra
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1073,7 +1073,7 @@ chapters:
   source_path: booklet/07-market-microstructure/128-mm-portfolio-theory.md
 - slug: mm-bid-ask-bounce-vwap-tick-data
   sequence: 129
-  title: 市场微观结构：bid-ask bounce、VWAP、tick 数据特性和高频数据清洗
+  title: Bid-Ask Bounce, VWAP & Tick Data
   section_id: 07-market-microstructure
   section_title: Market Microstructure
   part_id: ''
@@ -1160,14 +1160,14 @@ files:
   booklet/01-python/22-scipy-optimize-minimize-roots.md: 2f2f6a3493b2ffc02d015456717b85344d619f64316b18a35860b67d9e15ad9f
   booklet/01-python/23-scipy-linalg-decompositions-solves.md: 94bfcdbecf044464346bfad809d7d37241a4be0c0ab365efca24ea08ec5bd802
   booklet/01-python/24-scipy-sparse-matrices.md: 58439768414ae653d23cb3d85a5e85923e218ed01ea9e19bc5c29e26c464d035
-  booklet/01-python/25-sklearn-estimator-api-pipeline.md: afdd132a54b310a2a74a89c93ffec9bdf0e0510cc77f5d9ebeaef3d34c1ad691
-  booklet/01-python/26-sklearn-split-cv-timeseries.md: 72c362a03e059f0d34cc15ec025e83bc9ffbe679be0d56bcb3757948075ab5ea
-  booklet/01-python/27-sklearn-preprocessing-columntransformer.md: a956cdce9499ff130d13dc3bdd5ac3fc36cededfdff0a4c67737431db21abbdd
+  booklet/01-python/25-sklearn-estimator-api-pipeline.md: d5d89fe8e7bbf6454b35b8324914bcf5d713bb2bfed81e024bb8353849552589
+  booklet/01-python/26-sklearn-split-cv-timeseries.md: eb93cc2a8980163d8f9c16f950b01eb61173f1676209249a54b26bacdb16875a
+  booklet/01-python/27-sklearn-preprocessing-columntransformer.md: 1d52abb7464d37f483673eb8dd540fe71dbb9c760ee58bacd33a7242ec93e5b0
   booklet/01-python/28-sklearn-supervised-models-metrics.md: f9d21b051f9c2857e354c7791fe5a1d72e4a61ddc8d61ebb39c9ecb3e20b747d
-  booklet/01-python/29-sklearn-model-selection-search.md: f386391f915ffcacc8e9c6f0c0aacc52daa476aff89ef9ca92aad1c6a0533a09
-  booklet/01-python/30-sklearn-feature-importance-explain.md: f64cf2d255ce8fa8dda24c7924d83eaf429c45a748fa860c2abfb8d966a4e9ee
+  booklet/01-python/29-sklearn-model-selection-search.md: 78f710d96d8aac0d06352c8b970db48e6b640b6a8b81874af01c94a6b96b1fb4
+  booklet/01-python/30-sklearn-feature-importance-explain.md: 045135053286edc0c807bcd56998dc5d9fe9bb2e53d677880481aae723de5404
   booklet/01-python/31-sklearn-pandas-numpy-interop.md: a128dc52d970af5e00f070fd1d3305396918c8afdec70e81edd59cb67d8c0834
-  booklet/01-python/32-matplotlib-figure-axes-basic-plots.md: 7518f5b81c61dbf07e12ffe2c1223f6f9a7ab67aa605f74f8769b606834fa6eb
+  booklet/01-python/32-matplotlib-figure-axes-basic-plots.md: baff91b7463c726aa9536fe3c0dd1898165b996ef6c4eeca5847e9f5dd998044
   booklet/01-python/33-matplotlib-labels-legends-styles.md: 59e96cd8756ae85edc4ff929a44d4ca3464474ec7a61ab012a77f4d0e8bb6351
   booklet/01-python/34-matplotlib-subplots-layouts.md: 1c7717038f6619c450234c170a5b105aac966aa023f06ad4a57d024ce4a10eb9
   booklet/01-python/35-matplotlib-distribution-diagnostic-plots.md: 1152007f029f75e61f12dc92d1f3a12d02773b9e65913480449ee3d13a7ba536
@@ -1176,23 +1176,23 @@ files:
   booklet/01-python/38-statsmodels-overview-data-results.md: caf5c5cb3bfc370a486d4481a65b52673b0b3a11723db1cf8eb76870f9346e3a
   booklet/01-python/39-statsmodels-ols-matrix-formula-summary.md: afb882fd0d45a1877259e0f2f8989aba34cdfb58c2d59fb067f82fb69e9c7984
   booklet/01-python/40-statsmodels-regression-diagnostics-robust-se.md: f032e8885326e4a04edbb557db10fcb5e8656e492d06136915d6bf0c6026f612
-  booklet/01-python/41-statsmodels-timeseries-arima-sarimax.md: affac2a94591c5cc922366d1c9e9eaa9a38faeeaf2292e00aed97bce97d8dc09
+  booklet/01-python/41-statsmodels-timeseries-arima-sarimax.md: 64ca483e8950562b21eb38213a1db0dd70b2bd295280ce9b67a66ca9caf6dd6e
   booklet/01-python/42-python-vectorization-concepts.md: c588530f5883ff2f3eb4197e5071adf4bea524a931f086a0ff50c3ce04ce9fb8
-  booklet/01-python/43-python-memory-layout.md: 924ed6a621ace5a4cf5af8833d698c015f884064c840655167f3bf6f35cc1d14
-  booklet/01-python/44-python-multiprocessing.md: 0164912bbc1096dd73ed133eb97e8efe0e665758f8b681cf7d556ffae5a48dd6
+  booklet/01-python/43-python-memory-layout.md: 87db0fb79b52978133c8d4544bef39daa7cdd83e74f211022321a963c8ee5d81
+  booklet/01-python/44-python-multiprocessing.md: 359d8254507450946a59844e77f606483bdc06b7e7b89183b624d471b4ff3cbe
   booklet/01-python/45-python-profiling.md: 09d32c4153435f40ec5662d024f49c4b81b7bd81b69f818dbc4dfe883cf05a6d
   booklet/01-python/46-python-data-alignment.md: 0c173206286894bd87300e5f038de5486d8902a876446f6b5eaad277f5911e59
   booklet/01-python/47-python-rolling-window.md: f5c7ba564eef58eed9d67a8adf29a7be3f50610be7e43e800e22ec321d802ef6
-  booklet/01-python/48-python-feature-pipeline.md: f075cccaa2d36471654b9ff38a0f3aca53547a9534e307b7e0b2630a5c67e9b0
-  booklet/01-python/49-python-backtest-leakage.md: 6b4749ccaf7a829ac5e8ec6a9cf894985f1d3c8030f38f174d672fa34bb7bd9f
-  booklet/01-python/50-python-lookahead-bias.md: a8a67192f898dc55a6faa55f4696270e368d189d52aeaf1758a9a45e8adc1373
+  booklet/01-python/48-python-feature-pipeline.md: 44a4fbca9f06ebd2052d26d1dcff969c290a03d730967797c7c1d5feb6a3bba1
+  booklet/01-python/49-python-backtest-leakage.md: 11e1962d37b026773d92aa69dda20da0242b23c385bf652078bb692c648e9ebb
+  booklet/01-python/50-python-lookahead-bias.md: fe87aa0084477f315f9f5e5666e1ed0590ec78b080c15e1085fc02623e9a8c2c
   booklet/02-probability-timeseries/51-statistics-ols.md: 252ad7aa376f52299a453595232d8cf5e04749bc3f5f865f6e14eb04f6850b8a
-  booklet/02-probability-timeseries/52-statistics-regularization.md: 4e46418597c808aa75e91e6d24bfa20d426cb6ee98979ceea7133704179a700a
+  booklet/02-probability-timeseries/52-statistics-regularization.md: ba74b32245a2a485448edfd9d79e07d01687c8c29e330995d52c27584bb1740f
   booklet/02-probability-timeseries/53-statistics-pca.md: 6daf31810ee56392d74b1c61ddad2331ffbc61fa8decc7f36a2047bd479dd068
-  booklet/02-probability-timeseries/54-statistics-covariance-shrinkage.md: 39423324dbe075fdd35d449311a9cf88c984667d1ddf1a2cab9c0048b97181e8
-  booklet/02-probability-timeseries/55-statistics-bootstrap.md: 06067e5de7f73788cc360b66bdd3c85ba2a1aaa1c0bb445592bc7cddf6f53d10
+  booklet/02-probability-timeseries/54-statistics-covariance-shrinkage.md: 5a3414280c7f3f569ff35aca07293738349499ce4f53f92199c5ac89dc4955b3
+  booklet/02-probability-timeseries/55-statistics-bootstrap.md: 527b58ae610bb9d1535e4a64b755ea2fe27ba587f80501529c701a7d7cedaa7d
   booklet/02-probability-timeseries/56-statistics-bayesian-basics.md: b59703c67630eaadbda9232b6869c84baacf89a7aca2427a9187f6bc92dcb210
-  booklet/02-probability-timeseries/57-statistics-cross-sectional-regression.md: e512eb65ecff533844283c5f69803fbcee96bc44cc2ad6d0d9715e825668bfee
+  booklet/02-probability-timeseries/57-statistics-cross-sectional-regression.md: 93781ca13814308f10ab09affdf6a9b952931082e6ede293b29714222d757bac
   booklet/02-probability-timeseries/58-statistics-factor-model.md: 5a025a5d41d283009910cc0efe56fc646fa3f429e3da998407675ed23d9f340e
   booklet/02-probability-timeseries/59-statistics-ic-rankic.md: 3b5f26bbe344c97a2c6e8e91326b43403a03a2f6f35d6bfaa012ee3d016629dd
   booklet/02-probability-timeseries/60-statistics-turnover.md: 92d9a2bad209eb90fcfbebbcf3e41acdefcf8e21bcb5f255414a3bce69587382
@@ -1202,70 +1202,70 @@ files:
   booklet/02-probability-timeseries/64-timeseries-stochastic-calculus-option-pricing.md: 260250d81ee30f900c6936aa0ef6aac8bcef2ee30a79a889913af544297faef3
   booklet/02-probability-timeseries/65-timeseries-arima.md: ce18402d4af0ef4a31d33e591bc6ee9466faa874a45b54f6f00b37b2c131f4ec
   booklet/02-probability-timeseries/66-timeseries-garch-stationarity-autocorrelation-cointegration.md: faed237a99950c5d5068faab45b45932270ce02fed13e4771b42232dc79466af
-  booklet/02-probability-timeseries/67-timeseries-kalman-filter.md: 61a7347e118e3607e8c0ab0cbaba1b6c1cd812aa2cc84fdfe9eb1804186a35b9
+  booklet/02-probability-timeseries/67-timeseries-kalman-filter.md: c93c977019e512106b56ec678e9038732a5ecd1d1b181a4eb832871eb342e8d6
   booklet/02-probability-timeseries/68-timeseries-regime-switch.md: c26d5788157032778b6780dae5d8d6f6a423f5673cf87727032ee580588289cc
   booklet/02-probability-timeseries/69-timeseries-cointegration.md: 5848745384a7d7923189e552f73e0bf25a364701f4977377dfb9a7bb2a5940b8
   booklet/02-probability-timeseries/70-timeseries-stationarity.md: e7613799b4c66819aa98974e3917aceb84b6841205927e45d0f8b9c19da532f4
-  booklet/02-probability-timeseries/71-timeseries-autocorrelation.md: 46f8b12cb1e46aea3da815eef44e59a866a85660c5a29b6f3847e807ce4d6987
+  booklet/02-probability-timeseries/71-timeseries-autocorrelation.md: 0f54432f98903a746c9eb2974f16b4355546d525b20c1f17059d3a183287b718
   booklet/02-probability-timeseries/72-timeseries-windows-leakage-nonstationarity.md: b0b389145d597c73efeae161c63747a54ba48c102ad49f50b59084ac78c8ff97
   booklet/03-data-structures-algorithms/73-dsa-hashmap.md: 4178814bb6cdf9a1839bd9b91bce5bcfd8cc464e0bd4797a461c62bfed370e36
   booklet/03-data-structures-algorithms/74-dsa-heap.md: b940a25c6e7f1b2c083e3bffa40d56bbf21aad79b0578dfeae571e9be6f4801d
-  booklet/03-data-structures-algorithms/75-dsa-binary-search.md: 4efec3f47c05d326e50de7330d30a5524418db21c38bca11445cb97a1aa97ed8
+  booklet/03-data-structures-algorithms/75-dsa-binary-search.md: 3fc48b7ed04eba7766eaaab2122c2ff85cdd24f2dc071b7be2e39187bf77ab04
   booklet/03-data-structures-algorithms/76-dsa-deque.md: 9fbe4dad112a7b5c24791edf029861f7e1eea626f0da57671038218e6b60303c
   booklet/03-data-structures-algorithms/77-dsa-sorting.md: ab8ba08abc5eb4804e946bc4ad540de1b3bfc3cb5f29f5bccf4217fb29a26f0c
   booklet/03-data-structures-algorithms/78-dsa-graph-basics.md: c55cb32d29a97fd0ce04953c7fcf24e9e183bae3d9bbce43075137d8d4cd0a8a
-  booklet/03-data-structures-algorithms/79-dsa-rolling-median.md: b7bdff0b60d78b11708eda7039dc7a74359aed10a8ed26180152b60567e230cb
+  booklet/03-data-structures-algorithms/79-dsa-rolling-median.md: b426b31491da2b903530349a50f03f8d3cc6b35bb186229d8a9824f0d6dd347d
   booklet/03-data-structures-algorithms/80-dsa-top-k.md: cd1e6b8e2c764c55b27010486043e31dde1062bedb7ce8d704219b0f339ea079
-  booklet/03-data-structures-algorithms/81-dsa-stream-processing.md: b0523da6f3c458caca9a54d024f6b8f0f67a6df8d4d9639d18d3453d94752986
-  booklet/03-data-structures-algorithms/82-dsa-order-book-simulation.md: 76f6e0fc16130c6155c60d8b22779a962fbbe778fa291246fe86951a266f076f
+  booklet/03-data-structures-algorithms/81-dsa-stream-processing.md: bc453550f152340c33becec8d65afa0feb7c7ab1f763a6517eee69e79c878f8f
+  booklet/03-data-structures-algorithms/82-dsa-order-book-simulation.md: 5aafc506fd3d947f77ace89b5af34cddcd6f299180bfbaf8781c843f0aab6d9e
   booklet/03-data-structures-algorithms/83-dsa-interval-merge.md: 2fa629091a29e1cf90280eb04f2d96d7056b480f5aedc7517069677d872a9874
-  booklet/04-brain-teaser-green-book/84-brainteaser-conditional-probability.md: d8bb03fb4e8c2f90e90b99775341ca296498f16f29413681757ffc6df7698648
-  booklet/04-brain-teaser-green-book/85-brainteaser-bayes.md: a02b989ab68f2c65deba637506db339ede40eb9919c5d49dc7b4c9b6cc26b749
-  booklet/04-brain-teaser-green-book/86-brainteaser-expectation.md: 3d32a1e16e9d508891337699b729552cb8a57ae3a906441d96a6103478dbdce7
-  booklet/04-brain-teaser-green-book/87-brainteaser-combinatorics.md: 729c4eb4eaeaee5cdbf0c62176112f01d67d2f60d121ad386f0487b05c5665d8
-  booklet/04-brain-teaser-green-book/88-brainteaser-optimal-stopping.md: cdef376202e02e09364e0dffa2d6d26543172257ddbbd4306c827dc520181bb0
-  booklet/04-brain-teaser-green-book/89-brainteaser-game-theory.md: 47c529f0be0ea4f6adf194139d87be4ebf49e9ff2b7c0d03ce60e01dd1f61062
-  booklet/04-brain-teaser-green-book/90-brainteaser-mental-math-estimation.md: d57055ed7e7000603d521c9516389ac54e1a603f7c1d276c66c5812c06a25f9f
-  booklet/05-machine-learning/100-ml-tree-feature-importance.md: 23b1c9553a27edbf2be3910b8d82724bcfa468a1566b0f338a06b33e9a54986e
-  booklet/05-machine-learning/101-ml-linear-model-baseline.md: db2f2892741dae39990fed038177e5b82c63f1bc3f72db3818a06b13e73f9cbf
+  booklet/04-brain-teaser-green-book/84-brainteaser-conditional-probability.md: 823b5290456f9f55993c1f77e190fd3d508605f02103c531cd8ceb54e1bd0fb5
+  booklet/04-brain-teaser-green-book/85-brainteaser-bayes.md: 63291beba3950287e67e1f00b3d2d300c5768cd81a950476869133462750d058
+  booklet/04-brain-teaser-green-book/86-brainteaser-expectation.md: 7d10962ef295bb7094478644d0fd7793f71c849c142f88121a1765600cb9e5b9
+  booklet/04-brain-teaser-green-book/87-brainteaser-combinatorics.md: 9066946a2903b9c2314bbdd49dc970b1b69d3f8d921c69c4bf5714d08c62b453
+  booklet/04-brain-teaser-green-book/88-brainteaser-optimal-stopping.md: 06603ad31cbe71b2ce611b0c3cb359f134eafb79c4f199527a7574527fc34bd9
+  booklet/04-brain-teaser-green-book/89-brainteaser-game-theory.md: 7471943b54b51e623c3d6a18431b488f20dfb8b1bdfd8950d540607b36dab553
+  booklet/04-brain-teaser-green-book/90-brainteaser-mental-math-estimation.md: 2e2d1dfdf541b2cba7fb42e70a8d514eec0b6959a1dc19a6b9ac29361367dab7
+  booklet/05-machine-learning/100-ml-tree-feature-importance.md: 571e1179cad9baac7d8175b8171d593d52511cf8615c907d52b3a99f3e022197
+  booklet/05-machine-learning/101-ml-linear-model-baseline.md: 37315e8c747f920ebf7628c8e9a93835513b74a7683f2a803717a0c7507bdd1a
   booklet/05-machine-learning/102-ml-svm.md: 59d4db91da1a15f6cc98573372dfcf4e140ed10e02eccd4c2a585a1505dd7cf7
   booklet/05-machine-learning/103-ml-k-means.md: 6c833fcba2db6e762bb2986ef9420e4fed10aabb3634db4bca3424d0b6f3eb07
-  booklet/05-machine-learning/104-ml-feature-importance.md: e0dbedecf04c3f2b9e076d955d8d637d37b16fa4d03f4902924d75e12e83006d
-  booklet/05-machine-learning/105-ml-overfitting-diagnosis.md: d261b3ecc7be0b8d01ae6d07cf83291b046b047c4b2e52a87632591bf45039b9
-  booklet/05-machine-learning/106-ml-hyperparameter-tuning.md: 81c04f2576afcb6791f3ce4e336d542eddec581237f5e0062ecc7ccd4f19f032
-  booklet/05-machine-learning/107-ml-ensemble.md: 6ada561450e06d6fe6ed5c86b21b9d5863d71849c7381a6cbb726504ede4725b
+  booklet/05-machine-learning/104-ml-feature-importance.md: dcf0e510000b2c193674427298bf8b25d0efb7ed00ec7a5d852e2220040c583c
+  booklet/05-machine-learning/105-ml-overfitting-diagnosis.md: 8646908e4ae3501e2cbbff31f494964b7118d34f00b6ab65d94692f9e24fd935
+  booklet/05-machine-learning/106-ml-hyperparameter-tuning.md: 4e3472fbe884b80990b3c0145fd859b5e0a6358beb5c3973e5047ac19f8dbbaf
+  booklet/05-machine-learning/107-ml-ensemble.md: 1e22a05992c2c43f437b7dc4c60c55ff6491610c62ca18a0114590d79eef64b4
   booklet/05-machine-learning/91-ml-robustness.md: 5ff2a5f0876a5be1b7f30183a7f9a80c9bd5da27ed219752ea5af9f8b84f050e
   booklet/05-machine-learning/92-ml-stability.md: 979143c5416b9508fe760f2383bbbc26cd26fa47ac6385dd2a4020ce2ba7797c
   booklet/05-machine-learning/93-ml-regime.md: 81a39f9c921ec032dac64dfa1e274898689e29da0bf5b8adab4108b5f4ea5a75
-  booklet/05-machine-learning/94-ml-feature-decay.md: 68da45c3a693298644b73d838a889f719e3081d5575b1feca77b25e906913916
-  booklet/05-machine-learning/95-ml-transaction-cost.md: 8a201feb2bc44e3f904b2ce72a50107c129f71e838f653a7ddea29c72fa36987
-  booklet/05-machine-learning/96-ml-decision-tree-split-criteria.md: 0f1cf51353c009f48fbaa8b076a692a4d5ccd71d975d0fa2ae25e246b2d59eec
+  booklet/05-machine-learning/94-ml-feature-decay.md: 285a17bc383fe0278d3d41f84ba48f0edcc63e8b93e366fdb8107b848399b705
+  booklet/05-machine-learning/95-ml-transaction-cost.md: d453bc30ceeba876c927326de8ce3a7e52034c9c74e6ed5ef21606422b58f057
+  booklet/05-machine-learning/96-ml-decision-tree-split-criteria.md: 9a32fe18153feeed5cb3c151bdac2614cdcaeec73cdd05d0a2b296958a99201c
   booklet/05-machine-learning/97-ml-decision-tree-overfitting-control.md: 2c128d43ba35528cf752186105c3858531a0e52edcdcc3daadec928d6bda42df
   booklet/05-machine-learning/98-ml-random-forest.md: 829966f0cb463bed223f1bca9fde2e2727eec67facd3fbc2a987c0c6f8ca69bd
-  booklet/05-machine-learning/99-ml-xgboost-lightgbm.md: 30d8003257580ffa16f3fc3afeb644e5e832ac790c1a5a5e991c6dd4a92305e0
+  booklet/05-machine-learning/99-ml-xgboost-lightgbm.md: fd370b2d0619e4c791a93ad8632d872bcd94d0acb08da809d50d1ce9c79136da
   booklet/06-deep-learning/01-foundations/108-ml-neural-network.md: abe813eb616277d5e7568b58171f2798d1b3d2d3eacc2e2f21ebec862329a0dc
   booklet/06-deep-learning/01-foundations/109-ml-training-correctness.md: 8ef5eedf5860d712ad0e91bef6cae0b9d89508c7cd66281cda83c6027dfcb26b
   booklet/06-deep-learning/02-training-optimization/110-ml-optimizer-selection.md: e05850f54f3692dc62bd38d476edab7b58e93c218ecf485a5dc92581bc9f94e3
   booklet/06-deep-learning/02-training-optimization/111-ml-normalization-statistics.md: 9a9585a001d2adea6635a66ffe909fd53adf44cf62d1d63d173443390fa94cc5
   booklet/06-deep-learning/03-sequence-models/112-ml-lstm.md: f2140dd67539207c81338230092b2b2e055c3e40b71a5434420049d19bc4910b
-  booklet/06-deep-learning/03-sequence-models/113-ml-gru.md: b76a9f7730adecfccccd4ded2a5d3880dac0f8c841682be16f0e861eb205e7da
-  booklet/06-deep-learning/03-sequence-models/114-ml-sequence-modeling.md: e83bf49425d4376b756403f0932702bfb666606a020de2e718aa741e7901574e
-  booklet/06-deep-learning/04-attention-transformers/115-ml-attention.md: 0ae8a67732b7dc0cb67f102149b38365f2ad677fa9fba81dbc468161837160b2
-  booklet/06-deep-learning/04-attention-transformers/116-ml-temporal-embedding.md: fb2affe1652ac7770695bf8404bdd7da97f3b96dffe0084f9b77a1263e10ad4c
-  booklet/06-deep-learning/04-attention-transformers/117-ml-transformer-for-ts.md: a20e5ea9546afa213147aef7b78b03effdd1f6ef8feb5ef8939bbcaae7684c01
+  booklet/06-deep-learning/03-sequence-models/113-ml-gru.md: 975c9c57eccc6050bf5232ac4068dafa6722e4bbf65894581718fe8837390155
+  booklet/06-deep-learning/03-sequence-models/114-ml-sequence-modeling.md: 6411dc22dfde521ebec9ea573f0f782d8947b925e9e9e37e229a7cbc2492a2ac
+  booklet/06-deep-learning/04-attention-transformers/115-ml-attention.md: ea52bfe219482025b655595e4466c5d71b728291e102a295b189aa2c8c30e178
+  booklet/06-deep-learning/04-attention-transformers/116-ml-temporal-embedding.md: a5fd871ecf95552e254269cb13efa602a52b3fef5e5bdd79c5744f8ac8004109
+  booklet/06-deep-learning/04-attention-transformers/117-ml-transformer-for-ts.md: f9f18b2ea4062119ba2f67d2cec1b2a713ab4aa573579cdad2f6a2e1023ad7ea
   booklet/06-deep-learning/05-efficient-systems/118-ml-efficient-attention.md: e3ab42b98f1af7bbdcfdecb2ca13150b497c23684ffeaf237cf69a9ca6f43306
   booklet/06-deep-learning/README.md: 3238e0e969090ed8e71dbf97073dd38190de01109d98562ededc4d2bc0222034
   booklet/07-market-microstructure/119-mm-bid-ask-spread.md: 461f7b56a4a70a5943cc1cf7b1f4a61bd3ba5498e4e6eb871e4b872c5de4a248
-  booklet/07-market-microstructure/120-mm-order-imbalance.md: f9ace7124ec35d6fc829155509a5444ad4859143180216befca97c1d2181ee86
-  booklet/07-market-microstructure/121-mm-queue-position.md: ffadc3ed6eb27f5d6a885f46b287db0df59132ff4403e2519bc546bb9fe068fd
-  booklet/07-market-microstructure/122-mm-adverse-selection.md: d1dfd6e052821d35a645b026c17f79a8b6358aec9b12109200aba35c6794c066
-  booklet/07-market-microstructure/123-mm-inventory-risk.md: 1de4733cc9a3a8b11ddae33fa049c4a7c035e49ad03dadddc8ce9d836d82e2c4
-  booklet/07-market-microstructure/124-mm-market-impact.md: 0a1ff97480784fbf0a08f64ea1c7df19ed61b8089ba402551662be6e3dc4baf1
+  booklet/07-market-microstructure/120-mm-order-imbalance.md: c9c46cbe96cf60e8ac0de56f6c6d14265f43ccfd2c0937b366338b83f80a2798
+  booklet/07-market-microstructure/121-mm-queue-position.md: 8c964606a4df2a9163699442838b6d6250ea323bbaf3456285a487735016b0ba
+  booklet/07-market-microstructure/122-mm-adverse-selection.md: 387e351b0f3a642f943d5899f647195cc61430ef52a00c432266d63be576a33a
+  booklet/07-market-microstructure/123-mm-inventory-risk.md: 2c2a3401aa154f4ed6a201ced0e6a08743e3c870ec7338f21f263f17fe4f63bb
+  booklet/07-market-microstructure/124-mm-market-impact.md: 6ae5678373d5b5933a061456bd6f827303486c432d875533938a74a2a4e2b710
   booklet/07-market-microstructure/125-mm-vpin.md: d0f8d678de3623adc66ab0db0b9146fd4fbdf2bd9bc560781f184abcb4297639
-  booklet/07-market-microstructure/126-mm-opening-closing-auction.md: 2bf5ade45bac7c3e0aecf1bd1f6f51acd6032c15bacc2d7d8b5ba4ff7c2b0d6b
-  booklet/07-market-microstructure/127-mm-factor-models-fama-french-barra.md: 0285b67df32077d80d8b64c73ff3b0bbb9068067966b5d6253f94005d97e48d2
+  booklet/07-market-microstructure/126-mm-opening-closing-auction.md: 287fd5b6bc5309a0f514d969d3033f5fe9779265eff740addad679e738f8bc87
+  booklet/07-market-microstructure/127-mm-factor-models-fama-french-barra.md: 6776554fe5fbf3a506a0993bac55696c2fbcc61ea9fa5c3fdee69653ac19da05
   booklet/07-market-microstructure/128-mm-portfolio-theory.md: 64d54876dc5bb036306f31e9dcd13703c4416357372f1e620eb4a21dcf52aa2a
-  booklet/07-market-microstructure/129-mm-bid-ask-bounce-vwap-tick-data.md: 47dc3a4898de1483fc6580ff9008849960b08b5766c21d0d4fc57b3abd79193c
+  booklet/07-market-microstructure/129-mm-bid-ask-bounce-vwap-tick-data.md: 8c36cb7f8cd68aa4212c63960f977206b36df7bdaef3abff7d3debe91587b374
   booklet/07-market-microstructure/130-mm-backtesting-frameworks.md: 879d97ae874798246e8477903175ed98b6967d993aa9557dfda319c58f67a617
   booklet/08-computer-science/131-cs-big-o.md: 3dc18670fea9af46b79137a198bce5c437f919b137df367c7423a70e92abe0b5
   booklet/08-computer-science/132-cs-list-dict-set.md: 418b8e04f00802f36e4d5761ed2184dc2565538a6b26d1fe82d2aa15509e18eb

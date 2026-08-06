@@ -1,4 +1,4 @@
-# 机器学习：hyperparameter tuning 的搜索空间、验证集、随机搜索、贝叶斯优化和调参过拟合
+# Hyperparameter Tuning
 
 ## 核心概念
 

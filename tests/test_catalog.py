@@ -107,6 +107,13 @@ def test_repository_catalog_is_valid() -> None:
     assert all(stage.summary for stage in deep_learning_path.stages)
     assert catalog.knowledge.node_by_slug["mm-market-impact"].level == "applied"
     assert catalog.knowledge.node_by_slug["cs-git-version-control"].level == "engineering"
+    navigation_nodes = catalog.knowledge.navigation_nodes
+    assert len(navigation_nodes) == len(catalog.knowledge.nodes)
+    assert len({node.id for node in navigation_nodes}) == len(navigation_nodes)
+    assert all(
+        catalog.knowledge.next_page_for(node.id) is navigation_nodes[(index + 1) % len(navigation_nodes)]
+        for index, node in enumerate(navigation_nodes)
+    )
 
 
 def test_long_knowledge_topics_have_complete_bounded_subtopics() -> None:
@@ -145,12 +152,53 @@ def test_long_knowledge_topics_have_complete_bounded_subtopics() -> None:
             if not topic.subtopics:
                 assert len(catalog.knowledge.nodes_for_topic(domain.id, topic.id)) <= 30
 
+    probability_nodes = catalog.knowledge.nodes_for_subtopic(
+        "foundations",
+        "probability-statistics",
+        "probability-distributions",
+    )
+    probability_ids = [node.id for node in probability_nodes]
+    assert probability_ids[:7] == [
+        "probability-normalization",
+        "expected-value",
+        "variance",
+        "conditional-probability",
+        "bayes-theorem",
+        "bayesian-inference",
+        "maximum-a-posteriori-estimation",
+    ]
+    assert probability_ids[7:14] == [
+        "gaussian-distribution",
+        "binomial-distribution",
+        "hypergeometric-distribution",
+        "beta-distribution",
+        "beta-binomial-model",
+        "exponential-distribution",
+        "poisson-distribution",
+    ]
+
 
 def test_quant_chapter_titles_do_not_repeat_filename_sequences() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     assert catalog.knowledge is not None
     assert all(not re.match(r"^\d+\.\s", chapter.title) for chapter in catalog.knowledge.chapters)
     assert all(not re.match(r"^#\s+\d+\.\s", chapter.body) for chapter in catalog.knowledge.chapters)
+    assert max(len(chapter.title) for chapter in catalog.knowledge.chapters) < 38
+    assert catalog.knowledge.chapter_by_slug["statistics-bootstrap"].title == "bootstrap"
+    expected_green_book_titles = {
+        "brainteaser-conditional-probability": "Conditional Expectation",
+        "brainteaser-bayes": "Bayes' Theorem",
+        "brainteaser-expectation": "Expectation",
+        "brainteaser-combinatorics": "Combinatorics",
+        "brainteaser-optimal-stopping": "Optimal Stopping",
+        "brainteaser-game-theory": "Game Theory",
+        "brainteaser-mental-math-estimation": "Mental Math & Estimation",
+    }
+    for slug, title in expected_green_book_titles.items():
+        assert catalog.knowledge.chapter_by_slug[slug].title == title
+        node = catalog.knowledge.node_by_slug[slug]
+        assert node.source_id == "quant-knowledge"
+        assert node.source_label == "Green Book"
 
 
 def test_report_routes_are_unique() -> None:

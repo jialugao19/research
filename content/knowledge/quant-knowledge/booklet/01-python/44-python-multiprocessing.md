@@ -1,4 +1,4 @@
-# Python 理解项：multiprocessing 进程并行、数据传递与适用边界
+# Multiprocessing
 
 ## 核心概念
 

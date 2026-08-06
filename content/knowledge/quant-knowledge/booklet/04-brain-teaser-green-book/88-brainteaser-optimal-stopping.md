@@ -1,4 +1,4 @@
-# Brain Teaser / Green Book：optimal stopping 的阈值策略、秘书问题和停止规则应用
+# Optimal Stopping
 
 ## 核心概念
 

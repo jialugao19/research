@@ -1,4 +1,4 @@
-# 市场微观结构扩展：Fama-French、Barra 风险因子、因子构造和中性化
+# Fama-French & Barra
 
 ## 核心概念
 

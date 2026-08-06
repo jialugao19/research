@@ -1,4 +1,4 @@
-# 市场微观结构：market impact 的临时/永久冲击、订单规模和执行成本
+# Market Impact
 
 ## 核心概念
 

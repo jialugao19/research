@@ -1,4 +1,4 @@
-# 数据结构与算法：rolling median 的双堆维护、延迟删除和滑动窗口应用
+# Rolling Median
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 机器学习：GRU 的 update gate、reset gate、候选隐藏状态和 LSTM 对比
+# GRU
 
 ## 核心概念
 

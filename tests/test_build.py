@@ -25,6 +25,22 @@ def test_subtopic_filter_and_anchor_behaviors_are_bundled() -> None:
     assert "target.open = true" in javascript
 
 
+def test_knowledge_article_spacing_is_compact() -> None:
+    stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+
+    assert ".article-header { max-width: 960px; padding: clamp(72px, 8vw, 118px) 0 18px; }" in stylesheet
+    assert ".article-source-note { max-width: 960px; margin: 0; padding: 5px 0 4px;" in stylesheet
+    assert ".knowledge-prose { max-width: 840px; padding: 18px 0 40px;" in stylesheet
+    assert ".knowledge-prose h2 { margin: 24px 0 7px; padding-top: 7px;" in stylesheet
+    assert ".knowledge-prose h3 { margin: 12px 0 4px;" in stylesheet
+    assert ".knowledge-prose p { margin: 0 0 9px; }" in stylesheet
+    assert ".knowledge-prose ul, .knowledge-prose ol { margin: 0 0 8px;" in stylesheet
+    assert ".knowledge-prose pre { overflow: auto; margin: 8px 0;" in stylesheet
+    assert ".math-block { max-width: 100%; overflow-x: auto; margin: 9px 0;" in stylesheet
+    assert ".knowledge-next-page { position: fixed;" in stylesheet
+    assert ".related-concept-rows { display: grid; gap: 6px; }" in stylesheet
+
+
 def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     assert catalog.homepage is not None
@@ -161,6 +177,14 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     article = (
         output / "knowledge" / "machine-intelligence" / "nlp-transformers" / "attention-mechanism" / "index.html"
     ).read_text(encoding="utf-8")
+    gradient_descent = (
+        output
+        / "knowledge"
+        / "machine-intelligence"
+        / "machine-learning"
+        / "gradient-descent"
+        / "index.html"
+    ).read_text(encoding="utf-8")
     chapter = (
         output
         / "knowledge"
@@ -177,6 +201,14 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
         / "mm-market-impact"
         / "index.html"
     ).read_text(encoding="utf-8")
+    green_book = (
+        output
+        / "knowledge"
+        / "foundations"
+        / "probability-statistics"
+        / "brainteaser-expectation"
+        / "index.html"
+    ).read_text(encoding="utf-8")
     payload = (output / "knowledge.json").read_text(encoding="utf-8")
 
     assert "Knowledge Graph" in index
@@ -190,6 +222,10 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert "Independent sources" not in index
     assert "DeepML concepts" not in index
     assert "Quant chapters" not in index
+    assert "Related Readings" in index
+    assert "Use these notes for theoretical background, standard notation" in index
+    assert "Use this book to cross-check terminology, equations" in index
+    assert index.rfind("Related Readings") > index.rfind("Research bridge")
     assert "Domain 02" in domain
     assert "Learning algorithms, neural architectures, optimization, and model operations." in domain
     assert "NLP &amp; Transformers" in topic
@@ -212,24 +248,47 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert "Five applied deep-learning parts" in deep_learning_topic
     assert "Part 5 · Efficient Systems" in deep_learning_topic
     assert '<html lang="zh-CN">' in article
-    assert "Knowledge card" in article
+    assert "Knowledge card" not in article
     assert "Machine Intelligence" in article
     assert "NLP &amp; Transformers" in article
     assert "Attention" in article
-    assert "<dt>Subtopic</dt>" in article
+    assert '<p class="article-source-note">articles/attention-mechanism.md · source class nlp</p>' in article
+    assert "关键词：" not in article
+    assert article.count(catalog.knowledge.node_by_slug["attention-mechanism"].summary) == 1
     assert "#subtopic-attention" in article
+    assert 'class="knowledge-next-page"' in article
+    expected_next = catalog.knowledge.next_page_for("attention-mechanism")
+    assert f'href="/{expected_next.route}"' in article
+    assert f"Next page: {expected_next.title}" in article
+    assert article.count('class="related-concept-row"') == 3
+    assert 'href="/knowledge/foundations/linear-algebra/matrix-multiplication/"' in article
+    assert "Prerequisites" not in article
+    assert "Next concepts" not in article
+    assert "延伸阅读" not in article
+    assert "概念误解" not in article
+    assert "数学误解" not in article
+    assert "使用误区" not in article
     assert "DeepML" in article
     assert "<math" in article
     assert "matplotlib" not in article
     assert '<html lang="zh-CN">' in chapter
-    assert "Knowledge card" in chapter
+    assert "Knowledge card" not in chapter
     assert "Systems Engineering" in chapter
     assert "Python &amp; Data Stack" in chapter
     assert "Quant Knowledge" in chapter
+    assert "<dt>Domain</dt>" not in chapter
     assert "numpy.ndarray 是 NumPy 最核心的数据结构" in chapter
     assert "Market Microstructure" in microstructure
     assert "Research bridge" in microstructure
     assert "Order-book data foundation" in microstructure
+    assert "<h1>Expectation</h1>" in green_book
+    assert "· Green Book</p>" in green_book
+    assert "Brain Teaser / Green Book：期望" not in green_book
+    assert "为什么需要它" not in gradient_descent
+    assert "模型需要从错误中调整参数" in gradient_descent
+    assert gradient_descent.index("数学定义") < gradient_descent.index("核心直觉")
+    assert "CS229 Machine Learning Notes" not in gradient_descent
+    assert "Deep Learning Book" not in gradient_descent
     assert '"schema_version": 4' in payload
     assert '"nodes": 871' in payload
     parsed_payload = json.loads(payload)

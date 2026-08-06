@@ -1,4 +1,4 @@
-# 市场微观结构：order imbalance 的盘口数量不平衡和短期价格压力
+# Order Imbalance
 
 ## 核心概念
 

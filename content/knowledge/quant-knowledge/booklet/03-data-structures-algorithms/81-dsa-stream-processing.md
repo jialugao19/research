@@ -1,4 +1,4 @@
-# 数据结构与算法：stream processing 的在线状态、窗口、乱序事件和增量计算
+# Stream Processing
 
 ## 核心概念
 

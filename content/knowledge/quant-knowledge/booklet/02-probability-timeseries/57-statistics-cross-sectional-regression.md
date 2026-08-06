@@ -1,4 +1,4 @@
-# 概率统计：cross-sectional regression 横截面回归、因子收益与截面解释
+# Cross-Sectional Regression
 
 ## 核心概念
 

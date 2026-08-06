@@ -1,4 +1,4 @@
-# 市场微观结构：opening/closing auction 的集合竞价撮合价、订单不平衡和开收盘流动性
+# Opening & Closing Auction
 
 ## 核心概念
 

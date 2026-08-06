@@ -1,4 +1,4 @@
-# Brain Teaser / Green Book：贝叶斯公式、基础率和反向条件概率应用
+# Bayes' Theorem
 
 ## 核心概念
 

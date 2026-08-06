@@ -20,7 +20,7 @@ from .catalog import (
     Study,
     Subproject,
 )
-from .knowledge import knowledge_payload, render_knowledge_node_markdown
+from .knowledge import KnowledgeCatalog, knowledge_payload, render_knowledge_node_markdown
 from .report_content import load_report_source, render_report_source
 
 def normalize_base_url(value: str) -> str:
@@ -109,6 +109,36 @@ def _group_subprojects(subprojects: tuple[Subproject, ...]) -> list[dict[str, ob
             groups.append({"title": subproject.group, "subprojects": items})
         by_title[subproject.group].append(subproject)
     return groups
+
+
+def _related_concept_rows(
+    knowledge: KnowledgeCatalog,
+    node_id: str,
+    source_groups: tuple[tuple[str, ...], ...],
+) -> tuple[tuple[dict[str, str], ...], ...]:
+    groups = source_groups
+    if not groups:
+        groups = tuple(
+            tuple(item.title for item in items)
+            for items in (
+                knowledge.prerequisite_nodes_for(node_id),
+                knowledge.related_nodes_for(node_id),
+                knowledge.next_nodes_for(node_id),
+            )
+            if items
+        )
+
+    rows: list[tuple[dict[str, str], ...]] = []
+    for group in groups[:3]:
+        cards: list[dict[str, str]] = []
+        for title in group:
+            target = knowledge.node_for_title(title)
+            if target is not None and target.id == node_id:
+                continue
+            cards.append({"title": title, "route": target.route if target is not None else ""})
+        if cards:
+            rows.append(tuple(cards))
+    return tuple(rows)
 
 
 def _select_project_evidence(studies: list[Study]) -> Study | None:
@@ -515,18 +545,8 @@ def build_site(
             active_subtopic=node.subtopic_id or None,
             nav_section="knowledge",
             node=node,
-            prerequisites=knowledge.prerequisite_nodes_for(node.id),
-            next_nodes=knowledge.next_nodes_for(node.id),
-            related=knowledge.related_nodes_for(node.id)[:12],
-            topic_peers=tuple(
-                item
-                for item in (
-                    knowledge.nodes_for_subtopic(node.domain_id, node.topic_id, node.subtopic_id)
-                    if node.subtopic_id
-                    else knowledge.nodes_for_topic(node.domain_id, node.topic_id)
-                )
-                if item.id != node.id
-            )[:8],
+            next_page=knowledge.next_page_for(node.id),
+            related_rows=_related_concept_rows(knowledge, node.id, rendered.related_groups),
             research_links=knowledge.research_links_for(node.domain_id, node.topic_id),
             body_html=Markup(rendered.html),
             toc=rendered.toc,

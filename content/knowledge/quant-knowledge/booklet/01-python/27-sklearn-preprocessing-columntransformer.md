@@ -1,4 +1,4 @@
-# sklearn：preprocessing：StandardScaler、OneHotEncoder 与 ColumnTransformer
+# ColumnTransformer
 
 ## 核心概念
 
