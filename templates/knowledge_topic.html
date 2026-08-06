@@ -30,9 +30,28 @@
   <label><span>Content type</span><select data-knowledge-domain><option value="">All content</option><option value="Concept">Concept</option><option value="Chapter">Chapter</option></select></label>
   <p><strong data-knowledge-count>{{ nodes|length }}</strong> results</p>
 </div>
+{% if topic.subtopics %}
+{% set node_index = namespace(value=0) %}
+<div class="knowledge-subtopic-list" data-knowledge-list>
+  {% for subtopic in topic.subtopics %}
+  {% set subtopic_nodes = knowledge.nodes_for_subtopic(domain.id, topic.id, subtopic.id) %}
+  <details class="knowledge-subtopic" id="{{ subtopic.anchor }}" data-knowledge-group data-subtopic-id="{{ subtopic.id }}"{% if loop.first %} open{% endif %}>
+    <summary>
+      <span class="subtopic-code">{{ "%02d.%02d.%02d"|format(domain.sequence, topic.sequence, subtopic.sequence) }}</span>
+      <div><h2>{{ subtopic.title }}</h2><p>{{ subtopic.summary }}</p></div>
+      <span class="subtopic-count"><strong data-subtopic-count>{{ subtopic_nodes|length }}</strong> nodes</span>
+    </summary>
+    <div class="article-library">
+      {% for node in subtopic_nodes %}{% set node_index.value = node_index.value + 1 %}<a data-knowledge-item data-domain="{{ node.content_type }}" data-search="{{ node.title }} {{ node.summary }} {{ node.keywords|join(' ') }} {{ node.source_label }} {{ subtopic.title }}" href="{{ base_url }}{{ node.route }}"><span class="depth-code">{{ "%03d"|format(node_index.value) }}</span><div><strong lang="zh-CN">{{ node.title }}</strong><p lang="zh-CN">{{ node.summary }}</p></div><small>{{ node.content_type }}<br>{{ node.level }} · {{ node.source_label }}</small></a>{% endfor %}
+    </div>
+  </details>
+  {% endfor %}
+</div>
+{% else %}
 <div class="article-library" data-knowledge-list>
   {% for node in nodes %}<a data-knowledge-item data-domain="{{ node.content_type }}" data-search="{{ node.title }} {{ node.summary }} {{ node.keywords|join(' ') }} {{ node.source_label }}" href="{{ base_url }}{{ node.route }}"><span class="depth-code">{{ "%03d"|format(loop.index) }}</span><div><strong lang="zh-CN">{{ node.title }}</strong><p lang="zh-CN">{{ node.summary }}</p></div><small>{{ node.content_type }}<br>{{ node.level }} · {{ node.source_label }}</small></a>{% endfor %}
 </div>
+{% endif %}
 <p class="empty-filter-state" data-knowledge-empty hidden>No nodes match this filter.</p>
 
 {% if research_links %}

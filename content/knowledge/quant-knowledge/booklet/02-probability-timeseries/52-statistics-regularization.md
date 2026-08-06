@@ -1,4 +1,4 @@
-# 52. 概率统计：regularization 正则化、偏差-方差权衡与岭回归 / Lasso 直觉
+# 概率统计：regularization 正则化、偏差-方差权衡与岭回归 / Lasso 直觉
 
 ## 核心概念
 

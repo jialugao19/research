@@ -1,4 +1,4 @@
-# 26. sklearn：train / test split、交叉验证与时间序列切分
+# sklearn：train / test split、交叉验证与时间序列切分
 
 ## 核心概念
 

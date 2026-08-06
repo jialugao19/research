@@ -1,4 +1,4 @@
-# 03. NumPy：broadcasting
+# NumPy：broadcasting
 
 ## 核心概念
 

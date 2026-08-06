@@ -1,4 +1,4 @@
-# 15. pandas：rolling / expanding / ewm
+# pandas：rolling / expanding / ewm
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 57. 概率统计：cross-sectional regression 横截面回归、因子收益与截面解释
+# 概率统计：cross-sectional regression 横截面回归、因子收益与截面解释
 
 ## 核心概念
 

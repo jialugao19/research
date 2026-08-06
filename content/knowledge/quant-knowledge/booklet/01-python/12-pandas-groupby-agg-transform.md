@@ -1,4 +1,4 @@
-# 12. pandas：groupby / agg / transform
+# pandas：groupby / agg / transform
 
 ## 核心概念
 

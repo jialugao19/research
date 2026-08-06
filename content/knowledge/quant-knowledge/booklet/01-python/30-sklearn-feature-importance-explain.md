@@ -1,4 +1,4 @@
-# 30. sklearn：feature importance、permutation importance 与模型解释
+# sklearn：feature importance、permutation importance 与模型解释
 
 ## 核心概念
 

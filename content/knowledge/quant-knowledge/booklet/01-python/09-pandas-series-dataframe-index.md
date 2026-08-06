@@ -1,4 +1,4 @@
-# 09. pandas：Series、DataFrame 与 Index
+# pandas：Series、DataFrame 与 Index
 
 ## 核心概念
 

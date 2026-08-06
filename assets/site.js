@@ -28,17 +28,6 @@
     );
   }
 
-  const sidebarGroups = [...document.querySelectorAll(".sidebar-group")];
-  for (const group of sidebarGroups) {
-    group.addEventListener("toggle", () => {
-      if (!group.open) return;
-      const navigation = group.closest(".sidebar-nav");
-      for (const sibling of navigation?.querySelectorAll(".sidebar-group[open]") || []) {
-        if (sibling !== group) sibling.open = false;
-      }
-    });
-  }
-
   const tocLinks = [
     ...document.querySelectorAll(
       '.doc-toc a[href^="#"], .mobile-toc-navigation a[href^="#"]',
@@ -160,9 +149,12 @@
   const knowledgeSearch = document.querySelector("[data-knowledge-search]");
   const knowledgeDomain = document.querySelector("[data-knowledge-domain]");
   const knowledgeItems = [...document.querySelectorAll("[data-knowledge-item]")];
+  const knowledgeGroups = [...document.querySelectorAll("[data-knowledge-group]")];
   const knowledgeCount = document.querySelector("[data-knowledge-count]");
   const knowledgeEmpty = document.querySelector("[data-knowledge-empty]");
   if (knowledgeItems.length && (knowledgeSearch || knowledgeDomain)) {
+    const savedOpenState = new Map();
+    let filteringActive = false;
     const requestedDomain = new URLSearchParams(window.location.search).get("domain") || "";
     if (knowledgeDomain && [...knowledgeDomain.options].some((option) => option.value === requestedDomain)) {
       knowledgeDomain.value = requestedDomain;
@@ -170,6 +162,10 @@
     const filterKnowledge = () => {
       const query = (knowledgeSearch?.value || "").trim().toLocaleLowerCase();
       const domain = knowledgeDomain?.value || "";
+      const nextFilteringActive = Boolean(query || domain);
+      if (nextFilteringActive && !filteringActive) {
+        for (const group of knowledgeGroups) savedOpenState.set(group, group.open);
+      }
       let visible = 0;
       for (const item of knowledgeItems) {
         const haystack = (item.dataset.search || "").toLocaleLowerCase();
@@ -177,11 +173,43 @@
         item.hidden = !show;
         if (show) visible += 1;
       }
+      for (const group of knowledgeGroups) {
+        const groupItems = [...group.querySelectorAll("[data-knowledge-item]")];
+        const groupVisible = groupItems.filter((item) => !item.hidden).length;
+        const groupCount = group.querySelector("[data-subtopic-count]");
+        group.hidden = groupVisible === 0;
+        if (groupCount) groupCount.textContent = String(groupVisible);
+        if (nextFilteringActive && groupVisible > 0) group.open = true;
+        else if (!nextFilteringActive && filteringActive) {
+          group.hidden = false;
+          group.open = savedOpenState.get(group) ?? group.open;
+        }
+      }
+      filteringActive = nextFilteringActive;
       if (knowledgeCount) knowledgeCount.textContent = String(visible);
       if (knowledgeEmpty) knowledgeEmpty.hidden = visible !== 0;
     };
     knowledgeSearch?.addEventListener("input", filterKnowledge);
     knowledgeDomain?.addEventListener("change", filterKnowledge);
     filterKnowledge();
+  }
+
+  const openSubtopicHash = (hash, scroll) => {
+    if (!hash.startsWith("#subtopic-")) return false;
+    const target = document.getElementById(decodeURIComponent(hash.slice(1)));
+    if (!(target instanceof HTMLDetailsElement)) return false;
+    target.open = true;
+    if (scroll) window.requestAnimationFrame(() => target.scrollIntoView({ block: "start" }));
+    return true;
+  };
+  if (window.location.hash) openSubtopicHash(window.location.hash, true);
+  window.addEventListener("hashchange", () => openSubtopicHash(window.location.hash, true));
+  for (const link of document.querySelectorAll('a[href*="#subtopic-"]')) {
+    link.addEventListener("click", (event) => {
+      const targetUrl = new URL(link.href, window.location.href);
+      if (targetUrl.pathname !== window.location.pathname || !openSubtopicHash(targetUrl.hash, true)) return;
+      event.preventDefault();
+      window.history.pushState(null, "", targetUrl.hash);
+    });
   }
 })();

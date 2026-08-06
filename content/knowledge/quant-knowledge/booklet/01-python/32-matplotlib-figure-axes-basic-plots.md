@@ -1,4 +1,4 @@
-# 32. matplotlib：Figure / Axes 与基础 line、scatter、bar 图
+# matplotlib：Figure / Axes 与基础 line、scatter、bar 图
 
 ## 核心概念
 

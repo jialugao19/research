@@ -1,4 +1,4 @@
-# 42. Python 理解项：vectorization 向量化的含义、收益与边界
+# Python 理解项：vectorization 向量化的含义、收益与边界
 
 ## 核心概念
 

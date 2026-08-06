@@ -1,4 +1,4 @@
-# 41. statsmodels：时间序列模型接口：ARIMA / SARIMAX 基础与预测结果
+# statsmodels：时间序列模型接口：ARIMA / SARIMAX 基础与预测结果
 
 ## 核心概念
 

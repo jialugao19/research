@@ -1,4 +1,4 @@
-# 87. Brain Teaser / Green Book：combinatorics 的排列组合、补集法和计数面试题应用
+# Brain Teaser / Green Book：combinatorics 的排列组合、补集法和计数面试题应用
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 34. matplotlib：subplots、多图布局与共享坐标轴
+# matplotlib：subplots、多图布局与共享坐标轴
 
 ## 核心概念
 

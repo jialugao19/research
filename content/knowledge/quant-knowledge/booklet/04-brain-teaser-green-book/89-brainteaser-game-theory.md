@@ -1,4 +1,4 @@
-# 89. Brain Teaser / Green Book：game theory 的策略、纳什均衡和博弈面试题应用
+# Brain Teaser / Green Book：game theory 的策略、纳什均衡和博弈面试题应用
 
 ## 核心概念
 

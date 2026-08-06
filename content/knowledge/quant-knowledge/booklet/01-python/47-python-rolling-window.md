@@ -1,4 +1,4 @@
-# 47. Python 理解项：rolling window 窗口语义、边界与性能
+# Python 理解项：rolling window 窗口语义、边界与性能
 
 ## 核心概念
 

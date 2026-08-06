@@ -1,4 +1,4 @@
-# 111. 归一化统计维度：Batch、Layer、Instance 与 Group
+# 归一化统计维度：Batch、Layer、Instance 与 Group
 
 ## 核心概念
 

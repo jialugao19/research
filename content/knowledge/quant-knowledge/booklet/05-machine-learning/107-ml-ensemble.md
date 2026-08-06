@@ -1,4 +1,4 @@
-# 107. 机器学习：ensemble 的 bagging、boosting、stacking、blending 和模型组合风险
+# 机器学习：ensemble 的 bagging、boosting、stacking、blending 和模型组合风险
 
 ## 核心概念
 

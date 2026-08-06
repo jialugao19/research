@@ -1,4 +1,4 @@
-# 113. 机器学习：GRU 的 update gate、reset gate、候选隐藏状态和 LSTM 对比
+# 机器学习：GRU 的 update gate、reset gate、候选隐藏状态和 LSTM 对比
 
 ## 核心概念
 

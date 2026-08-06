@@ -1,4 +1,4 @@
-# 19. pandas：常见泄露：shift、rolling、未来函数
+# pandas：常见泄露：shift、rolling、未来函数
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 84. Brain Teaser / Green Book：条件概率的基本公式、树状分解和面试题应用
+# Brain Teaser / Green Book：条件概率的基本公式、树状分解和面试题应用
 
 ## 核心概念
 

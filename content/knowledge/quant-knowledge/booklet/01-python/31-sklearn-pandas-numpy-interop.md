@@ -1,4 +1,4 @@
-# 31. sklearn：与 pandas / numpy 数据形态互操作
+# sklearn：与 pandas / numpy 数据形态互操作
 
 ## 核心概念
 

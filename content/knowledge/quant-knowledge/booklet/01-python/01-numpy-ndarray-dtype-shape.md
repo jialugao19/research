@@ -1,4 +1,4 @@
-# 01. NumPy：ndarray、dtype 与 shape
+# NumPy：ndarray、dtype 与 shape
 
 ## 核心概念
 

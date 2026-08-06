@@ -1,4 +1,4 @@
-{% macro sidebar(catalog, knowledge, root_url, active_project=None, active_report=None, active_section="projects", active_domain=None, active_topic=None) %}
+{% macro sidebar(catalog, knowledge, root_url, active_project=None, active_report=None, active_section="projects", active_domain=None, active_topic=None, active_subtopic=None) %}
 <nav class="sidebar-nav" aria-label="Research index">
   {% if active_section == "knowledge" %}
   <a class="sidebar-root is-active" href="{{ root_url }}knowledge/"><span class="nav-code">K0</span><span>Knowledge index</span></a>
@@ -9,6 +9,12 @@
       {% for topic in domain.topics %}
       {% set count = knowledge.nodes_for_topic(domain.id, topic.id)|length %}
       <a class="sidebar-project{% if active_domain == domain.id and active_topic == topic.id %} is-active{% endif %}" href="{{ root_url }}{{ topic.route }}"><span class="nav-code">{{ "%02d.%02d"|format(domain.sequence, topic.sequence) }}</span><span>{{ topic.title }} <small>{{ count }}</small></span></a>
+      {% if active_domain == domain.id and active_topic == topic.id and topic.subtopics %}
+        {% for subtopic in topic.subtopics %}
+        {% set subtopic_count = knowledge.nodes_for_subtopic(domain.id, topic.id, subtopic.id)|length %}
+        <a class="sidebar-child sidebar-subtopic{% if active_subtopic == subtopic.id %} is-active{% endif %}" href="{{ root_url }}{{ topic.route }}#{{ subtopic.anchor }}"><span class="nav-code">{{ "%02d"|format(subtopic.sequence) }}</span><span>{{ subtopic.title }} <small>{{ subtopic_count }}</small></span></a>
+        {% endfor %}
+      {% endif %}
       {% endfor %}
     </div>
   </details>

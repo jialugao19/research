@@ -1,4 +1,4 @@
-# 50. Python 理解项：lookahead bias 前视偏差的时点语义、识别与修正
+# Python 理解项：lookahead bias 前视偏差的时点语义、识别与修正
 
 ## 核心概念
 

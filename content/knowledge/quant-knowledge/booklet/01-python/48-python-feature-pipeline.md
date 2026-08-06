@@ -1,4 +1,4 @@
-# 48. Python 理解项：feature pipeline 特征流水线的组织、复现与防错
+# Python 理解项：feature pipeline 特征流水线的组织、复现与防错
 
 ## 核心概念
 

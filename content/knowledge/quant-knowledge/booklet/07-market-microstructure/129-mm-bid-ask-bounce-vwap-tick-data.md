@@ -1,4 +1,4 @@
-# 129. 市场微观结构：bid-ask bounce、VWAP、tick 数据特性和高频数据清洗
+# 市场微观结构：bid-ask bounce、VWAP、tick 数据特性和高频数据清洗
 
 ## 核心概念
 

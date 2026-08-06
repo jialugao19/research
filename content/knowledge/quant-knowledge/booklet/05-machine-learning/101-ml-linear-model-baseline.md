@@ -1,4 +1,4 @@
-# 101. 机器学习：linear model baseline 的线性回归、逻辑回归、L1/L2 正则和损失函数
+# 机器学习：linear model baseline 的线性回归、逻辑回归、L1/L2 正则和损失函数
 
 ## 核心概念
 

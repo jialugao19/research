@@ -1,4 +1,4 @@
-# 75. 数据结构与算法：binary search 的边界模板、bisect 和有序数据查询
+# 数据结构与算法：binary search 的边界模板、bisect 和有序数据查询
 
 ## 核心概念
 

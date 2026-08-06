@@ -1,4 +1,4 @@
-# 36. matplotlib：时间序列图、双轴图与 pandas 绘图互操作
+# matplotlib：时间序列图、双轴图与 pandas 绘图互操作
 
 ## 核心概念
 

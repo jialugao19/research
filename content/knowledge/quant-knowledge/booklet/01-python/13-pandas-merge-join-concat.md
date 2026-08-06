@@ -1,4 +1,4 @@
-# 13. pandas：merge / join / concat
+# pandas：merge / join / concat
 
 ## 核心概念
 

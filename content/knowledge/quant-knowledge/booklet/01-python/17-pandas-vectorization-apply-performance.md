@@ -1,4 +1,4 @@
-# 17. pandas：向量化、apply 与性能
+# pandas：向量化、apply 与性能
 
 ## 核心概念
 

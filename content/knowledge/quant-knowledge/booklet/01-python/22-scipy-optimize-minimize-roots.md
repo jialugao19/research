@@ -1,4 +1,4 @@
-# 22. scipy.optimize：最小化、约束优化与根查找
+# scipy.optimize：最小化、约束优化与根查找
 
 ## 核心概念
 

@@ -1,4 +1,4 @@
-# 04. NumPy：axis 语义与聚合
+# NumPy：axis 语义与聚合
 
 ## 核心概念
 

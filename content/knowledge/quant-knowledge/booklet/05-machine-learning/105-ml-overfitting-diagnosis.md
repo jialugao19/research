@@ -1,4 +1,4 @@
-# 105. 机器学习：overfitting diagnosis 的训练/验证差距、学习曲线、泄露排查和复杂度控制
+# 机器学习：overfitting diagnosis 的训练/验证差距、学习曲线、泄露排查和复杂度控制
 
 ## 核心概念
 

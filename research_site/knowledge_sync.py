@@ -247,9 +247,8 @@ def _validate_quant_source(source_root: Path) -> None:
             raise KnowledgeSyncError(f"{path} must start with an H1 title")
         if "\n## " not in text:
             raise KnowledgeSyncError(f"{path} must contain H2 chapter sections")
-        heading_number = re.match(r"^# (?P<number>\d+)\.", text)
-        if heading_number is None or int(heading_number.group("number")) != record["sequence"]:
-            raise KnowledgeSyncError(f"{path} H1 number must match its filename sequence")
+        if re.match(r"^#\s+\d+\.\s+", text):
+            raise KnowledgeSyncError(f"{path} H1 title must not repeat its filename sequence")
         if record["section_id"] == "06-deep-learning" and not record["part_id"]:
             raise KnowledgeSyncError(f"{path} must belong to a numbered deep-learning part")
         if len(text.encode("utf-8")) < 1000:

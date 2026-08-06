@@ -441,6 +441,7 @@ def build_site(
         active_report=None,
         active_domain=None,
         active_topic=None,
+        active_subtopic=None,
         nav_section="knowledge",
     )
     _write(output_root / "knowledge" / "index.html", knowledge_home)
@@ -454,6 +455,7 @@ def build_site(
             active_report=None,
             active_domain=domain.id,
             active_topic=None,
+            active_subtopic=None,
             nav_section="knowledge",
             domain=domain,
             nodes=knowledge.nodes_for_domain(domain.id),
@@ -492,6 +494,7 @@ def build_site(
                 active_report=None,
                 active_domain=domain.id,
                 active_topic=topic.id,
+                active_subtopic=None,
                 nav_section="knowledge",
                 domain=domain,
                 topic=topic,
@@ -509,12 +512,21 @@ def build_site(
             active_report=None,
             active_domain=node.domain_id,
             active_topic=node.topic_id,
+            active_subtopic=node.subtopic_id or None,
             nav_section="knowledge",
             node=node,
             prerequisites=knowledge.prerequisite_nodes_for(node.id),
             next_nodes=knowledge.next_nodes_for(node.id),
             related=knowledge.related_nodes_for(node.id)[:12],
-            topic_peers=tuple(item for item in knowledge.nodes_for_topic(node.domain_id, node.topic_id) if item.id != node.id)[:8],
+            topic_peers=tuple(
+                item
+                for item in (
+                    knowledge.nodes_for_subtopic(node.domain_id, node.topic_id, node.subtopic_id)
+                    if node.subtopic_id
+                    else knowledge.nodes_for_topic(node.domain_id, node.topic_id)
+                )
+                if item.id != node.id
+            )[:8],
             research_links=knowledge.research_links_for(node.domain_id, node.topic_id),
             body_html=Markup(rendered.html),
             toc=rendered.toc,

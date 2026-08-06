@@ -1,4 +1,4 @@
-# 20. scipy：与 numpy 的关系、常用子模块、ndarray 互操作
+# scipy：与 numpy 的关系、常用子模块、ndarray 互操作
 
 ## 核心概念
 

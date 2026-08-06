@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 from research_site.build import _featured_chart_view, build_site
@@ -5,6 +6,23 @@ from research_site.catalog import load_catalog
 from research_site.validation import validate_built_site
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_sidebar_groups_do_not_use_exclusive_accordion_behavior() -> None:
+    javascript = (SITE_ROOT / "assets" / "site.js").read_text(encoding="utf-8")
+
+    assert 'querySelectorAll(".sidebar-group[open]")' not in javascript
+    assert "sibling.open = false" not in javascript
+
+
+def test_subtopic_filter_and_anchor_behaviors_are_bundled() -> None:
+    javascript = (SITE_ROOT / "assets" / "site.js").read_text(encoding="utf-8")
+
+    assert "savedOpenState.set(group, group.open)" in javascript
+    assert "group.open = savedOpenState.get(group)" in javascript
+    assert "group.hidden = groupVisible === 0" in javascript
+    assert 'hash.startsWith("#subtopic-")' in javascript
+    assert "target.open = true" in javascript
 
 
 def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
@@ -176,6 +194,18 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert "Learning algorithms, neural architectures, optimization, and model operations." in domain
     assert "NLP &amp; Transformers" in topic
     assert "data-knowledge-search" in topic
+    assert 'id="subtopic-tokenization-representation"' in topic
+    assert 'id="subtopic-context-serving"' in topic
+    assert topic.count('class="knowledge-subtopic"') == 10
+    assert topic.count('class="knowledge-subtopic" id=') == 10
+    assert topic.count("data-knowledge-group") == 10
+    assert topic.count("data-knowledge-group data-subtopic-id") == 10
+    assert topic.count("data-subtopic-id=") == 10
+    assert topic.count("<details class=\"knowledge-subtopic\"") == 10
+    assert topic.count("<details class=\"knowledge-subtopic\" id=") == 10
+    assert topic.count(" open>") == 3  # desktop + mobile navigation domain, plus the first subtopic
+    assert "Fine-Tuning &amp; Alignment" in topic
+    assert "Retrieval &amp; Document Processing" in topic
     assert "Attention Mechanism" in topic
     assert "DeepML learning path" in deep_learning_topic
     assert "Part 1 · Foundations and differentiable computation" in deep_learning_topic
@@ -185,6 +215,9 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert "Knowledge card" in article
     assert "Machine Intelligence" in article
     assert "NLP &amp; Transformers" in article
+    assert "Attention" in article
+    assert "<dt>Subtopic</dt>" in article
+    assert "#subtopic-attention" in article
     assert "DeepML" in article
     assert "<math" in article
     assert "matplotlib" not in article
@@ -197,8 +230,14 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert "Market Microstructure" in microstructure
     assert "Research bridge" in microstructure
     assert "Order-book data foundation" in microstructure
-    assert '"schema_version": 3' in payload
+    assert '"schema_version": 4' in payload
     assert '"nodes": 871' in payload
+    parsed_payload = json.loads(payload)
+    nlp_topic = next(item for item in parsed_payload["topics"] if item["id"] == "nlp-transformers")
+    attention_node = next(item for item in parsed_payload["nodes"] if item["id"] == "attention-mechanism")
+    assert len(nlp_topic["subtopics"]) == 10
+    assert sum(item["node_count"] for item in nlp_topic["subtopics"]) == nlp_topic["node_count"]
+    assert attention_node["subtopic"] == "attention"
     assert '"/knowledge/machine-intelligence/nlp-transformers/attention-mechanism/"' in payload
     assert '"/knowledge/deep-ml/' not in payload
     assert '"/knowledge/chapters/' not in payload

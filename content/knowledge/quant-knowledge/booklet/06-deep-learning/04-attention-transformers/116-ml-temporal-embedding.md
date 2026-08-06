@@ -1,4 +1,4 @@
-# 116. 机器学习：temporal embedding 的位置、日历、相对时间和防泄露表示
+# 机器学习：temporal embedding 的位置、日历、相对时间和防泄露表示
 
 ## 核心概念
 

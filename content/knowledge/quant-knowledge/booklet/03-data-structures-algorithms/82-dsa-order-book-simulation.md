@@ -1,4 +1,4 @@
-# 82. 数据结构与算法：order book simulation 的价格档位、订单事件和撮合规则
+# 数据结构与算法：order book simulation 的价格档位、订单事件和撮合规则
 
 ## 核心概念
 

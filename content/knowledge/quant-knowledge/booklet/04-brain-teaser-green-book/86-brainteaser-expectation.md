@@ -1,4 +1,4 @@
-# 86. Brain Teaser / Green Book：期望的线性性、条件期望和常见面试题应用
+# Brain Teaser / Green Book：期望的线性性、条件期望和常见面试题应用
 
 ## 核心概念
 

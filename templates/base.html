@@ -25,10 +25,10 @@
   </header>
   <details class="mobile-navigation">
     <summary>Research index</summary>
-    {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none)) }}
+    {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}
   </details>
   <div class="doc-layout">
-    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none)) }}</aside>
+    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}</aside>
     <main id="main-content" class="doc-main">
       {% block content %}{% endblock %}
       <footer class="site-footer">

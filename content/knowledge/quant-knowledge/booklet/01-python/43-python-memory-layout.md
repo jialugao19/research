@@ -1,4 +1,4 @@
-# 43. Python 理解项：memory layout 内存布局、连续性、视图与拷贝
+# Python 理解项：memory layout 内存布局、连续性、视图与拷贝
 
 ## 核心概念
 

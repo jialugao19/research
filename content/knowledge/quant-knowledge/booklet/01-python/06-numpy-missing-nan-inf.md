@@ -1,4 +1,4 @@
-# 06. NumPy：缺失值、nan 与 inf
+# NumPy：缺失值、nan 与 inf
 
 ## 核心概念
 

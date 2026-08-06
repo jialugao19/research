@@ -1,4 +1,4 @@
-# 96. 机器学习：决策树分裂准则的 Gini、entropy、MSE 和 split gain
+# 机器学习：决策树分裂准则的 Gini、entropy、MSE 和 split gain
 
 ## 核心概念
 

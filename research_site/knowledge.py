@@ -110,12 +110,30 @@ class QuantKnowledgeChapter:
 
 
 @dataclass(frozen=True)
+class KnowledgeSubtopic:
+    id: str
+    title: str
+    summary: str
+    domain_id: str
+    topic_id: str
+    sequence: int
+    path_stages: tuple[tuple[str, str], ...] = ()
+    node_ids: tuple[str, ...] = ()
+    prefixes: tuple[str, ...] = ()
+
+    @property
+    def anchor(self) -> str:
+        return f"subtopic-{self.id}"
+
+
+@dataclass(frozen=True)
 class KnowledgeTopic:
     id: str
     title: str
     summary: str
     domain_id: str
     sequence: int
+    subtopics: tuple[KnowledgeSubtopic, ...] = ()
 
     @property
     def route(self) -> str:
@@ -153,6 +171,7 @@ class KnowledgeOntology:
     research_links: tuple[KnowledgeResearchLink, ...]
     domain_by_id: dict[str, KnowledgeDomain] = field(init=False, repr=False)
     topic_by_key: dict[tuple[str, str], KnowledgeTopic] = field(init=False, repr=False)
+    subtopic_by_key: dict[tuple[str, str, str], KnowledgeSubtopic] = field(init=False, repr=False)
 
     def __post_init__(self) -> None:
         object.__setattr__(self, "domain_by_id", {domain.id: domain for domain in self.domains})
@@ -160,6 +179,16 @@ class KnowledgeOntology:
             self,
             "topic_by_key",
             {(topic.domain_id, topic.id): topic for domain in self.domains for topic in domain.topics},
+        )
+        object.__setattr__(
+            self,
+            "subtopic_by_key",
+            {
+                (subtopic.domain_id, subtopic.topic_id, subtopic.id): subtopic
+                for domain in self.domains
+                for topic in domain.topics
+                for subtopic in topic.subtopics
+            },
         )
 
     def topic(self, domain_id: str, topic_id: str) -> KnowledgeTopic:
@@ -188,6 +217,9 @@ class KnowledgeNode:
     concept_ids: tuple[str, ...] = ()
     source_domain: str = ""
     source_part: str = ""
+    subtopic_id: str = ""
+    subtopic_title: str = ""
+    subtopic_sequence: int = 0
 
     @property
     def route(self) -> str:
@@ -258,6 +290,20 @@ class KnowledgeCatalog:
 
     def nodes_for_topic(self, domain_id: str, topic_id: str) -> tuple[KnowledgeNode, ...]:
         return tuple(node for node in self.nodes if node.domain_id == domain_id and node.topic_id == topic_id)
+
+    def nodes_for_subtopic(
+        self,
+        domain_id: str,
+        topic_id: str,
+        subtopic_id: str,
+    ) -> tuple[KnowledgeNode, ...]:
+        return tuple(
+            node
+            for node in self.nodes
+            if node.domain_id == domain_id
+            and node.topic_id == topic_id
+            and node.subtopic_id == subtopic_id
+        )
 
     def research_links_for(self, domain_id: str, topic_id: str | None = None) -> tuple[KnowledgeResearchLink, ...]:
         if self.ontology is None:
@@ -431,11 +477,13 @@ def load_knowledge(
     if quant_snapshot_root is not None:
         quant_snapshot = validate_quant_snapshot(quant_snapshot_root)
         quant_sections, chapters = _load_quant_knowledge(quant_snapshot_root, quant_snapshot)
+    _validate_subtopic_selectors(ontology, tuple(paths))
     nodes = _build_nodes(
         ontology=ontology,
         concepts=concepts,
         articles=tuple(articles),
         chapters=chapters,
+        paths=tuple(paths),
     )
     knowledge = KnowledgeCatalog(
         concepts=concepts,
@@ -494,7 +542,7 @@ def _render_markdown_document(title: str, body: str, context: str) -> RenderedKn
 
 def _load_ontology(path: Path) -> KnowledgeOntology:
     payload = _load_yaml(path)
-    if payload.get("schema_version") != 1:
+    if payload.get("schema_version") != 2:
         raise KnowledgeSyncError("knowledge ontology has unsupported schema_version")
     domains_payload = payload.get("domains", [])
     if not isinstance(domains_payload, list) or not domains_payload:
@@ -507,24 +555,32 @@ def _load_ontology(path: Path) -> KnowledgeOntology:
         if not isinstance(topics_payload, list) or not topics_payload:
             raise KnowledgeSyncError(f"knowledge domain {domain_payload.get('id')} must define topics")
         domain_id = str(domain_payload["id"])
-        topics = tuple(
-            KnowledgeTopic(
-                id=str(topic_payload["id"]),
-                title=str(topic_payload["title"]),
-                summary=str(topic_payload["summary"]),
-                domain_id=domain_id,
-                sequence=topic_index,
+        topics: list[KnowledgeTopic] = []
+        for topic_index, topic_payload in enumerate(topics_payload, 1):
+            if not isinstance(topic_payload, dict):
+                raise KnowledgeSyncError(f"knowledge domain {domain_id} topics must be mappings")
+            topic_id = str(topic_payload["id"])
+            topics.append(
+                KnowledgeTopic(
+                    id=topic_id,
+                    title=str(topic_payload["title"]),
+                    summary=str(topic_payload["summary"]),
+                    domain_id=domain_id,
+                    sequence=topic_index,
+                    subtopics=_load_subtopics(
+                        topic_payload.get("subtopics", []),
+                        domain_id=domain_id,
+                        topic_id=topic_id,
+                    ),
+                )
             )
-            for topic_index, topic_payload in enumerate(topics_payload, 1)
-            if isinstance(topic_payload, dict)
-        )
         domains.append(
             KnowledgeDomain(
                 id=domain_id,
                 title=str(domain_payload["title"]),
                 summary=str(domain_payload["summary"]),
                 sequence=domain_index,
-                topics=topics,
+                topics=tuple(topics),
             )
         )
     ontology = KnowledgeOntology(
@@ -543,7 +599,9 @@ def _build_nodes(
     concepts: tuple[KnowledgeConcept, ...],
     articles: tuple[KnowledgeArticle, ...],
     chapters: tuple[QuantKnowledgeChapter, ...],
+    paths: tuple[KnowledgePath, ...],
 ) -> tuple[KnowledgeNode, ...]:
+    path_by_id = {path.id: path for path in paths}
     article_by_slug = {article.slug: article for article in articles}
     nodes: list[KnowledgeNode] = []
     for concept in concepts:
@@ -551,6 +609,7 @@ def _build_nodes(
         domain_id, topic_id = _ontology_mapping_for_deepml(ontology, concept.domain)
         topic = ontology.topic(domain_id, topic_id)
         domain = ontology.domain_by_id[domain_id]
+        subtopic = _resolve_subtopic(ontology, path_by_id, domain_id, topic_id, concept.id)
         nodes.append(
             KnowledgeNode(
                 id=concept.id,
@@ -572,12 +631,16 @@ def _build_nodes(
                 aliases=concept.aliases,
                 concept_ids=(concept.id,),
                 source_domain=concept.domain,
+                subtopic_id=subtopic.id if subtopic else "",
+                subtopic_title=subtopic.title if subtopic else "",
+                subtopic_sequence=subtopic.sequence if subtopic else 0,
             )
         )
     for chapter in chapters:
         domain_id, topic_id = _ontology_mapping_for_chapter(ontology, chapter)
         topic = ontology.topic(domain_id, topic_id)
         domain = ontology.domain_by_id[domain_id]
+        subtopic = _resolve_subtopic(ontology, path_by_id, domain_id, topic_id, chapter.slug)
         nodes.append(
             KnowledgeNode(
                 id=chapter.slug,
@@ -599,6 +662,9 @@ def _build_nodes(
                 source_ref=chapter.source_path,
                 source_domain=chapter.section_id,
                 source_part=chapter.part_title,
+                subtopic_id=subtopic.id if subtopic else "",
+                subtopic_title=subtopic.title if subtopic else "",
+                subtopic_sequence=subtopic.sequence if subtopic else 0,
             )
         )
     return tuple(sorted(nodes, key=lambda node: (node.domain_id, node.topic_id, node.title.lower(), node.id)))
@@ -608,7 +674,7 @@ def knowledge_payload(knowledge: KnowledgeCatalog, base_url: str) -> dict[str, A
     if knowledge.ontology is None:
         raise KnowledgeSyncError("knowledge payload requires ontology")
     return {
-        "schema_version": 3,
+        "schema_version": 4,
         "counts": knowledge.aggregate_counts,
         "source_hashes": knowledge.snapshot["source_hashes"],
         "sources": [
@@ -647,6 +713,19 @@ def knowledge_payload(knowledge: KnowledgeCatalog, base_url: str) -> dict[str, A
                 "domain": topic.domain_id,
                 "url": f"{base_url}{topic.route}",
                 "node_count": len(knowledge.nodes_for_topic(topic.domain_id, topic.id)),
+                "subtopics": [
+                    {
+                        "id": subtopic.id,
+                        "title": subtopic.title,
+                        "summary": subtopic.summary,
+                        "anchor": subtopic.anchor,
+                        "url": f"{base_url}{topic.route}#{subtopic.anchor}",
+                        "node_count": len(
+                            knowledge.nodes_for_subtopic(topic.domain_id, topic.id, subtopic.id)
+                        ),
+                    }
+                    for subtopic in topic.subtopics
+                ],
             }
             for domain in knowledge.ontology.domains
             for topic in domain.topics
@@ -658,6 +737,7 @@ def knowledge_payload(knowledge: KnowledgeCatalog, base_url: str) -> dict[str, A
                 "title": node.title,
                 "domain": node.domain_id,
                 "topic": node.topic_id,
+                "subtopic": node.subtopic_id or None,
                 "level": node.level,
                 "content_type": node.content_type,
                 "source": node.source_id,
@@ -702,6 +782,80 @@ def _load_topic_map(value: Any, context: str) -> dict[str, tuple[str, str]]:
     return mapping
 
 
+def _load_subtopics(
+    value: Any,
+    *,
+    domain_id: str,
+    topic_id: str,
+) -> tuple[KnowledgeSubtopic, ...]:
+    if not isinstance(value, list):
+        raise KnowledgeSyncError(f"subtopics for {domain_id}/{topic_id} must be a list")
+    subtopics: list[KnowledgeSubtopic] = []
+    for index, item in enumerate(value, 1):
+        if not isinstance(item, dict):
+            raise KnowledgeSyncError(f"subtopic {domain_id}/{topic_id}/{index} must be a mapping")
+        raw_path_stages = item.get("path_stages", [])
+        if not isinstance(raw_path_stages, list):
+            raise KnowledgeSyncError(f"subtopic {domain_id}/{topic_id}/{item.get('id')} path_stages must be a list")
+        raw_node_ids = item.get("ids", [])
+        raw_prefixes = item.get("prefixes", [])
+        if not isinstance(raw_node_ids, list) or not isinstance(raw_prefixes, list):
+            raise KnowledgeSyncError(
+                f"subtopic {domain_id}/{topic_id}/{item.get('id')} ids and prefixes must be lists"
+            )
+        path_stages: list[tuple[str, str]] = []
+        for path_stage in raw_path_stages:
+            if not isinstance(path_stage, list) or len(path_stage) != 2:
+                raise KnowledgeSyncError(
+                    f"subtopic {domain_id}/{topic_id}/{item.get('id')} path_stages entries must be [path, stage]"
+                )
+            path_stages.append((str(path_stage[0]), str(path_stage[1])))
+        subtopics.append(
+            KnowledgeSubtopic(
+                id=str(item["id"]),
+                title=str(item["title"]),
+                summary=str(item["summary"]),
+                domain_id=domain_id,
+                topic_id=topic_id,
+                sequence=index,
+                path_stages=tuple(path_stages),
+                node_ids=tuple(str(node_id) for node_id in raw_node_ids),
+                prefixes=tuple(str(prefix) for prefix in raw_prefixes),
+            )
+        )
+    return tuple(subtopics)
+
+
+def _resolve_subtopic(
+    ontology: KnowledgeOntology,
+    path_by_id: dict[str, KnowledgePath],
+    domain_id: str,
+    topic_id: str,
+    node_id: str,
+) -> KnowledgeSubtopic | None:
+    topic = ontology.topic(domain_id, topic_id)
+    if not topic.subtopics:
+        return None
+    matches: list[KnowledgeSubtopic] = []
+    for subtopic in topic.subtopics:
+        path_match = any(
+            node_id in stage.topic_ids
+            for path_id, stage_name in subtopic.path_stages
+            for stage in path_by_id[path_id].stages
+            if stage.name == stage_name
+        )
+        if path_match or node_id in subtopic.node_ids or any(
+            node_id.startswith(prefix) for prefix in subtopic.prefixes
+        ):
+            matches.append(subtopic)
+    if len(matches) != 1:
+        matched = ", ".join(subtopic.id for subtopic in matches) or "none"
+        raise KnowledgeSyncError(
+            f"node {node_id} in {domain_id}/{topic_id} must match exactly one subtopic; matched {matched}"
+        )
+    return matches[0]
+
+
 def _load_chapter_rules(value: Any) -> tuple[dict[str, Any], ...]:
     if not isinstance(value, list):
         raise KnowledgeSyncError("quant_chapter_rules must be a list")
@@ -740,6 +894,31 @@ def _load_research_links(value: Any) -> tuple[KnowledgeResearchLink, ...]:
 
 
 def _validate_ontology(ontology: KnowledgeOntology) -> None:
+    domain_ids = [domain.id for domain in ontology.domains]
+    if len(domain_ids) != len(set(domain_ids)):
+        raise KnowledgeSyncError("knowledge ontology domain ids must be unique")
+    topic_keys = [
+        (topic.domain_id, topic.id)
+        for domain in ontology.domains
+        for topic in domain.topics
+    ]
+    if len(topic_keys) != len(set(topic_keys)):
+        raise KnowledgeSyncError("knowledge ontology topic ids must be unique within each domain")
+    subtopic_keys = [
+        (subtopic.domain_id, subtopic.topic_id, subtopic.id)
+        for domain in ontology.domains
+        for topic in domain.topics
+        for subtopic in topic.subtopics
+    ]
+    if len(subtopic_keys) != len(set(subtopic_keys)):
+        raise KnowledgeSyncError("knowledge ontology subtopic ids must be unique within each topic")
+    for domain in ontology.domains:
+        for topic in domain.topics:
+            for subtopic in topic.subtopics:
+                if not (subtopic.path_stages or subtopic.node_ids or subtopic.prefixes):
+                    raise KnowledgeSyncError(
+                        f"subtopic {domain.id}/{topic.id}/{subtopic.id} must define at least one selector"
+                    )
     for context, mappings in (
         ("deepml_domain_map", ontology.deepml_domain_map),
         ("quant_section_map", ontology.quant_section_map),
@@ -754,6 +933,27 @@ def _validate_ontology(ontology: KnowledgeOntology) -> None:
     for link in ontology.research_links:
         if (link.domain_id, link.topic_id) not in ontology.topic_by_key:
             raise KnowledgeSyncError(f"research link {link.label} references unknown topic")
+
+
+def _validate_subtopic_selectors(
+    ontology: KnowledgeOntology,
+    paths: tuple[KnowledgePath, ...],
+) -> None:
+    path_by_id = {path.id: path for path in paths}
+    for domain in ontology.domains:
+        for topic in domain.topics:
+            for subtopic in topic.subtopics:
+                for path_id, stage_name in subtopic.path_stages:
+                    if path_id not in path_by_id:
+                        raise KnowledgeSyncError(
+                            f"subtopic {domain.id}/{topic.id}/{subtopic.id} references unknown path {path_id}"
+                        )
+                    stage_names = {stage.name for stage in path_by_id[path_id].stages}
+                    if stage_name not in stage_names:
+                        raise KnowledgeSyncError(
+                            f"subtopic {domain.id}/{topic.id}/{subtopic.id} references unknown stage "
+                            f"{path_id}/{stage_name}"
+                        )
 
 
 def _ontology_mapping_for_deepml(ontology: KnowledgeOntology, source_domain: str) -> tuple[str, str]:
@@ -850,6 +1050,54 @@ def _validate_knowledge(knowledge: KnowledgeCatalog) -> None:
     for node in knowledge.nodes:
         if (node.domain_id, node.topic_id) not in topic_keys:
             raise KnowledgeSyncError(f"node {node.id} references unknown ontology topic")
+    for domain in knowledge.ontology.domains:
+        for topic in domain.topics:
+            topic_nodes = knowledge.nodes_for_topic(domain.id, topic.id)
+            if len(topic_nodes) > 30 and not topic.subtopics:
+                raise KnowledgeSyncError(
+                    f"topic {domain.id}/{topic.id} has {len(topic_nodes)} nodes and requires subtopics"
+                )
+            if not topic.subtopics:
+                continue
+            topic_node_ids = {node.id for node in topic_nodes}
+            assigned_ids = {subtopic.id for subtopic in topic.subtopics}
+            unknown = {node.subtopic_id for node in topic_nodes} - assigned_ids
+            if unknown:
+                raise KnowledgeSyncError(
+                    f"topic {domain.id}/{topic.id} has invalid subtopic assignments {sorted(unknown)}"
+                )
+            for subtopic in topic.subtopics:
+                invalid_exact_ids = set(subtopic.node_ids) - topic_node_ids
+                if invalid_exact_ids:
+                    raise KnowledgeSyncError(
+                        f"subtopic {domain.id}/{topic.id}/{subtopic.id} exact ids are outside the topic: "
+                        f"{sorted(invalid_exact_ids)[:3]}"
+                    )
+                for prefix in subtopic.prefixes:
+                    if not any(node_id.startswith(prefix) for node_id in topic_node_ids):
+                        raise KnowledgeSyncError(
+                            f"subtopic {domain.id}/{topic.id}/{subtopic.id} prefix {prefix} matches no nodes"
+                        )
+                for path_id, stage_name in subtopic.path_stages:
+                    stage = next(
+                        stage
+                        for stage in knowledge.path_by_id[path_id].stages
+                        if stage.name == stage_name
+                    )
+                    if not topic_node_ids.intersection(stage.topic_ids):
+                        raise KnowledgeSyncError(
+                            f"subtopic {domain.id}/{topic.id}/{subtopic.id} path stage "
+                            f"{path_id}/{stage_name} matches no nodes in the topic"
+                        )
+                subtopic_nodes = knowledge.nodes_for_subtopic(domain.id, topic.id, subtopic.id)
+                if not subtopic_nodes:
+                    raise KnowledgeSyncError(
+                        f"subtopic {domain.id}/{topic.id}/{subtopic.id} must contain at least one node"
+                    )
+                if len(subtopic_nodes) > 30:
+                    raise KnowledgeSyncError(
+                        f"subtopic {domain.id}/{topic.id}/{subtopic.id} has {len(subtopic_nodes)} nodes; maximum is 30"
+                    )
 
 
 def _load_quant_knowledge(

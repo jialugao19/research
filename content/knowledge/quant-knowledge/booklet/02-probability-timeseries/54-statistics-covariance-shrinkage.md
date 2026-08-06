@@ -1,4 +1,4 @@
-# 54. 概率统计：covariance shrinkage 协方差收缩的动机、Ledoit-Wolf 直觉与投资组合稳定性
+# 概率统计：covariance shrinkage 协方差收缩的动机、Ledoit-Wolf 直觉与投资组合稳定性
 
 ## 核心概念
 

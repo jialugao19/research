@@ -1,4 +1,4 @@
-# 39. statsmodels：OLS 矩阵接口、公式接口与 summary 解读
+# statsmodels：OLS 矩阵接口、公式接口与 summary 解读
 
 ## 核心概念
 

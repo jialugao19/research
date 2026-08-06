@@ -1,4 +1,4 @@
-# 25. sklearn：estimator API：fit / predict / transform 与 Pipeline 基础
+# sklearn：estimator API：fit / predict / transform 与 Pipeline 基础
 
 ## 核心概念
 

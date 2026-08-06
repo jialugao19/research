@@ -1,4 +1,4 @@
-# 23. scipy.linalg：矩阵分解与线性方程
+# scipy.linalg：矩阵分解与线性方程
 
 ## 核心概念
 

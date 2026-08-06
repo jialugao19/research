@@ -1,4 +1,4 @@
-# 117. 机器学习：Transformer for TS 的自注意力、位置编码、因果 mask 和时间序列预测
+# 机器学习：Transformer for TS 的自注意力、位置编码、因果 mask 和时间序列预测
 
 ## 核心概念
 

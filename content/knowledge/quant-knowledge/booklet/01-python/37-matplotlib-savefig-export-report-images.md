@@ -1,4 +1,4 @@
-# 37. matplotlib：savefig、分辨率、导出格式与报告图片规范
+# matplotlib：savefig、分辨率、导出格式与报告图片规范
 
 ## 核心概念
 

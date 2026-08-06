@@ -1,4 +1,4 @@
-schema_version: 1
+schema_version: 2
 domains:
   - id: foundations
     title: Foundations
@@ -10,9 +10,63 @@ domains:
       - id: probability-statistics
         title: Probability & Statistics
         summary: Probability, inference, uncertainty, sampling, and statistical evaluation.
+        subtopics:
+          - id: probability-distributions
+            title: Probability & Distributions
+            summary: Probability rules, conditional reasoning, distributions, expectation, and Bayesian foundations.
+            path_stages:
+              - [statistics-for-ml, probability]
+            ids: [brainteaser-conditional-probability, brainteaser-bayes, brainteaser-expectation]
+          - id: sampling-estimation-experiments
+            title: Sampling, Estimation & Experiments
+            summary: Sampling schemes, uncertainty intervals, experiments, simulation, and statistical power.
+            path_stages:
+              - [statistics-for-ml, sampling]
+            ids: [statistics-bootstrap, click-through-rate, experiment-design, monte-carlo-methods, social-engagement-metrics, statistical-power]
+          - id: descriptive-statistics-tests
+            title: Descriptive Statistics & Tests
+            summary: Summary statistics, dependence measures, distribution views, and classical tests.
+            path_stages:
+              - [statistics-for-ml, statistics]
+            ids: [correlation-coefficient, covariance-matrix]
+          - id: statistical-models-dimension-reduction
+            title: Statistical Models & Dimension Reduction
+            summary: Regression, regularization, covariance estimation, and principal component methods.
+            ids: [statistics-ols, statistics-regularization, statistics-pca, statistics-covariance-shrinkage]
+          - id: information-model-evidence
+            title: Information & Model Evidence
+            summary: Information measures, likelihood-based inference, variational evidence, and model comparison.
+            path_stages:
+              - [statistics-for-ml, information]
+            ids: [statistics-bayesian-basics]
+          - id: probability-puzzles-decisions
+            title: Probability Puzzles & Decision Problems
+            summary: Combinatorial reasoning, optimal stopping, games, and compact quantitative puzzles.
+            ids: [brainteaser-combinatorics, brainteaser-optimal-stopping, brainteaser-game-theory, brainteaser-mental-math-estimation]
       - id: linear-algebra
         title: Linear Algebra
         summary: Vector spaces, matrices, decompositions, and geometry for models.
+        subtopics:
+          - id: vectors-matrices
+            title: Vectors & Matrices
+            summary: Vector and matrix notation, products, traces, norms, and core operations.
+            path_stages:
+              - [linear-algebra-for-ml, vectors-and-matrices]
+          - id: spaces-linear-systems
+            title: Spaces & Linear Systems
+            summary: Span, rank, bases, orthogonality, projections, and solving linear systems.
+            path_stages:
+              - [linear-algebra-for-ml, spaces-and-systems]
+          - id: geometry-similarity-transforms
+            title: Geometry, Similarity & Transforms
+            summary: Distances, angles, similarity, rotations, and geometric transformations.
+            path_stages:
+              - [linear-algebra-for-ml, similarity-and-shapes]
+          - id: matrix-decompositions
+            title: Matrix Decompositions
+            summary: Eigen, singular-value, QR, and Cholesky decompositions and their uses.
+            path_stages:
+              - [linear-algebra-for-ml, decomposition]
   - id: machine-intelligence
     title: Machine Intelligence
     summary: Learning algorithms, neural architectures, optimization, and model operations.
@@ -20,24 +74,266 @@ domains:
       - id: machine-learning
         title: Machine Learning
         summary: Classical models, data preprocessing, evaluation, and model selection.
+        subtopics:
+          - id: linear-regularized-models
+            title: Linear & Regularized Models
+            summary: Linear predictors, regression, likelihood, and coefficient regularization.
+            path_stages:
+              - [classical-machine-learning, linear-models]
+              - [classical-machine-learning, regularized-models]
+            ids: [ml-linear-model-baseline]
+          - id: losses-objectives
+            title: Losses & Objectives
+            summary: Regression, classification, margin, ranking, and imbalance-aware objectives.
+            path_stages:
+              - [classical-machine-learning, losses]
+            ids: [cross-entropy]
+          - id: optimization-training
+            title: Optimization & Training
+            summary: Gradient-based optimization, stochastic updates, and practical training control.
+            ids: [gradient-descent, stochastic-gradient-descent]
+          - id: classification-evaluation
+            title: Classification & Evaluation
+            summary: Classification tasks, thresholds, calibration, metrics, and predictive uncertainty.
+            path_stages:
+              - [classical-machine-learning, classification]
+            ids: [confusion-matrix, model-evaluation-metrics, roc-auc, uncertainty-estimation]
+          - id: neighbors-clustering-reduction
+            title: Neighbors, Clustering & Reduction
+            summary: Distance methods, clustering families, embedding, and dimensionality reduction.
+            path_stages:
+              - [classical-machine-learning, neighbors-and-clusters]
+            ids: [ml-k-means]
+          - id: trees-ensembles
+            title: Trees & Ensembles
+            summary: Split criteria, tree regularization, bagging, boosting, and ensemble diagnostics.
+            path_stages:
+              - [classical-machine-learning, tree-models]
+            ids: [ml-tree-feature-importance, ml-ensemble, ml-decision-tree-split-criteria, ml-decision-tree-overfitting-control, ml-random-forest, ml-xgboost-lightgbm]
+          - id: other-baselines
+            title: Other Baselines
+            summary: Kernel, probabilistic, voting, bagging, and anomaly-detection baselines.
+            path_stages:
+              - [classical-machine-learning, other-baselines]
+            ids: [ml-svm]
+          - id: selection-diagnosis-explainability
+            title: Selection, Diagnosis & Explainability
+            summary: Validation, tuning, leakage control, feature attribution, and robustness checks.
+            ids: [cross-validation, grid-search, random-search, hyperparameter-tuning, dataset-shuffling, random-subset-sampling, learning-curve, generalization-gap-diagnosis, feature-engineering, column-transformer, feature-hashing, expert-feature-fusion, feature-space, feature-receptive-field, sparse-distributed-memory, feature-selection, feature-importance, shap-values, random-projection, random-fourier-features, linear-probing, data-leakage, early-stopping, normalization, train-validation-test-split, ml-feature-importance, ml-overfitting-diagnosis, ml-hyperparameter-tuning, ml-robustness, ml-stability]
+          - id: representation-pattern-mining
+            title: Representation & Pattern Mining
+            summary: Feature spaces, representation transfer, association rules, and reusable patterns.
+            path_stages:
+              - [classical-machine-learning, patterns-and-representation]
+          - id: specialized-learning-settings
+            title: Specialized Learning Settings
+            summary: Weak, active, semi-supervised, multitask, curriculum, and task-specific learning setups.
+            path_stages:
+              - [classical-machine-learning, special-settings]
+            ids: [transfer-learning, domain-adaptation, closed-loop-driving-policy, curriculum-learning, dataset-balancing, reward-modeling, state-space-model, undersampling]
       - id: deep-learning
         title: Deep Learning
         summary: Neural networks, PyTorch, differentiable training, and representation learning.
+        subtopics:
+          - id: foundations-differentiable-computation
+            title: Foundations & Differentiable Computation
+            summary: Neural computation, tensors, autodiff, gradients, and differentiable building blocks.
+            path_stages:
+              - [deep-learning-engineer, 01-foundations-and-computation]
+            ids: [delta-rule, einsum-notation, gather-scatter, gradient-of-broadcast, gradient-of-max, gradient-of-reshape, reduction-operations, tensor-indexing, vector-jacobian-product, ml-neural-network, ml-training-correctness]
+          - id: pytorch-workflow
+            title: PyTorch Workflow
+            summary: Modules, parameter registration, custom autograd, debugging, and framework conventions.
+            path_stages:
+              - [deep-learning-engineer, 02-pytorch-workflow]
+            ids: [custom-autograd-function, pytorch-parameter-count]
+          - id: mlp-classification
+            title: MLP & Classification
+            summary: Dense architectures, activation and gating layers, classification heads, and losses.
+            path_stages:
+              - [deep-learning-engineer, 03-mlp-and-classification]
+            ids: [binary-cross-entropy, focal-loss, gated-linear-unit, gating-mechanism, label-smoothing, mixture-density-network, triplet-loss]
+          - id: optimization-stability
+            title: Optimization & Stability
+            summary: Optimizers, compute allocation, stable training, distillation, and scaling behavior.
+            path_stages:
+              - [deep-learning-engineer, 04-optimization-and-stability]
+            ids: [compute-optimal-training, distillation-loss, knowledge-distillation, model-averaging, scaling-law, training-compute-estimation]
+          - id: regularization-normalization
+            title: Regularization & Normalization
+            summary: Normalization, representation constraints, forgetting, contrastive learning, and generalization.
+            path_stages:
+              - [deep-learning-engineer, 05-regularization-and-normalization]
+            ids: [catastrophic-forgetting, contrastive-learning, contrastive-loss, path-patching, self-supervised-learning, superposition-feature-reconstruction, ml-normalization-statistics]
+          - id: cnn-vision
+            title: CNN & Vision
+            summary: Convolutional models, visual feature hierarchies, augmentation, and vision-language systems.
+            ids: [data-augmentation-pipeline, flatten-layer, hierarchical-feature-fusion, video-latent-memory-estimation, vision-language-model]
+          - id: sequence-models
+            title: Sequence Models
+            summary: Recurrent state, temporal processing, LSTM and GRU models, and sequence training.
+            ids: [hidden-state, time-delay-neural-network, ml-lstm, ml-gru, ml-sequence-modeling]
+          - id: attention-transformers
+            title: Attention & Transformers
+            summary: Attention, transformer blocks, memory augmentation, experts, and temporal embeddings.
+            path_stages:
+              - [deep-learning-engineer, 07-attention-and-transformer]
+            ids: [associative-memory, decentralized-expert-model, hybrid-attention-layer-assignment, hypernetwork, memory-augmented-network, ml-attention, ml-temporal-embedding, ml-transformer-for-ts]
+          - id: generative-models
+            title: Generative Models
+            summary: Diffusion, flows, adversarial learning, conditioned generation, and sampling algorithms.
+            path_stages:
+              - [deep-learning-engineer, 08-generative-models]
+            ids: [conditioned-generation, euler-sampling, frame-anchor-noise, maskgit-decoding, rectified-flow, relativistic-gan-critic, unipc-sampling]
+          - id: efficiency-scaling
+            title: Efficiency & Scaling
+            summary: Memory layout, parallelism, efficient execution, scaling, and large-model systems.
+            path_stages:
+              - [deep-learning-engineer, 09-efficiency-and-scaling]
+            ids: [contiguous-memory, four-dimensional-parallelism]
       - id: nlp-transformers
         title: NLP & Transformers
         summary: Tokenization, language models, attention, and transformer systems.
+        subtopics:
+          - id: tokenization-representation
+            title: Tokenization & Representation
+            summary: Text units, embeddings, token processing, vocabulary design, and representation learning.
+            path_stages:
+              - [nlp-transformer, representation]
+              - [nlp-transformer, token-processing]
+          - id: sequence-to-sequence
+            title: Sequence-to-Sequence
+            summary: Recurrent encoders, decoders, teacher forcing, and sequence transduction.
+            path_stages:
+              - [nlp-transformer, sequence-models]
+          - id: attention
+            title: Attention
+            summary: Attention scores, masking, heads, positional signals, and attention variants.
+            path_stages:
+              - [nlp-transformer, attention]
+          - id: transformer-architecture
+            title: Transformer Architecture
+            summary: Transformer blocks, normalization, feed-forward layers, and expert routing.
+            path_stages:
+              - [nlp-transformer, architecture]
+            ids: [mixture-of-experts, rmsnorm, transformer-block]
+          - id: decoding-generation
+            title: Decoding & Generation
+            summary: Autoregressive generation, sampling, beam methods, constraints, and stopping behavior.
+            path_stages:
+              - [nlp-transformer, decoding]
+          - id: prompting-reasoning
+            title: Prompting & Reasoning
+            summary: Prompt templates, chain-of-thought methods, and explicit reasoning traces.
+            ids: [prompt-template, chain-of-thought, reasoning-trace]
+          - id: fine-tuning-alignment
+            title: Fine-Tuning & Alignment
+            summary: Instruction tuning, preference learning, adapters, reward signals, and steering.
+            ids: [instruction-tuning, instruction-loss-masking, special-token-instruction, preference-dataset, self-critique-loss, direct-preference-optimization, low-rank-adaptation, fine-tuning, steering-vector]
+          - id: evaluation-verification
+            title: Evaluation & Verification
+            summary: Language benchmarks, semantic metrics, rubric judgments, and executable verification.
+            ids: [instruction-following-evaluation, instruction-complexity-scoring, instruction-constraint-checking, text-generation-evaluation, semantic-similarity, wu-palmer-similarity, open-ended-qa-evaluation, corpus-qa-evaluation, ngram-coverage, rouge-score, translation-evaluation, meteor-score, rubric-based-evaluation, llm-as-judge, mmlu-evaluation, code-execution-verifier, math-benchmark, boxed-answer-extraction, answer-equivalence-checking]
+          - id: retrieval-document-processing
+            title: Retrieval & Document Processing
+            summary: Chunking, deduplication, summarization, multi-document retrieval, and grounded generation.
+            ids: [document-chunking, overlapping-chunks, text-deduplication, document-summarization, multi-document-retrieval, retrieval-augmented-generation]
+          - id: context-serving
+            title: Context & Serving
+            summary: Long-context evaluation, cache-aware serving, memory constraints, and inference details.
+            path_stages:
+              - [nlp-transformer, serving-details]
+            ids: [needle-in-a-haystack-evaluation, long-context-evaluation, context-management]
       - id: reinforcement-learning
         title: Reinforcement Learning
         summary: MDPs, policies, value functions, and control algorithms.
+        subtopics:
+          - id: environments-trajectories-models
+            title: Environments, Trajectories & Models
+            summary: Agents, environments, trajectories, Markov models, and transition dynamics.
+            path_stages:
+              - [reinforcement-learning, model]
+          - id: planning-dynamic-programming
+            title: Planning & Dynamic Programming
+            summary: Bellman operators, policy evaluation, value iteration, and model-based planning.
+            path_stages:
+              - [reinforcement-learning, planning]
+          - id: value-learning-exploration
+            title: Value Learning & Exploration
+            summary: Temporal-difference methods, Q-learning, bandits, exploration, and replay.
+            path_stages:
+              - [reinforcement-learning, value]
+            ids: [multi-armed-bandit]
+          - id: function-approximation
+            title: Function Approximation
+            summary: Approximate value functions, gradients, eligibility traces, and control with features.
+            path_stages:
+              - [reinforcement-learning, approximation]
+          - id: deep-offline-rl
+            title: Deep & Offline RL
+            summary: Deep value learning, offline objectives, actor-critic systems, and replay stabilization.
+            path_stages:
+              - [reinforcement-learning, deep-rl]
+          - id: policy-optimization-multi-agent
+            title: Policy Optimization & Multi-Agent
+            summary: Policy gradients, proximal updates, multi-agent learning, and preference optimization.
+            path_stages:
+              - [reinforcement-learning, policy]
+          - id: training-diagnostics-scaling
+            title: Training, Diagnostics & Scaling
+            summary: Parallel rollout, scheduling, diagnostics, and large-scale RL operations.
+            ids: [policy-parallelism, resource-dilation-scheduling, rl-training-diagnostics]
       - id: computer-vision
         title: Computer Vision
         summary: Image models, convolutional architectures, detection, and segmentation.
+        subtopics:
+          - id: cnn-fundamentals
+            title: CNN Fundamentals
+            summary: Convolution, pooling, receptive fields, and residual building blocks.
+            path_stages:
+              - [computer-vision, cnn-basics]
+          - id: training-augmentation
+            title: Training & Augmentation
+            summary: Image preprocessing, augmentation, regularization, and training recipes.
+            path_stages:
+              - [computer-vision, training]
+          - id: tasks-architectures
+            title: Tasks & Architectures
+            summary: Classification, detection, segmentation, vision transformers, and spatial models.
+            path_stages:
+              - [computer-vision, tasks]
+          - id: evaluation-quality-metrics
+            title: Evaluation & Quality Metrics
+            summary: Overlap, localization, calibration, and perceptual quality measurements.
+            path_stages:
+              - [computer-vision, evaluation]
       - id: optimization
         title: Optimization
         summary: Objective functions, search, gradients, schedules, and constraints.
       - id: mlops-inference
         title: MLOps & Inference
         summary: Serving, drift, experiment tracking, deployment, and inference systems.
+        subtopics:
+          - id: experimentation-quality
+            title: Experimentation & Quality
+            summary: Reproducible runs, checkpoints, logs, inference statistics, and human quality review.
+            ids: [random-seed, experiment-tracking, checkpointing, checkpoint-resume-training, request-logging, inference-statistics, quality-scoring-pipeline, human-review-queue]
+          - id: data-pipelines
+            title: Data Pipelines
+            summary: ETL design, dependency graphs, and critical-path analysis for model data flows.
+            ids: [etl-pipeline, pipeline-dag, critical-path-analysis]
+          - id: serving-batching
+            title: Serving & Batching
+            summary: Online and batch serving, request scheduling, batching, streaming, and throughput.
+            ids: [model-serving, latency-throughput, real-time-inference, batch-inference, dynamic-batching, continuous-batching, chunked-prefill, weighted-batching, streaming-inference]
+          - id: gpu-inference-optimization
+            title: GPU Inference & Optimization
+            summary: Cache and decode design, GPU allocation, quantization, export, and accelerated decoding.
+            ids: [prefix-cache, prefill-decode, inference-latency-metrics, multi-gpu-inference, gpu-resource-allocation, mig-partitioning, model-quantization, onnx-export, speculative-decoding, grammar-constrained-decoding]
+          - id: deployment-monitoring
+            title: Deployment & Monitoring
+            summary: Health checks, rollout safety, monitoring, drift detection, and deployment analysis.
+            ids: [health-check, model-monitoring, canary-deployment, rollout-analysis, data-drift]
       - id: robotics-control
         title: Robotics & Control
         summary: Control systems, robotics environments, and embodied learning.
@@ -70,9 +366,65 @@ domains:
       - id: algorithms
         title: Algorithms
         summary: Complexity, recursion, dynamic programming, graph traversal, and search.
+        subtopics:
+          - id: complexity-analysis
+            title: Complexity & Analysis
+            summary: Asymptotic reasoning, recurrences, recursion, and algorithmic cost models.
+            path_stages:
+              - [algorithmic-thinking, complexity]
+            ids: [cs-big-o]
+          - id: arrays-windows-intervals
+            title: Arrays, Windows & Intervals
+            summary: Prefix sums, sliding windows, array scans, interval merging, and rolling summaries.
+            path_stages:
+              - [algorithmic-thinking, array-patterns]
+            ids: [merge-intervals, dsa-rolling-median, dsa-interval-merge]
+          - id: search-sorting-selection
+            title: Search, Sorting & Selection
+            summary: Binary search, ordering, sampling, geometric selection, and top-k techniques.
+            ids: [sorting-algorithms, binary-search, reservoir-sampling, manhattan-median, dsa-binary-search, dsa-sorting, dsa-top-k]
+          - id: graph-dynamic-algorithms
+            title: Graph & Dynamic Algorithms
+            summary: Traversal, paths, components, spanning trees, dynamic programming, and game search.
+            ids: [graph-traversal, connected-components, grid-path-search, robot-grid-simulation, topological-sort, shortest-path, minimum-spanning-tree, dynamic-programming, edit-distance, fibonacci-sequence, alpha-beta-pruning, game-move-resolution, dsa-graph-basics]
+          - id: string-expression-algorithms
+            title: String & Expression Algorithms
+            summary: Frequency methods, linked structures, parsers, parentheses, and palindrome checks.
+            ids: [duplicate-detection, set-frequency-counting, linked-list-cycle, valid-parentheses, expression-evaluation, palindrome-checking]
+          - id: streaming-simulation
+            title: Streaming & Simulation
+            summary: Stateful stream processing and event-driven order-book simulation.
+            ids: [dsa-stream-processing, dsa-order-book-simulation]
       - id: databases
         title: Databases
         summary: SQL, joins, indexes, aggregation, constraints, and query planning.
+        subtopics:
+          - id: tables-relational-basics
+            title: Tables & Relational Basics
+            summary: Tables, keys, constraints, transactions, schema changes, and basic relational operations.
+            path_stages:
+              - [data-and-sql, tables]
+          - id: joins-analytics
+            title: Joins & Analytics
+            summary: Joins, grouping, windows, cohort analysis, and analytical query patterns.
+            path_stages:
+              - [data-and-sql, analytics]
+            ids: [cs-sql-joins-aggregations]
+          - id: time-based-queries
+            title: Time-Based Queries
+            summary: Retention, event sequences, temporal windows, and time-aware aggregation.
+            path_stages:
+              - [data-and-sql, time-analysis]
+          - id: performance-indexing
+            title: Performance & Indexing
+            summary: Index structures, query plans, partitioning, materialization, and performance diagnosis.
+            path_stages:
+              - [data-and-sql, performance]
+          - id: cleanup-presentation
+            title: Cleanup & Presentation
+            summary: Deduplication, NULL handling, pivoting, formatting, and presentation-ready results.
+            path_stages:
+              - [data-and-sql, cleanup-and-presentation]
       - id: software-engineering
         title: Software Engineering
         summary: API design, version control, Linux tooling, testing, and maintainable systems.
@@ -83,6 +435,36 @@ domains:
       - id: python-data-stack
         title: Python & Data Stack
         summary: NumPy, pandas, SciPy, sklearn, statsmodels, plotting, and data pipelines.
+        subtopics:
+          - id: numpy-array-computing
+            title: NumPy & Array Computing
+            summary: Arrays, broadcasting, indexing, random generation, and vectorized numerical work.
+            prefixes: [numpy-]
+          - id: pandas-tabular-data
+            title: pandas & Tabular Data
+            summary: DataFrames, alignment, joins, reshaping, grouping, time series, and missing data.
+            prefixes: [pandas-]
+          - id: scipy-scientific-computing
+            title: SciPy & Scientific Computing
+            summary: Optimization, interpolation, sparse methods, integration, and scientific statistics.
+            prefixes: [scipy-]
+          - id: sklearn-preprocessing
+            title: scikit-learn & Preprocessing
+            summary: Estimator workflows, preprocessing, categorical encoding, scaling, and imputation.
+            prefixes: [sklearn-]
+            ids: [categorical-encoding, data-cleaning, feature-scaling, missing-value-imputation, one-hot-encoding, ordinal-encoding]
+          - id: visualization
+            title: Visualization
+            summary: Statistical and analytical visualization with Matplotlib and related tools.
+            prefixes: [matplotlib-]
+          - id: statsmodels
+            title: statsmodels
+            summary: Formula-based statistical modeling, diagnostics, and time-series estimation.
+            prefixes: [statsmodels-]
+          - id: python-performance-reliability
+            title: Python Performance & Reliability
+            summary: Language behavior, profiling, testing, typing, concurrency, and robust execution.
+            prefixes: [python-]
       - id: gpu-computing
         title: GPU Computing
         summary: CUDA, Triton, kernels, memory hierarchy, atomics, and parallel execution.

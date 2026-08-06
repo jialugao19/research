@@ -1,4 +1,4 @@
-# 38. statsmodels：与 sklearn 的区别、数据接口与结果对象
+# statsmodels：与 sklearn 的区别、数据接口与结果对象
 
 ## 核心概念
 

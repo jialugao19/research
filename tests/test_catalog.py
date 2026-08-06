@@ -1,9 +1,11 @@
+import re
 import shutil
 from pathlib import Path
 
 import pytest
 
 from research_site.catalog import CatalogError, load_catalog
+from research_site.knowledge_sync import KnowledgeSyncError, sync_quant_knowledge_snapshot
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
 
@@ -107,6 +109,50 @@ def test_repository_catalog_is_valid() -> None:
     assert catalog.knowledge.node_by_slug["cs-git-version-control"].level == "engineering"
 
 
+def test_long_knowledge_topics_have_complete_bounded_subtopics() -> None:
+    catalog = load_catalog(SITE_ROOT / "content")
+    assert catalog.knowledge is not None
+    grouped_topics = {
+        (domain.id, topic.id): topic
+        for domain in catalog.knowledge.ontology_domains
+        for topic in domain.topics
+        if topic.subtopics
+    }
+    assert set(grouped_topics) == {
+        ("foundations", "probability-statistics"),
+        ("foundations", "linear-algebra"),
+        ("machine-intelligence", "machine-learning"),
+        ("machine-intelligence", "deep-learning"),
+        ("machine-intelligence", "nlp-transformers"),
+        ("machine-intelligence", "reinforcement-learning"),
+        ("machine-intelligence", "computer-vision"),
+        ("machine-intelligence", "mlops-inference"),
+        ("computer-science", "algorithms"),
+        ("computer-science", "databases"),
+        ("systems-engineering", "python-data-stack"),
+    }
+    for (domain_id, topic_id), topic in grouped_topics.items():
+        topic_nodes = catalog.knowledge.nodes_for_topic(domain_id, topic_id)
+        subtopic_nodes = [
+            catalog.knowledge.nodes_for_subtopic(domain_id, topic_id, subtopic.id)
+            for subtopic in topic.subtopics
+        ]
+        assert all(0 < len(nodes) <= 30 for nodes in subtopic_nodes)
+        assert sum(len(nodes) for nodes in subtopic_nodes) == len(topic_nodes)
+        assert {node.id for nodes in subtopic_nodes for node in nodes} == {node.id for node in topic_nodes}
+    for domain in catalog.knowledge.ontology_domains:
+        for topic in domain.topics:
+            if not topic.subtopics:
+                assert len(catalog.knowledge.nodes_for_topic(domain.id, topic.id)) <= 30
+
+
+def test_quant_chapter_titles_do_not_repeat_filename_sequences() -> None:
+    catalog = load_catalog(SITE_ROOT / "content")
+    assert catalog.knowledge is not None
+    assert all(not re.match(r"^\d+\.\s", chapter.title) for chapter in catalog.knowledge.chapters)
+    assert all(not re.match(r"^#\s+\d+\.\s", chapter.body) for chapter in catalog.knowledge.chapters)
+
+
 def test_report_routes_are_unique() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     routes = [report.route for report in catalog.reports]
@@ -129,6 +175,17 @@ def test_quant_knowledge_snapshot_checksum_is_enforced(tmp_path: Path) -> None:
 
     with pytest.raises(CatalogError, match="quant knowledge snapshot checksum mismatch"):
         load_catalog(tmp_path)
+
+
+def test_quant_sync_rejects_numbered_h1_titles(tmp_path: Path) -> None:
+    source = tmp_path / "source"
+    shutil.copytree(SITE_ROOT / "content" / "knowledge" / "quant-knowledge", source)
+    chapter = source / "booklet" / "01-python" / "01-numpy-ndarray-dtype-shape.md"
+    text = chapter.read_text(encoding="utf-8")
+    chapter.write_text(text.replace("# ", "# 1. ", 1), encoding="utf-8")
+
+    with pytest.raises(KnowledgeSyncError, match="must not repeat its filename sequence"):
+        sync_quant_knowledge_snapshot(source, tmp_path / "destination")
 
 
 def test_featured_report_must_be_current(tmp_path: Path) -> None:
