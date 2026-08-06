@@ -16,8 +16,8 @@ def main() -> int:
     except CatalogError as exc:
         parser.error(str(exc))
     print(
-        f"catalog valid: {len(catalog.projects)} projects, "
-        f"{len(catalog.studies)} studies, {len(catalog.reports)} reports"
+        f"catalog valid: {len(catalog.research_projects)} research projects, "
+        f"{len(catalog.studies)} studies, {len(catalog.reports)} reports, Knowledge loaded"
     )
     return 0
 

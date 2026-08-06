@@ -9,15 +9,18 @@ SITE_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _copy_catalog(tmp_path: Path) -> None:
-    for name in ("projects.yaml", "studies.yaml", "reports.yaml"):
+    for name in ("projects.yaml", "studies.yaml", "reports.yaml", "highlights.yaml"):
         (tmp_path / name).write_text((SITE_ROOT / "content" / name).read_text(encoding="utf-8"), encoding="utf-8")
     shutil.copytree(SITE_ROOT / "content" / "report-docs", tmp_path / "report-docs")
+    shutil.copytree(SITE_ROOT / "content" / "knowledge", tmp_path / "knowledge")
 
 
 def test_repository_catalog_is_valid() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
-    assert len(catalog.projects) == 17
-    assert len(catalog.studies) == 39
+    assert len(catalog.projects) == 18
+    assert len(catalog.research_projects) == 16
+    assert len(catalog.knowledge_projects) == 2
+    assert len(catalog.studies) == 38
     assert len(catalog.reports) == 13
     assert len(catalog.current_reports) == 7
     assert catalog.featured_report_id == "0802-stock1s-gru384-v2"
@@ -33,16 +36,99 @@ def test_repository_catalog_is_valid() -> None:
     assert one_minute is not None
     assert len(one_minute.objective_details) == 3
     assert len(one_minute.data_structure) == 4
-    assert "成本后结果" in one_minute.conclusion
+    assert "net results" in one_minute.conclusion
     assert catalog.project_by_id["prediction-nn"].track("one-second") is not None
-    assert catalog.project_by_id["prediction-nn"].subproject("l2-features").group == "特征扩展与组合验证"
+    assert catalog.project_by_id["prediction-nn"].subproject("l2-features").group == "Feature Extensions & Integration"
     assert catalog.study_by_id["baseline-1s-0720"].metrics[0].display_value == "0.09842"
+    evaluation_rows = next(
+        metric
+        for metric in catalog.study_by_id["baseline-1s-0720"].metrics
+        if metric.id == "evaluation-rows"
+    )
+    assert evaluation_rows.display_value == "7,947,567"
+    assert all(study.method and study.dataset and study.decision_state for study in catalog.studies)
+    assert all(not study.metrics or study.primary_metric is not None for study in catalog.studies)
+    assert catalog.study_by_id["optimize-1min-model"].primary_metric_id == "test-pooled-ic"
+    architecture_count = next(
+        metric
+        for metric in catalog.study_by_id["optimize-1min-model"].metrics
+        if metric.id == "architecture-candidates"
+    )
+    assert architecture_count.display_value == "18"
+    assert catalog.homepage is not None
+    assert catalog.homepage.featured.study == "baseline-1s-0720"
+    assert catalog.homepage.featured.chart.bins == (1, 2, 3, 18, 19, 20)
+    assert len(catalog.homepage.metrics) == 8
+    assert len(catalog.homepage.rejected_ideas) == 3
+    assert catalog.project_by_id["deep-ml"].section == "knowledge"
+    assert catalog.project_by_id["quant-knowledge"].section == "knowledge"
+    assert catalog.knowledge is not None
+    assert catalog.knowledge.counts == {
+        "concepts": 735,
+        "articles": 653,
+        "relations": 2585,
+        "paths": 18,
+    }
+    assert catalog.knowledge.aggregate_counts == {
+        "sources": 2,
+        "concepts": 735,
+        "deepml_articles": 653,
+        "quant_chapters": 136,
+        "nodes": 871,
+        "relations": 2585,
+        "paths": 18,
+    }
+    assert len(catalog.knowledge.ontology_domains) == 5
+    assert sum(len(domain.topics) for domain in catalog.knowledge.ontology_domains) == 25
+    assert len(catalog.knowledge.nodes) == 871
+    assert catalog.knowledge.node_by_slug["attention-mechanism"].route == (
+        "knowledge/machine-intelligence/nlp-transformers/attention-mechanism/"
+    )
+    assert catalog.knowledge.node_by_slug["numpy-ndarray-dtype-shape"].route == (
+        "knowledge/systems-engineering/python-data-stack/numpy-ndarray-dtype-shape/"
+    )
+    assert catalog.knowledge.node_by_slug["mm-market-impact"].route == (
+        "knowledge/quantitative-research/market-microstructure/mm-market-impact/"
+    )
+    assert len(catalog.knowledge.quant_sections) == 8
+    assert len(catalog.knowledge.chapters) == 136
+    assert catalog.knowledge.article_by_slug["attention-mechanism"].review_state == "automated_editorial"
+    assert catalog.knowledge.chapter_by_slug["numpy-ndarray-dtype-shape"].section_title == "Python & Data Stack"
+    neural_network = catalog.knowledge.chapter_by_slug["ml-neural-network"]
+    assert neural_network.section_title == "Deep Learning"
+    assert neural_network.part_title == "Part 1 · Foundations & Correctness"
+    assert neural_network.source_path == "booklet/06-deep-learning/01-foundations/108-ml-neural-network.md"
+    deep_learning_path = catalog.knowledge.path_by_id["deep-learning-engineer"]
+    assert len(deep_learning_path.stages) == 9
+    assert deep_learning_path.organization == "part -> stage -> concept -> article"
+    assert deep_learning_path.stages[0].title.startswith("Part 1")
+    assert all(stage.summary for stage in deep_learning_path.stages)
+    assert catalog.knowledge.node_by_slug["mm-market-impact"].level == "applied"
+    assert catalog.knowledge.node_by_slug["cs-git-version-control"].level == "engineering"
 
 
 def test_report_routes_are_unique() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     routes = [report.route for report in catalog.reports]
     assert len(routes) == len(set(routes))
+
+
+def test_knowledge_snapshot_checksum_is_enforced(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    article = tmp_path / "knowledge" / "deep-ml" / "articles" / "attention-mechanism.md"
+    article.write_text(article.read_text(encoding="utf-8") + "\nchanged\n", encoding="utf-8")
+
+    with pytest.raises(CatalogError, match="knowledge snapshot checksum mismatch"):
+        load_catalog(tmp_path)
+
+
+def test_quant_knowledge_snapshot_checksum_is_enforced(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    chapter = tmp_path / "knowledge" / "quant-knowledge" / "booklet" / "01-python" / "01-numpy-ndarray-dtype-shape.md"
+    chapter.write_text(chapter.read_text(encoding="utf-8") + "\nchanged\n", encoding="utf-8")
+
+    with pytest.raises(CatalogError, match="quant knowledge snapshot checksum mismatch"):
+        load_catalog(tmp_path)
 
 
 def test_featured_report_must_be_current(tmp_path: Path) -> None:
@@ -141,4 +227,44 @@ def test_study_report_must_belong_to_same_project(tmp_path: Path) -> None:
     )
     (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
     with pytest.raises(CatalogError, match="belongs to another project"):
+        load_catalog(tmp_path)
+
+
+def test_study_decision_state_must_be_supported(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
+    studies = studies.replace("decision_state: retain", "decision_state: uncertain", 1)
+    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    with pytest.raises(CatalogError, match="unsupported decision_state uncertain"):
+        load_catalog(tmp_path)
+
+
+def test_metric_bearing_study_requires_valid_primary_metric(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
+    studies = studies.replace("primary_metric: test-pooled-ic", "primary_metric: missing-metric", 1)
+    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    with pytest.raises(CatalogError, match="primary_metric references unknown metric missing-metric"):
+        load_catalog(tmp_path)
+
+
+def test_homepage_metric_reference_must_resolve(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    highlights = (tmp_path / "highlights.yaml").read_text(encoding="utf-8")
+    highlights = highlights.replace("metric: etf-test-ic", "metric: missing-metric", 1)
+    (tmp_path / "highlights.yaml").write_text(highlights, encoding="utf-8")
+    with pytest.raises(CatalogError, match="references unknown metric index500-clean-benchmark/missing-metric"):
+        load_catalog(tmp_path)
+
+
+def test_homepage_chart_series_must_match_bins(tmp_path: Path) -> None:
+    _copy_catalog(tmp_path)
+    highlights = (tmp_path / "highlights.yaml").read_text(encoding="utf-8")
+    highlights = highlights.replace(
+        "values: [-8.054, -3.855, -2.834, 3.612, 4.521, 7.072]",
+        "values: [-8.054, -3.855]",
+        1,
+    )
+    (tmp_path / "highlights.yaml").write_text(highlights, encoding="utf-8")
+    with pytest.raises(CatalogError, match="one value for every bin"):
         load_catalog(tmp_path)

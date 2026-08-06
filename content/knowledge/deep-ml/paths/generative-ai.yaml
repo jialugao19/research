@@ -1,0 +1,39 @@
+path:
+  name: Generative AI
+stages:
+- name: representations
+  topics:
+  - autoencoder
+  - variational-autoencoder
+- name: image-generation
+  topics:
+  - generative-adversarial-network
+  - diffusion-model
+  - denoising-process
+  - diffusion-noise-schedule
+  - euler-sampling
+  - rectified-flow
+  - ddim-sampling
+  - unipc-sampling
+  - maskgit-decoding
+  - video-latent-memory-estimation
+  - frame-anchor-noise
+  - classifier-free-guidance
+- name: language-generation
+  topics:
+  - language-modeling
+  - autoregressive-generation
+  - chat-template
+  - prompt-template
+  - fine-tuning
+  - instruction-tuning
+  - instruction-loss-masking
+  - preference-dataset
+  - reward-modeling
+  - low-rank-adaptation
+  - retrieval-augmented-generation
+- name: representation-learning
+  topics:
+  - contrastive-learning
+  - contrastive-loss
+  - feature-space

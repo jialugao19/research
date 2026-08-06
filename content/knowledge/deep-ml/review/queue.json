@@ -1,0 +1,8 @@
+{
+  "items": [],
+  "policy": {
+    "human_review": "optional and not required for publication",
+    "publish_gate": "automated editorial checks",
+    "queue_scope": "only articles with explicit editorial blockers or deprecated overrides"
+  }
+}

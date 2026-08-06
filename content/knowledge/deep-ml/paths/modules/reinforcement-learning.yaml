@@ -1,0 +1,319 @@
+path:
+  name: Reinforcement Learning
+modules:
+- id: model-1
+  stage: model
+  stage_title: model
+  stage_summary: ''
+  objective: 串联 probability 到 acrobot-environment，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - probability-overview
+  - markov-chain-overview
+  - markov-decision-process-overview
+  - environment-model-overview
+  - simulation-environment-overview
+  - gymnasium-environment-overview
+  - gym-space-validation-overview
+  - acrobot-environment-overview
+  optional_units: []
+  articles:
+  - acrobot-environment.md
+  - environment-model.md
+  - gym-space-validation.md
+  - gymnasium-environment.md
+  - markov-chain.md
+  - markov-decision-process.md
+  - probability.md
+  - simulation-environment.md
+- id: model-2
+  stage: model
+  stage_title: model
+  stage_summary: ''
+  objective: 串联 vectorized-environment 到 domain-randomization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - vectorized-environment-overview
+  - parallel-environment-simulation-overview
+  - rl-trajectory-overview
+  - model-based-planning-overview
+  - imitation-learning-overview
+  - behavior-cloning-overview
+  - multi-task-rl-overview
+  - domain-randomization-overview
+  optional_units: []
+  articles:
+  - behavior-cloning.md
+  - domain-randomization.md
+  - imitation-learning.md
+  - model-based-planning.md
+  - multi-task-rl.md
+  - parallel-environment-simulation.md
+  - rl-trajectory.md
+  - vectorized-environment.md
+- id: model-3
+  stage: model
+  stage_title: model
+  stage_summary: ''
+  objective: 串联 monte-carlo-methods 到 multi-agent-reinforcement-learning，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - monte-carlo-methods-overview
+  - sample-efficiency-overview
+  - multi-agent-reinforcement-learning-overview
+  optional_units: []
+  articles:
+  - monte-carlo-methods.md
+  - multi-agent-reinforcement-learning.md
+  - sample-efficiency.md
+- id: planning-1
+  stage: planning
+  stage_title: planning
+  stage_summary: ''
+  objective: 串联 policy-evaluation 到 puct-selection，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - policy-evaluation-overview
+  - policy-improvement-overview
+  - policy-iteration-overview
+  - bellman-expectation-equation-overview
+  - value-iteration-overview
+  - dyna-q-overview
+  - model-based-value-expansion-overview
+  - puct-selection-overview
+  optional_units: []
+  articles:
+  - dyna-q.md
+  - model-based-value-expansion.md
+  - policy-evaluation.md
+  - policy-improvement.md
+  - policy-iteration.md
+  - puct-selection.md
+  - temporal-difference-learning.md
+  - value-iteration.md
+- id: value-1
+  stage: value
+  stage_title: value
+  stage_summary: ''
+  objective: 串联 discounted-return 到 temporal-difference-learning，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - discounted-return-overview
+  - state-value-function-overview
+  - action-value-function-overview
+  - bellman-equation-overview
+  - exploration-exploitation-overview
+  - epsilon-greedy-policy-overview
+  - upper-confidence-bound-overview
+  - temporal-difference-learning-overview
+  optional_units: []
+  articles:
+  - action-value-function.md
+  - discounted-return.md
+  - epsilon-greedy-policy.md
+  - state-value-function.md
+  - temporal-difference-learning.md
+  - upper-confidence-bound.md
+- id: value-2
+  stage: value
+  stage_title: value
+  stage_summary: ''
+  objective: 串联 temporal-difference-prediction 到 forward-backward-td，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - temporal-difference-prediction-overview
+  - td-error-overview
+  - td-error-bound-overview
+  - rl-backup-diagram-overview
+  - n-step-td-overview
+  - q-sigma-algorithm-overview
+  - td-lambda-overview
+  - forward-backward-td-overview
+  optional_units: []
+  articles:
+  - forward-backward-td.md
+  - n-step-td.md
+  - q-sigma-algorithm.md
+  - rl-backup-diagram.md
+  - td-error-bound.md
+  - td-error.md
+  - td-lambda.md
+  - temporal-difference-prediction.md
+- id: value-3
+  stage: value
+  stage_title: value
+  stage_summary: ''
+  objective: 串联 semi-gradient-td 到 maximization-bias，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - semi-gradient-td-overview
+  - full-return-prediction-overview
+  - eligibility-traces-overview
+  - action-conditional-trace-overview
+  - trace-clearing-overview
+  - prioritized-sweeping-overview
+  - successor-representation-overview
+  - maximization-bias-overview
+  optional_units: []
+  articles:
+  - action-conditional-trace.md
+  - eligibility-traces.md
+  - full-return-prediction.md
+  - maximization-bias.md
+  - prioritized-sweeping.md
+  - semi-gradient-td.md
+  - successor-representation.md
+  - trace-clearing.md
+- id: value-4
+  stage: value
+  stage_title: value
+  stage_summary: ''
+  objective: 串联 retrace-algorithm 到 td-gammon，形成一个可执行的阶段性学习块。
+  estimated_minutes: 125
+  required_units:
+  - retrace-algorithm-overview
+  - sarsa-overview
+  - q-learning-overview
+  - r-learning-overview
+  - td-gammon-overview
+  optional_units: []
+  articles:
+  - r-learning.md
+  - retrace-algorithm.md
+  - td-gammon.md
+  - temporal-difference-learning.md
+- id: approximation-1
+  stage: approximation
+  stage_title: approximation
+  stage_summary: ''
+  objective: 串联 rl-function-approximation 到 feature-receptive-field，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - rl-function-approximation-overview
+  - feature-density-approximation-overview
+  - value-generalization-analysis-overview
+  - tile-coding-overview
+  - coarse-coding-overview
+  - directional-stripe-tiling-overview
+  - kanerva-coding-overview
+  - feature-receptive-field-overview
+  optional_units: []
+  articles:
+  - coarse-coding.md
+  - directional-stripe-tiling.md
+  - feature-density-approximation.md
+  - feature-receptive-field.md
+  - kanerva-coding.md
+  - rl-function-approximation.md
+  - tile-coding.md
+  - value-generalization-analysis.md
+- id: approximation-2
+  stage: approximation
+  stage_title: approximation
+  stage_summary: ''
+  objective: 串联 action-mapping 到 rote-learning-rl，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - action-mapping-overview
+  - options-framework-overview
+  - latent-action-space-overview
+  - rote-learning-rl-overview
+  optional_units: []
+  articles:
+  - action-mapping.md
+  - latent-action-space.md
+  - options-framework.md
+  - rote-learning-rl.md
+- id: deep-rl-1
+  stage: deep-rl
+  stage_title: deep-rl
+  stage_summary: ''
+  objective: 串联 off-policy-learning 到 error-dependent-weight-updates，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - off-policy-learning-overview
+  - offline-reinforcement-learning-overview
+  - deadly-triad-overview
+  - deep-q-network-overview
+  - dueling-dqn-overview
+  - target-network-overview
+  - replay-buffer-overview
+  - error-dependent-weight-updates-overview
+  optional_units: []
+  articles:
+  - deadly-triad.md
+  - dueling-dqn.md
+  - error-dependent-weight-updates.md
+  - off-policy-learning.md
+  - offline-reinforcement-learning.md
+  - target-network.md
+  - temporal-difference-learning.md
+- id: deep-rl-2
+  stage: deep-rl
+  stage_title: deep-rl
+  stage_summary: ''
+  objective: 串联 verifiable-reward 到 reward-normalization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 125
+  required_units:
+  - verifiable-reward-overview
+  - binary-reward-overview
+  - sparse-reward-overview
+  - reward-shaping-overview
+  - reward-normalization-overview
+  optional_units: []
+  articles:
+  - binary-reward.md
+  - reward-normalization.md
+  - reward-shaping.md
+  - sparse-reward.md
+  - verifiable-reward.md
+- id: policy-1
+  stage: policy
+  stage_title: policy
+  stage_summary: ''
+  objective: 串联 gradient-descent 到 optimal-policy-extraction，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - gradient-descent-overview
+  - budget-constrained-optimization-overview
+  - policy-gradient-overview
+  - reinforce-algorithm-overview
+  - on-policy-learning-overview
+  - policy-optimization-overview
+  - action-masking-overview
+  - optimal-policy-extraction-overview
+  optional_units: []
+  articles:
+  - action-masking.md
+  - budget-constrained-optimization.md
+  - gradient-descent.md
+  - on-policy-learning.md
+  - optimal-policy-extraction.md
+  - policy-gradient.md
+  - policy-optimization.md
+  - reinforce-algorithm.md
+- id: policy-2
+  stage: policy
+  stage_title: policy
+  stage_summary: ''
+  objective: 串联 reward-baseline 到 alphazero，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - reward-baseline-overview
+  - advantage-function-overview
+  - generalized-advantage-estimation-overview
+  - actor-critic-overview
+  - proximal-policy-optimization-overview
+  - group-relative-policy-optimization-overview
+  - self-play-overview
+  - alphazero-overview
+  optional_units: []
+  articles:
+  - actor-critic.md
+  - advantage-function.md
+  - alphazero.md
+  - generalized-advantage-estimation.md
+  - group-relative-policy-optimization.md
+  - proximal-policy-optimization.md
+  - reward-baseline.md
+  - self-play.md

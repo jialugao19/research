@@ -1,26 +1,44 @@
-{% macro sidebar(catalog, root_url, active_project=None, active_report=None, active_section="projects") %}
-<nav class="sidebar-nav" aria-label="研究目录">
-  <a class="sidebar-root{% if active_section == 'projects' and not active_project and not active_report %} is-active{% endif %}" href="{{ root_url }}">研究总览</a>
-  {% for category in catalog.categories %}
-  <details class="sidebar-group"{% if (active_project and catalog.project_by_id[active_project].category == category.id) or (active_section == 'projects' and not active_project and not active_report and loop.first) %} open{% endif %}>
-    <summary>{{ category.title }}</summary>
+{% macro sidebar(catalog, knowledge, root_url, active_project=None, active_report=None, active_section="projects", active_domain=None, active_topic=None) %}
+<nav class="sidebar-nav" aria-label="Research index">
+  {% if active_section == "knowledge" %}
+  <a class="sidebar-root is-active" href="{{ root_url }}knowledge/"><span class="nav-code">K0</span><span>Knowledge index</span></a>
+  {% for domain in knowledge.ontology_domains %}
+  <details class="sidebar-group"{% if active_domain == domain.id or (not active_domain and loop.first) %} open{% endif %}>
+    <summary><span class="nav-code">{{ "%02d"|format(domain.sequence) }}</span><span>{{ domain.title }}</span></summary>
     <div>
-      {% for project in catalog.projects %}{% if project.category == category.id %}
-      <a class="sidebar-project{% if active_project == project.id %} is-active{% endif %}" href="{{ root_url }}projects/{{ project.id }}/">{{ project.title }}</a>
+      {% for topic in domain.topics %}
+      {% set count = knowledge.nodes_for_topic(domain.id, topic.id)|length %}
+      <a class="sidebar-project{% if active_domain == domain.id and active_topic == topic.id %} is-active{% endif %}" href="{{ root_url }}{{ topic.route }}"><span class="nav-code">{{ "%02d.%02d"|format(domain.sequence, topic.sequence) }}</span><span>{{ topic.title }} <small>{{ count }}</small></span></a>
+      {% endfor %}
+    </div>
+  </details>
+  {% endfor %}
+  {% else %}
+  <a class="sidebar-root{% if active_section == 'projects' and not active_project and not active_report %} is-active{% endif %}" href="{{ root_url }}"><span class="nav-code">00</span><span>Research overview</span></a>
+  {% for category in catalog.categories %}
+  {% set category_index = loop.index %}
+  <details class="sidebar-group"{% if (active_project and catalog.project_by_id[active_project].category == category.id) or (active_section == 'projects' and not active_project and not active_report and loop.first) %} open{% endif %}>
+    <summary><span class="nav-code">{{ "%02d"|format(category_index) }}</span><span>{{ category.title }}</span></summary>
+    <div>
+      {% set project_index = namespace(value=0) %}
+      {% for project in catalog.research_projects %}{% if project.category == category.id %}
+      {% set project_index.value = project_index.value + 1 %}
+      <a class="sidebar-project{% if active_project == project.id %} is-active{% endif %}" href="{{ root_url }}projects/{{ project.id }}/"><span class="nav-code">{{ "%02d.%02d"|format(category_index, project_index.value) }}</span><span>{{ project.title }}</span></a>
       {% if active_project == project.id and project.tracks %}
-        {% for track in project.tracks %}<a class="sidebar-child" href="{{ root_url }}projects/{{ project.id }}/{{ track.id }}/">{{ track.title }}</a>{% endfor %}
+        {% for track in project.tracks %}<a class="sidebar-child" href="{{ root_url }}projects/{{ project.id }}/{{ track.id }}/"><span class="nav-code">—</span><span>{{ track.title }}</span></a>{% endfor %}
       {% endif %}
       {% endif %}{% endfor %}
     </div>
   </details>
   {% endfor %}
   <div class="sidebar-report-group">
-    <a class="sidebar-root{% if active_report or active_section == 'reports' %} is-active{% endif %}" href="{{ root_url }}reports/">研究报告</a>
+    <a class="sidebar-root{% if active_report or active_section == 'reports' %} is-active{% endif %}" href="{{ root_url }}reports/"><span class="nav-code">P</span><span>Publications</span></a>
     {% if active_report %}
       {% for report in catalog.current_reports %}{% if report.project == active_project %}
-      <a class="sidebar-child{% if report.id == active_report %} is-active{% endif %}" href="{{ root_url }}{{ report.route }}">{{ report.title }}</a>
+      <a class="sidebar-child{% if report.id == active_report %} is-active{% endif %}" href="{{ root_url }}{{ report.route }}"><span class="nav-code">—</span><span>{{ report.title }}</span></a>
       {% endif %}{% endfor %}
     {% endif %}
   </div>
+  {% endif %}
 </nav>
 {% endmacro %}

@@ -1,0 +1,360 @@
+path:
+  name: Deep Learning Engineer
+  summary: 从可微计算与 PyTorch 工作流出发，依次学习训练、架构、生成模型和系统效率。
+  organization: part -> stage -> concept -> article
+  inspiration: Datawhale Deep Learning Notes 的 Part / Chapter / tutorial 三级结构
+modules:
+- id: 01-foundations-and-computation-1
+  stage: 01-foundations-and-computation
+  stage_title: Part 1 · Foundations and differentiable computation
+  stage_summary: 先理解模型、前向依赖、计算图和反向传播，再进入框架 API。
+  objective: 串联 linear-algebra 到 backpropagation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - linear-algebra-overview
+  - probability-overview
+  - neural-network-overview
+  - artificial-neuron-overview
+  - forward-pass-overview
+  - backward-pass-overview
+  - computational-graph-overview
+  - backpropagation-overview
+  optional_units: []
+  articles:
+  - artificial-neuron.md
+  - backpropagation.md
+  - backward-pass.md
+  - computational-graph.md
+  - forward-pass.md
+  - linear-algebra.md
+  - neural-network.md
+  - probability.md
+- id: 02-pytorch-workflow-1
+  stage: 02-pytorch-workflow
+  stage_title: Part 2 · PyTorch workflow
+  stage_summary: 把张量、autograd、数据加载、Module、训练步和 checkpoint 串成可运行闭环。
+  objective: 串联 pytorch-tensor 到 dataloader，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - pytorch-tensor-overview
+  - tensor-shape-overview
+  - reshape-view-overview
+  - transpose-permute-overview
+  - automatic-differentiation-overview
+  - no-grad-inference-overview
+  - dataset-class-overview
+  - dataloader-overview
+  optional_units: []
+  articles:
+  - automatic-differentiation.md
+  - dataloader.md
+  - dataset-class.md
+  - no-grad-inference.md
+  - pytorch-tensor.md
+- id: 02-pytorch-workflow-2
+  stage: 02-pytorch-workflow
+  stage_title: Part 2 · PyTorch workflow
+  stage_summary: 把张量、autograd、数据加载、Module、训练步和 checkpoint 串成可运行闭环。
+  objective: 串联 pytorch-module 到 model-train-eval-mode，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - pytorch-module-overview
+  - sequential-module-overview
+  - state-dict-overview
+  - single-training-step-overview
+  - loss-computation-overview
+  - zero-grad-overview
+  - optimizer-step-overview
+  - model-train-eval-mode-overview
+  optional_units: []
+  articles:
+  - loss-computation.md
+  - model-train-eval-mode.md
+  - optimizer-step.md
+  - pytorch-module.md
+  - sequential-module.md
+  - single-training-step.md
+  - state-dict.md
+  - zero-grad.md
+- id: 02-pytorch-workflow-3
+  stage: 02-pytorch-workflow
+  stage_title: Part 2 · PyTorch workflow
+  stage_summary: 把张量、autograd、数据加载、Module、训练步和 checkpoint 串成可运行闭环。
+  objective: 理解 checkpoint-resume-training 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - checkpoint-resume-training-overview
+  optional_units: []
+  articles:
+  - training-resume-and-gradient-checking.md
+- id: 03-mlp-and-classification-1
+  stage: 03-mlp-and-classification
+  stage_title: Part 3 · MLP and classification
+  stage_summary: 从隐藏层与非线性推进到 logits、稳定分类损失和梯度检查。
+  objective: 串联 multilayer-perceptron 到 gelu-activation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - multilayer-perceptron-overview
+  - linear-layer-overview
+  - activation-functions-overview
+  - sigmoid-activation-overview
+  - tanh-activation-overview
+  - relu-activation-overview
+  - leaky-relu-activation-overview
+  - gelu-activation-overview
+  optional_units: []
+  articles:
+  - activation-functions.md
+  - linear-layer.md
+  - multilayer-perceptron.md
+- id: 03-mlp-and-classification-2
+  stage: 03-mlp-and-classification
+  stage_title: Part 3 · MLP and classification
+  stage_summary: 从隐藏层与非线性推进到 logits、稳定分类损失和梯度检查。
+  objective: 串联 softmax-function 到 gradient-checking，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - softmax-function-overview
+  - cross-entropy-overview
+  - log-sum-exp-overview
+  - gradient-checking-overview
+  optional_units: []
+  articles:
+  - cross-entropy.md
+  - log-sum-exp.md
+  - softmax-function.md
+  - training-resume-and-gradient-checking.md
+- id: 04-optimization-and-stability-1
+  stage: 04-optimization-and-stability
+  stage_title: Part 4 · Optimization and stability
+  stage_summary: 按 SGD、动量、自适应更新、权重衰减与训练稳定性的因果顺序组织。
+  objective: 串联 gradient-descent 到 rmsprop-optimizer，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - gradient-descent-overview
+  - mini-batch-training-overview
+  - gradient-accumulation-overview
+  - parameter-update-overview
+  - momentum-optimizer-overview
+  - adagrad-optimizer-overview
+  - adadelta-optimizer-overview
+  - rmsprop-optimizer-overview
+  optional_units: []
+  articles:
+  - gradient-accumulation.md
+  - gradient-descent.md
+  - parameter-update.md
+- id: 04-optimization-and-stability-2
+  stage: 04-optimization-and-stability
+  stage_title: Part 4 · Optimization and stability
+  stage_summary: 按 SGD、动量、自适应更新、权重衰减与训练稳定性的因果顺序组织。
+  objective: 串联 adam-optimizer 到 gradient-clipping，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - adam-optimizer-overview
+  - adamax-optimizer-overview
+  - adamw-optimizer-overview
+  - muon-optimizer-overview
+  - learning-rate-schedule-overview
+  - weight-decay-overview
+  - weight-initialization-overview
+  - gradient-clipping-overview
+  optional_units: []
+  articles:
+  - gradient-clipping.md
+  - gradient-descent.md
+  - learning-rate-schedule.md
+  - modern-optimizer-updates.md
+  - weight-decay.md
+  - weight-initialization.md
+- id: 05-regularization-and-normalization-1
+  stage: 05-regularization-and-normalization
+  stage_title: Part 5 · Regularization and normalization
+  stage_summary: 区分随机正则、统计集合、残差路径以及训练与推理状态。
+  objective: 串联 regularization 到 rmsnorm，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - regularization-overview
+  - dropout-overview
+  - normalization-overview
+  - batch-normalization-overview
+  - layer-normalization-overview
+  - instance-normalization-overview
+  - group-normalization-overview
+  - rmsnorm-overview
+  optional_units: []
+  articles:
+  - batch-normalization.md
+  - dropout.md
+  - layer-normalization.md
+  - normalization-statistics.md
+  - normalization.md
+  - regularization.md
+  - rmsnorm.md
+- id: 05-regularization-and-normalization-2
+  stage: 05-regularization-and-normalization
+  stage_title: Part 5 · Regularization and normalization
+  stage_summary: 区分随机正则、统计集合、残差路径以及训练与推理状态。
+  objective: 串联 residual-connections 到 layernorm-backward，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - residual-connections-overview
+  - batchnorm-backward-overview
+  - layernorm-backward-overview
+  optional_units: []
+  articles:
+  - batchnorm-backward.md
+  - layernorm-backward.md
+  - residual-connections.md
+- id: 06-cnn-and-vision-transformer-1
+  stage: 06-cnn-and-vision-transformer
+  stage_title: Part 6 · CNN and Vision Transformer
+  stage_summary: 从局部感受野和下采样过渡到 patch token 与视觉 Transformer。
+  objective: 串联 convolution 到 patch-embedding，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - convolution-overview
+  - padding-and-stride-overview
+  - pooling-overview
+  - convolutional-neural-network-overview
+  - convolution-backward-overview
+  - max-pooling-backward-overview
+  - patchification-overview
+  - patch-embedding-overview
+  optional_units: []
+  articles:
+  - convolution-backward.md
+  - convolution.md
+  - convolutional-neural-network.md
+  - max-pooling-backward.md
+  - padding-and-stride.md
+  - patch-embedding.md
+  - patchification.md
+  - pooling.md
+- id: 06-cnn-and-vision-transformer-2
+  stage: 06-cnn-and-vision-transformer
+  stage_title: Part 6 · CNN and Vision Transformer
+  stage_summary: 从局部感受野和下采样过渡到 patch token 与视觉 Transformer。
+  objective: 理解 vision-transformer 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - vision-transformer-overview
+  optional_units: []
+  articles:
+  - vision-transformer.md
+- id: 07-attention-and-transformer-1
+  stage: 07-attention-and-transformer
+  stage_title: Part 7 · Attention and Transformer
+  stage_summary: 从表示与动态检索开始，再进入多头、mask、Transformer block 和 KV cache。
+  objective: 串联 embedding-layer 到 padding-mask，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - embedding-layer-overview
+  - positional-encoding-overview
+  - attention-mechanism-overview
+  - scaled-dot-product-attention-overview
+  - cross-attention-overview
+  - multi-head-attention-overview
+  - causal-mask-overview
+  - padding-mask-overview
+  optional_units: []
+  articles:
+  - attention-mechanism.md
+  - embedding-layer.md
+  - positional-encoding.md
+- id: 07-attention-and-transformer-2
+  stage: 07-attention-and-transformer
+  stage_title: Part 7 · Attention and Transformer
+  stage_summary: 从表示与动态检索开始，再进入多头、mask、Transformer block 和 KV cache。
+  objective: 串联 transformer-architecture 到 kv-cache，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - transformer-architecture-overview
+  - transformer-block-overview
+  - feed-forward-network-overview
+  - kv-cache-overview
+  optional_units: []
+  articles:
+  - feed-forward-network.md
+  - kv-cache.md
+  - transformer-architecture.md
+  - transformer-block.md
+- id: 08-generative-models-1
+  stage: 08-generative-models
+  stage_title: Part 8 · Generative models
+  stage_summary: 沿重建、概率潜变量、对抗生成和逐步去噪建立生成模型谱系。
+  objective: 串联 autoencoder 到 ddim-sampling，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - autoencoder-overview
+  - variational-autoencoder-overview
+  - evidence-lower-bound-overview
+  - generative-adversarial-network-overview
+  - diffusion-model-overview
+  - denoising-process-overview
+  - diffusion-noise-schedule-overview
+  - ddim-sampling-overview
+  optional_units: []
+  articles:
+  - autoencoder.md
+  - ddim-sampling.md
+  - denoising-process.md
+  - diffusion-model.md
+  - diffusion-noise-schedule.md
+  - evidence-lower-bound.md
+  - generative-adversarial-network.md
+  - variational-autoencoder.md
+- id: 08-generative-models-2
+  stage: 08-generative-models
+  stage_title: Part 8 · Generative models
+  stage_summary: 沿重建、概率潜变量、对抗生成和逐步去噪建立生成模型谱系。
+  objective: 理解 classifier-free-guidance 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - classifier-free-guidance-overview
+  optional_units: []
+  articles:
+  - classifier-free-guidance.md
+- id: 09-efficiency-and-scaling-1
+  stage: 09-efficiency-and-scaling
+  stage_title: Part 9 · Efficiency and scaling
+  stage_summary: 把精度、显存、Attention IO、重计算与并行策略放到统一系统视角。
+  objective: 串联 mixed-precision-training 到 checkpointing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - mixed-precision-training-overview
+  - numeric-precision-formats-overview
+  - memory-footprint-estimation-overview
+  - elementwise-operations-overview
+  - compute-bound-vs-memory-bound-overview
+  - attention-io-bottleneck-overview
+  - flash-attention-overview
+  - checkpointing-overview
+  optional_units: []
+  articles:
+  - checkpointing.md
+  - compute-bound-vs-memory-bound.md
+  - elementwise-operations.md
+  - flash-attention.md
+  - memory-footprint-estimation.md
+  - mixed-precision-training.md
+  - numeric-precision-formats.md
+- id: 09-efficiency-and-scaling-2
+  stage: 09-efficiency-and-scaling
+  stage_title: Part 9 · Efficiency and scaling
+  stage_summary: 把精度、显存、Attention IO、重计算与并行策略放到统一系统视角。
+  objective: 串联 data-parallelism 到 zero-redundancy-optimizer，形成一个可执行的阶段性学习块。
+  estimated_minutes: 125
+  required_units:
+  - data-parallelism-overview
+  - tensor-parallelism-overview
+  - pipeline-parallelism-overview
+  - expert-parallelism-overview
+  - zero-redundancy-optimizer-overview
+  optional_units: []
+  articles:
+  - data-parallelism.md
+  - expert-parallelism.md
+  - pipeline-parallelism.md
+  - tensor-parallelism.md
+  - zero-redundancy-optimizer.md

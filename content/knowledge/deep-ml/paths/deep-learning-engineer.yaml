@@ -1,0 +1,149 @@
+path:
+  name: Deep Learning Engineer
+  summary: 从可微计算与 PyTorch 工作流出发，依次学习训练、架构、生成模型和系统效率。
+  organization: part -> stage -> concept -> article
+  inspiration: Datawhale Deep Learning Notes 的 Part / Chapter / tutorial 三级结构
+stages:
+- name: 01-foundations-and-computation
+  title: Part 1 · Foundations and differentiable computation
+  summary: 先理解模型、前向依赖、计算图和反向传播，再进入框架 API。
+  topics:
+  - linear-algebra
+  - probability
+  - neural-network
+  - artificial-neuron
+  - forward-pass
+  - backward-pass
+  - computational-graph
+  - backpropagation
+- name: 02-pytorch-workflow
+  title: Part 2 · PyTorch workflow
+  summary: 把张量、autograd、数据加载、Module、训练步和 checkpoint 串成可运行闭环。
+  topics:
+  - pytorch-tensor
+  - tensor-shape
+  - reshape-view
+  - transpose-permute
+  - automatic-differentiation
+  - no-grad-inference
+  - dataset-class
+  - dataloader
+  - pytorch-module
+  - sequential-module
+  - state-dict
+  - single-training-step
+  - loss-computation
+  - zero-grad
+  - optimizer-step
+  - model-train-eval-mode
+  - checkpoint-resume-training
+- name: 03-mlp-and-classification
+  title: Part 3 · MLP and classification
+  summary: 从隐藏层与非线性推进到 logits、稳定分类损失和梯度检查。
+  topics:
+  - multilayer-perceptron
+  - linear-layer
+  - activation-functions
+  - sigmoid-activation
+  - tanh-activation
+  - relu-activation
+  - leaky-relu-activation
+  - gelu-activation
+  - softmax-function
+  - cross-entropy
+  - log-sum-exp
+  - gradient-checking
+- name: 04-optimization-and-stability
+  title: Part 4 · Optimization and stability
+  summary: 按 SGD、动量、自适应更新、权重衰减与训练稳定性的因果顺序组织。
+  topics:
+  - gradient-descent
+  - mini-batch-training
+  - gradient-accumulation
+  - parameter-update
+  - momentum-optimizer
+  - adagrad-optimizer
+  - adadelta-optimizer
+  - rmsprop-optimizer
+  - adam-optimizer
+  - adamax-optimizer
+  - adamw-optimizer
+  - muon-optimizer
+  - learning-rate-schedule
+  - weight-decay
+  - weight-initialization
+  - gradient-clipping
+- name: 05-regularization-and-normalization
+  title: Part 5 · Regularization and normalization
+  summary: 区分随机正则、统计集合、残差路径以及训练与推理状态。
+  topics:
+  - regularization
+  - dropout
+  - normalization
+  - batch-normalization
+  - layer-normalization
+  - instance-normalization
+  - group-normalization
+  - rmsnorm
+  - residual-connections
+  - batchnorm-backward
+  - layernorm-backward
+- name: 06-cnn-and-vision-transformer
+  title: Part 6 · CNN and Vision Transformer
+  summary: 从局部感受野和下采样过渡到 patch token 与视觉 Transformer。
+  topics:
+  - convolution
+  - padding-and-stride
+  - pooling
+  - convolutional-neural-network
+  - convolution-backward
+  - max-pooling-backward
+  - patchification
+  - patch-embedding
+  - vision-transformer
+- name: 07-attention-and-transformer
+  title: Part 7 · Attention and Transformer
+  summary: 从表示与动态检索开始，再进入多头、mask、Transformer block 和 KV cache。
+  topics:
+  - embedding-layer
+  - positional-encoding
+  - attention-mechanism
+  - scaled-dot-product-attention
+  - cross-attention
+  - multi-head-attention
+  - causal-mask
+  - padding-mask
+  - transformer-architecture
+  - transformer-block
+  - feed-forward-network
+  - kv-cache
+- name: 08-generative-models
+  title: Part 8 · Generative models
+  summary: 沿重建、概率潜变量、对抗生成和逐步去噪建立生成模型谱系。
+  topics:
+  - autoencoder
+  - variational-autoencoder
+  - evidence-lower-bound
+  - generative-adversarial-network
+  - diffusion-model
+  - denoising-process
+  - diffusion-noise-schedule
+  - ddim-sampling
+  - classifier-free-guidance
+- name: 09-efficiency-and-scaling
+  title: Part 9 · Efficiency and scaling
+  summary: 把精度、显存、Attention IO、重计算与并行策略放到统一系统视角。
+  topics:
+  - mixed-precision-training
+  - numeric-precision-formats
+  - memory-footprint-estimation
+  - elementwise-operations
+  - compute-bound-vs-memory-bound
+  - attention-io-bottleneck
+  - flash-attention
+  - checkpointing
+  - data-parallelism
+  - tensor-parallelism
+  - pipeline-parallelism
+  - expert-parallelism
+  - zero-redundancy-optimizer

@@ -1,0 +1,44 @@
+path:
+  name: Optimization for ML
+stages:
+- name: calculus
+  topics:
+  - calculus-basics
+  - derivative
+  - partial-derivative
+  - product-rule
+  - quotient-rule
+  - chain-rule
+  - taylor-series
+  - gradient-vector
+  - gradient-descent
+  - objective-function
+  - convex-function
+- name: matrix-calculus
+  topics:
+  - jacobian-matrix
+  - vector-jacobian-product
+  - hessian-matrix
+- name: convex-methods
+  topics:
+  - convex-optimization
+  - budget-constrained-optimization
+  - multi-objective-optimization
+  - robust-optimization
+  - quadratic-programming
+  - newton-method
+  - lagrange-multipliers
+  - iterative-repair
+- name: deep-learning
+  topics:
+  - momentum-optimizer
+  - adagrad-optimizer
+  - adadelta-optimizer
+  - rmsprop-optimizer
+  - rms-update-scaling
+  - adam-optimizer
+  - adamax-optimizer
+  - adamw-optimizer
+  - muon-optimizer
+  - learning-rate-schedule
+  - batch-size-schedule

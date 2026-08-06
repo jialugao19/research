@@ -5,11 +5,14 @@ import re
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path, PurePath
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 import yaml
 
 from .report_content import ReportContentError, load_report_source
+
+if TYPE_CHECKING:
+    from .knowledge import KnowledgeCatalog
 
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
@@ -17,6 +20,19 @@ ALLOWED_MATCH_METHODS = {"sha256", "central-catalog", "path-evidence", "title-an
 ALLOWED_STUDY_STATUSES = {"doing", "completed", "archived"}
 ALLOWED_MATURITIES = {"decision-ready", "signal-only", "developmental", "diagnostic", "blocked", "archived"}
 ALLOWED_METRIC_FORMATS = {"decimal", "percent", "integer", "number", "bps"}
+ALLOWED_DECISION_STATES = {
+    "promote",
+    "retain",
+    "iterate",
+    "reject",
+    "diagnostic",
+    "blocked",
+    "archived",
+    "observe",
+}
+ALLOWED_HIGHLIGHT_STATES = {"positive", "warning", "negative"}
+ALLOWED_HOMEPAGE_METRIC_CATEGORIES = {"quality", "method", "scale", "coverage"}
+ALLOWED_HOMEPAGE_VALUE_FORMATS = {"raw", "compact-1", "compact-2"}
 
 
 class CatalogError(ValueError):
@@ -61,6 +77,7 @@ class Project:
     objective: str
     review_summary: str
     source_refs: tuple[str, ...]
+    section: str = "research"
     tracks: tuple[Track, ...] = field(default_factory=tuple)
     subprojects: tuple[Subproject, ...] = field(default_factory=tuple)
 
@@ -108,6 +125,10 @@ class Study:
     status: str
     maturity: str
     updated_at: date
+    method: str
+    dataset: str
+    decision_state: str
+    primary_metric_id: str | None
     objective: str
     summary: str
     decision: str
@@ -122,6 +143,12 @@ class Study:
     @property
     def display_date(self) -> str:
         return self.updated_at.isoformat()
+
+    @property
+    def primary_metric(self) -> Metric | None:
+        if self.primary_metric_id is None:
+            return None
+        return next(metric for metric in self.metrics if metric.id == self.primary_metric_id)
 
 
 @dataclass(frozen=True)
@@ -158,12 +185,84 @@ class Report:
 
 
 @dataclass(frozen=True)
+class HomepageMetricSpec:
+    id: str
+    label: str
+    category: str
+    scope: str
+    display_format: str
+    study: str | None = None
+    metric: str | None = None
+    display_value: str | None = None
+
+
+@dataclass(frozen=True)
+class HighlightGate:
+    id: str
+    label: str
+    state: str
+    value: str
+
+
+@dataclass(frozen=True)
+class ChartSeries:
+    id: str
+    label: str
+    values: tuple[float, ...]
+
+
+@dataclass(frozen=True)
+class FeaturedChart:
+    title: str
+    description: str
+    source_note: str
+    bins: tuple[int, ...]
+    series: tuple[ChartSeries, ...]
+
+
+@dataclass(frozen=True)
+class FeaturedHighlight:
+    report: str
+    study: str
+    decision_label: str
+    decision_summary: str
+    gates: tuple[HighlightGate, ...]
+    chart: FeaturedChart
+
+
+@dataclass(frozen=True)
+class RejectedIdea:
+    title: str
+    state: str
+    reason: str
+    study: str
+    metric_ids: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class HomepageHighlights:
+    metrics: tuple[HomepageMetricSpec, ...]
+    featured: FeaturedHighlight
+    rejected_ideas: tuple[RejectedIdea, ...]
+
+
+@dataclass(frozen=True)
 class Catalog:
     categories: tuple[Category, ...]
     projects: tuple[Project, ...]
     reports: tuple[Report, ...]
     studies: tuple[Study, ...] = field(default_factory=tuple)
     featured_report_id: str | None = None
+    homepage: HomepageHighlights | None = None
+    knowledge: KnowledgeCatalog | None = None
+
+    @property
+    def research_projects(self) -> tuple[Project, ...]:
+        return tuple(project for project in self.projects if project.section == "research")
+
+    @property
+    def knowledge_projects(self) -> tuple[Project, ...]:
+        return tuple(project for project in self.projects if project.section == "knowledge")
 
     @property
     def project_by_id(self) -> dict[str, Project]:
@@ -307,6 +406,9 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
         if not isinstance(item, dict):
             raise CatalogError(f"projects[{index}] must be a mapping")
         project_id = _require_slug(item.get("id"), f"projects[{index}].id")
+        section = _require_slug(item.get("section", "research"), f"projects[{index}].section")
+        if section not in {"research", "knowledge"}:
+            raise CatalogError(f"project {project_id} has unsupported section {section}")
         category = _require_slug(item.get("category"), f"projects[{index}].category")
         if category not in category_ids:
             raise CatalogError(f"project {project_id} references unknown category {category}")
@@ -374,6 +476,7 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
                 objective=_require_text(item.get("objective"), f"projects[{index}].objective"),
                 review_summary=_require_text(item.get("review_summary"), f"projects[{index}].review_summary"),
                 source_refs=source_refs,
+                section=section,
                 tracks=tuple(tracks),
                 subprojects=tuple(subprojects),
             )
@@ -564,6 +667,13 @@ def _load_studies(
         maturity = _require_slug(item.get("maturity"), f"study {study_id}.maturity")
         if maturity not in ALLOWED_MATURITIES:
             raise CatalogError(f"study {study_id} has unsupported maturity {maturity}")
+        decision_state = _require_slug(
+            item.get("decision_state"), f"study {study_id}.decision_state"
+        )
+        if decision_state not in ALLOWED_DECISION_STATES:
+            raise CatalogError(
+                f"study {study_id} has unsupported decision_state {decision_state}"
+            )
         raw_metrics = item.get("metrics", [])
         if not isinstance(raw_metrics, list):
             raise CatalogError(f"study {study_id}.metrics must be a list")
@@ -592,6 +702,18 @@ def _load_studies(
                 )
             )
         _unique([metric.id for metric in metrics], f"metric ids in study {study_id}")
+        primary_metric_value = item.get("primary_metric")
+        primary_metric_id = None
+        if primary_metric_value is not None:
+            primary_metric_id = _require_slug(
+                primary_metric_value, f"study {study_id}.primary_metric"
+            )
+            if primary_metric_id not in {metric.id for metric in metrics}:
+                raise CatalogError(
+                    f"study {study_id}.primary_metric references unknown metric {primary_metric_id}"
+                )
+        if metrics and primary_metric_id is None:
+            raise CatalogError(f"study {study_id} with metrics must define primary_metric")
         raw_report_ids = item.get("report_ids", [])
         if not isinstance(raw_report_ids, list):
             raise CatalogError(f"study {study_id}.report_ids must be a list")
@@ -619,6 +741,10 @@ def _load_studies(
                 status=status,
                 maturity=maturity,
                 updated_at=_parse_date(item.get("updated_at"), f"study {study_id}.updated_at"),
+                method=_require_text(item.get("method"), f"study {study_id}.method"),
+                dataset=_require_text(item.get("dataset"), f"study {study_id}.dataset"),
+                decision_state=decision_state,
+                primary_metric_id=primary_metric_id,
                 objective=_require_text(item.get("objective"), f"study {study_id}.objective"),
                 summary=_require_text(item.get("summary"), f"study {study_id}.summary"),
                 decision=_require_text(item.get("decision"), f"study {study_id}.decision"),
@@ -634,15 +760,249 @@ def _load_studies(
     return tuple(studies)
 
 
+def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
+    """Load curated homepage evidence and validate every catalog reference."""
+    raw = _load_yaml(path)
+    study_by_id = catalog.study_by_id
+    report_by_id = catalog.report_by_id
+
+    raw_metrics = raw.get("metrics")
+    if not isinstance(raw_metrics, list) or not raw_metrics:
+        raise CatalogError(f"{path} must define a non-empty metrics list")
+    metrics: list[HomepageMetricSpec] = []
+    for index, item in enumerate(raw_metrics):
+        if not isinstance(item, dict):
+            raise CatalogError(f"homepage metrics[{index}] must be a mapping")
+        metric_id = _require_slug(item.get("id"), f"homepage metrics[{index}].id")
+        category = _require_slug(item.get("category"), f"homepage metric {metric_id}.category")
+        if category not in ALLOWED_HOMEPAGE_METRIC_CATEGORIES:
+            raise CatalogError(f"homepage metric {metric_id} has unsupported category {category}")
+        display_format = _require_slug(
+            item.get("display_format", "raw"), f"homepage metric {metric_id}.display_format"
+        )
+        if display_format not in ALLOWED_HOMEPAGE_VALUE_FORMATS:
+            raise CatalogError(
+                f"homepage metric {metric_id} has unsupported display_format {display_format}"
+            )
+        study_value = item.get("study")
+        metric_value = item.get("metric")
+        display_value_raw = item.get("display_value")
+        has_reference = study_value is not None or metric_value is not None
+        has_literal = display_value_raw is not None
+        if has_reference == has_literal:
+            raise CatalogError(
+                f"homepage metric {metric_id} must define either a study/metric reference or display_value"
+            )
+        study_id = None
+        referenced_metric_id = None
+        display_value = None
+        if has_reference:
+            study_id = _require_slug(study_value, f"homepage metric {metric_id}.study")
+            referenced_metric_id = _require_slug(
+                metric_value, f"homepage metric {metric_id}.metric"
+            )
+            study = study_by_id.get(study_id)
+            if study is None:
+                raise CatalogError(f"homepage metric {metric_id} references unknown study {study_id}")
+            if referenced_metric_id not in {metric.id for metric in study.metrics}:
+                raise CatalogError(
+                    f"homepage metric {metric_id} references unknown metric "
+                    f"{study_id}/{referenced_metric_id}"
+                )
+        else:
+            display_value = _require_text(
+                display_value_raw, f"homepage metric {metric_id}.display_value"
+            )
+            if display_format != "raw":
+                raise CatalogError(
+                    f"homepage metric {metric_id} literal display_value must use raw format"
+                )
+        metrics.append(
+            HomepageMetricSpec(
+                id=metric_id,
+                label=_require_text(item.get("label"), f"homepage metric {metric_id}.label"),
+                category=category,
+                scope=_require_text(item.get("scope"), f"homepage metric {metric_id}.scope"),
+                display_format=display_format,
+                study=study_id,
+                metric=referenced_metric_id,
+                display_value=display_value,
+            )
+        )
+    _unique([item.id for item in metrics], "homepage metric ids")
+
+    raw_featured = raw.get("featured")
+    if not isinstance(raw_featured, dict):
+        raise CatalogError(f"{path} must define featured as a mapping")
+    featured_report_id = _require_slug(raw_featured.get("report"), "homepage featured.report")
+    if featured_report_id != catalog.featured_report_id:
+        raise CatalogError("homepage featured.report must match reports.yaml featured_report")
+    featured_report = report_by_id.get(featured_report_id)
+    if featured_report is None:
+        raise CatalogError(f"homepage featured references unknown report {featured_report_id}")
+    featured_study_id = _require_slug(raw_featured.get("study"), "homepage featured.study")
+    featured_study = study_by_id.get(featured_study_id)
+    if featured_study is None:
+        raise CatalogError(f"homepage featured references unknown study {featured_study_id}")
+    if featured_report_id not in featured_study.report_ids:
+        raise CatalogError("homepage featured study must link the featured report")
+
+    raw_gates = raw_featured.get("gates")
+    if not isinstance(raw_gates, list) or not raw_gates:
+        raise CatalogError("homepage featured.gates must be a non-empty list")
+    gates: list[HighlightGate] = []
+    for index, item in enumerate(raw_gates):
+        if not isinstance(item, dict):
+            raise CatalogError(f"homepage featured.gates[{index}] must be a mapping")
+        gate_id = _require_slug(item.get("id"), f"homepage featured.gates[{index}].id")
+        state = _require_slug(item.get("state"), f"homepage gate {gate_id}.state")
+        if state not in ALLOWED_HIGHLIGHT_STATES:
+            raise CatalogError(f"homepage gate {gate_id} has unsupported state {state}")
+        gates.append(
+            HighlightGate(
+                id=gate_id,
+                label=_require_text(item.get("label"), f"homepage gate {gate_id}.label"),
+                state=state,
+                value=_require_text(item.get("value"), f"homepage gate {gate_id}.value"),
+            )
+        )
+    _unique([item.id for item in gates], "homepage gate ids")
+
+    raw_chart = raw_featured.get("chart")
+    if not isinstance(raw_chart, dict):
+        raise CatalogError("homepage featured.chart must be a mapping")
+    raw_bins = raw_chart.get("bins")
+    if (
+        not isinstance(raw_bins, list)
+        or not raw_bins
+        or any(isinstance(value, bool) or not isinstance(value, int) or value <= 0 for value in raw_bins)
+    ):
+        raise CatalogError("homepage featured.chart.bins must be positive integers")
+    bins = tuple(raw_bins)
+    if tuple(sorted(set(bins))) != bins:
+        raise CatalogError("homepage featured.chart.bins must be unique and increasing")
+    raw_series = raw_chart.get("series")
+    if not isinstance(raw_series, list) or not raw_series:
+        raise CatalogError("homepage featured.chart.series must be a non-empty list")
+    series: list[ChartSeries] = []
+    for index, item in enumerate(raw_series):
+        if not isinstance(item, dict):
+            raise CatalogError(f"homepage featured.chart.series[{index}] must be a mapping")
+        series_id = _require_slug(item.get("id"), f"homepage chart series[{index}].id")
+        raw_values = item.get("values")
+        if not isinstance(raw_values, list) or len(raw_values) != len(bins):
+            raise CatalogError(
+                f"homepage chart series {series_id} must have one value for every bin"
+            )
+        values = tuple(
+            float(_require_number(value, f"homepage chart series {series_id}.values[{value_index}]"))
+            for value_index, value in enumerate(raw_values)
+        )
+        series.append(
+            ChartSeries(
+                id=series_id,
+                label=_require_text(item.get("label"), f"homepage chart series {series_id}.label"),
+                values=values,
+            )
+        )
+    _unique([item.id for item in series], "homepage chart series ids")
+    chart = FeaturedChart(
+        title=_require_text(raw_chart.get("title"), "homepage featured.chart.title"),
+        description=_require_text(
+            raw_chart.get("description"), "homepage featured.chart.description"
+        ),
+        source_note=_require_text(
+            raw_chart.get("source_note"), "homepage featured.chart.source_note"
+        ),
+        bins=bins,
+        series=tuple(series),
+    )
+    featured = FeaturedHighlight(
+        report=featured_report_id,
+        study=featured_study_id,
+        decision_label=_require_text(
+            raw_featured.get("decision_label"), "homepage featured.decision_label"
+        ),
+        decision_summary=_require_text(
+            raw_featured.get("decision_summary"), "homepage featured.decision_summary"
+        ),
+        gates=tuple(gates),
+        chart=chart,
+    )
+
+    raw_rejections = raw.get("rejected_ideas")
+    if not isinstance(raw_rejections, list) or not raw_rejections:
+        raise CatalogError(f"{path} must define a non-empty rejected_ideas list")
+    rejected_ideas: list[RejectedIdea] = []
+    for index, item in enumerate(raw_rejections):
+        if not isinstance(item, dict):
+            raise CatalogError(f"homepage rejected_ideas[{index}] must be a mapping")
+        title = _require_text(item.get("title"), f"homepage rejected_ideas[{index}].title")
+        study_id = _require_slug(item.get("study"), f"rejected idea {title}.study")
+        study = study_by_id.get(study_id)
+        if study is None:
+            raise CatalogError(f"rejected idea {title} references unknown study {study_id}")
+        raw_metric_ids = item.get("metric_ids", [])
+        if not isinstance(raw_metric_ids, list):
+            raise CatalogError(f"rejected idea {title}.metric_ids must be a list")
+        metric_ids = tuple(
+            _require_slug(value, f"rejected idea {title}.metric_ids[{metric_index}]")
+            for metric_index, value in enumerate(raw_metric_ids)
+        )
+        available_metric_ids = {metric.id for metric in study.metrics}
+        unknown_metric_ids = [value for value in metric_ids if value not in available_metric_ids]
+        if unknown_metric_ids:
+            raise CatalogError(
+                f"rejected idea {title} references unknown metrics in {study_id}: "
+                + ", ".join(unknown_metric_ids)
+            )
+        rejected_ideas.append(
+            RejectedIdea(
+                title=title,
+                state=_require_text(item.get("state"), f"rejected idea {title}.state"),
+                reason=_require_text(item.get("reason"), f"rejected idea {title}.reason"),
+                study=study_id,
+                metric_ids=metric_ids,
+            )
+        )
+    _unique([item.title for item in rejected_ideas], "homepage rejected idea titles")
+
+    return HomepageHighlights(
+        metrics=tuple(metrics),
+        featured=featured,
+        rejected_ideas=tuple(rejected_ideas),
+    )
+
+
 def load_catalog(content_root: Path) -> Catalog:
     """Load and validate public project, study, and report metadata."""
     categories, projects = _load_projects(content_root / "projects.yaml")
     reports, featured_report_id = _load_reports(content_root / "reports.yaml", projects)
     studies = _load_studies(content_root / "studies.yaml", projects, reports)
-    return Catalog(
+    catalog = Catalog(
         categories=categories,
         projects=projects,
         reports=reports,
         studies=studies,
         featured_report_id=featured_report_id,
+    )
+    from .knowledge import load_knowledge
+    from .knowledge_sync import KnowledgeSyncError
+
+    try:
+        knowledge = load_knowledge(
+            content_root / "knowledge" / "deep-ml",
+            content_root / "knowledge" / "quant-knowledge",
+            content_root / "knowledge" / "ontology.yaml",
+        )
+    except KnowledgeSyncError as exc:
+        raise CatalogError(str(exc)) from exc
+    return Catalog(
+        categories=catalog.categories,
+        projects=catalog.projects,
+        reports=catalog.reports,
+        studies=catalog.studies,
+        featured_report_id=catalog.featured_report_id,
+        homepage=_load_homepage(content_root / "highlights.yaml", catalog),
+        knowledge=knowledge,
     )

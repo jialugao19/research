@@ -1,271 +1,284 @@
 schema_version: 1
 categories:
-  - id: research
-    title: 研究模型与策略
-    description: 预测、因子与交易策略研究。
-  - id: data
-    title: 数据基础设施
-    description: 市场数据构建、校验与索引工具。
-  - id: platform
-    title: 可视化与研究平台
-    description: 面向研究流程的可视化、知识和交互平台。
-  - id: tools
-    title: 工具
-    description: 支持研究环境稳定运行的辅助工具。
+  - id: forecasting-models
+    title: Forecasting Models
+    description: Short-horizon return forecasting, model selection, and live signal evaluation.
+  - id: factor-discovery
+    title: Factor Discovery
+    description: Systematic factor search, validation, and portfolio-level evidence.
+  - id: portfolio-execution
+    title: Portfolio & Execution
+    description: Portfolio construction, execution constraints, and cost-aware strategy research.
+  - id: market-data
+    title: Market Data
+    description: Reproducible market data, order-book reconstruction, and coverage audits.
+  - id: research-systems
+    title: Research Systems
+    description: Visualization, knowledge, and operational systems that support the research lifecycle.
 projects:
   - id: prediction-nn
     title: Prediction-NN
-    category: research
+    category: forecasting-models
     status: active
-    description: 面向 A 股分钟级与秒级收益预测的神经网络研究总入口，分别维护 1min 和 1s 的数据、模型、验证与交易评估证据。
-    objective: 建立可复刻、可比较并明确区分信号质量与交易可行性的神经网络研究体系。
-    review_summary: 1min 已形成多 seed 模型结构与 checkpoint 选择结论；1s 最新 fold0 信号 IC 较高，但成本后结果为负且存在 test 参与选择的问题。
+    description: Neural forecasting research for minute- and second-level A-share returns, with separate evidence for data, models, validation, and trading evaluation.
+    objective: Build a reproducible and comparable neural research system that clearly separates signal quality from trading feasibility.
+    review_summary: The 1min program has multi-seed conclusions for architecture and checkpoint selection. The latest 1s fold0 has strong signal IC, but net performance is negative and the current candidate used test data during selection.
     source_refs: [prediction-NN-main, exp-nn]
     tracks:
       - id: one-minute
-        title: 1min 预测研究
-        description: 基于 stock1m 的标签、模型结构、损失函数、采样、checkpoint 选择与泛化研究。
-        objective: 分钟级研究要回答的不是“某次训练能否得到较高 IC”，而是只使用预测时点之前可获得的 A 股行情，能否稳定预测未来一段持有期的横截面收益。研究先固定数据、标签、时间切分和 checkpoint 选择协议，再分别检验模型结构、损失函数、样本处理与特征扩展；信号相关性、成本后组合收益和执行可行性始终作为三个不同层级的证据。
+        title: 1min Forecasting Research
+        description: Research on stock1m labels, architectures, losses, sampling, checkpoint selection, and generalization.
+        objective: The minute-level program asks whether information available before prediction time can consistently forecast cross-sectional returns over a future holding period. It fixes data, labels, temporal splits, and checkpoint policy before testing architectures, losses, sample treatment, and feature extensions. Signal correlation, net portfolio performance, and execution feasibility remain separate evidence layers.
         objective_details:
-          - 可比较性：所有候选必须在相同样本行、时间切分、训练预算和选择规则下比较，避免把数据口径变化误判成模型改进。
-          - 稳健性：关键结论需要跨随机种子、滚动时期和相邻 checkpoint 复核，单次 test 最优值只作诊断，不直接决定默认方案。
-          - 可执行性：模型先通过 pooled IC 与 Rank IC 的信号门槛，再独立检查换手、交易成本、滑点和样本外稳定性；离线信号胜出不等于策略可以上线。
+          - 'Comparability: every candidate must use identical sample rows, time splits, training budgets, and selection rules so data-contract changes are not mistaken for model improvements.'
+          - 'Robustness: key conclusions require confirmation across seeds, rolling periods, and neighboring checkpoints. A single test maximum is diagnostic evidence, not a default-selection rule.'
+          - 'Executability: models must first pass pooled IC and Rank IC signal gates, then separately pass turnover, cost, slippage, and out-of-sample stability checks. An offline signal win does not imply deployability.'
         data_structure:
-          - 样本索引：基础数据按交易日、分钟和证券组织，每个样本都能追溯到确定的时间点与证券；训练、验证和测试按交易日分段，避免同一时间邻域跨集合泄漏。
-          - 模型输入：序列模型接收“批次 × 时间步 × 特征”的三维张量。模型结构实验使用 60 个分钟时间步和 14 个市场特征；其他专题若改变特征或窗口，会在各自实验记录中单独标明。
-          - 标签与对照：当前主线使用未来 10 分钟 VWAP 收益标签、1 分钟 entry lag 和 paired_vwap_valid 有效行集合，同时保留相同行集合上的 close 标签作为配对对照。
-          - 评估产物：每个实验保存配置、checkpoint、分集合预测与聚合指标。特征和标签归一化只从训练集估计，validation 用于选择，test 只用于最终审计。
-        conclusion: 当前证据支持以 B+VWAP 作为分钟级信号基线，以 GRU192×2 的 last-hidden 表示作为默认小模型，并使用 20k robust checkpoint 作为保守选择。三项结论都来自配对样本、多 seed 或多时期验证，但目前只能说明信号和选择协议更稳健；现有成本后结果尚未证明该模型可以进入交易执行。
+          - 'Sample index: base data is keyed by trading day, minute, and security. Train, validation, and test segments are split by day to prevent leakage across neighboring timestamps.'
+          - 'Model input: sequence models consume batch × time-step × feature tensors. Architecture studies use 60 minute steps and 14 market features; experiments that change either dimension declare it separately.'
+          - 'Labels and controls: the current mainline uses future 10-minute VWAP returns, a one-minute entry lag, and the paired_vwap_valid row set, with close-return labels retained on the same rows as a paired control.'
+          - 'Evaluation artifacts: each experiment preserves configuration, checkpoints, split predictions, and aggregate metrics. Feature and label normalization is estimated from train only, validation selects candidates, and test is reserved for final audit.'
+        conclusion: Current evidence supports B+VWAP as the minute-level signal baseline, GRU192×2 last-hidden as the default compact model, and the robust 20k checkpoint as the conservative selection. Paired samples, multiple seeds, or multiple periods support all three decisions, but net results do not yet justify trading execution.
       - id: one-second
-        title: 1s 预测研究
-        description: 基于 stock1s/v2 的秒级特征、模型、fold 评估以及换手和成本研究。
-        objective: 秒级研究用于判断更高频的逐秒成交、盘口和委托信息，是否能在分钟级主线之外提供稳定的增量预测能力。它使用独立的数据集、特征契约、fold 和成本评价，不把分钟级实验的参数或结论直接迁移过来；只有信号、选择稳定性和成本后表现同时通过，才讨论进一步晋升。
+        title: 1s Forecasting Research
+        description: Second-level stock1s/v2 features, models, fold evaluation, turnover, and cost research.
+        objective: The second-level program tests whether trades, quotes, and order flow add stable forecasting power beyond the minute-level mainline. It uses an independent dataset, feature contract, folds, and cost evaluation. Promotion requires signal quality, selection stability, and net performance to pass together.
         objective_details:
-          - 数据有效性：先验证逐秒文件、特征覆盖、缺失模式和标签端点，再进行模型比较，防止模型把数据缺口或市场时段编码成伪信号。
-          - 选择纪律：checkpoint、阈值和组合候选必须由 train/validation 决定，test 只保留作一次性评价，避免当前候选使用 test 参与选择的问题继续扩大。
-          - 交易门槛：除 pooled IC 与 Rank IC 外，同时报告换手、成本后日均收益和 Sharpe；高频信号若无法覆盖成本，不视为有效晋升。
+          - 'Data validity: verify second-level files, feature coverage, missingness, and label endpoints before comparing models so gaps and market sessions cannot become spurious signals.'
+          - 'Selection discipline: checkpoints, thresholds, and portfolio candidates must be chosen on train/validation. Test is a one-time evaluation set and cannot continue participating in selection.'
+          - 'Trading gate: report turnover, net daily return, and Sharpe alongside pooled IC and Rank IC. A high-frequency signal that cannot cover costs is not promoted.'
         data_structure:
-          - 样本索引：stock1s/v2 以交易日、秒级时间点和证券为主键，fold0 的 train、validation、test 分开保存和审计。
-          - 特征向量：当前基线包含 78 维去重特征，覆盖短窗收益与波动、成交强度、盘口价差与深度、报价质量以及委托流；各字段都保留缺失与可用性语义。
-          - 模型与标签：秒级特征序列输入 GRU384 与双层 MLP512×512 预测头，标签和评价端点按独立秒级协议生成，不与 1min 标签混用。
-          - 评价产物：除逐样本预测外，还生成分组信号指标、重要股票池聚合、换手和成本结果；这些产物共同决定实验是否具备继续比较的资格。
-        conclusion: fold0 的秒级模型已经显示较高的 test pooled IC 与 Rank IC，但组合候选曾使用 test 参与选择，且 10 分钟成本后日均收益和 Sharpe 仍为负。因此当前结论是“数据与信号链路值得继续研究”，而不是“秒级模型已经可交易”；下一步必须先修正选择协议并降低换手。
+          - 'Sample index: stock1s/v2 is keyed by trading day, second, and security, with separate train, validation, and test stores for fold0.'
+          - 'Feature vector: the baseline contains 78 deduplicated features spanning short-window return and volatility, trading intensity, spread and depth, quote quality, and order flow, with explicit missingness semantics.'
+          - 'Models and labels: GRU384 plus a two-layer MLP512×512 head consumes the second-level sequence. Labels and endpoints follow a dedicated 1s protocol and are not mixed with 1min labels.'
+          - 'Evaluation artifacts: sample predictions, grouped signal metrics, key-universe aggregates, turnover, and cost results jointly determine whether an experiment remains comparable.'
+        conclusion: Fold0 shows strong test pooled IC and Rank IC, but the portfolio candidate used test during selection and its 10-minute net daily return and Sharpe remain negative. The current conclusion is that the data and signal chain merit further research, not that the model is tradable. Selection discipline and turnover must be fixed first.
     subprojects:
       - id: reference-baseline
-        title: 参考基线
+        title: Reference Baseline
         track: one-minute
-        group: 基线与模型设计
-        description: 分钟级参考基线、标签端点和当前可比较信号锚点。
-        objective: 固定可复刻基线，并明确从信号基线到执行基线仍缺少的门槛。
+        group: Baselines & Model Design
+        description: Minute-level reference baselines, label endpoints, and the current comparable signal anchor.
+        objective: Fix a reproducible baseline and identify the remaining gates between signal and execution baselines.
       - id: optimize-1min-model
-        title: 1 分钟模型结构
+        title: 1min Model Architecture
         track: one-minute
-        group: 基线与模型设计
-        description: 比较 GRU、pooling、MLP 和 TCN 结构的容量、稳定性与测试表现。
-        objective: 在多 seed 证据下选择更小、更稳定的分钟级模型结构。
+        group: Baselines & Model Design
+        description: Capacity, stability, and test comparisons across GRU, pooling, MLP, and TCN architectures.
+        objective: Select a smaller and more stable minute-level architecture using multi-seed evidence.
       - id: loss-function-1min
-        title: 1 分钟损失函数
+        title: 1min Loss Functions
         track: one-minute
-        group: 基线与模型设计
-        description: 比较 MSE、相关性、moment 和输出尺度约束损失。
-        objective: 改善信号 IC 与预测尺度，同时避免单 seed 结果被误当作最终晋升。
+        group: Baselines & Model Design
+        description: Compare MSE, correlation, moment, and output-scale constrained losses.
+        objective: Improve signal IC and prediction scale without treating a single-seed result as a final promotion.
       - id: learning-rate
-        title: 学习率与调度器
+        title: Learning Rate & Schedulers
         track: one-minute
-        group: 基线与模型设计
-        description: 固定训练步数下的学习率、多 seed 稳定性和调度器筛选。
-        objective: 为后续实验固定稳定的优化器学习率与 scheduler 配置。
+        group: Baselines & Model Design
+        description: Learning-rate, multi-seed stability, and scheduler screening under a fixed training budget.
+        objective: Fix a stable optimizer rate and scheduler configuration for subsequent experiments.
       - id: validation
-        title: 验证与 Checkpoint 选择
+        title: Validation & Checkpoint Selection
         track: one-minute
-        group: 验证、选择与稳健性
-        description: rolling/purged 验证、窗口选择和稳健 checkpoint selector。
-        objective: 避免 validation argmax 和重复查看 test 造成的选择偏差。
+        group: Validation, Selection & Robustness
+        description: Rolling and purged validation, window selection, and robust checkpoint selectors.
+        objective: Prevent selection bias from validation argmax and repeated inspection of test results.
       - id: capacity-robust-sampling
-        title: 容量与稳健采样
+        title: Capacity & Robust Sampling
         track: one-minute
-        group: 验证、选择与稳健性
-        description: 研究模型容量、dropout、稳健损失和去相关采样对早期过拟合的影响。
-        objective: 判断哪些机制能减缓晚期 checkpoint 退化，并为多时期验证提供候选。
+        group: Validation, Selection & Robustness
+        description: Effects of capacity, dropout, robust losses, and decorrelated sampling on early overfitting.
+        objective: Identify mechanisms that reduce late-checkpoint degradation and merit multi-period validation.
       - id: prediction-calibration
-        title: 标签与预测校准
+        title: Labels & Prediction Calibration
         track: one-minute
-        group: 数据、标签与样本处理
-        description: 比较 close、VWAP、波动率归一化与 impact 权重对 IC 和校准的影响。
-        objective: 在相同行样本上降低标签噪声，并把信号提升与校准门槛分开判断。
+        group: Data, Labels & Sampling
+        description: Compare close, VWAP, volatility normalization, and impact weights for IC and calibration.
+        objective: Reduce label noise on paired rows and evaluate signal gains separately from calibration gates.
       - id: generalization
-        title: 泛化与稳健性
+        title: Generalization & Robustness
         track: one-minute
-        group: 验证、选择与稳健性
-        description: 滚动年份、采样步长、相邻窗口、多 seed 和 checkpoint 曲线诊断。
-        objective: 验证研究结论能否跨时间和 seed 保持，并标记 test 暴露的诊断结果。
+        group: Validation, Selection & Robustness
+        description: Rolling years, endpoint strides, adjacent windows, multiple seeds, and checkpoint-curve diagnostics.
+        objective: Test whether conclusions persist across time and seeds while marking diagnostics exposed to test.
       - id: limit-pool
-        title: 涨跌停样本池
+        title: Limit-state Sample Pools
         track: one-minute
-        group: 数据、标签与样本处理
-        description: 比较 all、touch 和 limit 样本池以及测试全集诊断。
-        objective: 判断涨跌停历史过滤能否在相同评价口径下改善信号质量。
+        group: Data, Labels & Sampling
+        description: Compare all, touch, and limit-state sample pools plus full-test diagnostics.
+        objective: Determine whether historical limit-state filtering improves signal quality under the same evaluation contract.
       - id: near-zero-filter
-        title: 近零过滤
+        title: Near-zero Filtering
         track: one-minute
-        group: 数据、标签与样本处理
-        description: 比较收益特征精确零和近零样本过滤对 IC、命中率与样本保留率的影响。
-        objective: 找到能够提高预测质量且不过度改变有效样本分布的过滤规则。
+        group: Data, Labels & Sampling
+        description: Effects of exact-zero and near-zero return-feature filtering on IC, hit rate, and sample retention.
+        objective: Find filtering rules that improve prediction quality without materially distorting the valid sample distribution.
       - id: zero-aware-normalization
-        title: 零值感知归一化
+        title: Zero-aware Normalization
         track: one-minute
-        group: 数据、标签与样本处理
-        description: 比较零值指示、分段标准化、hurdle 和 jitter 变换。
-        objective: 评估零值结构的建模方式，并要求无变换 control 后再做提升结论。
+        group: Data, Labels & Sampling
+        description: Compare zero indicators, piecewise standardization, hurdle models, and jitter transforms.
+        objective: Evaluate representations of structural zeros against an explicit no-transform control.
       - id: l2-features
-        title: L2 特征
+        title: L2 Features
         track: one-minute
-        group: 特征扩展与组合验证
-        description: 研究 snapshot fast12 等 L2 衍生特征相对 stock1m baseline 的贡献。
-        objective: 在一致 checkpoint 候选政策下完成可归因的 L2 特征消融。
+        group: Feature Extensions & Integration
+        description: Contribution of L2-derived features such as snapshot fast12 relative to the stock1m baseline.
+        objective: Run attributable L2 feature ablations under a consistent checkpoint-candidate policy.
       - id: feature-cleaning
-        title: 特征清洗
+        title: Feature Cleaning
         track: one-minute
-        group: 数据、标签与样本处理
-        description: 历史特征清洗 bundle 与数据质量研究。
-        objective: 保存历史证据，并在复刻配置和 artifact 完整时才恢复为当前基线。
+        group: Data, Labels & Sampling
+        description: Historical feature-cleaning bundles and data-quality research.
+        objective: Preserve historical evidence and restore it as a current baseline only when configuration and artifacts are reproducible.
       - id: integration
-        title: 组合集成
+        title: Integrated Improvements
         track: one-minute
-        group: 特征扩展与组合验证
-        description: 把 touch、near-zero、学习率等单项改进放入统一矩阵验证。
-        objective: 检验局部改进能否组合成立，并保留负结果和重跑要求。
+        group: Feature Extensions & Integration
+        description: Test touch, near-zero, learning-rate, and other isolated changes in one controlled matrix.
+        objective: Determine whether local improvements compose while preserving negative results and rerun requirements.
       - id: baseline-1s-0720
-        title: 1 秒数据基线
+        title: 1s Data Baseline
         track: one-second
-        group: 秒级基线与执行验证
-        description: stock1s/v2 数据、特征健康、GRU 模型、fold 评估和成本换手研究。
-        objective: 建立秒级独立基线，并在预声明选择和成本后收益通过前保持研究状态。
+        group: 1s Baseline & Execution Gates
+        description: stock1s/v2 data, feature health, GRU models, fold evaluation, costs, and turnover.
+        objective: Establish an independent second-level baseline and keep it in research status until predeclared selection and net-return gates pass.
   - id: index500-predict
     title: Index500 Predict
-    category: research
+    category: forecasting-models
     status: active
-    description: 围绕中证 500 成分股和 510500 ETF，研究从个股 alpha、篮子合成、基差修正到 30 分钟交易映射的完整预测链路。
-    objective: 建立从个股信号到 ETF 可交易映射的闭环，并用滚动验证、成本和滑点检验其稳健性。
-    review_summary: ETF 预测和篮子合成均有显著 IC；piecewise 映射优于旧的直接做空解释，但当前报告尚未加入交易成本和滑点。
+    description: End-to-end forecasting for CSI 500 constituents and the 510500 ETF, from stock-level alpha and basket aggregation to basis adjustment and 30-minute trading maps.
+    objective: Close the loop from constituent signals to tradable ETF mappings and test robustness with rolling validation, costs, and slippage.
+    review_summary: ETF forecasts and basket aggregation both show material IC. The piecewise mapping improves on the old direct-short interpretation, but the current report excludes transaction costs and slippage.
     source_refs: [index500-predict, exp-index]
   - id: limit-0729
     title: Limit / T+1
-    category: research
+    category: portfolio-execution
     status: active
-    description: 研究 A 股首次触板候选的规则漏斗、walk-forward 排序、成交约束与机械 T+1 退出，评估压力成本下能否进入仿真盘。
-    objective: 在无时间穿越、成交假设可审计和压力成本可接受的前提下形成可进入仿真盘的打板策略。
-    review_summary: 最新方案在回撤和相对门槛上可接受，但 30bp 年化收益门槛未通过，冻结测试样本也过少，当前不进入仿真盘。
+    description: Rule funnels, walk-forward ranking, fill constraints, and mechanical T+1 exits for first-limit A-share candidates under stressed costs.
+    objective: Develop a simulation-ready strategy without temporal leakage, with auditable fills and acceptable stressed costs.
+    review_summary: Drawdown and relative gates are acceptable, but the 30bp annual-return gate fails and the frozen test has too few trades. The strategy is not promoted to simulation.
     source_refs: [limit-0729]
   - id: shouban2
     title: First Board Top-K
-    category: research
+    category: portfolio-execution
     status: maintained
-    description: 研究首板与弱转强候选的连续评分、Top-K 组合约束、成交实现和分层回测。
-    objective: 验证排序稳定性、组合约束与真实成交假设能否共同支持首板策略。
-    review_summary: 已发现一份历史 MHTML 候选报告，但它依赖本地 Streamlit 资源且尚未通过归属与静态发布门禁，暂不展示量化结论。
+    description: Continuous scoring, Top-K portfolio constraints, fill realization, and layered backtests for first-board and weak-to-strong candidates.
+    objective: Test whether rank stability, portfolio constraints, and realistic fills jointly support a first-board strategy.
+    review_summary: A historical MHTML candidate exists, but it depends on local Streamlit resources and has not passed ownership or static-publication gates. No quantitative conclusion is published yet.
     source_refs: [shouban2]
   - id: alphas
     title: Crypto Alphas
-    category: research
+    category: factor-discovery
     status: archived
-    description: 研究数字货币分钟级价量因子的择时、横截面预测与稳健性；当前作为历史研究档案维护。
-    objective: 保存数字货币 alpha 研究脉络，并在证据口径可复核时恢复关键结果。
-    review_summary: 当前没有经过审核的静态报告或量化快照，页面只保留项目定位和归档状态。
+    description: Minute-level crypto price-volume factors for timing, cross-sectional prediction, and robustness; maintained as a historical research archive.
+    objective: Preserve the crypto-alpha research lineage and restore key results only when the evidence contract is auditable.
+    review_summary: No reviewed static report or quantitative snapshot is available. The page preserves project intent and archive status only.
     source_refs: [alphas]
   - id: genetic-factor-auto-3
     title: Genetic Factor Mining
-    category: research
+    category: factor-discovery
     status: maintained
-    description: 使用 GPU 加速遗传算法在数字货币市场中搜索、变异和复评公式因子，并评估跨样本期 IC 与挖掘吞吐。
-    objective: 高吞吐搜索数字货币因子，并用更长样本复评抑制小样本选择偏差。
-    review_summary: 30 代搜索达到较高吞吐；小样本最佳 IC 明显高于 250 日复评结果，说明跨样本衰减必须作为主要结论。
+    description: GPU-accelerated genetic search, mutation, and re-evaluation of formula factors in crypto markets, with cross-sample IC and throughput evidence.
+    objective: Search crypto factors at high throughput and suppress small-sample selection bias through longer-horizon re-evaluation.
+    review_summary: Thirty generations achieved high throughput, but the best small-sample IC fell materially in the 250-day review. Cross-sample decay is a primary result.
     source_refs: [genetic-factor-auto-3]
   - id: factor-daily
     title: Daily Factor Research
-    category: research
+    category: factor-discovery
     status: maintained
-    description: 日频价量因子研究与批量评估，产出公式、Rank IC、分组收益和回测证据。
-    objective: 统一日频因子的覆盖、IC、分组收益、换手和成本后回测评价。
-    review_summary: 最新 Top10 汇总中的 8 个因子成本后收益均为负，当前证据支持保留为负结果并重新审查组合构造和换手。
+    description: Daily price-volume factor research and batch evaluation covering formulas, Rank IC, grouped returns, and backtest evidence.
+    objective: Standardize coverage, IC, grouped returns, turnover, and net backtest evaluation for daily factors.
+    review_summary: All eight factors in the latest Top10 summary have negative net returns. The evidence is retained as a negative result pending a review of portfolio construction and turnover.
     source_refs: [factor-daily]
   - id: aq2
     title: AQ2 Order Book Reconstruction
-    category: data
+    category: market-data
     status: active
-    description: 从逐笔委托和成交确定性重建订单簿，并与交易所十档快照逐 tick 校验，定位事件顺序、竞价和可见量残差。
-    objective: 在不使用未来真值污染回放的前提下解释订单簿差异，并形成可回归的交易所规则状态机。
-    review_summary: v16 跨三日全市场复扫无处理错误和盘口不变量违规，候选错行继续下降；候选口径使用当期真值，不能表述为预测准确率。
+    description: Deterministic order-book reconstruction from orders and trades, validated tick by tick against exchange depth snapshots to isolate sequencing, auction, and visible-volume residuals.
+    objective: Explain order-book differences without future-truth contamination and maintain a regression-tested exchange-rule state machine.
+    review_summary: The v16 three-day full-market sweep completed without processing or book-invariant errors and reduced candidate mismatches. Its candidate boundary uses contemporaneous truth and is not a prediction-accuracy measure.
     source_refs: [AQ2]
   - id: ashare-1s
     title: A-share 1s
-    category: data
+    category: market-data
     status: active
-    description: 从 A 股 L2 逐笔与快照构建版本化 stock1s/v2 数据产品，维护日级覆盖、manifest 和质量审计。
-    objective: 形成可复刻、可审计并可供 1s 模型独立使用的秒级数据产品。
-    review_summary: 当前有 960 个日级覆盖文件和 956 个审计结果；2024 年只有 4 个覆盖文件，是必须解释的数据缺口。
+    description: Versioned stock1s/v2 data built from A-share L2 orders, trades, and snapshots, with daily coverage manifests and quality audits.
+    objective: Produce a reproducible and auditable second-level dataset that 1s models can consume independently.
+    review_summary: The catalog contains 960 daily coverage files and 956 audits. Only four files cover 2024, a material gap that must be resolved.
     source_refs: [ashare-1s]
   - id: get-index-data
     title: Index Data Loader
-    category: data
+    category: market-data
     status: maintained
-    description: 获取并落盘指数成分、权重和 ETF 映射，为指数研究提供可复现的数据输入。
-    objective: 稳定维护指数研究需要的成分、权重、版本和落盘契约。
-    review_summary: 当前未登记独立量化效果报告；项目页记录其数据职责，后续补充覆盖率和更新时间审计。
+    description: Reproducible index constituents, weights, and ETF mappings for index research.
+    objective: Maintain stable constituent, weight, versioning, and storage contracts for index workflows.
+    review_summary: No independent quantitative report is registered. The project page records its data responsibility pending coverage and freshness audits.
     source_refs: [get-index-data]
   - id: get-data
     title: Market Data Pipeline
-    category: data
+    category: market-data
     status: maintained
-    description: 维护日频、分钟、交易日历和市场镜像数据的获取、更新与落盘链路。
-    objective: 为研究项目提供稳定、可检查且可增量更新的市场数据基础设施。
-    review_summary: 当前未登记统一的数据覆盖快照；后续应补充数据集、日期范围、缺口和最近成功更新时间。
+    description: Acquisition, update, and storage pipelines for daily, minute, calendar, and market-mirror data.
+    objective: Provide stable, inspectable, and incrementally updateable market data infrastructure.
+    review_summary: No unified coverage snapshot is registered. Dataset ranges, gaps, and latest successful updates remain evidence backlog items.
     source_refs: [get_data]
   - id: tdx-data-source
     title: TDX Data Source
-    category: data
+    category: market-data
     status: active
-    description: Clean-room Go 市场数据源，提供 A 股发现、直接一分钟 K 线、能力感知实时逐笔、2-of-3 历史归档，以及独立的 ExHQ IF/IC/IM 期货服务。
-    objective: 提供能力、连接、重连、并发、完整性和一致性规则显式可控的 TDX 股票与股指期货接口。
-    review_summary: 08-05 三个独立逐笔 endpoint 的 1,800 标的连续 sweep 为 1,800 非空、0 失败，p95 1.289 秒；直接 K 线仍只有一个有效 endpoint，属于单点故障域。
+    description: A clean-room Go market-data source for A-share discovery, direct one-minute bars, capability-aware live transactions, 2-of-3 historical quorum, and an independent ExHQ IF/IC/IM futures service.
+    objective: Expose explicit capability, connection, reconnection, concurrency, integrity, and consistency controls for TDX equities and index futures.
+    review_summary: On 08-05, three independent transaction endpoints completed repeated 1,800-symbol sweeps with 1,800 nonempty responses, zero failures, and 1.289s p95. Direct bars still have one effective endpoint and remain a single failure domain.
     source_refs: [tdx-data-source]
   - id: snapshot-visualizer2
     title: Snapshot Visualizer
-    category: platform
+    category: research-systems
     status: maintained
-    description: 交互查看订单簿快照、价差、深度、imbalance 和时间演化，用于 L2 数据诊断与复核。
-    objective: 降低订单簿与快照异常的人工定位成本，并提供可重复的可视化入口。
-    review_summary: 当前存在应用构建产物但没有经过审核的静态研究报告；页面先记录功能边界和待补证据。
+    description: Interactive order-book snapshots, spreads, depth, imbalance, and time evolution for L2 diagnostics.
+    objective: Reduce manual investigation cost for book and snapshot anomalies through reproducible visual inspection.
+    review_summary: Application artifacts exist, but no reviewed static research report is available. The page records functional boundaries and missing evidence.
     source_refs: [snapshot-visualizer2]
   - id: webpage5
     title: Factor Research Platform
-    category: platform
+    category: research-systems
     status: active
-    description: 表达式驱动的因子生成、批量评估、回测、产物管理和 Web 展示平台。
-    objective: 用统一表达式和 artifact contract 串联因子生成、评估、比较和展示。
-    review_summary: 项目目录中已有 7 份因子评估报告输出；批量缓存的项目归属仍需确认后再纳入公开统计。
+    description: Expression-driven factor generation, batch evaluation, backtesting, artifact management, and web presentation.
+    objective: Connect factor generation, evaluation, comparison, and presentation through one expression and artifact contract.
+    review_summary: Seven factor-evaluation reports exist in the project. Cached batch results require provenance confirmation before entering public statistics.
     source_refs: [webpage5]
   - id: live-predictor
     title: Live Predictor
-    category: platform
+    category: forecasting-models
     status: active
-    description: 消费 TDX 一分钟数据，执行冻结的 Prediction-NN 模型，聚合三只 ETF 成分篮子预测，并记录因果事后收益、运行质量和研究报告。
-    objective: 建立从实时数据门禁、模型推理、持久化到 shadow 评价的可审计闭环，并在证据充分前保持 non-actionable。
-    review_summary: 08-05 上午 1,800 只证券全部通过数据门禁并生成 156 条已成熟预测；合计方向胜率 48.98%，历史极端尾部表现不一致，当前只支持研究监控。
+    description: A live evaluation loop that consumes TDX one-minute data, runs frozen Prediction-NN models, aggregates three ETF constituent baskets, and records causal realized returns and service quality.
+    objective: Build an auditable loop from live data gates and inference through persistence and shadow evaluation, remaining non-actionable until evidence is sufficient.
+    review_summary: On the morning of 08-05, all 1,800 securities passed data gates and produced 156 matured predictions. Aggregate direction accuracy was 48.98%, and historical extreme-tail behavior is inconsistent. The system remains research monitoring only.
     source_refs: [live-predictor]
   - id: deep-ml
     title: Deep-ML Knowledge Base
-    category: platform
+    category: research-systems
+    section: knowledge
     status: active
-    description: 将机器学习知识整理为概念图谱、原创中文学习单元、课程路径和质量评估的知识工程项目。
-    objective: 建立可发布、可验证并与临时发现来源隔离的机器学习知识内容包。
-    review_summary: 当前内容包包含 597 个概念、597 篇原创文章、1974 条关系和 18 条学习路径。
+    description: A knowledge-engineering system that organizes machine learning into a concept graph, original Chinese learning units, course paths, and quality checks.
+    objective: Maintain a publishable and verifiable machine-learning knowledge package isolated from temporary discovery sources.
+    review_summary: The publishable snapshot contains 735 concepts, 653 original Chinese articles, 2,585 relations, and 18 learning paths. All articles pass automated editorial checks; this is not a human or factual certification.
     source_refs: [deep-ml]
+  - id: quant-knowledge
+    title: Quant Knowledge
+    category: research-systems
+    section: knowledge
+    status: active
+    description: A chapter-based practical knowledge project covering Python, statistics, time series, machine learning practice, market microstructure, and computer-science foundations.
+    objective: Publish the original knowledge booklet as an independent source inside the unified Knowledge section without merging it into the DeepML concept graph.
+    review_summary: The publishable snapshot contains 136 Chinese chapters across eight sections. Deep learning is an independent five-part section; chapters remain distinct from DeepML concepts and learning paths.
+    source_refs: [knowledge]
   - id: ipcheck
     title: IP Check
-    category: tools
+    category: research-systems
     status: maintained
-    description: 检测内外网 IP 变化并按变化发送通知，支持研究环境服务可达性维护。
-    objective: 用一次性、可审计的运行检查降低服务地址变化造成的访问中断。
-    review_summary: 当前没有研究效果指标；页面保留工具用途，后续可补充最近检查时间和通知成功率。
+    description: Detects internal and external IP changes and sends change-triggered notifications to maintain research-service reachability.
+    objective: Reduce address-change outages through one-shot, auditable operational checks.
+    review_summary: No research-performance metric is registered. Future evidence may include the latest check time and notification success rate.
     source_refs: [ipcheck]

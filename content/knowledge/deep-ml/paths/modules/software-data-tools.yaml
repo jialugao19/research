@@ -1,0 +1,92 @@
+path:
+  name: Software Data Tools
+modules:
+- id: text-and-formats-1
+  stage: text-and-formats
+  stage_title: text-and-formats
+  stage_summary: ''
+  objective: 串联 regular-expression 到 json-data-format，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - regular-expression-overview
+  - json-data-format-overview
+  optional_units: []
+  articles:
+  - json-data-format.md
+  - regular-expression.md
+- id: service-interface-1
+  stage: service-interface
+  stage_title: service-interface
+  stage_summary: ''
+  objective: 串联 api-design 到 lock-free-synchronization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - api-design-overview
+  - web-crawler-overview
+  - token-bucket-rate-limiter-overview
+  - model-serving-overview
+  - concurrency-control-overview
+  - shared-memory-ipc-overview
+  - copy-on-write-memory-overview
+  - lock-free-synchronization-overview
+  optional_units: []
+  articles:
+  - api-design.md
+  - concurrency-control.md
+  - copy-on-write-memory.md
+  - lock-free-synchronization.md
+  - model-serving.md
+  - shared-memory-ipc.md
+  - token-bucket-rate-limiter.md
+  - web-crawler.md
+- id: service-interface-2
+  stage: service-interface
+  stage_title: service-interface
+  stage_summary: ''
+  objective: 串联 transaction-log 到 resumable-processing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - transaction-log-overview
+  - write-ahead-log-overview
+  - resumable-processing-overview
+  optional_units: []
+  articles:
+  - resumable-processing.md
+  - transaction-log.md
+  - write-ahead-log.md
+- id: data-prep-1
+  stage: data-prep
+  stage_title: data-prep
+  stage_summary: ''
+  objective: 串联 data-cleaning 到 dataset-balancing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - data-cleaning-overview
+  - pandas-merge-overview
+  - missing-value-imputation-overview
+  - categorical-encoding-overview
+  - ordinal-encoding-overview
+  - feature-scaling-overview
+  - random-subset-sampling-overview
+  - dataset-balancing-overview
+  optional_units: []
+  articles:
+  - categorical-encoding.md
+  - data-cleaning.md
+  - dataset-balancing.md
+  - feature-scaling.md
+  - missing-value-imputation.md
+  - ordinal-encoding.md
+  - pandas-merge.md
+  - random-subset-sampling.md
+- id: data-prep-2
+  stage: data-prep
+  stage_title: data-prep
+  stage_summary: ''
+  objective: 理解 undersampling 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - undersampling-overview
+  optional_units: []
+  articles:
+  - undersampling.md

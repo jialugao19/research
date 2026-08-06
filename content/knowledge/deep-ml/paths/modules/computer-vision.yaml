@@ -1,0 +1,131 @@
+path:
+  name: Computer Vision
+modules:
+- id: cnn-basics-1
+  stage: cnn-basics
+  stage_title: cnn-basics
+  stage_summary: ''
+  objective: 串联 convolution 到 convolutional-neural-network，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - convolution-overview
+  - padding-and-stride-overview
+  - pooling-overview
+  - convolutional-neural-network-overview
+  optional_units: []
+  articles:
+  - convolution.md
+  - convolutional-neural-network.md
+  - padding-and-stride.md
+  - pooling.md
+- id: training-1
+  stage: training
+  stage_title: training
+  stage_summary: ''
+  objective: 串联 image-augmentation 到 instance-normalization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - image-augmentation-overview
+  - image-flip-overview
+  - bilinear-resizing-overview
+  - image-brightness-adjustment-overview
+  - image-corruption-overview
+  - rgb-grayscale-conversion-overview
+  - batch-normalization-overview
+  - instance-normalization-overview
+  optional_units: []
+  articles:
+  - batch-normalization.md
+  - bilinear-resizing.md
+  - image-augmentation.md
+  - image-brightness-adjustment.md
+  - image-corruption.md
+  - image-flip.md
+  - normalization-statistics.md
+  - rgb-grayscale-conversion.md
+- id: training-2
+  stage: training
+  stage_title: training
+  stage_summary: ''
+  objective: 串联 group-normalization 到 max-pooling-backward，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - group-normalization-overview
+  - residual-connections-overview
+  - convolution-backward-overview
+  - max-pooling-backward-overview
+  optional_units: []
+  articles:
+  - convolution-backward.md
+  - max-pooling-backward.md
+  - normalization-statistics.md
+  - residual-connections.md
+- id: tasks-1
+  stage: tasks
+  stage_title: tasks
+  stage_summary: ''
+  objective: 串联 object-detection 到 frame-aware-processing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - object-detection-overview
+  - semantic-segmentation-overview
+  - optical-flow-overview
+  - kinematic-bicycle-model-overview
+  - image-reconstruction-overview
+  - video-chunking-overview
+  - video-frame-sampling-overview
+  - frame-aware-processing-overview
+  optional_units: []
+  articles:
+  - frame-aware-processing.md
+  - image-reconstruction.md
+  - kinematic-bicycle-model.md
+  - object-detection.md
+  - optical-flow.md
+  - semantic-segmentation.md
+  - video-chunking.md
+  - video-frame-sampling.md
+- id: tasks-2
+  stage: tasks
+  stage_title: tasks
+  stage_summary: ''
+  objective: 串联 video-latent-memory-estimation 到 vision-language-model，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - video-latent-memory-estimation-overview
+  - patchification-overview
+  - patch-embedding-overview
+  - vision-transformer-overview
+  - visual-resolution-overview
+  - clip-model-overview
+  - vision-language-model-overview
+  optional_units: []
+  articles:
+  - clip-model.md
+  - patch-embedding.md
+  - patchification.md
+  - video-latent-memory-estimation.md
+  - vision-language-model.md
+  - vision-transformer.md
+  - visual-resolution.md
+- id: evaluation-1
+  stage: evaluation
+  stage_title: evaluation
+  stage_summary: ''
+  objective: 串联 psnr-ssim 到 video-quality-metrics，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - psnr-ssim-overview
+  - perceptual-distance-overview
+  - pose-estimation-accuracy-overview
+  - frechet-inception-distance-overview
+  - frame-rate-overview
+  - video-quality-metrics-overview
+  optional_units: []
+  articles:
+  - frame-rate.md
+  - frechet-inception-distance.md
+  - perceptual-distance.md
+  - pose-estimation-accuracy.md
+  - psnr-ssim.md
+  - video-quality-metrics.md

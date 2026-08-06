@@ -9,6 +9,7 @@ description = "Static catalog for selected research projects and reports"
 requires-python = ">=3.10"
 dependencies = [
   "Jinja2>=3.1,<4",
+  "latex2mathml>=3.81,<4",
   "markdown-it-py>=3,<5",
   "Pillow>=10,<12",
   "PyYAML>=6,<7",

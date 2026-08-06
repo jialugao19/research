@@ -1,0 +1,222 @@
+schema_version: 1
+domains:
+  - id: foundations
+    title: Foundations
+    summary: Mathematical and statistical foundations used across modeling, inference, and research evaluation.
+    topics:
+      - id: mathematics
+        title: Mathematics
+        summary: Calculus, game theory, information theory, and general mathematical tools.
+      - id: probability-statistics
+        title: Probability & Statistics
+        summary: Probability, inference, uncertainty, sampling, and statistical evaluation.
+      - id: linear-algebra
+        title: Linear Algebra
+        summary: Vector spaces, matrices, decompositions, and geometry for models.
+  - id: machine-intelligence
+    title: Machine Intelligence
+    summary: Learning algorithms, neural architectures, optimization, and model operations.
+    topics:
+      - id: machine-learning
+        title: Machine Learning
+        summary: Classical models, data preprocessing, evaluation, and model selection.
+      - id: deep-learning
+        title: Deep Learning
+        summary: Neural networks, PyTorch, differentiable training, and representation learning.
+      - id: nlp-transformers
+        title: NLP & Transformers
+        summary: Tokenization, language models, attention, and transformer systems.
+      - id: reinforcement-learning
+        title: Reinforcement Learning
+        summary: MDPs, policies, value functions, and control algorithms.
+      - id: computer-vision
+        title: Computer Vision
+        summary: Image models, convolutional architectures, detection, and segmentation.
+      - id: optimization
+        title: Optimization
+        summary: Objective functions, search, gradients, schedules, and constraints.
+      - id: mlops-inference
+        title: MLOps & Inference
+        summary: Serving, drift, experiment tracking, deployment, and inference systems.
+      - id: robotics-control
+        title: Robotics & Control
+        summary: Control systems, robotics environments, and embodied learning.
+  - id: quantitative-research
+    title: Quantitative Research
+    summary: Time series, factors, execution, market structure, and financial modeling.
+    topics:
+      - id: time-series
+        title: Time Series
+        summary: Temporal modeling, stationarity, regime changes, and leakage-safe windows.
+      - id: market-microstructure
+        title: Market Microstructure
+        summary: Order books, spreads, queues, impact, auctions, and tick-data behavior.
+      - id: factor-research
+        title: Factor Research
+        summary: Factor construction, IC, RankIC, cross-sectional regression, and neutralization.
+      - id: portfolio-execution
+        title: Portfolio & Execution
+        summary: Portfolio construction, turnover, Sharpe, drawdown, capacity, and costs.
+      - id: financial-engineering
+        title: Financial Engineering
+        summary: Derivatives, stochastic calculus, and financial modeling primitives.
+  - id: computer-science
+    title: Computer Science
+    summary: Algorithms, data structures, databases, and software foundations.
+    topics:
+      - id: data-structures
+        title: Data Structures
+        summary: Arrays, hash maps, heaps, stacks, queues, trees, and storage choices.
+      - id: algorithms
+        title: Algorithms
+        summary: Complexity, recursion, dynamic programming, graph traversal, and search.
+      - id: databases
+        title: Databases
+        summary: SQL, joins, indexes, aggregation, constraints, and query planning.
+      - id: software-engineering
+        title: Software Engineering
+        summary: API design, version control, Linux tooling, testing, and maintainable systems.
+  - id: systems-engineering
+    title: Systems Engineering
+    summary: Python data systems, GPU computing, performance, kernels, and infrastructure.
+    topics:
+      - id: python-data-stack
+        title: Python & Data Stack
+        summary: NumPy, pandas, SciPy, sklearn, statsmodels, plotting, and data pipelines.
+      - id: gpu-computing
+        title: GPU Computing
+        summary: CUDA, Triton, kernels, memory hierarchy, atomics, and parallel execution.
+      - id: systems-programming
+        title: Systems Programming
+        summary: Low-level programming, concurrency, memory, and operating-system interfaces.
+      - id: performance-optimization
+        title: Performance Optimization
+        summary: Vectorization, profiling, cache behavior, throughput, and resource efficiency.
+      - id: infrastructure
+        title: Infrastructure
+        summary: Containers, deployment, distributed computing, and reproducible environments.
+
+deepml_domain_map:
+  algorithms: [computer-science, algorithms]
+  calculus: [foundations, mathematics]
+  computer_vision: [machine-intelligence, computer-vision]
+  cuda: [systems-engineering, gpu-computing]
+  data_preprocessing: [systems-engineering, python-data-stack]
+  data_structures: [computer-science, data-structures]
+  deep_learning: [machine-intelligence, deep-learning]
+  financial_engineering: [quantitative-research, financial-engineering]
+  game_theory: [foundations, mathematics]
+  inference: [machine-intelligence, mlops-inference]
+  information_theory: [foundations, mathematics]
+  linear_algebra: [foundations, linear-algebra]
+  llm: [machine-intelligence, nlp-transformers]
+  machine_learning: [machine-intelligence, machine-learning]
+  mathematics: [foundations, mathematics]
+  mlops: [machine-intelligence, mlops-inference]
+  nlp: [machine-intelligence, nlp-transformers]
+  optimization: [machine-intelligence, optimization]
+  performance_optimization: [systems-engineering, performance-optimization]
+  probabilistic_ml: [foundations, probability-statistics]
+  probability: [foundations, probability-statistics]
+  pytorch: [machine-intelligence, deep-learning]
+  reinforcement_learning: [machine-intelligence, reinforcement-learning]
+  robotics: [machine-intelligence, robotics-control]
+  software_engineering: [computer-science, software-engineering]
+  sql: [computer-science, databases]
+  statistics: [foundations, probability-statistics]
+  systems_programming: [systems-engineering, systems-programming]
+  tinygrad: [systems-engineering, gpu-computing]
+  triton: [systems-engineering, gpu-computing]
+
+quant_section_map:
+  01-python: [systems-engineering, python-data-stack]
+  02-probability-timeseries: [foundations, probability-statistics]
+  03-data-structures-algorithms: [computer-science, algorithms]
+  04-brain-teaser-green-book: [foundations, probability-statistics]
+  05-machine-learning: [machine-intelligence, machine-learning]
+  06-deep-learning: [machine-intelligence, deep-learning]
+  07-market-microstructure: [quantitative-research, market-microstructure]
+  08-computer-science: [computer-science, software-engineering]
+
+quant_chapter_rules:
+  - prefixes: [timeseries-]
+    domain: quantitative-research
+    topic: time-series
+  - prefixes: [statistics-factor-model, statistics-ic-rankic, statistics-cross-sectional-regression]
+    domain: quantitative-research
+    topic: factor-research
+  - prefixes: [statistics-turnover, statistics-sharpe, statistics-drawdown, statistics-capacity]
+    domain: quantitative-research
+    topic: portfolio-execution
+  - prefixes: [timeseries-stochastic-calculus]
+    domain: quantitative-research
+    topic: financial-engineering
+  - prefixes: [dsa-hashmap, dsa-heap, dsa-deque]
+    domain: computer-science
+    topic: data-structures
+  - prefixes: [dsa-]
+    domain: computer-science
+    topic: algorithms
+  - prefixes: [ml-optimizer-selection]
+    domain: machine-intelligence
+    topic: optimization
+  - prefixes: [ml-efficient-attention]
+    domain: systems-engineering
+    topic: performance-optimization
+  - prefixes: [ml-training-correctness, ml-normalization-statistics]
+    domain: machine-intelligence
+    topic: deep-learning
+  - prefixes: [ml-lstm, ml-gru, ml-transformer-for-ts, ml-attention, ml-temporal-embedding, ml-sequence-modeling, ml-neural-network]
+    domain: machine-intelligence
+    topic: deep-learning
+  - prefixes: [ml-transaction-cost]
+    domain: quantitative-research
+    topic: portfolio-execution
+  - prefixes: [ml-regime, ml-feature-decay]
+    domain: quantitative-research
+    topic: time-series
+  - prefixes: [mm-factor-models]
+    domain: quantitative-research
+    topic: factor-research
+  - prefixes: [mm-portfolio-theory, mm-backtesting-frameworks]
+    domain: quantitative-research
+    topic: portfolio-execution
+  - prefixes: [cs-big-o]
+    domain: computer-science
+    topic: algorithms
+  - prefixes: [cs-list-dict-set]
+    domain: computer-science
+    topic: data-structures
+  - prefixes: [cs-sql]
+    domain: computer-science
+    topic: databases
+  - prefixes: [cs-docker]
+    domain: systems-engineering
+    topic: infrastructure
+
+research_links:
+  - domain: systems-engineering
+    topic: gpu-computing
+    project: genetic-factor-auto-3
+    label: GPU factor mining throughput
+    summary: GPU and kernel concepts support high-throughput factor generation and screening.
+  - domain: quantitative-research
+    topic: market-microstructure
+    project: aq2
+    label: Order-book data foundation
+    summary: Microstructure concepts connect directly to L2 snapshot quality and market-data coverage.
+  - domain: quantitative-research
+    topic: market-microstructure
+    project: live-predictor
+    label: Live signal evaluation
+    summary: Spread, queue, impact, and execution constraints define live prediction interpretation.
+  - domain: quantitative-research
+    topic: time-series
+    project: prediction-nn
+    label: Short-horizon return forecasting
+    summary: Time-series leakage, regime, and window design constrain model evaluation.
+  - domain: quantitative-research
+    topic: factor-research
+    project: webpage5
+    label: Factor research platform
+    summary: Factor construction and IC evaluation link knowledge nodes to the research system.

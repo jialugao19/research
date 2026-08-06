@@ -1,70 +1,46 @@
 {% macro study_card(study, catalog, base_url) %}
 <article class="study-card maturity-{{ study.maturity }}" id="study-{{ study.id }}">
-  <p class="study-kicker"><time datetime="{{ study.display_date }}">{{ study.display_date }}</time><span>{{ study.status }}</span><span>{{ study.maturity }}</span></p>
+  <p class="study-kicker"><time datetime="{{ study.display_date }}">{{ study.display_date }}</time><span>{{ study.status|replace('-', ' ')|upper }}</span><span>{{ study.maturity|replace('-', ' ')|upper }}</span><span>{{ study.decision_state|upper }}</span></p>
   <h3>{{ study.title }}</h3>
+  <dl class="study-context"><div><dt>Method</dt><dd>{{ study.method }}</dd></div><div><dt>Dataset</dt><dd>{{ study.dataset }}</dd></div></dl>
   <div class="study-narrative">
-    <section>
-      <h4>研究问题与方法</h4>
-      <p>{{ study.objective }}</p>
-    </section>
-    <section>
-      <h4>观察结果</h4>
-      <p>{{ study.summary }}</p>
-    </section>
+    <section><h4>Research question &amp; method</h4><p>{{ study.objective }}</p></section>
+    <section><h4>Observed result</h4><p>{{ study.summary }}</p></section>
   </div>
   {% if study.metrics %}
   <dl class="metric-grid">
-    {% for metric in study.metrics %}
-    <div>
-      <dt>{{ metric.label }}</dt>
-      <dd>{{ metric.display_value }}</dd>
-      <small>{{ metric.context }}</small>
-    </div>
-    {% endfor %}
+    {% for metric in study.metrics %}<div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>{% endfor %}
   </dl>
   {% endif %}
-  <div class="decision-box"><h4>当前结论</h4><p>{{ study.decision }}</p></div>
-  {% if study.caveats %}
-  <div class="caveat-box"><h4>适用边界</h4><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>
-  {% endif %}
+  <div class="decision-box"><h4>Current decision</h4><p>{{ study.decision }}</p></div>
+  {% if study.caveats %}<div class="caveat-box"><h4>Evidence boundary</h4><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>{% endif %}
   {% if study.report_ids %}
-  <div class="study-reports">
-    <h4>关联报告</h4>
-    <div class="study-report-links">
-    {% for report_id in study.report_ids %}
-    {% set report = catalog.report_by_id[report_id] %}
-    <a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>
-    {% endfor %}
-    </div>
-  </div>
+  <div class="study-reports"><h4>Linked publications</h4><div class="study-report-links">
+    {% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}
+  </div></div>
   {% endif %}
 </article>
 {% endmacro %}
 
 {% macro study_timeline(studies, catalog, base_url) %}
-<div class="study-timeline">
+<div class="evidence-ledger">
+  <div class="evidence-ledger-header" aria-hidden="true"><span>Experiment ID</span><span>Hypothesis</span><span>Method</span><span>Dataset</span><span>Primary metric</span><span>Decision</span><span></span></div>
   {% for study in studies %}
-  <details class="study-entry maturity-{{ study.maturity }}">
+  <details class="evidence-row maturity-{{ study.maturity }}" id="study-{{ study.id }}">
     <summary>
-      <span class="timeline-date">{{ study.display_date }}</span>
-      <span class="timeline-main"><strong>{{ study.title }}</strong><small>{{ study.status }} · {{ study.maturity }}</small></span>
-      <span class="timeline-toggle" aria-hidden="true">＋</span>
+      <span class="evidence-id"><strong>{{ study.id }}</strong><small>{{ study.display_date }}</small></span>
+      <span class="evidence-hypothesis"><strong>{{ study.title }}</strong><small>{{ study.objective }}</small></span>
+      <span class="evidence-method" data-label="Method">{{ study.method }}</span>
+      <span class="evidence-dataset" data-label="Dataset">{{ study.dataset }}</span>
+      <span class="evidence-primary" data-label="Primary metric">{% if study.primary_metric %}<small>{{ study.primary_metric.label }}</small><strong>{{ study.primary_metric.display_value }}</strong>{% else %}<small>EVIDENCE</small><strong>Pending</strong>{% endif %}</span>
+      <span class="decision-state decision-{{ study.decision_state }}" data-label="Decision">{{ study.decision_state }}</span>
+      <span class="evidence-toggle" aria-hidden="true">＋</span>
     </summary>
-    <div class="timeline-body">
-      <p><strong>目标：</strong>{{ study.objective }}</p>
-      <p><strong>结果：</strong>{{ study.summary }}</p>
-      <p><strong>决策：</strong>{{ study.decision }}</p>
-      {% if study.metrics %}
-      <dl class="metric-grid compact-metrics">
-        {% for metric in study.metrics %}
-        <div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>
-        {% endfor %}
-      </dl>
-      {% endif %}
-      {% if study.caveats %}<ul class="timeline-caveats">{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul>{% endif %}
-      {% if study.report_ids %}
-      <p class="timeline-reports">{% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}</p>
-      {% endif %}
+    <div class="evidence-detail">
+      <div class="evidence-narrative"><p><strong>Observed result</strong>{{ study.summary }}</p><p><strong>Current decision</strong>{{ study.decision }}</p></div>
+      {% if study.metrics %}<dl class="metric-grid compact-metrics">{% for metric in study.metrics %}<div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>{% endfor %}</dl>{% endif %}
+      {% if study.caveats %}<div class="evidence-boundary"><strong>Evidence boundary</strong><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>{% endif %}
+      {% if study.report_ids %}<p class="evidence-reports">{% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}</p>{% endif %}
     </div>
   </details>
   {% endfor %}

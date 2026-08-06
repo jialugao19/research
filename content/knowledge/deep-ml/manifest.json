@@ -1,0 +1,327 @@
+{
+  "counts": {
+    "article_plans": 653,
+    "articles": 653,
+    "concepts": 735,
+    "ir_candidates": 735,
+    "learning_units": 735,
+    "path_module_files": 18,
+    "publish_changed_articles": 0,
+    "publish_removed_articles": 0,
+    "publish_unchanged_articles": 653,
+    "publishable_changed_articles": 0,
+    "quality_records": 653,
+    "review_queue_items": 0,
+    "review_required_changed_articles": 0
+  },
+  "coverage": {
+    "article_concept_coverage": 1.0,
+    "article_content_type": {
+      "algorithm": 41,
+      "engineering": 100,
+      "metric": 13,
+      "model": 50,
+      "theory": 449
+    },
+    "article_covered_concepts": 735,
+    "article_depth_level": {
+      "level_1_card": 564,
+      "level_2_standard": 80,
+      "level_3_deep_dive": 9
+    },
+    "concept_coverage": 1.0,
+    "covered_concepts": 735,
+    "discovered_concepts": 735,
+    "domain_depth": {
+      "algorithms": {
+        "count": 28,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "calculus": {
+        "count": 9,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "computer_vision": {
+        "count": 32,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "cuda": {
+        "count": 8,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "data_preprocessing": {
+        "count": 8,
+        "domain_depth_score": 0.2,
+        "levels": [
+          "beginner"
+        ]
+      },
+      "data_structures": {
+        "count": 14,
+        "domain_depth_score": 0.8,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "deep_learning": {
+        "count": 92,
+        "domain_depth_score": 0.8,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced",
+          "expert"
+        ]
+      },
+      "financial_engineering": {
+        "count": 1,
+        "domain_depth_score": 0.2,
+        "levels": [
+          "intermediate"
+        ]
+      },
+      "game_theory": {
+        "count": 1,
+        "domain_depth_score": 0.2,
+        "levels": [
+          "intermediate"
+        ]
+      },
+      "inference": {
+        "count": 15,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "information_theory": {
+        "count": 6,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "linear_algebra": {
+        "count": 34,
+        "domain_depth_score": 0.8,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "llm": {
+        "count": 50,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "machine_learning": {
+        "count": 118,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "mathematics": {
+        "count": 2,
+        "domain_depth_score": 0.2,
+        "levels": [
+          "foundation"
+        ]
+      },
+      "mlops": {
+        "count": 20,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "nlp": {
+        "count": 37,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "optimization": {
+        "count": 18,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "performance_optimization": {
+        "count": 18,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "probabilistic_ml": {
+        "count": 2,
+        "domain_depth_score": 0.2,
+        "levels": [
+          "advanced"
+        ]
+      },
+      "probability": {
+        "count": 19,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "pytorch": {
+        "count": 24,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "reinforcement_learning": {
+        "count": 95,
+        "domain_depth_score": 0.8,
+        "levels": [
+          "beginner",
+          "intermediate",
+          "advanced",
+          "expert"
+        ]
+      },
+      "robotics": {
+        "count": 6,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "software_engineering": {
+        "count": 11,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "sql": {
+        "count": 33,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "beginner",
+          "intermediate"
+        ]
+      },
+      "statistics": {
+        "count": 21,
+        "domain_depth_score": 0.8,
+        "levels": [
+          "foundation",
+          "beginner",
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "systems_programming": {
+        "count": 5,
+        "domain_depth_score": 0.6,
+        "levels": [
+          "intermediate",
+          "advanced",
+          "expert"
+        ]
+      },
+      "tinygrad": {
+        "count": 6,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "intermediate",
+          "advanced"
+        ]
+      },
+      "triton": {
+        "count": 2,
+        "domain_depth_score": 0.4,
+        "levels": [
+          "intermediate",
+          "advanced"
+        ]
+      }
+    },
+    "learning_unit_coverage": 1.0,
+    "published_article_count": 653
+  },
+  "generated_at": "2026-08-06T10:21:27+00:00",
+  "hashes": {
+    "article_hash": "6272f1c2a414fddb67f038dec0b184e829fc4048e24e36f09bb80187eeab70ee",
+    "content_hash": "0ee83c3b9502e4c22681e9a1d955ed48b7c2d77cdb92b76a1ea6ddbff3f40bde",
+    "knowledge_graph_hash": "6ed9226507a3a0afe12f15dbf8ac597bb827c22b5848d7fbc6a709b1c2047938"
+  },
+  "license_layers": {
+    "layer_1": "Deep-ML is only a temporary discovery input.",
+    "layer_2": "Knowledge Graph stores abstract common knowledge structure.",
+    "layer_3": "Articles are original educational content with external citations."
+  },
+  "retention_policy": {
+    "not_retained": [
+      "source exercise text",
+      "source exercise title",
+      "source item IDs",
+      "source URLs",
+      "source-to-concept mapping",
+      "source embeddings"
+    ],
+    "retained": [
+      "knowledge_graph_hash",
+      "article_hash",
+      "manifest",
+      "publish_plan",
+      "abstract_concepts",
+      "quality_scores"
+    ]
+  },
+  "schema_version": "2026-08-06.1"
+}

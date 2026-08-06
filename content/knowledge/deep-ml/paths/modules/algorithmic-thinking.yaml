@@ -1,0 +1,152 @@
+path:
+  name: Algorithmic Thinking
+modules:
+- id: complexity-1
+  stage: complexity
+  stage_title: complexity
+  stage_summary: ''
+  objective: 串联 time-complexity 到 recursion，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - time-complexity-overview
+  - arrays-overview
+  - recursion-overview
+  optional_units: []
+  articles:
+  - arrays.md
+  - recursion.md
+  - time-complexity.md
+- id: data-structures-1
+  stage: data-structures
+  stage_title: data-structures
+  stage_summary: ''
+  objective: 串联 hash-table 到 running-median，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - hash-table-overview
+  - key-value-store-overview
+  - in-memory-database-overview
+  - linked-list-overview
+  - lru-cache-overview
+  - stack-and-queue-overview
+  - heap-priority-queue-overview
+  - running-median-overview
+  optional_units: []
+  articles:
+  - hash-table.md
+  - heap-priority-queue.md
+  - in-memory-database.md
+  - key-value-store.md
+  - linked-list.md
+  - lru-cache.md
+  - running-median.md
+  - stack-and-queue.md
+- id: data-structures-2
+  stage: data-structures
+  stage_title: data-structures
+  stage_summary: ''
+  objective: 串联 binary-tree 到 ledger，形成一个可执行的阶段性学习块。
+  estimated_minutes: 125
+  required_units:
+  - binary-tree-overview
+  - trie-overview
+  - union-find-overview
+  - order-book-overview
+  - ledger-overview
+  optional_units: []
+  articles:
+  - binary-tree.md
+  - ledger.md
+  - order-book.md
+  - trie.md
+  - union-find.md
+- id: array-patterns-1
+  stage: array-patterns
+  stage_title: array-patterns
+  stage_summary: ''
+  objective: 串联 prefix-sum 到 two-pointers，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - prefix-sum-overview
+  - sliding-window-overview
+  - two-pointers-overview
+  optional_units: []
+  articles:
+  - prefix-sum.md
+  - sliding-window.md
+  - two-pointers.md
+- id: core-algorithms-1
+  stage: core-algorithms
+  stage_title: core-algorithms
+  stage_summary: ''
+  objective: 串联 sorting-algorithms 到 grid-path-search，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - sorting-algorithms-overview
+  - binary-search-overview
+  - duplicate-detection-overview
+  - set-frequency-counting-overview
+  - linked-list-cycle-overview
+  - graph-traversal-overview
+  - connected-components-overview
+  - grid-path-search-overview
+  optional_units: []
+  articles:
+  - binary-search.md
+  - connected-components.md
+  - duplicate-detection.md
+  - graph-traversal.md
+  - grid-path-search.md
+  - linked-list-cycle.md
+  - set-frequency-counting.md
+  - sorting-algorithms.md
+- id: core-algorithms-2
+  stage: core-algorithms
+  stage_title: core-algorithms
+  stage_summary: ''
+  objective: 串联 robot-grid-simulation 到 fibonacci-sequence，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - robot-grid-simulation-overview
+  - reservoir-sampling-overview
+  - topological-sort-overview
+  - shortest-path-overview
+  - minimum-spanning-tree-overview
+  - dynamic-programming-overview
+  - edit-distance-overview
+  - fibonacci-sequence-overview
+  optional_units: []
+  articles:
+  - dynamic-programming.md
+  - edit-distance.md
+  - fibonacci-sequence.md
+  - minimum-spanning-tree.md
+  - reservoir-sampling.md
+  - robot-grid-simulation.md
+  - shortest-path.md
+  - topological-sort.md
+- id: core-algorithms-3
+  stage: core-algorithms
+  stage_title: core-algorithms
+  stage_summary: ''
+  objective: 串联 path-normalization 到 game-move-resolution，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - path-normalization-overview
+  - valid-parentheses-overview
+  - expression-evaluation-overview
+  - palindrome-checking-overview
+  - merge-intervals-overview
+  - minimax-algorithm-overview
+  - alpha-beta-pruning-overview
+  - game-move-resolution-overview
+  optional_units: []
+  articles:
+  - alpha-beta-pruning.md
+  - expression-evaluation.md
+  - game-move-resolution.md
+  - merge-intervals.md
+  - minimax-algorithm.md
+  - palindrome-checking.md
+  - path-normalization.md
+  - valid-parentheses.md

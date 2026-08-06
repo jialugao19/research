@@ -1,0 +1,118 @@
+path:
+  name: Optimization for ML
+modules:
+- id: calculus-1
+  stage: calculus
+  stage_title: calculus
+  stage_summary: ''
+  objective: 串联 calculus-basics 到 gradient-vector，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - calculus-basics-overview
+  - derivative-overview
+  - partial-derivative-overview
+  - product-rule-overview
+  - quotient-rule-overview
+  - chain-rule-overview
+  - taylor-series-overview
+  - gradient-vector-overview
+  optional_units: []
+  articles:
+  - calculus-basics.md
+  - chain-rule.md
+  - derivative.md
+  - gradient-vector.md
+  - partial-derivative.md
+  - product-rule.md
+  - quotient-rule.md
+  - taylor-series.md
+- id: calculus-2
+  stage: calculus
+  stage_title: calculus
+  stage_summary: ''
+  objective: 串联 gradient-descent 到 convex-function，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - gradient-descent-overview
+  - objective-function-overview
+  - convex-function-overview
+  optional_units: []
+  articles:
+  - convex-function.md
+  - gradient-descent.md
+  - objective-function.md
+- id: matrix-calculus-1
+  stage: matrix-calculus
+  stage_title: matrix-calculus
+  stage_summary: ''
+  objective: 串联 jacobian-matrix 到 hessian-matrix，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - jacobian-matrix-overview
+  - vector-jacobian-product-overview
+  - hessian-matrix-overview
+  optional_units: []
+  articles:
+  - hessian-matrix.md
+  - jacobian-matrix.md
+  - vector-jacobian-product.md
+- id: convex-methods-1
+  stage: convex-methods
+  stage_title: convex-methods
+  stage_summary: ''
+  objective: 串联 convex-optimization 到 iterative-repair，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - convex-optimization-overview
+  - budget-constrained-optimization-overview
+  - multi-objective-optimization-overview
+  - robust-optimization-overview
+  - quadratic-programming-overview
+  - newton-method-overview
+  - lagrange-multipliers-overview
+  - iterative-repair-overview
+  optional_units: []
+  articles:
+  - budget-constrained-optimization.md
+  - convex-optimization.md
+  - iterative-repair.md
+  - lagrange-multipliers.md
+  - multi-objective-optimization.md
+  - newton-method.md
+  - quadratic-programming.md
+  - robust-optimization.md
+- id: deep-learning-1
+  stage: deep-learning
+  stage_title: deep-learning
+  stage_summary: ''
+  objective: 串联 momentum-optimizer 到 adamw-optimizer，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - momentum-optimizer-overview
+  - adagrad-optimizer-overview
+  - adadelta-optimizer-overview
+  - rmsprop-optimizer-overview
+  - rms-update-scaling-overview
+  - adam-optimizer-overview
+  - adamax-optimizer-overview
+  - adamw-optimizer-overview
+  optional_units: []
+  articles:
+  - gradient-descent.md
+  - modern-optimizer-updates.md
+  - rms-update-scaling.md
+- id: deep-learning-2
+  stage: deep-learning
+  stage_title: deep-learning
+  stage_summary: ''
+  objective: 串联 muon-optimizer 到 batch-size-schedule，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - muon-optimizer-overview
+  - learning-rate-schedule-overview
+  - batch-size-schedule-overview
+  optional_units: []
+  articles:
+  - batch-size-schedule.md
+  - learning-rate-schedule.md
+  - modern-optimizer-updates.md

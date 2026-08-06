@@ -1,0 +1,128 @@
+path:
+  name: Data and SQL
+modules:
+- id: tables-1
+  stage: tables
+  stage_title: tables
+  stage_summary: ''
+  objective: 串联 pandas-dataframe 到 sql-null-handling，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - pandas-dataframe-overview
+  - sql-select-overview
+  - select-distinct-overview
+  - sql-where-filtering-overview
+  - sql-joins-overview
+  - sql-null-handling-overview
+  optional_units: []
+  articles:
+  - pandas-dataframe.md
+  - select-distinct.md
+  - sql-joins.md
+  - sql-null-handling.md
+  - sql-select.md
+  - sql-where-filtering.md
+- id: analytics-1
+  stage: analytics
+  stage_title: analytics
+  stage_summary: ''
+  objective: 串联 sql-aggregation 到 sql-subquery，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - sql-aggregation-overview
+  - having-clause-overview
+  - count-having-pattern-overview
+  - sql-case-when-overview
+  - conditional-aggregation-sql-overview
+  - click-through-rate-overview
+  - social-engagement-metrics-overview
+  - sql-subquery-overview
+  optional_units: []
+  articles:
+  - click-through-rate.md
+  - social-engagement-metrics.md
+  - sql-aggregation.md
+- id: analytics-2
+  stage: analytics
+  stage_title: analytics
+  stage_summary: ''
+  objective: 串联 common-table-expression 到 groupwise-min-max-sql，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - common-table-expression-overview
+  - sql-window-functions-overview
+  - first-value-window-overview
+  - self-join-overview
+  - bidirectional-sql-union-overview
+  - groupwise-ranking-sql-overview
+  - percent-rank-sql-overview
+  - groupwise-min-max-sql-overview
+  optional_units: []
+  articles:
+  - bidirectional-sql-union.md
+  - self-join.md
+  - sql-aggregation.md
+- id: analytics-3
+  stage: analytics
+  stage_title: analytics
+  stage_summary: ''
+  objective: 理解 current-status-from-events 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - current-status-from-events-overview
+  optional_units: []
+  articles:
+  - current-status-from-events.md
+- id: time-analysis-1
+  stage: time-analysis
+  stage_title: time-analysis
+  stage_summary: ''
+  objective: 串联 sql-date-functions 到 consecutive-activity，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - sql-date-functions-overview
+  - sql-date-range-filtering-overview
+  - daily-active-users-overview
+  - session-duration-analysis-overview
+  - rolling-average-sql-overview
+  - cohort-retention-overview
+  - consecutive-activity-overview
+  optional_units: []
+  articles:
+  - cohort-retention.md
+  - consecutive-activity.md
+  - daily-active-users.md
+  - rolling-average-sql.md
+  - session-duration-analysis.md
+  - sql-date-functions.md
+  - sql-date-range-filtering.md
+- id: performance-1
+  stage: performance
+  stage_title: performance
+  stage_summary: ''
+  objective: 串联 query-execution-plan 到 sql-constraints，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - query-execution-plan-overview
+  - sql-index-overview
+  - sql-constraints-overview
+  optional_units: []
+  articles:
+  - query-execution-plan.md
+  - sql-constraints.md
+  - sql-index.md
+- id: cleanup-and-presentation-1
+  stage: cleanup-and-presentation
+  stage_title: cleanup-and-presentation
+  stage_summary: ''
+  objective: 串联 sql-delete-duplicates 到 top-n-per-group，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - sql-delete-duplicates-overview
+  - sql-order-limit-overview
+  - top-n-per-group-overview
+  optional_units: []
+  articles:
+  - sql-delete-duplicates.md
+  - sql-order-limit.md
+  - top-n-per-group.md

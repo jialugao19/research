@@ -1,0 +1,39 @@
+path:
+  name: Robotics and Control
+modules:
+- id: geometry-1
+  stage: geometry
+  stage_title: geometry
+  stage_summary: ''
+  objective: 串联 rotation-matrix 到 quaternion-slerp，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - rotation-matrix-overview
+  - affine-transformation-overview
+  - forward-kinematics-overview
+  - inverse-kinematics-overview
+  - inverse-dynamics-overview
+  - closed-loop-driving-policy-overview
+  - quaternion-slerp-overview
+  optional_units: []
+  articles:
+  - affine-transformation.md
+  - closed-loop-driving-policy.md
+  - forward-kinematics.md
+  - inverse-dynamics.md
+  - inverse-kinematics.md
+  - quaternion-slerp.md
+  - rotation-matrix.md
+- id: state-estimation-1
+  stage: state-estimation
+  stage_title: state-estimation
+  stage_summary: ''
+  objective: 串联 state-space-model 到 kalman-filter，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - state-space-model-overview
+  - kalman-filter-overview
+  optional_units: []
+  articles:
+  - kalman-filter.md
+  - state-space-model.md

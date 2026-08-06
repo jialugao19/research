@@ -1,0 +1,163 @@
+path:
+  name: Statistics for ML
+modules:
+- id: probability-1
+  stage: probability
+  stage_title: probability
+  stage_summary: ''
+  objective: 串联 probability 到 maximum-a-posteriori-estimation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - probability-overview
+  - probability-normalization-overview
+  - expected-value-overview
+  - variance-overview
+  - conditional-probability-overview
+  - bayes-theorem-overview
+  - bayesian-inference-overview
+  - maximum-a-posteriori-estimation-overview
+  optional_units: []
+  articles:
+  - bayes-theorem.md
+  - bayesian-inference.md
+  - conditional-probability.md
+  - expected-value.md
+  - maximum-a-posteriori-estimation.md
+  - probability-normalization.md
+  - probability.md
+  - variance.md
+- id: probability-2
+  stage: probability
+  stage_title: probability
+  stage_summary: ''
+  objective: 串联 gaussian-distribution 到 markov-chain，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - gaussian-distribution-overview
+  - binomial-distribution-overview
+  - hypergeometric-distribution-overview
+  - beta-distribution-overview
+  - beta-binomial-model-overview
+  - exponential-distribution-overview
+  - poisson-distribution-overview
+  - markov-chain-overview
+  optional_units: []
+  articles:
+  - beta-binomial-model.md
+  - beta-distribution.md
+  - binomial-distribution.md
+  - exponential-distribution.md
+  - gaussian-distribution.md
+  - hypergeometric-distribution.md
+  - markov-chain.md
+  - poisson-distribution.md
+- id: probability-3
+  stage: probability
+  stage_title: probability
+  stage_summary: ''
+  objective: 串联 negative-log-likelihood 到 uncertainty-estimation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - negative-log-likelihood-overview
+  - uncertainty-estimation-overview
+  optional_units: []
+  articles:
+  - negative-log-likelihood.md
+  - uncertainty-estimation.md
+- id: sampling-1
+  stage: sampling
+  stage_title: sampling
+  stage_summary: ''
+  objective: 串联 sampling-distribution 到 hypothesis-testing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - sampling-distribution-overview
+  - random-subset-sampling-overview
+  - rejection-sampling-overview
+  - bootstrap-sampling-overview
+  - confidence-interval-overview
+  - hypothesis-testing-overview
+  optional_units: []
+  articles:
+  - bootstrap-sampling.md
+  - confidence-interval.md
+  - hypothesis-testing.md
+  - random-subset-sampling.md
+  - rejection-sampling.md
+  - sampling-distribution.md
+- id: statistics-1
+  stage: statistics
+  stage_title: statistics
+  stage_summary: ''
+  objective: 串联 descriptive-statistics 到 r-squared，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - descriptive-statistics-overview
+  - standard-deviation-overview
+  - bessel-correction-overview
+  - histogram-overview
+  - probability-density-function-overview
+  - cumulative-distribution-function-overview
+  - bhattacharyya-distance-overview
+  - r-squared-overview
+  optional_units: []
+  articles:
+  - bessel-correction.md
+  - bhattacharyya-distance.md
+  - cumulative-distribution-function.md
+  - descriptive-statistics.md
+  - histogram.md
+  - probability-density-function.md
+  - r-squared.md
+  - standard-deviation.md
+- id: statistics-2
+  stage: statistics
+  stage_title: statistics
+  stage_summary: ''
+  objective: 串联 phi-coefficient 到 law-of-large-numbers，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - phi-coefficient-overview
+  - chi-square-test-overview
+  - law-of-large-numbers-overview
+  optional_units: []
+  articles:
+  - chi-square-test.md
+  - law-of-large-numbers.md
+  - phi-coefficient.md
+- id: information-1
+  stage: information
+  stage_title: information
+  stage_summary: ''
+  objective: 串联 entropy 到 evidence-lower-bound，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - entropy-overview
+  - mutual-information-overview
+  - pointwise-mutual-information-overview
+  - kl-divergence-overview
+  - jensen-shannon-divergence-overview
+  - maximum-likelihood-estimation-overview
+  - variational-inference-overview
+  - evidence-lower-bound-overview
+  optional_units: []
+  articles:
+  - entropy.md
+  - evidence-lower-bound.md
+  - jensen-shannon-divergence.md
+  - kl-divergence.md
+  - maximum-likelihood-estimation.md
+  - mutual-information.md
+  - pointwise-mutual-information.md
+  - variational-inference.md
+- id: information-2
+  stage: information
+  stage_title: information
+  stage_summary: ''
+  objective: 理解 bic-aic 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - bic-aic-overview
+  optional_units: []
+  articles:
+  - bic-aic.md

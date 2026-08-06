@@ -1,0 +1,33 @@
+path:
+  name: Financial Machine Learning
+modules:
+- id: risk-foundation-1
+  stage: risk-foundation
+  stage_title: risk-foundation
+  stage_summary: ''
+  objective: 串联 expected-value 到 portfolio-variance，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - expected-value-overview
+  - variance-overview
+  - covariance-matrix-overview
+  - portfolio-variance-overview
+  optional_units: []
+  articles:
+  - covariance-matrix.md
+  - expected-value.md
+  - portfolio-variance.md
+  - variance.md
+- id: optimization-1
+  stage: optimization
+  stage_title: optimization
+  stage_summary: ''
+  objective: 串联 quadratic-programming 到 multi-objective-optimization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - quadratic-programming-overview
+  - multi-objective-optimization-overview
+  optional_units: []
+  articles:
+  - multi-objective-optimization.md
+  - quadratic-programming.md

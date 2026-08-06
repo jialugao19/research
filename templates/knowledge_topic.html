@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% set nav_section = "knowledge" %}
+{% block title %}{{ topic.title }} · {{ domain.title }} · Knowledge{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page{% endblock %}
+{% block content %}
+<header class="catalog-hero knowledge-domain-hero">
+  <nav class="knowledge-breadcrumb" aria-label="Knowledge hierarchy"><a href="{{ base_url }}knowledge/">Knowledge</a><span>/</span><a href="{{ base_url }}{{ domain.route }}">{{ domain.title }}</a><span>/</span><strong>{{ topic.title }}</strong></nav>
+  <p class="eyebrow">Topic {{ "%02d.%02d"|format(domain.sequence, topic.sequence) }}</p>
+  <h1>{{ topic.title }}</h1>
+  <p>{{ topic.summary }}</p>
+</header>
+
+{% if learning_path %}
+<section class="knowledge-section" id="learning-path">
+  <div class="section-heading"><p class="eyebrow">DeepML learning path</p><h2>{{ learning_path.name }}</h2><p>{{ learning_path.summary }}</p></div>
+  <div class="knowledge-topic-map">
+    {% for stage in learning_path.stages %}<section><header><span>{{ "%02d"|format(loop.index) }}</span><h3>{{ stage.title }}</h3></header><p>{{ stage.summary }}</p><small>{{ stage.topic_ids|length }} concepts</small></section>{% endfor %}
+  </div>
+  {% if chapter_parts %}
+  <div class="section-heading"><p class="eyebrow">Quant Knowledge booklet</p><h2>Five applied deep-learning parts</h2></div>
+  <div class="knowledge-topic-map">
+    {% for part_title, chapter_count in chapter_parts %}<section><header><span>{{ "%02d"|format(loop.index) }}</span><h3>{{ part_title }}</h3></header><p>{{ chapter_count }} focused chapters from fundamentals and training correctness through efficient systems.</p></section>{% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endif %}
+
+<div class="knowledge-filter-bar">
+  <label><span>Search</span><input id="knowledge-search" data-knowledge-search type="search" placeholder="Title, keyword, source, or summary" autocomplete="off"></label>
+  <label><span>Content type</span><select data-knowledge-domain><option value="">All content</option><option value="Concept">Concept</option><option value="Chapter">Chapter</option></select></label>
+  <p><strong data-knowledge-count>{{ nodes|length }}</strong> results</p>
+</div>
+<div class="article-library" data-knowledge-list>
+  {% for node in nodes %}<a data-knowledge-item data-domain="{{ node.content_type }}" data-search="{{ node.title }} {{ node.summary }} {{ node.keywords|join(' ') }} {{ node.source_label }}" href="{{ base_url }}{{ node.route }}"><span class="depth-code">{{ "%03d"|format(loop.index) }}</span><div><strong lang="zh-CN">{{ node.title }}</strong><p lang="zh-CN">{{ node.summary }}</p></div><small>{{ node.content_type }}<br>{{ node.level }} · {{ node.source_label }}</small></a>{% endfor %}
+</div>
+<p class="empty-filter-state" data-knowledge-empty hidden>No nodes match this filter.</p>
+
+{% if research_links %}
+<section class="knowledge-section">
+  <div class="section-heading"><p class="eyebrow">Research bridge</p><h2>Applied research connections</h2></div>
+  <div class="article-row-list">
+    {% for link in research_links %}{% set project = catalog.project_by_id[link.project] %}<a href="{{ base_url }}projects/{{ project.id }}/"><span>{{ "%02d"|format(loop.index) }}</span><div><strong>{{ link.label }}</strong><small>{{ project.title }} · {{ link.summary }}</small></div><em>Open →</em></a>{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

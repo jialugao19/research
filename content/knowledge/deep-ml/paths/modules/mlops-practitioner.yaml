@@ -1,0 +1,113 @@
+path:
+  name: MLOps Practitioner
+modules:
+- id: evaluation-1
+  stage: evaluation
+  stage_title: evaluation
+  stage_summary: ''
+  objective: 串联 train-validation-test-split 到 data-leakage，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - train-validation-test-split-overview
+  - model-evaluation-metrics-overview
+  - data-leakage-overview
+  optional_units: []
+  articles:
+  - data-leakage.md
+  - model-evaluation-metrics.md
+  - train-validation-test-split.md
+- id: tracking-1
+  stage: tracking
+  stage_title: tracking
+  stage_summary: ''
+  objective: 串联 experiment-tracking 到 inference-statistics，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - experiment-tracking-overview
+  - rl-experiment-configuration-overview
+  - rl-training-diagnostics-overview
+  - resource-dilation-scheduling-overview
+  - checkpointing-overview
+  - early-stopping-overview
+  - request-logging-overview
+  - inference-statistics-overview
+  optional_units: []
+  articles:
+  - checkpointing.md
+  - early-stopping.md
+  - experiment-tracking.md
+  - inference-statistics.md
+  - request-logging.md
+  - resource-dilation-scheduling.md
+  - rl-experiment-configuration.md
+  - rl-training-diagnostics.md
+- id: tracking-2
+  stage: tracking
+  stage_title: tracking
+  stage_summary: ''
+  objective: 串联 quality-scoring-pipeline 到 resumable-processing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - quality-scoring-pipeline-overview
+  - human-review-queue-overview
+  - resumable-processing-overview
+  optional_units: []
+  articles:
+  - human-review-queue.md
+  - quality-scoring-pipeline.md
+  - resumable-processing.md
+- id: data-pipeline-1
+  stage: data-pipeline
+  stage_title: data-pipeline
+  stage_summary: ''
+  objective: 串联 etl-pipeline 到 critical-path-analysis，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - etl-pipeline-overview
+  - pipeline-dag-overview
+  - critical-path-analysis-overview
+  optional_units: []
+  articles:
+  - critical-path-analysis.md
+  - etl-pipeline.md
+  - pipeline-dag.md
+- id: production-1
+  stage: production
+  stage_title: production
+  stage_summary: ''
+  objective: 串联 model-serving 到 load-balancing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - model-serving-overview
+  - health-check-overview
+  - model-monitoring-overview
+  - canary-deployment-overview
+  - rollout-analysis-overview
+  - data-drift-overview
+  - gpu-resource-allocation-overview
+  - load-balancing-overview
+  optional_units: []
+  articles:
+  - canary-deployment.md
+  - data-drift.md
+  - gpu-resource-allocation.md
+  - health-check.md
+  - load-balancing.md
+  - model-monitoring.md
+  - model-serving.md
+  - rollout-analysis.md
+- id: production-2
+  stage: production
+  stage_title: production
+  stage_summary: ''
+  objective: 串联 onnx-export 到 mixed-precision-training，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - onnx-export-overview
+  - model-quantization-overview
+  - mixed-precision-training-overview
+  optional_units: []
+  articles:
+  - mixed-precision-training.md
+  - model-quantization.md
+  - onnx-export.md

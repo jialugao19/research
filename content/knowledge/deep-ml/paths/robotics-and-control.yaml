@@ -1,0 +1,16 @@
+path:
+  name: Robotics and Control
+stages:
+- name: geometry
+  topics:
+  - rotation-matrix
+  - affine-transformation
+  - forward-kinematics
+  - inverse-kinematics
+  - inverse-dynamics
+  - closed-loop-driving-policy
+  - quaternion-slerp
+- name: state-estimation
+  topics:
+  - state-space-model
+  - kalman-filter

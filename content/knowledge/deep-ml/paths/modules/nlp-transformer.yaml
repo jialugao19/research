@@ -1,0 +1,333 @@
+path:
+  name: NLP and Transformer
+modules:
+- id: representation-1
+  stage: representation
+  stage_title: representation
+  stage_summary: ''
+  objective: 串联 tokenization 到 gru-network，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - tokenization-overview
+  - word-embeddings-overview
+  - positional-encoding-overview
+  - recurrent-neural-network-overview
+  - lstm-network-overview
+  - gru-network-overview
+  optional_units: []
+  articles:
+  - gru-network.md
+  - lstm-network.md
+  - positional-encoding.md
+  - recurrent-neural-network.md
+  - tokenization.md
+  - word-embeddings.md
+- id: token-processing-1
+  stage: token-processing
+  stage_title: token-processing
+  stage_summary: ''
+  objective: 串联 vocabulary 到 chat-template，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - vocabulary-overview
+  - byte-pair-encoding-overview
+  - token-frequency-overview
+  - ngram-model-overview
+  - pointwise-mutual-information-overview
+  - tf-idf-overview
+  - bm25-ranking-overview
+  - chat-template-overview
+  optional_units: []
+  articles:
+  - bm25-ranking.md
+  - byte-pair-encoding.md
+  - chat-template.md
+  - ngram-model.md
+  - pointwise-mutual-information.md
+  - tf-idf.md
+  - token-frequency.md
+  - vocabulary.md
+- id: token-processing-2
+  stage: token-processing
+  stage_title: token-processing
+  stage_summary: ''
+  objective: 串联 padding-and-truncation 到 context-compression，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - padding-and-truncation-overview
+  - context-window-overview
+  - context-cropping-overview
+  - context-compression-overview
+  optional_units: []
+  articles:
+  - context-compression.md
+  - context-cropping.md
+  - context-window.md
+  - padding-and-truncation.md
+- id: sequence-models-1
+  stage: sequence-models
+  stage_title: sequence-models
+  stage_summary: ''
+  objective: 串联 sequence-to-sequence 到 encoder-decoder-architecture，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - sequence-to-sequence-overview
+  - teacher-forcing-overview
+  - encoder-decoder-architecture-overview
+  optional_units: []
+  articles:
+  - encoder-decoder-architecture.md
+  - sequence-to-sequence.md
+  - teacher-forcing.md
+- id: attention-1
+  stage: attention
+  stage_title: attention
+  stage_summary: ''
+  objective: 串联 attention-mechanism 到 cross-attention，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - attention-mechanism-overview
+  - scaled-dot-product-attention-overview
+  - multi-head-attention-overview
+  - cross-attention-overview
+  optional_units: []
+  articles:
+  - attention-mechanism.md
+- id: architecture-1
+  stage: architecture
+  stage_title: architecture
+  stage_summary: ''
+  objective: 串联 layer-normalization 到 padding-mask，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - layer-normalization-overview
+  - transformer-architecture-overview
+  - rotary-positional-embedding-overview
+  - residual-stream-overview
+  - feed-forward-network-overview
+  - language-modeling-overview
+  - causal-mask-overview
+  - padding-mask-overview
+  optional_units: []
+  articles:
+  - attention-mechanism.md
+  - feed-forward-network.md
+  - language-modeling.md
+  - layer-normalization.md
+  - residual-stream.md
+  - rotary-positional-embedding.md
+  - transformer-architecture.md
+- id: decoding-1
+  stage: decoding
+  stage_title: decoding
+  stage_summary: ''
+  objective: 串联 perplexity 到 temperature-sampling，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - perplexity-overview
+  - bigram-language-model-overview
+  - autoregressive-generation-overview
+  - last-token-logits-overview
+  - token-level-loss-overview
+  - beam-search-overview
+  - beam-search-length-penalty-overview
+  - temperature-sampling-overview
+  optional_units: []
+  articles:
+  - beam-search.md
+  - bigram-language-model.md
+  - last-token-logits.md
+  - token-level-loss.md
+- id: decoding-2
+  stage: decoding
+  stage_title: decoding
+  stage_summary: ''
+  objective: 串联 temperature-schedule 到 grammar-constrained-decoding，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - temperature-schedule-overview
+  - top-k-sampling-overview
+  - nucleus-sampling-overview
+  - grammar-constrained-decoding-overview
+  optional_units: []
+  articles:
+  - beam-search.md
+  - grammar-constrained-decoding.md
+  - temperature-schedule.md
+- id: adaptation-and-evaluation-1
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 串联 prompt-template 到 instruction-complexity-scoring，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - prompt-template-overview
+  - chain-of-thought-overview
+  - reasoning-trace-overview
+  - instruction-tuning-overview
+  - instruction-loss-masking-overview
+  - special-token-instruction-overview
+  - instruction-following-evaluation-overview
+  - instruction-complexity-scoring-overview
+  optional_units: []
+  articles:
+  - chain-of-thought.md
+  - instruction-complexity-scoring.md
+  - instruction-following-evaluation.md
+  - instruction-loss-masking.md
+  - instruction-tuning.md
+  - prompt-template.md
+  - reasoning-trace.md
+  - special-token-instruction.md
+- id: adaptation-and-evaluation-2
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 串联 instruction-constraint-checking 到 low-rank-adaptation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - instruction-constraint-checking-overview
+  - preference-dataset-overview
+  - reward-modeling-overview
+  - self-critique-loss-overview
+  - direct-preference-optimization-overview
+  - verifiable-reward-overview
+  - binary-reward-overview
+  - low-rank-adaptation-overview
+  optional_units: []
+  articles:
+  - binary-reward.md
+  - direct-preference-optimization.md
+  - instruction-constraint-checking.md
+  - low-rank-adaptation.md
+  - preference-dataset.md
+  - reward-modeling.md
+  - self-critique-loss.md
+  - verifiable-reward.md
+- id: adaptation-and-evaluation-3
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 串联 text-generation-evaluation 到 translation-evaluation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - text-generation-evaluation-overview
+  - semantic-similarity-overview
+  - wu-palmer-similarity-overview
+  - open-ended-qa-evaluation-overview
+  - corpus-qa-evaluation-overview
+  - ngram-coverage-overview
+  - rouge-score-overview
+  - translation-evaluation-overview
+  optional_units: []
+  articles:
+  - corpus-qa-evaluation.md
+  - ngram-coverage.md
+  - open-ended-qa-evaluation.md
+  - rouge-score.md
+  - semantic-similarity.md
+  - text-generation-evaluation.md
+  - translation-evaluation.md
+  - wu-palmer-similarity.md
+- id: adaptation-and-evaluation-4
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 串联 meteor-score 到 code-execution-verifier，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - meteor-score-overview
+  - rubric-based-evaluation-overview
+  - llm-as-judge-overview
+  - mmlu-evaluation-overview
+  - needle-in-a-haystack-evaluation-overview
+  - long-context-evaluation-overview
+  - context-management-overview
+  - code-execution-verifier-overview
+  optional_units: []
+  articles:
+  - code-execution-verifier.md
+  - context-management.md
+  - llm-as-judge.md
+  - long-context-evaluation.md
+  - meteor-score.md
+  - mmlu-evaluation.md
+  - needle-in-a-haystack-evaluation.md
+  - rubric-based-evaluation.md
+- id: adaptation-and-evaluation-5
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 串联 benchmark-dataset 到 document-summarization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - benchmark-dataset-overview
+  - math-benchmark-overview
+  - boxed-answer-extraction-overview
+  - answer-equivalence-checking-overview
+  - document-chunking-overview
+  - overlapping-chunks-overview
+  - text-deduplication-overview
+  - document-summarization-overview
+  optional_units: []
+  articles:
+  - answer-equivalence-checking.md
+  - benchmark-dataset.md
+  - boxed-answer-extraction.md
+  - document-chunking.md
+  - document-summarization.md
+  - math-benchmark.md
+  - overlapping-chunks.md
+  - text-deduplication.md
+- id: adaptation-and-evaluation-6
+  stage: adaptation-and-evaluation
+  stage_title: adaptation-and-evaluation
+  stage_summary: ''
+  objective: 理解 multi-document-retrieval 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - multi-document-retrieval-overview
+  optional_units: []
+  articles:
+  - multi-document-retrieval.md
+- id: serving-details-1
+  stage: serving-details
+  stage_title: serving-details
+  stage_summary: ''
+  objective: 串联 kv-cache 到 grouped-query-attention，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - kv-cache-overview
+  - prefix-cache-overview
+  - cache-hit-rate-overview
+  - prefill-decode-overview
+  - inference-latency-metrics-overview
+  - continuous-batching-overview
+  - chunked-prefill-overview
+  - grouped-query-attention-overview
+  optional_units: []
+  articles:
+  - attention-mechanism.md
+  - cache-hit-rate.md
+  - chunked-prefill.md
+  - continuous-batching.md
+  - inference-latency-metrics.md
+  - kv-cache.md
+  - prefill-decode.md
+  - prefix-cache.md
+- id: serving-details-2
+  stage: serving-details
+  stage_title: serving-details
+  stage_summary: ''
+  objective: 串联 attention-io-bottleneck 到 memory-footprint-estimation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - attention-io-bottleneck-overview
+  - flash-attention-overview
+  - speculative-decoding-overview
+  - memory-footprint-estimation-overview
+  optional_units: []
+  articles:
+  - flash-attention.md
+  - memory-footprint-estimation.md
+  - speculative-decoding.md

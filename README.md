@@ -1,4 +1,4 @@
-# Jialu Gao Research
+# JG Research Lab
 
 面向同事、同行与研究管理者的静态研究项目主页。网站把项目目标、研究线、
 实验快照、量化结果和经过明确筛选的报告组织在一起；源项目、数据与
@@ -8,19 +8,29 @@
 
 - `content/projects.yaml`：项目、研究线和子项目的公开说明；
 - `content/studies.yaml`：带研究背景、方法、证据边界和指标快照的实验结论；
+- `content/highlights.yaml`：首页指标、精选研究门槛、审计图表和淘汰结论；
 - `content/reports.yaml`：明确批准发布的报告清单，兼容历史 HTML 与新版
   Markdown 内容包；
 - `content/report-docs/<project>/<report>/`：新版报告的 `report.md` 与本地
   `images/`，构建时统一套用站点文档外壳。
+- `content/knowledge/deep-ml/`：经过校验并带逐文件 SHA-256 清单的 DeepML
+  发布快照，包含 Concept、Article、Relation、Learning Path 和自动编辑质量记录；
+- `content/knowledge/quant-knowledge/`：经过校验并带逐文件 SHA-256 清单的
+  Quant Knowledge 章节快照；
+- `content/knowledge/ontology.yaml`：统一知识图谱的 Domain、Topic、来源映射和
+  research bridge。DeepML 与 Quant Knowledge 是 source metadata，不作为一级导航。
 
 报告文件不会因为出现在工作区或 `0-report-html` 中就被自动发布。
 
 ```bash
 python3 -m pip install -e '.[test]'
 python3 scripts/validate_catalog.py
+python3 scripts/sync_knowledge.py \
+  --deepml-source /home/maomao/deep-ml/content \
+  --quant-source /home/maomao/knowledge
 python3 scripts/build_site.py --base-url / --output _preview
 python3 scripts/validate_site.py --base-url / --output _preview
-python3 -m http.server 8888 --bind 0.0.0.0 --directory _preview
+python3 -m http.server 8888 --bind 127.0.0.1 --directory _preview
 ```
 
 在容器环境中，把容器的 `8888` 端口转发到宿主机，再访问
@@ -34,8 +44,19 @@ python3 -m http.server 8888 --bind 0.0.0.0 --directory _preview
 ├── projects/<project>/
 │   ├── <track>/
 │   └── topics/<subproject>/
+├── knowledge/
+│   ├── <domain>/
+│   └── <domain>/<topic>/<node>/
 └── reports/<project>/<report>/
 ```
+
+Knowledge 是独立顶层板块，不计入研究项目与实验数量。界面导航使用英文，文章
+正文保留中文；展示公式在构建时转为静态 MathML。站点构建只读取仓内快照，
+不会在 CI 或 GitHub Pages 环境依赖相邻的 `deep-ml` 或 `knowledge` 工作区。
+公开 URL 只使用 ontology 路径；来源项目保留在节点 metadata 中。更新知识库时先在
+DeepML / Quant Knowledge 源项目完成校验，再显式执行 `sync_knowledge.py`；同步器
+只接受全部 DeepML 文章已发布且编辑阻塞队列为空的内容包，并校验 Quant Knowledge
+章节清单与哈希。
 
 更新项目说明或实验结果时，先修改 YAML 并保留指标的口径、样本和限制，
 然后重新运行目录校验、测试、构建和站点校验。只有需要公开新报告时才运行
@@ -67,11 +88,14 @@ python3 -m http.server 8888 --bind 0.0.0.0 --directory _preview
 默认只展示每条修订链的最新版，旧 URL 仍可直接访问。
 
 首页精选研究由 `content/reports.yaml` 顶层的 `featured_report` 手工指定，
-必须引用当前修订链中的公开报告；不会再根据日期或报告 front matter 自动选择。
+必须引用当前修订链中的公开报告；`content/highlights.yaml` 只能引用目录中已登记的
+study、metric 和该精选报告。首页图表数据必须来自公开报告中的明确数值，并在
+`source_note` 中标注口径；不会根据日期或报告 front matter 自动选择或推断指标。
 
 研究线需要分别登记展开后的目标、数据结构和当前结论；实验专题使用 `group`
 按研究问题组织。实验快照中的指标以紧凑文本呈现，不再为少量重复指标生成
-摘要图；需要图形证据时，应在正式研究报告中提供完整的口径、图注和上下文。
+摘要图。首页可把正式报告中已经公开、口径明确的少量数值重绘为统一的内联 SVG，
+但正式图形证据仍须在研究报告中保留完整口径、图注和上下文。
 
 Publishing is event-driven. Project directories are never watched or published
 automatically. Use the `publish-research-site` Codex skill for audits and report

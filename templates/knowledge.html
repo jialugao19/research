@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% set nav_section = "knowledge" %}
+{% block title %}Knowledge · JG Research Lab{% endblock %}
+{% block body_class %}knowledge-page knowledge-ontology-page{% endblock %}
+{% block content %}
+<header class="knowledge-hero knowledge-ontology-hero">
+  <p class="eyebrow">Knowledge Graph</p>
+  <h1>A structured knowledge system<br>for research and engineering.</h1>
+  <p class="knowledge-intro">Concepts, implementation notes, and applied quant chapters are organized by domain and topic. DeepML and Quant Knowledge remain source metadata, not the browsing model.</p>
+</header>
+
+<section class="knowledge-section" id="architecture">
+  <div class="section-heading"><p class="eyebrow">Knowledge architecture</p><h2>Browse by domain, then topic</h2></div>
+  <div class="knowledge-architecture-grid">
+    {% for domain in knowledge.ontology_domains %}
+    <a class="knowledge-domain-card" href="{{ base_url }}{{ domain.route }}">
+      <span class="nav-code">{{ "%02d"|format(domain.sequence) }}</span>
+      <h3>{{ domain.title }}</h3>
+      <p>{{ domain.summary }}</p>
+      <small>{{ domain.topics|length }} topics · {{ knowledge.nodes_for_domain(domain.id)|length }} nodes</small>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="knowledge-section" id="topics">
+  <div class="section-heading"><p class="eyebrow">Topic map</p><h2>The source layer is metadata</h2></div>
+  <div class="knowledge-topic-map">
+    {% for domain in knowledge.ontology_domains %}
+    <section>
+      <header><span>{{ "%02d"|format(domain.sequence) }}</span><h3>{{ domain.title }}</h3></header>
+      <div>
+        {% for topic in domain.topics %}<a href="{{ base_url }}{{ topic.route }}"><strong>{{ topic.title }}</strong><small>{{ knowledge.nodes_for_topic(domain.id, topic.id)|length }} nodes</small></a>{% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="knowledge-section" id="research-links">
+  <div class="section-heading"><p class="eyebrow">Research bridge</p><h2>Selected links into active research systems</h2></div>
+  <div class="article-row-list">
+    {% for link in knowledge.ontology.research_links %}
+    {% set project = catalog.project_by_id[link.project] %}
+    <a href="{{ base_url }}projects/{{ project.id }}/"><span>{{ "%02d"|format(loop.index) }}</span><div><strong>{{ link.label }}</strong><small>{{ project.title }} · {{ link.summary }}</small></div><em>Open →</em></a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

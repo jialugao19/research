@@ -1,0 +1,39 @@
+path:
+  name: MLOps Practitioner
+stages:
+- name: evaluation
+  topics:
+  - train-validation-test-split
+  - model-evaluation-metrics
+  - data-leakage
+- name: tracking
+  topics:
+  - experiment-tracking
+  - rl-experiment-configuration
+  - rl-training-diagnostics
+  - resource-dilation-scheduling
+  - checkpointing
+  - early-stopping
+  - request-logging
+  - inference-statistics
+  - quality-scoring-pipeline
+  - human-review-queue
+  - resumable-processing
+- name: data-pipeline
+  topics:
+  - etl-pipeline
+  - pipeline-dag
+  - critical-path-analysis
+- name: production
+  topics:
+  - model-serving
+  - health-check
+  - model-monitoring
+  - canary-deployment
+  - rollout-analysis
+  - data-drift
+  - gpu-resource-allocation
+  - load-balancing
+  - onnx-export
+  - model-quantization
+  - mixed-precision-training

@@ -1,0 +1,13 @@
+path:
+  name: Financial Machine Learning
+stages:
+- name: risk-foundation
+  topics:
+  - expected-value
+  - variance
+  - covariance-matrix
+  - portfolio-variance
+- name: optimization
+  topics:
+  - quadratic-programming
+  - multi-objective-optimization

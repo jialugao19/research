@@ -1,0 +1,36 @@
+path:
+  name: GPU Kernel Engineer
+stages:
+- name: tensor-basics
+  topics:
+  - arrays
+  - pytorch-tensor
+  - matrix-multiplication
+- name: cuda
+  topics:
+  - cuda-thread-hierarchy
+  - cuda-memory-hierarchy
+  - memory-coalescing
+  - arithmetic-intensity
+  - compute-bound-vs-memory-bound
+  - roofline-analysis
+  - gpu-bottleneck-analysis
+  - gpu-utilization
+  - shared-memory-tiling
+  - warp-divergence
+  - cuda-occupancy
+  - atomic-operations
+  - parallel-reduction
+  - race-condition
+  - concurrency-control
+- name: kernel-tools
+  topics:
+  - triton-kernel
+  - masked-load-store
+  - kernel-fusion
+  - tinygrad-computation-graph
+  - tinygrad-layer
+  - tinygrad-training-loop
+  - tinygrad-conv2d
+  - tinygrad-batchnorm
+  - lazy-evaluation

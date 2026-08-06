@@ -1,0 +1,102 @@
+path:
+  name: GPU Kernel Engineer
+modules:
+- id: tensor-basics-1
+  stage: tensor-basics
+  stage_title: tensor-basics
+  stage_summary: ''
+  objective: 串联 arrays 到 matrix-multiplication，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - arrays-overview
+  - pytorch-tensor-overview
+  - matrix-multiplication-overview
+  optional_units: []
+  articles:
+  - arrays.md
+  - linear-algebra.md
+  - pytorch-tensor.md
+- id: cuda-1
+  stage: cuda
+  stage_title: cuda
+  stage_summary: ''
+  objective: 串联 cuda-thread-hierarchy 到 gpu-utilization，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - cuda-thread-hierarchy-overview
+  - cuda-memory-hierarchy-overview
+  - memory-coalescing-overview
+  - arithmetic-intensity-overview
+  - compute-bound-vs-memory-bound-overview
+  - roofline-analysis-overview
+  - gpu-bottleneck-analysis-overview
+  - gpu-utilization-overview
+  optional_units: []
+  articles:
+  - arithmetic-intensity.md
+  - compute-bound-vs-memory-bound.md
+  - cuda-memory-hierarchy.md
+  - cuda-thread-hierarchy.md
+  - gpu-bottleneck-analysis.md
+  - gpu-utilization.md
+  - memory-coalescing.md
+  - roofline-analysis.md
+- id: cuda-2
+  stage: cuda
+  stage_title: cuda
+  stage_summary: ''
+  objective: 串联 shared-memory-tiling 到 concurrency-control，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - shared-memory-tiling-overview
+  - warp-divergence-overview
+  - cuda-occupancy-overview
+  - atomic-operations-overview
+  - parallel-reduction-overview
+  - race-condition-overview
+  - concurrency-control-overview
+  optional_units: []
+  articles:
+  - atomic-operations.md
+  - concurrency-control.md
+  - cuda-occupancy.md
+  - parallel-reduction.md
+  - race-condition.md
+  - shared-memory-tiling.md
+  - warp-divergence.md
+- id: kernel-tools-1
+  stage: kernel-tools
+  stage_title: kernel-tools
+  stage_summary: ''
+  objective: 串联 triton-kernel 到 tinygrad-batchnorm，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - triton-kernel-overview
+  - masked-load-store-overview
+  - kernel-fusion-overview
+  - tinygrad-computation-graph-overview
+  - tinygrad-layer-overview
+  - tinygrad-training-loop-overview
+  - tinygrad-conv2d-overview
+  - tinygrad-batchnorm-overview
+  optional_units: []
+  articles:
+  - kernel-fusion.md
+  - masked-load-store.md
+  - tinygrad-batchnorm.md
+  - tinygrad-computation-graph.md
+  - tinygrad-conv2d.md
+  - tinygrad-layer.md
+  - tinygrad-training-loop.md
+  - triton-kernel.md
+- id: kernel-tools-2
+  stage: kernel-tools
+  stage_title: kernel-tools
+  stage_summary: ''
+  objective: 理解 lazy-evaluation 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - lazy-evaluation-overview
+  optional_units: []
+  articles:
+  - lazy-evaluation.md

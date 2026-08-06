@@ -1,0 +1,54 @@
+path:
+  name: Algorithmic Thinking
+stages:
+- name: complexity
+  topics:
+  - time-complexity
+  - arrays
+  - recursion
+- name: data-structures
+  topics:
+  - hash-table
+  - key-value-store
+  - in-memory-database
+  - linked-list
+  - lru-cache
+  - stack-and-queue
+  - heap-priority-queue
+  - running-median
+  - binary-tree
+  - trie
+  - union-find
+  - order-book
+  - ledger
+- name: array-patterns
+  topics:
+  - prefix-sum
+  - sliding-window
+  - two-pointers
+- name: core-algorithms
+  topics:
+  - sorting-algorithms
+  - binary-search
+  - duplicate-detection
+  - set-frequency-counting
+  - linked-list-cycle
+  - graph-traversal
+  - connected-components
+  - grid-path-search
+  - robot-grid-simulation
+  - reservoir-sampling
+  - topological-sort
+  - shortest-path
+  - minimum-spanning-tree
+  - dynamic-programming
+  - edit-distance
+  - fibonacci-sequence
+  - path-normalization
+  - valid-parentheses
+  - expression-evaluation
+  - palindrome-checking
+  - merge-intervals
+  - minimax-algorithm
+  - alpha-beta-pruning
+  - game-move-resolution

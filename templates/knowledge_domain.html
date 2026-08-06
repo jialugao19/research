@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% set nav_section = "knowledge" %}
+{% block title %}{{ domain.title }} · Knowledge{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page{% endblock %}
+{% block content %}
+<header class="catalog-hero knowledge-domain-hero">
+  <nav class="knowledge-breadcrumb" aria-label="Knowledge hierarchy"><a href="{{ base_url }}knowledge/">Knowledge</a><span>/</span><strong>{{ domain.title }}</strong></nav>
+  <p class="eyebrow">Domain {{ "%02d"|format(domain.sequence) }}</p>
+  <h1>{{ domain.title }}</h1>
+  <p>{{ domain.summary }}</p>
+</header>
+
+<section class="knowledge-section">
+  <div class="section-heading"><p class="eyebrow">Topics</p><h2>{{ domain.topics|length }} organized topic areas</h2></div>
+  <div class="knowledge-topic-map">
+    {% for topic in domain.topics %}
+    <section>
+      <header><span>{{ "%02d.%02d"|format(domain.sequence, topic.sequence) }}</span><h3>{{ topic.title }}</h3></header>
+      <p>{{ topic.summary }}</p>
+      <div><a href="{{ base_url }}{{ topic.route }}"><strong>Open topic</strong><small>{{ knowledge.nodes_for_topic(domain.id, topic.id)|length }} nodes</small></a></div>
+    </section>
+    {% endfor %}
+  </div>
+</section>
+
+{% if research_links %}
+<section class="knowledge-section">
+  <div class="section-heading"><p class="eyebrow">Research bridge</p><h2>Applied research connections</h2></div>
+  <div class="article-row-list">
+    {% for link in research_links %}{% set project = catalog.project_by_id[link.project] %}<a href="{{ base_url }}projects/{{ project.id }}/"><span>{{ "%02d"|format(loop.index) }}</span><div><strong>{{ link.label }}</strong><small>{{ project.title }} · {{ link.summary }}</small></div><em>Open →</em></a>{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}

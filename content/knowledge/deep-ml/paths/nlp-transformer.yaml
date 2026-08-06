@@ -1,0 +1,117 @@
+path:
+  name: NLP and Transformer
+stages:
+- name: representation
+  topics:
+  - tokenization
+  - word-embeddings
+  - positional-encoding
+  - recurrent-neural-network
+  - lstm-network
+  - gru-network
+- name: token-processing
+  topics:
+  - vocabulary
+  - byte-pair-encoding
+  - token-frequency
+  - ngram-model
+  - pointwise-mutual-information
+  - tf-idf
+  - bm25-ranking
+  - chat-template
+  - padding-and-truncation
+  - context-window
+  - context-cropping
+  - context-compression
+- name: sequence-models
+  topics:
+  - sequence-to-sequence
+  - teacher-forcing
+  - encoder-decoder-architecture
+- name: attention
+  topics:
+  - attention-mechanism
+  - scaled-dot-product-attention
+  - multi-head-attention
+  - cross-attention
+- name: architecture
+  topics:
+  - layer-normalization
+  - transformer-architecture
+  - rotary-positional-embedding
+  - residual-stream
+  - feed-forward-network
+  - language-modeling
+  - causal-mask
+  - padding-mask
+- name: decoding
+  topics:
+  - perplexity
+  - bigram-language-model
+  - autoregressive-generation
+  - last-token-logits
+  - token-level-loss
+  - beam-search
+  - beam-search-length-penalty
+  - temperature-sampling
+  - temperature-schedule
+  - top-k-sampling
+  - nucleus-sampling
+  - grammar-constrained-decoding
+- name: adaptation-and-evaluation
+  topics:
+  - prompt-template
+  - chain-of-thought
+  - reasoning-trace
+  - instruction-tuning
+  - instruction-loss-masking
+  - special-token-instruction
+  - instruction-following-evaluation
+  - instruction-complexity-scoring
+  - instruction-constraint-checking
+  - preference-dataset
+  - reward-modeling
+  - self-critique-loss
+  - direct-preference-optimization
+  - verifiable-reward
+  - binary-reward
+  - low-rank-adaptation
+  - text-generation-evaluation
+  - semantic-similarity
+  - wu-palmer-similarity
+  - open-ended-qa-evaluation
+  - corpus-qa-evaluation
+  - ngram-coverage
+  - rouge-score
+  - translation-evaluation
+  - meteor-score
+  - rubric-based-evaluation
+  - llm-as-judge
+  - mmlu-evaluation
+  - needle-in-a-haystack-evaluation
+  - long-context-evaluation
+  - context-management
+  - code-execution-verifier
+  - benchmark-dataset
+  - math-benchmark
+  - boxed-answer-extraction
+  - answer-equivalence-checking
+  - document-chunking
+  - overlapping-chunks
+  - text-deduplication
+  - document-summarization
+  - multi-document-retrieval
+- name: serving-details
+  topics:
+  - kv-cache
+  - prefix-cache
+  - cache-hit-rate
+  - prefill-decode
+  - inference-latency-metrics
+  - continuous-batching
+  - chunked-prefill
+  - grouped-query-attention
+  - attention-io-bottleneck
+  - flash-attention
+  - speculative-decoding
+  - memory-footprint-estimation

@@ -48,19 +48,47 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
     """Validate public copies, expected routes, local links, and path redaction."""
     base_url = normalize_base_url(base_url)
     validate_public_reports(catalog, site_root / "public" / "reports")
-    expected = [output_root / "index.html", output_root / "reports" / "index.html", output_root / "catalog.json"]
-    expected.extend(output_root / "projects" / project.id / "index.html" for project in catalog.projects)
+    expected = [
+        output_root / "index.html",
+        output_root / "reports" / "index.html",
+        output_root / "catalog.json",
+        output_root / "knowledge.json",
+        output_root / "knowledge" / "index.html",
+    ]
+    expected.extend(output_root / "projects" / project.id / "index.html" for project in catalog.research_projects)
     expected.extend(
         output_root / "projects" / project.id / track.id / "index.html"
-        for project in catalog.projects
+        for project in catalog.research_projects
         for track in project.tracks
     )
     expected.extend(
         output_root / "projects" / project.id / subproject.id / "index.html"
-        for project in catalog.projects
+        for project in catalog.research_projects
         for subproject in project.subprojects
     )
     expected.extend(output_root / report.route / "index.html" for report in catalog.reports)
+    if catalog.knowledge is None:
+        raise CatalogError("catalog is missing knowledge data")
+    expected.extend(output_root / domain.route / "index.html" for domain in catalog.knowledge.ontology_domains)
+    expected.extend(
+        output_root / topic.route / "index.html"
+        for domain in catalog.knowledge.ontology_domains
+        for topic in domain.topics
+    )
+    expected.extend(output_root / node.route / "index.html" for node in catalog.knowledge.nodes)
+    forbidden_routes = [
+        output_root / "knowledge" / "deep-ml" / "index.html",
+        output_root / "knowledge" / "quant" / "index.html",
+        output_root / "knowledge" / "concepts" / "index.html",
+        output_root / "knowledge" / "articles" / "index.html",
+        output_root / "knowledge" / "paths" / "index.html",
+        output_root / "knowledge" / "chapters" / "index.html",
+        output_root / "projects" / "deep-ml" / "index.html",
+        output_root / "projects" / "quant-knowledge" / "index.html",
+    ]
+    unexpected = [path for path in forbidden_routes if path.exists()]
+    if unexpected:
+        raise CatalogError("obsolete knowledge routes were built: " + ", ".join(str(path) for path in unexpected[:5]))
     missing = [path for path in expected if not path.is_file()]
     if missing:
         raise CatalogError("missing built site files: " + ", ".join(str(path) for path in missing[:5]))
@@ -69,10 +97,11 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
         if report.is_markdown:
             validate_rendered_markdown_report(report, (output_root / report.route / "index.html").read_bytes())
 
-    catalog_data = (output_root / "catalog.json").read_bytes()
-    for forbidden in FORBIDDEN_PUBLIC_BYTES:
-        if forbidden in catalog_data:
-            raise CatalogError(f"catalog.json contains forbidden public token {forbidden!r}")
+    for data_name in ("catalog.json", "knowledge.json"):
+        public_data = (output_root / data_name).read_bytes()
+        for forbidden in FORBIDDEN_PUBLIC_BYTES:
+            if forbidden in public_data:
+                raise CatalogError(f"{data_name} contains forbidden public token {forbidden!r}")
 
     link_errors: list[str] = []
     for html_path in output_root.rglob("*.html"):

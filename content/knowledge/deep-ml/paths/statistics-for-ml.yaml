@@ -1,0 +1,55 @@
+path:
+  name: Statistics for ML
+stages:
+- name: probability
+  topics:
+  - probability
+  - probability-normalization
+  - expected-value
+  - variance
+  - conditional-probability
+  - bayes-theorem
+  - bayesian-inference
+  - maximum-a-posteriori-estimation
+  - gaussian-distribution
+  - binomial-distribution
+  - hypergeometric-distribution
+  - beta-distribution
+  - beta-binomial-model
+  - exponential-distribution
+  - poisson-distribution
+  - markov-chain
+  - negative-log-likelihood
+  - uncertainty-estimation
+- name: sampling
+  topics:
+  - sampling-distribution
+  - random-subset-sampling
+  - rejection-sampling
+  - bootstrap-sampling
+  - confidence-interval
+  - hypothesis-testing
+- name: statistics
+  topics:
+  - descriptive-statistics
+  - standard-deviation
+  - bessel-correction
+  - histogram
+  - probability-density-function
+  - cumulative-distribution-function
+  - bhattacharyya-distance
+  - r-squared
+  - phi-coefficient
+  - chi-square-test
+  - law-of-large-numbers
+- name: information
+  topics:
+  - entropy
+  - mutual-information
+  - pointwise-mutual-information
+  - kl-divergence
+  - jensen-shannon-divergence
+  - maximum-likelihood-estimation
+  - variational-inference
+  - evidence-lower-bound
+  - bic-aic

@@ -1,0 +1,48 @@
+path:
+  name: Machine Learning Foundation
+stages:
+- name: foundation
+  topics:
+  - linear-algebra
+  - probability
+  - probability-normalization
+  - matrix-multiplication
+- name: statistics
+  topics:
+  - descriptive-statistics
+  - expected-value
+  - variance
+  - covariance-matrix
+  - standard-deviation
+  - correlation-coefficient
+  - normalization
+  - maximum-a-posteriori-estimation
+  - entropy
+  - mutual-information
+  - kl-divergence
+  - jensen-shannon-divergence
+  - bootstrap-sampling
+  - law-of-large-numbers
+  - bic-aic
+- name: evaluation
+  topics:
+  - train-validation-test-split
+  - data-leakage
+  - model-evaluation-metrics
+  - confusion-matrix
+  - accuracy-score
+  - precision-recall
+  - f1-score
+  - dice-score
+  - roc-auc
+  - r-squared
+  - model-calibration
+  - threshold-selection
+- name: optimization
+  topics:
+  - gradient-descent
+  - mini-batch-training
+  - stochastic-gradient-descent
+  - regularization
+  - early-stopping
+  - adam-optimizer

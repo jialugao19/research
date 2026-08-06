@@ -88,7 +88,7 @@
     anchor.className = "heading-anchor";
     anchor.href = `#${anchorTarget.id}`;
     anchor.textContent = "#";
-    anchor.setAttribute("aria-label", `打开“${heading.textContent.trim()}”章节锚点`);
+    anchor.setAttribute("aria-label", `Open section anchor for “${heading.textContent.trim()}”`);
     heading.append(anchor);
   }
 
@@ -97,7 +97,7 @@
     const lightbox = document.createElement("dialog");
     lightbox.className = "image-lightbox";
     lightbox.innerHTML =
-      '<button type="button" class="lightbox-close" aria-label="关闭大图">关闭</button>' +
+      '<button type="button" class="lightbox-close" aria-label="Close enlarged image">CLOSE</button>' +
       '<img alt=""><p class="lightbox-caption"></p>';
     document.body.append(lightbox);
     const enlarged = lightbox.querySelector("img");
@@ -124,7 +124,7 @@
     for (const image of reportImages) {
       image.tabIndex = 0;
       image.setAttribute("role", "button");
-      image.setAttribute("aria-label", `${image.alt}，点击查看大图`);
+      image.setAttribute("aria-label", `${image.alt}; open enlarged image`);
       image.addEventListener("click", () => open(image));
       image.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
@@ -155,5 +155,33 @@
     };
     search.addEventListener("input", filter);
     project.addEventListener("change", filter);
+  }
+
+  const knowledgeSearch = document.querySelector("[data-knowledge-search]");
+  const knowledgeDomain = document.querySelector("[data-knowledge-domain]");
+  const knowledgeItems = [...document.querySelectorAll("[data-knowledge-item]")];
+  const knowledgeCount = document.querySelector("[data-knowledge-count]");
+  const knowledgeEmpty = document.querySelector("[data-knowledge-empty]");
+  if (knowledgeItems.length && (knowledgeSearch || knowledgeDomain)) {
+    const requestedDomain = new URLSearchParams(window.location.search).get("domain") || "";
+    if (knowledgeDomain && [...knowledgeDomain.options].some((option) => option.value === requestedDomain)) {
+      knowledgeDomain.value = requestedDomain;
+    }
+    const filterKnowledge = () => {
+      const query = (knowledgeSearch?.value || "").trim().toLocaleLowerCase();
+      const domain = knowledgeDomain?.value || "";
+      let visible = 0;
+      for (const item of knowledgeItems) {
+        const haystack = (item.dataset.search || "").toLocaleLowerCase();
+        const show = (!query || haystack.includes(query)) && (!domain || item.dataset.domain === domain);
+        item.hidden = !show;
+        if (show) visible += 1;
+      }
+      if (knowledgeCount) knowledgeCount.textContent = String(visible);
+      if (knowledgeEmpty) knowledgeEmpty.hidden = visible !== 0;
+    };
+    knowledgeSearch?.addEventListener("input", filterKnowledge);
+    knowledgeDomain?.addEventListener("change", filterKnowledge);
+    filterKnowledge();
   }
 })();

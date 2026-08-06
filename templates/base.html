@@ -1,40 +1,41 @@
 {% from "_navigation.html" import sidebar %}
 <!doctype html>
-<html lang="zh-CN">
+<html lang="{% block html_lang %}en{% endblock %}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Jialu Gao 的研究项目、关键指标与静态研究报告">
-  <meta name="theme-color" content="#f7f8f5">
-  <title>{% block title %}Jialu Gao Research{% endblock %}</title>
+  <meta name="description" content="JG Research Lab: systematic alpha research, model evaluation, market data, and execution evidence.">
+  <meta name="theme-color" content="#fafaf8">
+  <title>{% block title %}JG Research Lab{% endblock %}</title>
   <link rel="stylesheet" href="{{ base_url }}assets/site.css">
 </head>
 <body class="{% block body_class %}{% endblock %}">
-  <a class="skip-link" href="#main-content">跳到正文</a>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header" data-auto-hide>
     <a class="brand" href="{{ base_url }}">
       <span class="brand-mark">JG</span>
-      <span class="brand-copy"><strong>Jialu Gao</strong><small>Research index</small></span>
+      <span class="brand-copy"><strong>JG Research Lab</strong><small>Systematic alpha</small></span>
     </a>
-    <nav class="top-nav" aria-label="主导航">
-      <a{% if nav_section|default('projects') == 'projects' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}">研究</a>
-      <a{% if nav_section|default('projects') == 'reports' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}reports/">报告</a>
+    <nav class="top-nav" aria-label="Primary navigation">
+      <a{% if nav_section|default('projects') == 'projects' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}">Research</a>
+      <a{% if nav_section|default('projects') == 'knowledge' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}knowledge/">Knowledge</a>
+      <a{% if nav_section|default('projects') == 'reports' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}reports/">Publications</a>
       <a href="https://github.com/jialugao19">GitHub <span aria-hidden="true">↗</span></a>
     </nav>
   </header>
   <details class="mobile-navigation">
-    <summary>研究目录</summary>
-    {{ sidebar(catalog, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects')) }}
+    <summary>Research index</summary>
+    {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none)) }}
   </details>
   <div class="doc-layout">
-    <aside class="doc-sidebar">{{ sidebar(catalog, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects')) }}</aside>
+    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none)) }}</aside>
     <main id="main-content" class="doc-main">
       {% block content %}{% endblock %}
       <footer class="site-footer">
-        <p><span>Jialu Gao · Research index</span><span>数据更新 {{ site_updated }} · <a href="https://github.com/jialugao19">GitHub</a></span></p>
+        <p><span>JG Research Lab · Systematic alpha research</span><span>Evidence updated {{ site_updated }} · <a href="https://github.com/jialugao19">GitHub</a></span></p>
       </footer>
     </main>
-    <aside class="doc-toc{% block toc_class %} doc-toc-empty{% endblock %}" aria-label="本页目录">{% block toc %}{% endblock %}</aside>
+    <aside class="doc-toc{% block toc_class %} doc-toc-empty{% endblock %}" aria-label="On this page">{% block toc %}{% endblock %}</aside>
   </div>
   <script src="{{ base_url }}assets/site.js" defer></script>
 </body>

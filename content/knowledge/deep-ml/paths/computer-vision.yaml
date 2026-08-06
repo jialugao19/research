@@ -1,0 +1,48 @@
+path:
+  name: Computer Vision
+stages:
+- name: cnn-basics
+  topics:
+  - convolution
+  - padding-and-stride
+  - pooling
+  - convolutional-neural-network
+- name: training
+  topics:
+  - image-augmentation
+  - image-flip
+  - bilinear-resizing
+  - image-brightness-adjustment
+  - image-corruption
+  - rgb-grayscale-conversion
+  - batch-normalization
+  - instance-normalization
+  - group-normalization
+  - residual-connections
+  - convolution-backward
+  - max-pooling-backward
+- name: tasks
+  topics:
+  - object-detection
+  - semantic-segmentation
+  - optical-flow
+  - kinematic-bicycle-model
+  - image-reconstruction
+  - video-chunking
+  - video-frame-sampling
+  - frame-aware-processing
+  - video-latent-memory-estimation
+  - patchification
+  - patch-embedding
+  - vision-transformer
+  - visual-resolution
+  - clip-model
+  - vision-language-model
+- name: evaluation
+  topics:
+  - psnr-ssim
+  - perceptual-distance
+  - pose-estimation-accuracy
+  - frechet-inception-distance
+  - frame-rate
+  - video-quality-metrics

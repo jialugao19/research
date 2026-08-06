@@ -1,0 +1,371 @@
+path:
+  name: Classical Machine Learning
+modules:
+- id: linear-models-1
+  stage: linear-models
+  stage_title: linear-models
+  stage_summary: ''
+  objective: 串联 supervised-learning 到 multinomial-logistic-regression，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - supervised-learning-overview
+  - linear-regression-overview
+  - mean-squared-error-overview
+  - negative-log-likelihood-overview
+  - heteroscedastic-regression-overview
+  - polynomial-features-overview
+  - logistic-regression-overview
+  - multinomial-logistic-regression-overview
+  optional_units: []
+  articles:
+  - heteroscedastic-regression.md
+  - linear-regression.md
+  - logistic-regression.md
+  - mean-squared-error.md
+  - multinomial-logistic-regression.md
+  - negative-log-likelihood.md
+  - polynomial-features.md
+  - supervised-learning.md
+- id: linear-models-2
+  stage: linear-models
+  stage_title: linear-models
+  stage_summary: ''
+  objective: 串联 linear-discriminant-analysis 到 maximum-likelihood-estimation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - linear-discriminant-analysis-overview
+  - quadratic-discriminant-analysis-overview
+  - maximum-likelihood-estimation-overview
+  optional_units: []
+  articles:
+  - linear-discriminant-analysis.md
+  - maximum-likelihood-estimation.md
+  - quadratic-discriminant-analysis.md
+- id: regularized-models-1
+  stage: regularized-models
+  stage_title: regularized-models
+  stage_summary: ''
+  objective: 串联 regularization 到 elastic-net，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - regularization-overview
+  - ridge-regression-overview
+  - lasso-regression-overview
+  - elastic-net-overview
+  optional_units: []
+  articles:
+  - elastic-net.md
+  - lasso-regression.md
+  - regularization.md
+  - ridge-regression.md
+- id: losses-1
+  stage: losses
+  stage_title: losses
+  stage_summary: ''
+  objective: 串联 mae-loss 到 label-smoothing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - mae-loss-overview
+  - huber-loss-overview
+  - binary-cross-entropy-overview
+  - focal-loss-overview
+  - triplet-loss-overview
+  - class-imbalance-overview
+  - label-smoothing-overview
+  optional_units: []
+  articles:
+  - binary-cross-entropy.md
+  - class-imbalance.md
+  - focal-loss.md
+  - huber-loss.md
+  - label-smoothing.md
+  - mae-loss.md
+  - triplet-loss.md
+- id: classification-1
+  stage: classification
+  stage_title: classification
+  stage_summary: ''
+  objective: 串联 classifier 到 dice-score，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - classifier-overview
+  - binary-classification-overview
+  - multiclass-classification-overview
+  - multilabel-classification-overview
+  - accuracy-score-overview
+  - precision-recall-overview
+  - f1-score-overview
+  - dice-score-overview
+  optional_units: []
+  articles:
+  - binary-classification.md
+  - classifier.md
+  - dice-score.md
+  - model-evaluation-metrics.md
+  - multiclass-classification.md
+  - multilabel-classification.md
+- id: classification-2
+  stage: classification
+  stage_title: classification
+  stage_summary: ''
+  objective: 串联 model-calibration 到 ranking-metrics，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - model-calibration-overview
+  - threshold-selection-overview
+  - ranking-metrics-overview
+  optional_units: []
+  articles:
+  - model-evaluation-metrics.md
+  - ranking-metrics.md
+- id: neighbors-and-clusters-1
+  stage: neighbors-and-clusters
+  stage_title: neighbors-and-clusters
+  stage_summary: ''
+  objective: 串联 distance-metrics 到 locally-linear-embedding，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - distance-metrics-overview
+  - knn-classification-overview
+  - k-means-clustering-overview
+  - mini-batch-kmeans-overview
+  - kmeans-plus-plus-overview
+  - elbow-method-overview
+  - hierarchical-clustering-overview
+  - locally-linear-embedding-overview
+  optional_units: []
+  articles:
+  - distance-metrics.md
+  - k-means-clustering.md
+  - knn-classification.md
+  - locally-linear-embedding.md
+- id: neighbors-and-clusters-2
+  stage: neighbors-and-clusters
+  stage_title: neighbors-and-clusters
+  stage_summary: ''
+  objective: 串联 isomap 到 calinski-harabasz-index，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - isomap-overview
+  - spectral-clustering-overview
+  - birch-clustering-overview
+  - affinity-propagation-overview
+  - dbscan-clustering-overview
+  - clustering-evaluation-overview
+  - silhouette-score-overview
+  - calinski-harabasz-index-overview
+  optional_units: []
+  articles:
+  - affinity-propagation.md
+  - birch-clustering.md
+  - isomap.md
+  - k-means-clustering.md
+  - spectral-clustering.md
+- id: neighbors-and-clusters-3
+  stage: neighbors-and-clusters
+  stage_title: neighbors-and-clusters
+  stage_summary: ''
+  objective: 串联 davies-bouldin-index 到 principal-component-analysis，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - davies-bouldin-index-overview
+  - adjusted-rand-index-overview
+  - normalized-mutual-information-overview
+  - principal-component-analysis-overview
+  optional_units: []
+  articles:
+  - k-means-clustering.md
+  - linear-algebra.md
+- id: tree-models-1
+  stage: tree-models
+  stage_title: tree-models
+  stage_summary: ''
+  objective: 串联 decision-tree 到 gradient-boosting，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - decision-tree-overview
+  - gini-impurity-overview
+  - information-gain-overview
+  - random-forest-overview
+  - extra-trees-overview
+  - gradient-boosting-overview
+  optional_units: []
+  articles:
+  - decision-tree.md
+  - extra-trees.md
+  - gini-impurity.md
+  - gradient-boosting.md
+  - information-gain.md
+  - random-forest.md
+- id: other-baselines-1
+  stage: other-baselines
+  stage_title: other-baselines
+  stage_summary: ''
+  objective: 串联 support-vector-machine 到 adaboost，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - support-vector-machine-overview
+  - kernel-method-overview
+  - radial-basis-function-overview
+  - naive-bayes-overview
+  - voting-classifier-overview
+  - bagging-ensemble-overview
+  - random-patches-ensemble-overview
+  - adaboost-overview
+  optional_units: []
+  articles:
+  - adaboost.md
+  - bagging-ensemble.md
+  - kernel-method.md
+  - naive-bayes.md
+  - radial-basis-function.md
+  - random-patches-ensemble.md
+  - support-vector-machine.md
+  - voting-classifier.md
+- id: other-baselines-2
+  stage: other-baselines
+  stage_title: other-baselines
+  stage_summary: ''
+  objective: 串联 out-of-bag-estimate 到 local-outlier-factor，形成一个可执行的阶段性学习块。
+  estimated_minutes: 125
+  required_units:
+  - out-of-bag-estimate-overview
+  - dummy-regressor-overview
+  - bias-variance-tradeoff-overview
+  - isolation-forest-overview
+  - local-outlier-factor-overview
+  optional_units: []
+  articles:
+  - bias-variance-tradeoff.md
+  - dummy-regressor.md
+  - isolation-forest.md
+  - local-outlier-factor.md
+  - out-of-bag-estimate.md
+- id: selection-and-diagnosis-1
+  stage: selection-and-diagnosis
+  stage_title: selection-and-diagnosis
+  stage_summary: ''
+  objective: 串联 cross-validation 到 generalization-gap-diagnosis，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - cross-validation-overview
+  - grid-search-overview
+  - random-search-overview
+  - hyperparameter-tuning-overview
+  - dataset-shuffling-overview
+  - random-subset-sampling-overview
+  - learning-curve-overview
+  - generalization-gap-diagnosis-overview
+  optional_units: []
+  articles:
+  - cross-validation.md
+  - dataset-shuffling.md
+  - generalization-gap-diagnosis.md
+  - grid-search.md
+  - hyperparameter-tuning.md
+  - learning-curve.md
+  - random-search.md
+  - random-subset-sampling.md
+- id: selection-and-diagnosis-2
+  stage: selection-and-diagnosis
+  stage_title: selection-and-diagnosis
+  stage_summary: ''
+  objective: 串联 feature-engineering 到 feature-selection，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - feature-engineering-overview
+  - column-transformer-overview
+  - feature-hashing-overview
+  - expert-feature-fusion-overview
+  - feature-space-overview
+  - feature-receptive-field-overview
+  - sparse-distributed-memory-overview
+  - feature-selection-overview
+  optional_units: []
+  articles:
+  - column-transformer.md
+  - expert-feature-fusion.md
+  - feature-engineering.md
+  - feature-hashing.md
+  - feature-receptive-field.md
+  - feature-selection.md
+  - feature-space.md
+  - sparse-distributed-memory.md
+- id: selection-and-diagnosis-3
+  stage: selection-and-diagnosis
+  stage_title: selection-and-diagnosis
+  stage_summary: ''
+  objective: 串联 feature-importance 到 domain-adaptation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - feature-importance-overview
+  - shap-values-overview
+  - random-projection-overview
+  - random-fourier-features-overview
+  - path-patching-overview
+  - linear-probing-overview
+  - transfer-learning-overview
+  - domain-adaptation-overview
+  optional_units: []
+  articles:
+  - domain-adaptation.md
+  - feature-importance.md
+  - linear-probing.md
+  - path-patching.md
+  - random-fourier-features.md
+  - random-projection.md
+  - shap-values.md
+  - transfer-learning.md
+- id: patterns-and-representation-1
+  stage: patterns-and-representation
+  stage_title: patterns-and-representation
+  stage_summary: ''
+  objective: 串联 frequent-itemset-mining 到 superposition-feature-reconstruction，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - frequent-itemset-mining-overview
+  - association-rule-mining-overview
+  - hypervector-overview
+  - superposition-feature-reconstruction-overview
+  optional_units: []
+  articles:
+  - association-rule-mining.md
+  - frequent-itemset-mining.md
+  - hypervector.md
+  - superposition-feature-reconstruction.md
+- id: special-settings-1
+  stage: special-settings
+  stage_title: special-settings
+  stage_summary: ''
+  objective: 串联 synthetic-dataset-generation 到 pairwise-ranking，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - synthetic-dataset-generation-overview
+  - benchmark-dataset-overview
+  - time-series-forecasting-overview
+  - probabilistic-regression-overview
+  - anomaly-detection-overview
+  - semi-supervised-learning-overview
+  - bradley-terry-model-overview
+  - pairwise-ranking-overview
+  optional_units: []
+  articles:
+  - anomaly-detection.md
+  - benchmark-dataset.md
+  - bradley-terry-model.md
+  - pairwise-ranking.md
+  - probabilistic-regression.md
+  - semi-supervised-learning.md
+  - synthetic-dataset-generation.md
+  - time-series-forecasting.md
+- id: special-settings-2
+  stage: special-settings
+  stage_title: special-settings
+  stage_summary: ''
+  objective: 理解 elo-rating 的核心概念、使用场景和常见误区。
+  estimated_minutes: 30
+  required_units:
+  - elo-rating-overview
+  optional_units: []
+  articles:
+  - elo-rating.md

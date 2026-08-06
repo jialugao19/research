@@ -1,0 +1,58 @@
+path:
+  name: Inference Systems
+stages:
+- name: service-basics
+  topics:
+  - model-serving
+  - latency-throughput
+  - real-time-inference
+  - batch-inference
+  - weighted-batching
+  - token-bucket-rate-limiter
+  - resumable-processing
+- name: gpu-serving
+  topics:
+  - dynamic-batching
+  - continuous-batching
+  - chunked-prefill
+  - model-quantization
+  - numeric-precision-formats
+  - mixed-precision-training
+  - memory-footprint-estimation
+  - memory-fragmentation
+  - arithmetic-intensity
+  - compute-bound-vs-memory-bound
+  - roofline-analysis
+  - gpu-bottleneck-analysis
+  - gpu-utilization
+  - model-flops-utilization
+  - streaming-inference
+  - kv-cache
+  - prefix-cache
+  - prefill-decode
+  - inference-latency-metrics
+  - attention-io-bottleneck
+  - flash-attention
+  - communication-overhead
+  - multi-gpu-inference
+  - gpu-resource-allocation
+  - mig-partitioning
+  - zero-copy-data-loading
+  - copy-on-write-memory
+  - data-parallelism
+  - tensor-parallelism
+  - pipeline-parallelism
+  - expert-parallelism
+  - grouped-query-attention
+  - speculative-decoding
+  - grammar-constrained-decoding
+- name: operations
+  topics:
+  - request-logging
+  - inference-statistics
+  - health-check
+  - model-monitoring
+  - rollout-analysis
+  - data-drift
+  - experiment-tracking
+  - checkpointing

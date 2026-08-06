@@ -1,0 +1,7347 @@
+concepts:
+- id: linear-algebra
+  name: Linear Algebra
+  domain: mathematics
+  level: foundation
+  definition: 研究向量、矩阵、线性变换和线性方程组的数学基础。
+  aliases: []
+  status: published
+  confidence: 0.98
+- id: probability
+  name: Probability
+  domain: mathematics
+  level: foundation
+  definition: 描述随机事件、随机变量和分布规律的数学语言。
+  aliases: []
+  status: published
+  confidence: 0.98
+- id: matrix-multiplication
+  name: Matrix Multiplication
+  domain: linear_algebra
+  level: beginner
+  definition: 把一个矩阵的行与另一个矩阵的列配对求和，得到新矩阵的运算。
+  aliases:
+  - matmul
+  - multiply matrices
+  - matrix times matrix
+  status: published
+  confidence: 0.94
+- id: covariance-matrix
+  name: Covariance Matrix
+  domain: statistics
+  level: beginner
+  definition: 用矩阵形式记录多个变量之间共同变化方向和强度的统计量。
+  aliases:
+  - covariance
+  status: published
+  confidence: 0.94
+- id: gradient-descent
+  name: Gradient Descent
+  domain: machine_learning
+  level: beginner
+  definition: 沿损失函数下降最快的局部方向，逐步更新参数的优化方法。
+  aliases:
+  - GD
+  status: published
+  confidence: 0.96
+- id: stochastic-gradient-descent
+  name: Stochastic Gradient Descent
+  domain: machine_learning
+  level: beginner
+  definition: 用单个样本或小批量样本估计梯度，并反复更新参数的训练方法。
+  aliases:
+  - SGD
+  status: published
+  confidence: 0.94
+- id: mini-batch-training
+  name: Mini-Batch Training
+  domain: deep_learning
+  level: beginner
+  definition: 每次用一小批样本估计梯度并更新模型参数的训练方式。
+  aliases:
+  - mini batches
+  status: published
+  confidence: 0.94
+- id: normalization
+  name: Normalization
+  domain: machine_learning
+  level: beginner
+  definition: 把数据或中间表示调整到更稳定尺度的处理方法。
+  aliases:
+  - feature normalization
+  - data normalization
+  status: published
+  confidence: 0.95
+- id: activation-functions
+  name: Activation Functions
+  domain: deep_learning
+  level: beginner
+  definition: 插在线性层之间、把逐层线性组合变成非线性表示的函数族。
+  aliases:
+  - activation
+  status: published
+  confidence: 0.94
+- id: softmax-function
+  name: Softmax Function
+  domain: deep_learning
+  level: beginner
+  definition: 把整组 logits 联合映射到概率单纯形的归一化指数函数。
+  aliases:
+  - probability distribution
+  - probabilities sum to one
+  status: published
+  confidence: 0.94
+- id: cross-entropy
+  name: Cross Entropy
+  domain: machine_learning
+  level: beginner
+  definition: 用真实标签在预测分布下的负对数似然衡量分类错误的损失函数。
+  aliases:
+  - log loss
+  status: published
+  confidence: 0.94
+- id: backpropagation
+  name: Backpropagation
+  domain: deep_learning
+  level: intermediate
+  definition: 沿计算图反向复用上游梯度和局部导数，高效计算参数梯度的算法。
+  aliases:
+  - backprop
+  status: published
+  confidence: 0.94
+- id: neural-network
+  name: Neural Network
+  domain: deep_learning
+  level: beginner
+  definition: 由可学习参数和非线性变换组成的函数近似模型。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: adam-optimizer
+  name: Adam Optimizer
+  domain: deep_learning
+  level: intermediate
+  definition: 结合动量和自适应学习率的梯度优化算法。
+  aliases:
+  - Adam
+  status: published
+  confidence: 0.94
+- id: batch-normalization
+  name: Batch Normalization
+  domain: deep_learning
+  level: intermediate
+  definition: 按特征或通道收集 mini-batch 统计量，并在标准化后做可学习仿射变换的方法。
+  aliases:
+  - BatchNorm
+  - BN
+  - BatchNorm1d
+  status: published
+  confidence: 0.95
+- id: layer-normalization
+  name: Layer Normalization
+  domain: deep_learning
+  level: intermediate
+  definition: 对每个样本独立地沿 normalized_shape 指定的尾部维度计算统计量的归一化方法。
+  aliases:
+  - LayerNorm
+  status: published
+  confidence: 0.93
+- id: convolution
+  name: Convolution
+  domain: computer_vision
+  level: beginner
+  definition: 用小窗口在输入上滑动，并计算局部加权组合的操作。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: convolutional-neural-network
+  name: Convolutional Neural Network
+  domain: computer_vision
+  level: intermediate
+  definition: 以卷积层为核心组件的神经网络结构。
+  aliases:
+  - CNN
+  - convolutional 2d layer
+  - Conv2D layer
+  status: published
+  confidence: 0.94
+- id: word-embeddings
+  name: Word Embeddings
+  domain: nlp
+  level: beginner
+  definition: 把词或 token 映射到连续向量空间的表示方法。
+  aliases:
+  - embeddings
+  status: published
+  confidence: 0.94
+- id: recurrent-neural-network
+  name: Recurrent Neural Network
+  domain: nlp
+  level: intermediate
+  definition: 通过循环状态处理序列数据的神经网络结构。
+  aliases:
+  - RNN
+  status: published
+  confidence: 0.94
+- id: attention-mechanism
+  name: Attention Mechanism
+  domain: nlp
+  level: intermediate
+  definition: 让当前查询按匹配程度从一组候选表示中动态检索并汇聚信息的机制。
+  aliases:
+  - attention
+  status: published
+  confidence: 0.94
+- id: scaled-dot-product-attention
+  name: Scaled Dot-Product Attention
+  domain: nlp
+  level: intermediate
+  definition: 用 query 和 key 的点积计算注意力分数，并按维度缩放后加权 value 的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: multi-head-attention
+  name: Multi-Head Attention
+  domain: nlp
+  level: intermediate
+  definition: 把模型维度拆成多个可学习投影子空间，并行执行注意力后再融合的结构。
+  aliases:
+  - MHA
+  - weighted multi head
+  status: published
+  confidence: 0.94
+- id: transformer-architecture
+  name: Transformer Architecture
+  domain: nlp
+  level: advanced
+  definition: 以自注意力和前馈网络为核心的序列建模架构。
+  aliases:
+  - Transformer
+  status: published
+  confidence: 0.95
+- id: markov-decision-process
+  name: Markov Decision Process
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用状态、动作、奖励和转移概率描述序贯决策问题的数学框架。
+  aliases:
+  - MDP
+  status: published
+  confidence: 0.94
+- id: bellman-equation
+  name: Bellman Equation
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 把当前价值和下一步价值递归联系起来的方程。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: q-learning
+  name: Q-Learning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 通过学习状态-动作价值函数来寻找优策略的无模型强化学习方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: policy-gradient
+  name: Policy Gradient
+  domain: reinforcement_learning
+  level: advanced
+  definition: 直接优化策略参数，使期望回报上升的强化学习方法。
+  aliases:
+  - REINFORCE
+  - reinforce
+  status: published
+  confidence: 0.94
+- id: time-complexity
+  name: Time Complexity
+  domain: algorithms
+  level: foundation
+  definition: 用输入规模描述算法运行时间增长速度的方法。
+  aliases:
+  - Big O
+  status: published
+  confidence: 0.97
+- id: recursion
+  name: Recursion
+  domain: algorithms
+  level: beginner
+  definition: 函数在解决问题时调用自身的编程和算法思想。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: arrays
+  name: Arrays
+  domain: data_structures
+  level: foundation
+  definition: 按连续索引组织元素的基础数据结构。
+  aliases:
+  - array
+  status: published
+  confidence: 0.94
+- id: hash-table
+  name: Hash Table
+  domain: data_structures
+  level: beginner
+  definition: 通过哈希函数把键映射到存储位置的数据结构。
+  aliases:
+  - dictionary
+  - hash map
+  status: published
+  confidence: 0.94
+- id: stack-and-queue
+  name: Stack and Queue
+  domain: data_structures
+  level: beginner
+  definition: 按固定出入顺序管理元素的两类线性结构。
+  aliases:
+  - stack
+  - queue
+  status: published
+  confidence: 0.94
+- id: heap-priority-queue
+  name: Heap and Priority Queue
+  domain: data_structures
+  level: intermediate
+  definition: 支持快速取出最高或最低优先级元素的数据结构。
+  aliases:
+  - priority queue
+  - heap
+  status: published
+  confidence: 0.94
+- id: binary-search
+  name: Binary Search
+  domain: algorithms
+  level: beginner
+  definition: 在有序空间中反复折半缩小搜索范围的算法思想。
+  aliases:
+  - binary search
+  status: published
+  confidence: 0.94
+- id: sorting-algorithms
+  name: Sorting Algorithms
+  domain: algorithms
+  level: beginner
+  definition: 把元素按指定顺序重新排列的一类算法。
+  aliases:
+  - sorting
+  status: published
+  confidence: 0.94
+- id: dynamic-programming
+  name: Dynamic Programming
+  domain: algorithms
+  level: intermediate
+  definition: 把重复子问题的结果保存下来，以避免重复计算的算法方法。
+  aliases:
+  - DP
+  status: published
+  confidence: 0.94
+- id: graph-traversal
+  name: Graph Traversal
+  domain: algorithms
+  level: intermediate
+  definition: 按一定规则访问图中节点和边的算法过程。
+  aliases:
+  - DFS
+  - BFS
+  status: published
+  confidence: 0.94
+- id: sql-joins
+  name: SQL Joins
+  domain: sql
+  level: beginner
+  definition: 按照键或条件把多张表的行组合起来的 SQL 操作。
+  aliases:
+  - join
+  status: published
+  confidence: 0.94
+- id: sql-aggregation
+  name: SQL Aggregation
+  domain: sql
+  level: beginner
+  definition: 把多行数据按分组汇总成统计结果的 SQL 能力。
+  aliases:
+  - group by
+  - aggregation
+  - count per group
+  - average per group
+  - average comment threads
+  status: published
+  confidence: 0.94
+- id: sql-window-functions
+  name: SQL Window Functions
+  domain: sql
+  level: intermediate
+  definition: 在保留明细行的同时，对相关行窗口计算统计值的 SQL 功能。
+  aliases:
+  - window function
+  - rolling window
+  - rank over partition
+  - event sequence
+  status: published
+  confidence: 0.94
+- id: query-execution-plan
+  name: Query Execution Plan
+  domain: sql
+  level: intermediate
+  definition: 数据库执行 SQL 查询时选择的操作步骤和访问路径。
+  aliases:
+  - explain plan
+  - query plan
+  status: published
+  confidence: 0.94
+- id: pandas-dataframe
+  name: pandas DataFrame
+  domain: data_preprocessing
+  level: beginner
+  definition: pandas 中用于处理二维表格数据的核心数据结构。
+  aliases:
+  - DataFrame
+  - DataFrames
+  - pandas dataframes
+  status: published
+  confidence: 0.94
+- id: train-validation-test-split
+  name: Train Validation Test Split
+  domain: machine_learning
+  level: beginner
+  definition: 把数据分成训练、验证和测试集合的评估设计。
+  aliases:
+  - data split
+  - train test split
+  - test split
+  - divide dataset
+  status: published
+  confidence: 0.94
+- id: data-leakage
+  name: Data Leakage
+  domain: machine_learning
+  level: intermediate
+  definition: 训练过程使用了预测时不可获得的信息，导致评估虚高的问题。
+  aliases:
+  - leakage
+  status: published
+  confidence: 0.94
+- id: model-evaluation-metrics
+  name: Model Evaluation Metrics
+  domain: machine_learning
+  level: beginner
+  definition: 用数值指标衡量模型预测质量的方法集合。
+  aliases:
+  - metrics
+  - evaluation score
+  - model score
+  status: published
+  confidence: 0.94
+- id: regularization
+  name: Regularization
+  domain: machine_learning
+  level: intermediate
+  definition: 通过限制模型复杂度或训练行为来减少过拟合的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: dropout
+  name: Dropout
+  domain: deep_learning
+  level: intermediate
+  definition: 训练时随机置零中间激活并对保留值缩放、推理时关闭随机性的正则化方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: pytorch-tensor
+  name: PyTorch Tensor
+  domain: pytorch
+  level: beginner
+  definition: PyTorch 中表示多维数组并支持自动求导和设备迁移的核心对象。
+  aliases:
+  - tensor
+  status: published
+  confidence: 0.94
+- id: automatic-differentiation
+  name: Automatic Differentiation
+  domain: deep_learning
+  level: intermediate
+  definition: 在程序执行时记录可导运算，并按局部求导规则组合梯度的技术。
+  aliases:
+  - autograd
+  status: published
+  confidence: 0.94
+- id: pytorch-module
+  name: PyTorch Module
+  domain: pytorch
+  level: beginner
+  definition: PyTorch 中封装参数、子层和前向计算的模型组件。
+  aliases:
+  - nn.Module
+  status: published
+  confidence: 0.94
+- id: dataloader
+  name: DataLoader
+  domain: pytorch
+  level: beginner
+  definition: 按批次读取、打乱和并行加载数据的 PyTorch 工具。
+  aliases:
+  - torch DataLoader
+  - batch iterator
+  status: published
+  confidence: 0.94
+- id: cuda-thread-hierarchy
+  name: CUDA Thread Hierarchy
+  domain: cuda
+  level: intermediate
+  definition: CUDA 中用 grid、block 和 thread 组织并行计算的层级结构。
+  aliases:
+  - CUDA threads
+  - thread block
+  - 2d grid
+  - CUDA grid
+  status: published
+  confidence: 0.94
+- id: cuda-memory-hierarchy
+  name: CUDA Memory Hierarchy
+  domain: cuda
+  level: intermediate
+  definition: CUDA 中由全局内存、共享内存、寄存器和缓存组成的存储层级。
+  aliases:
+  - GPU memory hierarchy
+  status: published
+  confidence: 0.94
+- id: shared-memory-tiling
+  name: Shared Memory Tiling
+  domain: cuda
+  level: advanced
+  definition: 把计算拆成小块，并把复用数据放入共享内存的 GPU 优化方法。
+  aliases:
+  - tiling
+  status: published
+  confidence: 0.94
+- id: warp-divergence
+  name: Warp Divergence
+  domain: cuda
+  level: advanced
+  definition: 同一个 warp 内线程走不同分支，导致执行效率下降的现象。
+  aliases:
+  - branch divergence
+  status: published
+  confidence: 0.94
+- id: triton-kernel
+  name: Triton Kernel
+  domain: triton
+  level: advanced
+  definition: 用 Triton 语言编写的 GPU 自定义算子程序。
+  aliases:
+  - Triton
+  status: published
+  confidence: 0.94
+- id: tinygrad-computation-graph
+  name: tinygrad Computation Graph
+  domain: tinygrad
+  level: intermediate
+  definition: tinygrad 中由 Tensor 操作形成并用于自动微分和编译的计算表示。
+  aliases:
+  - tinygrad graph
+  status: published
+  confidence: 0.94
+- id: tokenization
+  name: Tokenization
+  domain: nlp
+  level: beginner
+  definition: 把原始文本切分成模型可处理 token 的过程。
+  aliases:
+  - tokenizer
+  status: published
+  confidence: 0.94
+- id: positional-encoding
+  name: Positional Encoding
+  domain: nlp
+  level: intermediate
+  definition: 向排列等变的自注意力表示注入绝对或相对顺序信息的方法。
+  aliases:
+  - position encoding
+  status: published
+  confidence: 0.94
+- id: experiment-tracking
+  name: Experiment Tracking
+  domain: mlops
+  level: beginner
+  definition: 记录实验配置、代码版本、指标和产物的工程流程。
+  aliases:
+  - tracking
+  status: published
+  confidence: 0.94
+- id: model-serving
+  name: Model Serving
+  domain: mlops
+  level: intermediate
+  definition: 把训练好的模型部署为可被业务系统调用的在线或离线服务。
+  aliases:
+  - inference service
+  status: published
+  confidence: 0.94
+- id: data-drift
+  name: Data Drift
+  domain: mlops
+  level: intermediate
+  definition: 模型服务时输入数据分布相对训练时期发生变化的现象。
+  aliases:
+  - distribution drift
+  status: published
+  confidence: 0.94
+- id: linear-regression
+  name: Linear Regression
+  domain: machine_learning
+  level: beginner
+  definition: 用线性函数拟合连续数值目标的监督学习方法。
+  aliases:
+  - ordinary least squares
+  - OLS
+  status: published
+  confidence: 0.97
+- id: logistic-regression
+  name: Logistic Regression
+  domain: machine_learning
+  level: beginner
+  definition: 用线性打分和 sigmoid 函数处理二分类问题的监督学习方法。
+  aliases:
+  - logit model
+  status: published
+  confidence: 0.94
+- id: mean-squared-error
+  name: Mean Squared Error
+  domain: machine_learning
+  level: beginner
+  definition: 回归任务中常用的平均平方误差损失。
+  aliases:
+  - MSE
+  status: published
+  confidence: 0.94
+- id: maximum-likelihood-estimation
+  name: Maximum Likelihood Estimation
+  domain: statistics
+  level: intermediate
+  definition: 选择最能解释观测数据的模型参数的统计估计方法。
+  aliases:
+  - MLE
+  status: published
+  confidence: 0.94
+- id: principal-component-analysis
+  name: Principal Component Analysis
+  domain: machine_learning
+  level: intermediate
+  definition: 通过正交方向保留最大方差的线性降维方法。
+  aliases:
+  - PCA
+  status: published
+  confidence: 0.94
+- id: singular-value-decomposition
+  name: Singular Value Decomposition
+  domain: linear_algebra
+  level: intermediate
+  definition: 把矩阵分解为两个正交矩阵和一个奇异值矩阵的线性代数工具。
+  aliases:
+  - SVD
+  status: published
+  confidence: 0.94
+- id: knn-classification
+  name: k-Nearest Neighbors
+  domain: machine_learning
+  level: beginner
+  definition: 根据最近的 k 个样本进行分类或回归的非参数方法。
+  aliases:
+  - kNN
+  status: published
+  confidence: 0.94
+- id: k-means-clustering
+  name: k-Means Clustering
+  domain: machine_learning
+  level: beginner
+  definition: 把样本分成 k 个簇，并让每个样本靠近所属簇中心的无监督方法。
+  aliases:
+  - kmeans
+  - k-means fit
+  - fit k means
+  - cluster centers
+  status: published
+  confidence: 0.94
+- id: decision-tree
+  name: Decision Tree
+  domain: machine_learning
+  level: beginner
+  definition: 通过一系列特征划分形成树状判断规则的模型。
+  aliases:
+  - CART
+  status: published
+  confidence: 0.94
+- id: random-forest
+  name: Random Forest
+  domain: machine_learning
+  level: intermediate
+  definition: 由多棵随机化决策树组成的集成学习模型。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: gradient-boosting
+  name: Gradient Boosting
+  domain: machine_learning
+  level: intermediate
+  definition: 逐步训练弱模型，让新模型修正前面模型错误的集成方法。
+  aliases:
+  - GBDT
+  status: published
+  confidence: 0.94
+- id: support-vector-machine
+  name: Support Vector Machine
+  domain: machine_learning
+  level: intermediate
+  definition: 寻找最大间隔分类边界的监督学习方法。
+  aliases:
+  - SVM
+  status: published
+  confidence: 0.94
+- id: naive-bayes
+  name: Naive Bayes
+  domain: machine_learning
+  level: beginner
+  definition: 基于贝叶斯公式和条件独立假设的概率分类方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: bias-variance-tradeoff
+  name: Bias-Variance Tradeoff
+  domain: machine_learning
+  level: intermediate
+  definition: 描述模型欠拟合和过拟合之间权衡的概念。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: confusion-matrix
+  name: Confusion Matrix
+  domain: machine_learning
+  level: beginner
+  definition: 按真实类别和预测类别统计分类结果的矩阵。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: roc-auc
+  name: ROC AUC
+  domain: machine_learning
+  level: intermediate
+  definition: 衡量二分类模型在不同阈值下区分正负样本能力的指标。
+  aliases:
+  - AUC
+  - ROC curve
+  - TPR FPR
+  - FPR
+  - TPR
+  status: published
+  confidence: 0.94
+- id: gradient-clipping
+  name: Gradient Clipping
+  domain: deep_learning
+  level: intermediate
+  definition: 把过大的梯度限制在指定范围内的训练稳定化方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: learning-rate-schedule
+  name: Learning Rate Schedule
+  domain: deep_learning
+  level: intermediate
+  definition: 按训练进度调整学习率的策略。
+  aliases:
+  - LR schedule
+  - rate scheduler
+  - learning rate scheduler
+  - learning rate scheduling
+  - rate scheduling
+  - learning rate decay
+  - linear learning rate decay
+  status: published
+  confidence: 0.94
+- id: weight-decay
+  name: Weight Decay
+  domain: deep_learning
+  level: intermediate
+  definition: 在训练中抑制权重过大的正则化方法。
+  aliases:
+  - L2 regularization
+  - AdamW
+  status: published
+  confidence: 0.94
+- id: weight-initialization
+  name: Weight Initialization
+  domain: deep_learning
+  level: intermediate
+  definition: 训练开始前设置模型参数初始值的方法。
+  aliases:
+  - initialization
+  status: published
+  confidence: 0.94
+- id: residual-connections
+  name: Residual Connections
+  domain: deep_learning
+  level: intermediate
+  definition: 把层输入直接加到层输出上的网络连接方式。
+  aliases:
+  - skip connection
+  status: published
+  confidence: 0.94
+- id: pooling
+  name: Pooling
+  domain: computer_vision
+  level: beginner
+  definition: 在局部窗口内汇总特征的神经网络操作。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: padding-and-stride
+  name: Padding and Stride
+  domain: computer_vision
+  level: beginner
+  definition: 控制卷积窗口边界和移动步长的两个参数。
+  aliases:
+  - stride
+  - padding
+  status: published
+  confidence: 0.94
+- id: image-augmentation
+  name: Image Augmentation
+  domain: computer_vision
+  level: beginner
+  definition: 通过随机变换扩展图像训练样本的方法。
+  aliases:
+  - data augmentation
+  status: published
+  confidence: 0.94
+- id: object-detection
+  name: Object Detection
+  domain: computer_vision
+  level: intermediate
+  definition: 在图像中同时定位目标位置并识别类别的视觉任务。
+  aliases:
+  - detection
+  status: published
+  confidence: 0.94
+- id: semantic-segmentation
+  name: Semantic Segmentation
+  domain: computer_vision
+  level: intermediate
+  definition: 为图像中每个像素预测语义类别的视觉任务。
+  aliases:
+  - segmentation
+  status: published
+  confidence: 0.94
+- id: language-modeling
+  name: Language Modeling
+  domain: llm
+  level: intermediate
+  definition: 学习文本序列概率分布，并预测 token 的建模任务。
+  aliases:
+  - LM
+  - tiny GPT
+  - build tiny GPT
+  status: published
+  confidence: 0.94
+- id: causal-mask
+  name: Causal Mask
+  domain: llm
+  level: intermediate
+  definition: 在自回归模型中阻止当前位置看到未来 token 的注意力掩码。
+  aliases:
+  - autoregressive mask
+  status: published
+  confidence: 0.94
+- id: perplexity
+  name: Perplexity
+  domain: llm
+  level: intermediate
+  definition: 衡量语言模型对文本预测不确定程度的指标。
+  aliases:
+  - PPL
+  status: published
+  confidence: 0.94
+- id: beam-search
+  name: Beam Search
+  domain: llm
+  level: intermediate
+  definition: 在序列生成中保留多个高分候选路径的搜索方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: temperature-sampling
+  name: Temperature Sampling
+  domain: llm
+  level: beginner
+  definition: 通过温度参数调整生成分布平滑程度的采样方法。
+  aliases:
+  - sampling temperature
+  status: published
+  confidence: 0.94
+- id: fine-tuning
+  name: Fine-Tuning
+  domain: llm
+  level: intermediate
+  definition: 在预训练模型基础上，用特定数据继续训练以适配任务的方法。
+  aliases:
+  - finetuning
+  status: published
+  confidence: 0.94
+- id: retrieval-augmented-generation
+  name: Retrieval-Augmented Generation
+  domain: llm
+  level: intermediate
+  definition: 在生成前检索外部资料，并把检索结果提供给模型的生成方法。
+  aliases:
+  - RAG
+  status: published
+  confidence: 0.94
+- id: exploration-exploitation
+  name: Exploration and Exploitation
+  domain: reinforcement_learning
+  level: beginner
+  definition: 在尝试新动作和利用已知好动作之间做权衡的强化学习问题。
+  aliases:
+  - exploration
+  - exploitation
+  status: published
+  confidence: 0.94
+- id: temporal-difference-learning
+  name: Temporal Difference Learning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用当前奖励和下一状态估计来更新价值函数的强化学习方法。
+  aliases:
+  - TD learning
+  - TD prediction
+  - TD update
+  - temporal difference update
+  - TD and MC comparison
+  - batch training TD MC
+  status: published
+  confidence: 0.94
+- id: sarsa
+  name: SARSA
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 根据实际执行的下一动作更新动作价值的 on-policy 强化学习方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: deep-q-network
+  name: Deep Q-Network
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用神经网络近似 Q 函数的强化学习方法。
+  aliases:
+  - DQN
+  status: published
+  confidence: 0.94
+- id: replay-buffer
+  name: Replay Buffer
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 保存智能体历史交互样本，并在训练时抽样使用的缓存结构。
+  aliases:
+  - experience replay
+  status: published
+  confidence: 0.94
+- id: actor-critic
+  name: Actor-Critic
+  domain: reinforcement_learning
+  level: advanced
+  definition: 同时学习策略和价值函数的强化学习方法框架。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: proximal-policy-optimization
+  name: Proximal Policy Optimization
+  domain: reinforcement_learning
+  level: advanced
+  definition: 通过限制策略更新幅度来提升训练稳定性的策略优化方法。
+  aliases:
+  - PPO
+  status: published
+  confidence: 0.94
+- id: autoencoder
+  name: Autoencoder
+  domain: deep_learning
+  level: intermediate
+  definition: 用 encoder 把输入映射到潜表示，再用 decoder 通过重建目标恢复输入的结构。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: variational-autoencoder
+  name: Variational Autoencoder
+  domain: deep_learning
+  level: advanced
+  definition: 用近似后验编码潜变量分布，并从显式先验到 decoder 建模数据生成过程的概率模型。
+  aliases:
+  - VAE
+  status: published
+  confidence: 0.94
+- id: generative-adversarial-network
+  name: Generative Adversarial Network
+  domain: deep_learning
+  level: advanced
+  definition: 通过生成器和判别器对抗训练来学习数据分布的生成模型。
+  aliases:
+  - GAN
+  status: published
+  confidence: 0.94
+- id: diffusion-model
+  name: Diffusion Model
+  domain: deep_learning
+  level: advanced
+  definition: 学习逆转预设逐步加噪过程、从简单噪声分布迭代生成数据的概率模型。
+  aliases:
+  - DDPM
+  - diffusion
+  status: published
+  confidence: 0.94
+- id: contrastive-learning
+  name: Contrastive Learning
+  domain: deep_learning
+  level: advanced
+  definition: 通过拉近相似样本表示、推远不相似样本表示来学习特征的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: model-quantization
+  name: Model Quantization
+  domain: mlops
+  level: intermediate
+  definition: 用更低精度数值表示模型权重或激活的压缩和加速方法。
+  aliases:
+  - quantization
+  status: published
+  confidence: 0.94
+- id: onnx-export
+  name: ONNX Export
+  domain: mlops
+  level: intermediate
+  definition: 把模型导出为开放神经网络交换格式的部署流程。
+  aliases:
+  - ONNX
+  status: published
+  confidence: 0.94
+- id: dot-product
+  name: Dot Product
+  domain: linear_algebra
+  level: foundation
+  definition: 把两个等长向量逐元素相乘再求和的运算。
+  aliases:
+  - inner product
+  status: published
+  confidence: 0.97
+- id: cosine-similarity
+  name: Cosine Similarity
+  domain: linear_algebra
+  level: beginner
+  definition: 用两个向量夹角余弦衡量方向相似度的方法。
+  aliases:
+  - cosine
+  status: published
+  confidence: 0.94
+- id: eigendecomposition
+  name: Eigendecomposition
+  domain: linear_algebra
+  level: intermediate
+  definition: 把矩阵分解为特征向量和特征值的线性代数方法。
+  aliases:
+  - eigen decomposition
+  - eigenvalues
+  - eigen values
+  status: published
+  confidence: 0.94
+- id: matrix-inverse
+  name: Matrix Inverse
+  domain: linear_algebra
+  level: beginner
+  definition: 能把方阵线性变换反向还原的矩阵。
+  aliases:
+  - inverse matrix
+  status: published
+  confidence: 0.94
+- id: broadcasting
+  name: Broadcasting
+  domain: linear_algebra
+  level: beginner
+  definition: 在数组形状兼容时，自动扩展较小数组参与逐元素运算的规则。
+  aliases:
+  - broadcast
+  status: published
+  confidence: 0.94
+- id: tensor-shape
+  name: Tensor Shape
+  domain: pytorch
+  level: beginner
+  definition: 描述张量每个维度大小的结构信息。
+  aliases:
+  - shape
+  status: published
+  confidence: 0.94
+- id: reshape-view
+  name: Reshape and View
+  domain: pytorch
+  level: beginner
+  definition: 改变张量形状而不改变元素总数的操作。
+  aliases:
+  - view
+  - reshape
+  - flatten
+  status: published
+  confidence: 0.94
+- id: binary-cross-entropy
+  name: Binary Cross Entropy
+  domain: deep_learning
+  level: beginner
+  definition: 二分类或多标签任务中常用的交叉熵损失。
+  aliases:
+  - BCE
+  status: published
+  confidence: 0.94
+- id: focal-loss
+  name: Focal Loss
+  domain: deep_learning
+  level: intermediate
+  definition: 降低易分类样本权重，并更关注难样本的分类损失。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: class-imbalance
+  name: Class Imbalance
+  domain: machine_learning
+  level: intermediate
+  definition: 不同类别样本数量差异很大的数据现象。
+  aliases:
+  - imbalanced data
+  status: published
+  confidence: 0.94
+- id: mae-loss
+  name: Mean Absolute Error
+  domain: machine_learning
+  level: beginner
+  definition: 回归任务中平均绝对误差形式的损失或评估指标。
+  aliases:
+  - MAE
+  - L1 loss
+  status: published
+  confidence: 0.94
+- id: huber-loss
+  name: Huber Loss
+  domain: machine_learning
+  level: intermediate
+  definition: 结合 MSE 和 MAE 特点的稳健回归损失。
+  aliases:
+  - smooth L1 loss
+  status: published
+  confidence: 0.94
+- id: momentum-optimizer
+  name: Momentum Optimizer
+  domain: deep_learning
+  level: intermediate
+  definition: 在梯度下降中累积历史更新方向的优化方法。
+  aliases:
+  - momentum
+  status: published
+  confidence: 0.94
+- id: rmsprop-optimizer
+  name: RMSprop Optimizer
+  domain: deep_learning
+  level: intermediate
+  definition: 用梯度平方的滑动平均调整学习率的自适应优化方法。
+  aliases:
+  - RMSprop
+  status: published
+  confidence: 0.94
+- id: early-stopping
+  name: Early Stopping
+  domain: machine_learning
+  level: beginner
+  definition: 当验证集表现不再改善时提前停止训练的正则化策略。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: checkpointing
+  name: Checkpointing
+  domain: mlops
+  level: beginner
+  definition: 在训练过程中保存模型和训练状态的工程机制。
+  aliases:
+  - model checkpoint
+  - recomputation
+  status: published
+  confidence: 0.94
+- id: gradient-accumulation
+  name: Gradient Accumulation
+  domain: deep_learning
+  level: intermediate
+  definition: 把多个小批次的梯度累积后再更新参数的训练技巧。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: mixed-precision-training
+  name: Mixed Precision Training
+  domain: deep_learning
+  level: intermediate
+  definition: 在训练中混合使用低精度和高精度数值以提升效率的方法。
+  aliases:
+  - AMP
+  - autocast
+  - mixed precision autocast
+  status: published
+  confidence: 0.94
+- id: custom-autograd-function
+  name: Custom Autograd Function
+  domain: pytorch
+  level: advanced
+  definition: 在 PyTorch 中自定义前向和反向传播逻辑的扩展方式。
+  aliases:
+  - torch.autograd.Function
+  status: published
+  confidence: 0.94
+- id: vectorization
+  name: Vectorization
+  domain: performance_optimization
+  level: beginner
+  definition: 用批量数组或张量操作替代显式逐元素循环的优化方法。
+  aliases:
+  - vectorized computation
+  status: published
+  confidence: 0.94
+- id: sql-subquery
+  name: SQL Subquery
+  domain: sql
+  level: beginner
+  definition: 嵌套在另一条 SQL 语句中的查询。
+  aliases:
+  - subquery
+  status: published
+  confidence: 0.94
+- id: common-table-expression
+  name: Common Table Expression
+  domain: sql
+  level: intermediate
+  definition: 用 WITH 子句定义可复用临时查询结果的 SQL 结构。
+  aliases:
+  - CTE
+  - WITH query
+  status: published
+  confidence: 0.94
+- id: sql-index
+  name: SQL Index
+  domain: sql
+  level: intermediate
+  definition: 帮助数据库更快定位行的辅助数据结构。
+  aliases:
+  - database index
+  status: published
+  confidence: 0.94
+- id: sql-constraints
+  name: SQL Constraints
+  domain: sql
+  level: beginner
+  definition: 数据库表中用于保证数据规则的约束。
+  aliases:
+  - database constraints
+  status: published
+  confidence: 0.94
+- id: monte-carlo-methods
+  name: Monte Carlo Methods
+  domain: probability
+  level: intermediate
+  definition: 用随机采样估计复杂数量的一类方法。
+  aliases:
+  - Monte Carlo
+  status: published
+  confidence: 0.94
+- id: markov-chain
+  name: Markov Chain
+  domain: probability
+  level: intermediate
+  definition: 下一状态只依赖当前状态的随机过程模型。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: entropy
+  name: Entropy
+  domain: information_theory
+  level: beginner
+  definition: 衡量随机变量不确定性的数量。
+  aliases:
+  - measure disorder
+  - disorder
+  status: published
+  confidence: 0.94
+- id: kl-divergence
+  name: KL Divergence
+  domain: information_theory
+  level: intermediate
+  definition: 衡量一个概率分布相对另一个分布差异的非对称量。
+  aliases:
+  - relative entropy
+  status: published
+  confidence: 0.94
+- id: policy-evaluation
+  name: Policy Evaluation
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 估计给定策略在各状态下长期价值的过程。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: policy-iteration
+  name: Policy Iteration
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在策略评估和策略改进之间交替寻找更优策略的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: value-iteration
+  name: Value Iteration
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 直接迭代最优 Bellman 方程来求解价值和策略的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: nucleus-sampling
+  name: Nucleus Sampling
+  domain: llm
+  level: beginner
+  definition: 只从累计概率达到阈值的一小组 token 中采样的生成方法。
+  aliases:
+  - top-p sampling
+  - top p
+  - top nucleus
+  status: published
+  confidence: 0.94
+- id: top-k-sampling
+  name: Top-k Sampling
+  domain: llm
+  level: beginner
+  definition: 每步只从概率最高的 k 个 token 中采样的生成方法。
+  aliases:
+  - top-k
+  status: published
+  confidence: 0.94
+- id: padding-mask
+  name: Padding Mask
+  domain: nlp
+  level: beginner
+  definition: 在序列模型中遮住填充 token 的掩码。
+  aliases:
+  - attention mask
+  status: published
+  confidence: 0.94
+- id: model-calibration
+  name: Model Calibration
+  domain: machine_learning
+  level: intermediate
+  definition: 让模型预测概率和真实发生频率更一致的评估与调整问题。
+  aliases:
+  - calibration
+  status: published
+  confidence: 0.94
+- id: sigmoid-activation
+  name: Sigmoid Activation
+  domain: deep_learning
+  level: beginner
+  definition: 把实数压缩到 0 到 1 区间的非线性激活函数。
+  aliases:
+  - sigmoid
+  status: published
+  confidence: 0.94
+- id: tanh-activation
+  name: Tanh Activation
+  domain: deep_learning
+  level: beginner
+  definition: 把实数压缩到 -1 到 1 区间的非线性激活函数。
+  aliases:
+  - tanh
+  status: published
+  confidence: 0.94
+- id: relu-activation
+  name: ReLU Activation
+  domain: deep_learning
+  level: beginner
+  definition: 把负值截断为零、正值保持不变的激活函数。
+  aliases:
+  - ReLU
+  status: published
+  confidence: 0.94
+- id: leaky-relu-activation
+  name: Leaky ReLU Activation
+  domain: deep_learning
+  level: beginner
+  definition: 给 ReLU 负半轴保留小斜率的激活函数。
+  aliases:
+  - LeakyReLU
+  status: published
+  confidence: 0.94
+- id: gelu-activation
+  name: GELU Activation
+  domain: deep_learning
+  level: intermediate
+  definition: 结合输入大小和高斯分布门控思想的平滑激活函数。
+  aliases:
+  - GELU
+  status: published
+  confidence: 0.94
+- id: log-sum-exp
+  name: Log-Sum-Exp
+  domain: deep_learning
+  level: intermediate
+  definition: 以数值稳定方式计算指数和再取对数的技巧。
+  aliases:
+  - logsumexp
+  status: published
+  confidence: 0.94
+- id: one-hot-encoding
+  name: One-Hot Encoding
+  domain: data_preprocessing
+  level: beginner
+  definition: 用只有一个位置为 1 的向量表示离散类别的方法。
+  aliases:
+  - one hot
+  status: published
+  confidence: 0.94
+- id: label-smoothing
+  name: Label Smoothing
+  domain: deep_learning
+  level: intermediate
+  definition: 把硬标签稍微软化的分类训练正则化方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: reduction-operations
+  name: Reduction Operations
+  domain: pytorch
+  level: beginner
+  definition: 把张量沿某些维度汇总成更小张量的操作。
+  aliases:
+  - sum
+  - mean
+  - reduce
+  status: published
+  confidence: 0.94
+- id: tensor-indexing
+  name: Tensor Indexing
+  domain: pytorch
+  level: beginner
+  definition: 按位置、切片或布尔条件选取张量元素的方法。
+  aliases:
+  - indexing
+  - slice
+  status: published
+  confidence: 0.94
+- id: gather-scatter
+  name: Gather and Scatter
+  domain: pytorch
+  level: intermediate
+  definition: 按索引收集或写回张量元素的两类操作。
+  aliases:
+  - gather
+  - scatter
+  status: published
+  confidence: 0.94
+- id: einsum-notation
+  name: Einsum Notation
+  domain: pytorch
+  level: intermediate
+  definition: 用下标字符串表达张量乘法、求和和转置的记法。
+  aliases:
+  - einsum
+  status: published
+  confidence: 0.94
+- id: transpose-permute
+  name: Transpose and Permute
+  domain: pytorch
+  level: beginner
+  definition: 交换张量维度顺序的操作。
+  aliases:
+  - transpose
+  - permute
+  status: published
+  confidence: 0.94
+- id: contiguous-memory
+  name: Contiguous Memory
+  domain: pytorch
+  level: intermediate
+  definition: 张量元素在内存中按连续顺序布局的状态。
+  aliases:
+  - contiguous
+  status: published
+  confidence: 0.94
+- id: random-seed
+  name: Random Seed
+  domain: mlops
+  level: beginner
+  definition: 控制伪随机过程初始状态的数值。
+  aliases:
+  - seed
+  status: published
+  confidence: 0.94
+- id: standard-deviation
+  name: Standard Deviation
+  domain: statistics
+  level: foundation
+  definition: 衡量数据围绕均值波动程度的统计量。
+  aliases:
+  - std
+  status: published
+  confidence: 0.94
+- id: correlation-coefficient
+  name: Correlation Coefficient
+  domain: statistics
+  level: beginner
+  definition: 衡量两个变量线性相关强度和方向的标准化统计量。
+  aliases:
+  - correlation
+  status: published
+  confidence: 0.94
+- id: gaussian-distribution
+  name: Gaussian Distribution
+  domain: probability
+  level: beginner
+  definition: 由均值和方差控制的钟形连续概率分布。
+  aliases:
+  - normal distribution
+  - Gaussian
+  status: published
+  confidence: 0.94
+- id: conditional-probability
+  name: Conditional Probability
+  domain: probability
+  level: foundation
+  definition: 在某个事件已经发生的条件下，另一个事件发生的概率。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: bayes-theorem
+  name: Bayes Theorem
+  domain: probability
+  level: beginner
+  definition: 用观测证据更新事件概率的公式。
+  aliases:
+  - Bayes rule
+  status: published
+  confidence: 0.94
+- id: sampling-distribution
+  name: Sampling Distribution
+  domain: statistics
+  level: intermediate
+  definition: 某个统计量在重复抽样下形成的概率分布。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: confidence-interval
+  name: Confidence Interval
+  domain: statistics
+  level: intermediate
+  definition: 用区间形式表达参数估计不确定性的统计工具。
+  aliases:
+  - CI
+  status: published
+  confidence: 0.94
+- id: hypothesis-testing
+  name: Hypothesis Testing
+  domain: statistics
+  level: intermediate
+  definition: 用样本数据判断某个统计假设是否与观察结果冲突的方法。
+  aliases:
+  - statistical test
+  - test statistical analysis
+  - statistical analysis
+  status: published
+  confidence: 0.94
+- id: calculus-basics
+  name: Calculus Basics
+  domain: calculus
+  level: foundation
+  definition: 研究函数变化率和累积量的数学基础。
+  aliases:
+  - calculus
+  status: published
+  confidence: 0.97
+- id: convex-function
+  name: Convex Function
+  domain: optimization
+  level: intermediate
+  definition: 任意两点连线都不低于函数图像的函数。
+  aliases:
+  - convexity
+  status: published
+  confidence: 0.94
+- id: convex-optimization
+  name: Convex Optimization
+  domain: optimization
+  level: intermediate
+  definition: 研究凸目标和凸约束下求最优解的优化领域。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: newton-method
+  name: Newton Method
+  domain: optimization
+  level: intermediate
+  definition: 利用一阶和二阶导数信息求解优化或方程的方法。
+  aliases:
+  - Newton's method
+  status: published
+  confidence: 0.94
+- id: lagrange-multipliers
+  name: Lagrange Multipliers
+  domain: optimization
+  level: intermediate
+  definition: 处理等式约束优化问题的经典方法。
+  aliases:
+  - Lagrange multiplier
+  status: published
+  confidence: 0.94
+- id: discounted-return
+  name: Discounted Return
+  domain: reinforcement_learning
+  level: beginner
+  definition: 把未来奖励按折扣因子加权求和得到的长期回报。
+  aliases:
+  - return
+  - reward discounting
+  - discounting factor
+  - ply-based discounting
+  - value discounting
+  - continuous-time discounting
+  status: published
+  confidence: 0.94
+- id: advantage-function
+  name: Advantage Function
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 衡量某动作相对当前状态平均水平好多少的函数。
+  aliases:
+  - advantage
+  status: published
+  confidence: 0.94
+- id: generalized-advantage-estimation
+  name: Generalized Advantage Estimation
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在偏差和方差之间折中估计优势函数的方法。
+  aliases:
+  - GAE
+  status: published
+  confidence: 0.94
+- id: epsilon-greedy-policy
+  name: Epsilon-Greedy Policy
+  domain: reinforcement_learning
+  level: beginner
+  definition: 以小概率随机探索，以大概率选择当前最优动作的策略。
+  aliases:
+  - epsilon greedy
+  status: published
+  confidence: 0.94
+- id: multi-armed-bandit
+  name: Multi-Armed Bandit
+  domain: reinforcement_learning
+  level: beginner
+  definition: 只有动作选择和奖励反馈、没有复杂状态转移的决策问题。
+  aliases:
+  - bandit
+  - channel allocation
+  status: published
+  confidence: 0.94
+- id: off-policy-learning
+  name: Off-Policy Learning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用一种行为策略产生的数据来学习另一种目标策略的方法。
+  aliases:
+  - off-policy
+  status: published
+  confidence: 0.94
+- id: reward-shaping
+  name: Reward Shaping
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 设计额外奖励信号来引导智能体学习的方法。
+  aliases:
+  - reward shaping
+  - shaped reward
+  status: published
+  confidence: 0.94
+- id: sql-where-filtering
+  name: SQL WHERE Filtering
+  domain: sql
+  level: beginner
+  definition: 用 WHERE 子句筛选满足条件的行。
+  aliases:
+  - where
+  status: published
+  confidence: 0.94
+- id: having-clause
+  name: HAVING Clause
+  domain: sql
+  level: beginner
+  definition: 对分组聚合后的结果进行过滤的 SQL 子句。
+  aliases:
+  - having
+  status: published
+  confidence: 0.94
+- id: sql-order-limit
+  name: SQL ORDER BY and LIMIT
+  domain: sql
+  level: beginner
+  definition: 用于排序结果并限制返回行数的 SQL 子句。
+  aliases:
+  - order by
+  - limit
+  status: published
+  confidence: 0.94
+- id: sql-null-handling
+  name: SQL NULL Handling
+  domain: sql
+  level: beginner
+  definition: 处理数据库中未知或缺失值 NULL 的规则和方法。
+  aliases:
+  - 'null'
+  status: published
+  confidence: 0.94
+- id: sql-case-when
+  name: SQL CASE WHEN
+  domain: sql
+  level: beginner
+  definition: 在 SQL 中按条件生成不同结果的表达式。
+  aliases:
+  - case when
+  status: published
+  confidence: 0.94
+- id: batch-inference
+  name: Batch Inference
+  domain: inference
+  level: beginner
+  definition: 把多条样本合成批次进行模型推理的方式。
+  aliases:
+  - batch prediction
+  status: published
+  confidence: 0.94
+- id: dynamic-batching
+  name: Dynamic Batching
+  domain: inference
+  level: intermediate
+  definition: 在线服务中把短时间内到达的请求动态合并成批次的推理策略。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: latency-throughput
+  name: Latency and Throughput
+  domain: inference
+  level: beginner
+  definition: 衡量服务响应速度和单位时间处理能力的两个指标。
+  aliases:
+  - latency
+  - throughput
+  status: published
+  confidence: 0.94
+- id: chain-rule
+  name: Chain Rule
+  domain: calculus
+  level: foundation
+  definition: 计算复合函数导数的基本规则。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: partial-derivative
+  name: Partial Derivative
+  domain: calculus
+  level: foundation
+  definition: 多变量函数中，对某一个变量求变化率的导数。
+  aliases:
+  - partial derivative
+  - partial derivatives
+  - multivariable derivatives
+  status: published
+  confidence: 0.94
+- id: gradient-vector
+  name: Gradient Vector
+  domain: calculus
+  level: beginner
+  definition: 由函数对各个变量的偏导数组成的向量。
+  aliases:
+  - gradient
+  status: published
+  confidence: 0.94
+- id: jacobian-matrix
+  name: Jacobian Matrix
+  domain: calculus
+  level: intermediate
+  definition: 向量值函数对向量输入的一阶偏导矩阵。
+  aliases:
+  - Jacobian
+  status: published
+  confidence: 0.94
+- id: vector-jacobian-product
+  name: Vector-Jacobian Product
+  domain: deep_learning
+  level: advanced
+  definition: 向量与 Jacobian 相乘得到反向传播所需梯度的计算形式。
+  aliases:
+  - VJP
+  status: published
+  confidence: 0.94
+- id: hessian-matrix
+  name: Hessian Matrix
+  domain: optimization
+  level: advanced
+  definition: 由二阶偏导数组成的矩阵，描述函数局部曲率。
+  aliases:
+  - Hessian
+  status: published
+  confidence: 0.94
+- id: gradient-of-reshape
+  name: Gradient of Reshape
+  domain: deep_learning
+  level: intermediate
+  definition: reshape 操作在反向传播中把梯度恢复到输入形状的规则。
+  aliases:
+  - reshape backward
+  status: published
+  confidence: 0.94
+- id: gradient-of-broadcast
+  name: Gradient of Broadcasting
+  domain: deep_learning
+  level: intermediate
+  definition: 广播运算反向传播时，对被扩展维度求和还原梯度的规则。
+  aliases:
+  - broadcast backward
+  status: published
+  confidence: 0.94
+- id: gradient-of-max
+  name: Gradient of Max Operation
+  domain: deep_learning
+  level: intermediate
+  definition: max 操作反向传播时，把梯度传给最大值位置的规则。
+  aliases:
+  - max backward
+  status: published
+  confidence: 0.94
+- id: max-pooling-backward
+  name: Max Pooling Backward
+  domain: computer_vision
+  level: intermediate
+  definition: max pooling 在反向传播中把梯度路由回窗口最大值位置的过程。
+  aliases:
+  - maxpool backward
+  status: published
+  confidence: 0.94
+- id: convolution-backward
+  name: Convolution Backward
+  domain: computer_vision
+  level: advanced
+  definition: 卷积层反向传播中计算输入梯度和卷积核梯度的过程。
+  aliases:
+  - conv backward
+  status: published
+  confidence: 0.94
+- id: layernorm-backward
+  name: LayerNorm Backward
+  domain: deep_learning
+  level: advanced
+  definition: LayerNorm 反向传播中计算输入、缩放和偏移梯度的过程。
+  aliases:
+  - LayerNorm backward
+  status: published
+  confidence: 0.94
+- id: batchnorm-backward
+  name: BatchNorm Backward
+  domain: deep_learning
+  level: advanced
+  definition: BatchNorm 反向传播中计算输入和可学习参数梯度的过程。
+  aliases:
+  - BatchNorm backward
+  status: published
+  confidence: 0.94
+- id: computational-graph
+  name: Computational Graph
+  domain: deep_learning
+  level: beginner
+  definition: 用节点和边表示计算依赖关系的结构。
+  aliases:
+  - computation graph
+  status: published
+  confidence: 0.94
+- id: lazy-evaluation
+  name: Lazy Evaluation
+  domain: tinygrad
+  level: intermediate
+  definition: 延迟执行计算，直到结果真正被需要的执行策略。
+  aliases:
+  - lazy execution
+  status: published
+  confidence: 0.94
+- id: kernel-fusion
+  name: Kernel Fusion
+  domain: performance_optimization
+  level: intermediate
+  definition: 把多个小算子合并成一个 kernel 执行的优化方法。
+  aliases:
+  - operator fusion
+  status: published
+  confidence: 0.94
+- id: cuda-occupancy
+  name: CUDA Occupancy
+  domain: cuda
+  level: advanced
+  definition: GPU 上活跃 warp 数相对硬件最大能力的利用程度。
+  aliases:
+  - occupancy
+  status: published
+  confidence: 0.94
+- id: memory-coalescing
+  name: Memory Coalescing
+  domain: cuda
+  level: advanced
+  definition: 让同一 warp 的线程访问连续内存，从而提升全局内存效率的技术。
+  aliases:
+  - coalesced access
+  status: published
+  confidence: 0.94
+- id: masked-load-store
+  name: Masked Load and Store
+  domain: triton
+  level: intermediate
+  definition: 在边界或条件位置上控制读取和写入是否生效的 GPU 编程技术。
+  aliases:
+  - masked load
+  - masked store
+  status: published
+  confidence: 0.94
+- id: prefix-sum
+  name: Prefix Sum
+  domain: algorithms
+  level: beginner
+  definition: 把序列中每个位置之前的累计和预先计算出来的方法。
+  aliases:
+  - scan
+  status: published
+  confidence: 0.94
+- id: sliding-window
+  name: Sliding Window
+  domain: algorithms
+  level: beginner
+  definition: 维护一个移动区间来处理连续子数组或子串的方法。
+  aliases:
+  - window
+  status: published
+  confidence: 0.94
+- id: two-pointers
+  name: Two Pointers
+  domain: algorithms
+  level: beginner
+  definition: 用两个索引协同移动来减少搜索空间的算法技巧。
+  aliases:
+  - two pointer
+  status: published
+  confidence: 0.94
+- id: union-find
+  name: Union-Find
+  domain: data_structures
+  level: intermediate
+  definition: 维护元素所属连通集合的数据结构。
+  aliases:
+  - disjoint set union
+  - DSU
+  status: published
+  confidence: 0.94
+- id: shortest-path
+  name: Shortest Path
+  domain: algorithms
+  level: intermediate
+  definition: 在图中寻找两个节点之间代价最小路径的问题。
+  aliases:
+  - Dijkstra
+  status: published
+  confidence: 0.94
+- id: minimum-spanning-tree
+  name: Minimum Spanning Tree
+  domain: algorithms
+  level: intermediate
+  definition: 连接所有节点且总边权最小的无环子图。
+  aliases:
+  - MST
+  status: published
+  confidence: 0.94
+- id: topological-sort
+  name: Topological Sort
+  domain: algorithms
+  level: intermediate
+  definition: 把有向无环图中的节点排成满足依赖顺序的序列。
+  aliases:
+  - toposort
+  status: published
+  confidence: 0.94
+- id: edit-distance
+  name: Edit Distance
+  domain: algorithms
+  level: intermediate
+  definition: 衡量两个字符串通过插入、删除和替换变成彼此所需最少操作数的指标。
+  aliases:
+  - Levenshtein distance
+  status: published
+  confidence: 0.94
+- id: regular-expression
+  name: Regular Expression
+  domain: software_engineering
+  level: beginner
+  definition: 用模式语言匹配字符串结构的方法。
+  aliases:
+  - regex
+  status: published
+  confidence: 0.94
+- id: json-data-format
+  name: JSON Data Format
+  domain: software_engineering
+  level: beginner
+  definition: 用键值、数组和基础类型表示结构化数据的文本格式。
+  aliases:
+  - JSON
+  status: published
+  confidence: 0.94
+- id: api-design
+  name: API Design
+  domain: software_engineering
+  level: intermediate
+  definition: 设计系统之间调用接口的原则和方法。
+  aliases:
+  - API
+  status: published
+  confidence: 0.94
+- id: feature-scaling
+  name: Feature Scaling
+  domain: data_preprocessing
+  level: beginner
+  definition: 把特征调整到合适数值尺度的数据预处理方法。
+  aliases:
+  - scaling
+  - StandardScaler
+  - standardscaler fit transform
+  - fit transform
+  status: published
+  confidence: 0.94
+- id: missing-value-imputation
+  name: Missing Value Imputation
+  domain: data_preprocessing
+  level: beginner
+  definition: 用规则或模型填补缺失值的数据处理方法。
+  aliases:
+  - imputation
+  - dropna
+  - fillna
+  - handle missing values
+  status: published
+  confidence: 0.94
+- id: categorical-encoding
+  name: Categorical Encoding
+  domain: data_preprocessing
+  level: beginner
+  definition: 把类别特征转换成模型可使用数值表示的方法。
+  aliases:
+  - category encoding
+  - label encoding
+  - ordinal variables
+  status: published
+  confidence: 0.94
+- id: multiclass-classification
+  name: Multiclass Classification
+  domain: machine_learning
+  level: beginner
+  definition: 从三个或更多互斥类别中选择一个类别的监督学习任务。
+  aliases:
+  - multi-class classification
+  status: published
+  confidence: 0.94
+- id: multilabel-classification
+  name: Multilabel Classification
+  domain: machine_learning
+  level: intermediate
+  definition: 一个样本可以同时属于多个类别的监督学习任务。
+  aliases:
+  - multi-label classification
+  status: published
+  confidence: 0.94
+- id: multinomial-logistic-regression
+  name: Multinomial Logistic Regression
+  domain: machine_learning
+  level: intermediate
+  definition: 把逻辑回归扩展到多分类任务的线性分类模型。
+  aliases:
+  - softmax regression
+  status: published
+  confidence: 0.94
+- id: ridge-regression
+  name: Ridge Regression
+  domain: machine_learning
+  level: beginner
+  definition: 在线性回归中加入 L2 正则化的回归方法。
+  aliases:
+  - L2 regression
+  status: published
+  confidence: 0.94
+- id: lasso-regression
+  name: Lasso Regression
+  domain: machine_learning
+  level: intermediate
+  definition: 在线性回归中加入 L1 正则化的回归方法。
+  aliases:
+  - L1 regression
+  status: published
+  confidence: 0.94
+- id: elastic-net
+  name: Elastic Net
+  domain: machine_learning
+  level: intermediate
+  definition: 结合 L1 和 L2 正则化的线性模型。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: cross-validation
+  name: Cross Validation
+  domain: machine_learning
+  level: beginner
+  definition: 把数据多次划分训练和验证，以更稳健评估模型的方法。
+  aliases:
+  - CV
+  - k-fold
+  status: published
+  confidence: 0.94
+- id: hyperparameter-tuning
+  name: Hyperparameter Tuning
+  domain: machine_learning
+  level: beginner
+  definition: 选择学习率、正则强度和模型结构等非训练参数的过程。
+  aliases:
+  - tuning
+  status: published
+  confidence: 0.94
+- id: learning-curve
+  name: Learning Curve
+  domain: machine_learning
+  level: beginner
+  definition: 展示模型表现随训练样本量或训练过程变化的曲线。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: feature-importance
+  name: Feature Importance
+  domain: machine_learning
+  level: intermediate
+  definition: 衡量特征对模型预测贡献程度的方法集合。
+  aliases:
+  - importance
+  status: published
+  confidence: 0.94
+- id: shap-values
+  name: SHAP Values
+  domain: machine_learning
+  level: advanced
+  definition: 基于博弈论思想解释单个预测中特征贡献的方法。
+  aliases:
+  - SHAP
+  status: published
+  confidence: 0.94
+- id: lstm-network
+  name: LSTM Network
+  domain: nlp
+  level: intermediate
+  definition: 带门控记忆单元的循环神经网络结构。
+  aliases:
+  - LSTM
+  status: published
+  confidence: 0.94
+- id: gru-network
+  name: GRU Network
+  domain: nlp
+  level: intermediate
+  definition: 使用更新门和重置门的轻量循环神经网络结构。
+  aliases:
+  - GRU
+  status: published
+  confidence: 0.94
+- id: sequence-to-sequence
+  name: Sequence-to-Sequence
+  domain: nlp
+  level: intermediate
+  definition: 把一个序列映射成另一个序列的建模框架。
+  aliases:
+  - seq2seq
+  status: published
+  confidence: 0.94
+- id: teacher-forcing
+  name: Teacher Forcing
+  domain: nlp
+  level: intermediate
+  definition: 训练自回归序列模型时，把真实上一个 token 作为下一步输入的方法。
+  aliases: []
+  status: published
+  confidence: 0.94
+- id: encoder-decoder-architecture
+  name: Encoder-Decoder Architecture
+  domain: nlp
+  level: intermediate
+  definition: 先编码输入，再由解码器生成输出的模型结构。
+  aliases:
+  - encoder decoder
+  status: published
+  confidence: 0.94
+- id: cross-attention
+  name: Cross-Attention
+  domain: nlp
+  level: intermediate
+  definition: 让一个序列的 query 去关注另一个序列 key-value 的注意力机制。
+  aliases:
+  - encoder-decoder attention
+  status: published
+  confidence: 0.94
+- id: residual-stream
+  name: Residual Stream
+  domain: llm
+  level: advanced
+  definition: Transformer 中沿层传递并被各子层逐步更新的主表示通道。
+  aliases:
+  - residual stream
+  status: published
+  confidence: 0.94
+- id: feed-forward-network
+  name: Feed-Forward Network
+  domain: llm
+  level: intermediate
+  definition: Transformer 块中对每个位置独立应用的两层或多层前馈子网络。
+  aliases:
+  - MLP block
+  - FFN
+  status: published
+  confidence: 0.94
+- id: beam-search-length-penalty
+  name: Beam Search Length Penalty
+  domain: llm
+  level: intermediate
+  definition: 在 beam search 中调整序列长度偏好的打分项。
+  aliases:
+  - length penalty
+  status: published
+  confidence: 0.94
+- id: dataset-class
+  name: PyTorch Dataset
+  domain: pytorch
+  level: beginner
+  definition: 定义数据集中单条样本如何读取的 PyTorch 抽象。
+  aliases:
+  - torch Dataset
+  status: published
+  confidence: 0.94
+- id: data-augmentation-pipeline
+  name: Data Augmentation Pipeline
+  domain: pytorch
+  level: beginner
+  definition: 把多个数据变换按顺序组合并应用到样本上的流程。
+  aliases:
+  - transforms
+  status: published
+  confidence: 0.94
+- id: model-train-eval-mode
+  name: Model Train and Eval Mode
+  domain: pytorch
+  level: beginner
+  definition: PyTorch 中控制模型训练和推理行为的模式切换。
+  aliases:
+  - train mode
+  - eval mode
+  status: published
+  confidence: 0.94
+- id: no-grad-inference
+  name: No-Grad Inference
+  domain: pytorch
+  level: beginner
+  definition: 在推理或验证中关闭梯度记录的 PyTorch 用法。
+  aliases:
+  - torch.no_grad
+  status: published
+  confidence: 0.94
+- id: state-dict
+  name: PyTorch State Dict
+  domain: pytorch
+  level: beginner
+  definition: 保存模型参数和缓冲区名称到张量的映射结构。
+  aliases:
+  - state_dict
+  status: published
+  confidence: 0.94
+- id: optimizer-step
+  name: Optimizer Step
+  domain: pytorch
+  level: beginner
+  definition: 优化器根据当前梯度更新模型参数的一步操作。
+  aliases:
+  - optimizer.step
+  - optimizer update
+  - training step
+  status: published
+  confidence: 0.94
+- id: zero-grad
+  name: Zero Grad
+  domain: pytorch
+  level: beginner
+  definition: 在新一轮反向传播前清空参数梯度的操作。
+  aliases:
+  - zero_grad
+  status: published
+  confidence: 0.94
+- id: atomic-operations
+  name: Atomic Operations
+  domain: cuda
+  level: advanced
+  definition: 保证多个线程并发更新同一内存位置时结果一致的操作。
+  aliases:
+  - atomic add
+  status: published
+  confidence: 0.94
+- id: parallel-reduction
+  name: Parallel Reduction
+  domain: cuda
+  level: advanced
+  definition: 用并行方式把大量元素汇总成一个或少量结果的算法模式。
+  aliases:
+  - reduction
+  status: published
+  confidence: 0.94
+- id: race-condition
+  name: Race Condition
+  domain: systems_programming
+  level: intermediate
+  definition: 程序结果依赖并发操作执行顺序而变得不稳定的问题。
+  aliases:
+  - data race
+  status: published
+  confidence: 0.94
+- id: streaming-inference
+  name: Streaming Inference
+  domain: inference
+  level: intermediate
+  definition: 模型在生成过程中逐步返回部分结果的推理方式。
+  aliases:
+  - streaming
+  status: published
+  confidence: 0.94
+- id: kv-cache
+  name: KV Cache
+  domain: llm
+  level: advanced
+  definition: 自回归解码时按层保存历史 token 的 key/value 投影、只处理新增 token 的推理机制。
+  aliases:
+  - key value cache
+  status: published
+  confidence: 0.94
+- id: grouped-query-attention
+  name: Grouped-Query Attention
+  domain: llm
+  level: advanced
+  definition: 让多个 query head 共享较少 key-value head 的注意力变体。
+  aliases:
+  - GQA
+  status: published
+  confidence: 0.94
+- id: ranking-metrics
+  name: Ranking Metrics
+  domain: machine_learning
+  level: intermediate
+  definition: 衡量排序模型把重要结果排在前面的指标集合。
+  aliases:
+  - NDCG
+  - MRR
+  status: published
+  confidence: 0.94
+- id: time-series-forecasting
+  name: Time Series Forecasting
+  domain: machine_learning
+  level: intermediate
+  definition: 根据历史时间序列预测未来数值的任务。
+  aliases:
+  - forecasting
+  status: published
+  confidence: 0.94
+- id: anomaly-detection
+  name: Anomaly Detection
+  domain: machine_learning
+  level: intermediate
+  definition: 识别与大多数数据明显不同样本的任务。
+  aliases:
+  - outlier detection
+  status: published
+  confidence: 0.94
+- id: isolation-forest
+  name: Isolation Forest
+  domain: machine_learning
+  level: intermediate
+  definition: 通过随机切分样本空间来检测异常点的树模型方法。
+  aliases:
+  - IsolationForest
+  status: published
+  confidence: 0.94
+- id: semi-supervised-learning
+  name: Semi-Supervised Learning
+  domain: machine_learning
+  level: intermediate
+  definition: 同时利用少量标注数据和大量未标注数据的学习范式。
+  aliases:
+  - semi-supervised
+  status: published
+  confidence: 0.94
+- id: self-supervised-learning
+  name: Self-Supervised Learning
+  domain: deep_learning
+  level: advanced
+  definition: 从数据自身构造监督信号来学习表示的方法。
+  aliases:
+  - SSL
+  status: published
+  confidence: 0.94
+- id: precision-recall
+  name: Precision and Recall
+  domain: machine_learning
+  level: beginner
+  definition: 衡量分类模型命中质量和漏检程度的一组指标。
+  aliases:
+  - precision recall
+  - precision metric
+  - recall
+  status: published
+  confidence: 0.94
+- id: f1-score
+  name: F1 Score
+  domain: machine_learning
+  level: beginner
+  definition: 把 Precision 和 Recall 合成为一个折中指标的调和平均数。
+  aliases:
+  - F1
+  - F1 score
+  status: published
+  confidence: 0.94
+- id: clustering-evaluation
+  name: Clustering Evaluation
+  domain: machine_learning
+  level: intermediate
+  definition: 评估聚类结果是否合理的方法集合。
+  aliases:
+  - clustering evaluation
+  - clustering score
+  - cluster score
+  status: published
+  confidence: 0.94
+- id: silhouette-score
+  name: Silhouette Score
+  domain: machine_learning
+  level: intermediate
+  definition: 衡量样本与本簇和最近其它簇距离差异的聚类指标。
+  aliases:
+  - silhouette
+  status: published
+  confidence: 0.94
+- id: feature-selection
+  name: Feature Selection
+  domain: machine_learning
+  level: beginner
+  definition: 从候选特征中选择更有用子集的过程。
+  aliases:
+  - feature selection
+  status: published
+  confidence: 0.94
+- id: threshold-selection
+  name: Threshold Selection
+  domain: machine_learning
+  level: beginner
+  definition: 把概率或分数转换为类别决策时选择切分点的过程。
+  aliases:
+  - decision threshold
+  - classification threshold
+  status: published
+  confidence: 0.94
+- id: bootstrap-sampling
+  name: Bootstrap Sampling
+  domain: statistics
+  level: intermediate
+  definition: 从样本中有放回抽样，用来估计统计量不确定性的方法。
+  aliases:
+  - bootstrap
+  status: published
+  confidence: 0.94
+- id: voting-classifier
+  name: Voting Classifier
+  domain: machine_learning
+  level: beginner
+  definition: 把多个分类器的预测通过投票或概率平均组合的集成方法。
+  aliases:
+  - ensemble voting
+  - voting classifier
+  status: published
+  confidence: 0.94
+- id: forward-pass
+  name: Forward Pass
+  domain: deep_learning
+  level: beginner
+  definition: 模型从输入计算输出和损失的前向过程。
+  aliases:
+  - forward pass
+  status: published
+  confidence: 0.94
+- id: backward-pass
+  name: Backward Pass
+  domain: deep_learning
+  level: beginner
+  definition: 根据损失从后往前计算各参数梯度的过程。
+  aliases:
+  - backward pass
+  - loss backward
+  status: published
+  confidence: 0.94
+- id: embedding-layer
+  name: Embedding Layer
+  domain: deep_learning
+  level: beginner
+  definition: 把离散 ID 映射为连续向量表示的可训练层。
+  aliases:
+  - embedding lookup
+  - token embedding
+  status: published
+  confidence: 0.94
+- id: rmsnorm
+  name: RMSNorm
+  domain: llm
+  level: advanced
+  definition: 使用均方根尺度归一化激活的归一化层。
+  aliases:
+  - RMS Norm
+  - gemma style rmsnorm
+  status: published
+  confidence: 0.94
+- id: mixture-of-experts
+  name: Mixture of Experts
+  domain: llm
+  level: advanced
+  definition: 用路由器为每个输入选择少量专家网络参与计算的模型结构。
+  aliases:
+  - MoE
+  - mixture experts
+  status: published
+  confidence: 0.94
+- id: low-rank-adaptation
+  name: Low-Rank Adaptation
+  domain: llm
+  level: advanced
+  definition: 冻结原模型权重，只训练低秩增量矩阵的参数高效微调方法。
+  aliases:
+  - LoRA
+  - low rank adaptation
+  status: published
+  confidence: 0.94
+- id: denoising-process
+  name: Denoising Process
+  domain: deep_learning
+  level: advanced
+  definition: 生成模型从噪声逐步恢复数据结构的过程。
+  aliases:
+  - diffusion denoising
+  - denoising
+  status: published
+  confidence: 0.94
+- id: classifier-free-guidance
+  name: Classifier-Free Guidance
+  domain: deep_learning
+  level: advanced
+  definition: 扩散模型中用条件和无条件预测差值增强生成条件一致性的方法。
+  aliases:
+  - CFG
+  - guidance scale
+  status: published
+  confidence: 0.94
+- id: state-value-function
+  name: State Value Function
+  domain: reinforcement_learning
+  level: beginner
+  definition: 表示从某个状态出发，按策略行动可获得期望回报的函数。
+  aliases:
+  - state value
+  - value function
+  - value functions
+  status: published
+  confidence: 0.94
+- id: action-value-function
+  name: Action Value Function
+  domain: reinforcement_learning
+  level: beginner
+  definition: 表示在某状态先采取某动作后，继续按策略行动的期望回报。
+  aliases:
+  - action value
+  - q function
+  - Q function
+  status: published
+  confidence: 0.94
+- id: td-error
+  name: TD Error
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 时序差分学习中目标估计和当前估计之间的差值。
+  aliases:
+  - temporal difference error
+  - TD error
+  - TD error calculation
+  status: published
+  confidence: 0.94
+- id: bellman-expectation-equation
+  name: Bellman Expectation Equation
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 描述给定策略下价值函数如何由一步奖励和后续价值递归组成的方程。
+  aliases:
+  - Bellman expectation
+  - Bellman expectation equation
+  status: published
+  confidence: 0.94
+- id: eligibility-traces
+  name: Eligibility Traces
+  domain: reinforcement_learning
+  level: advanced
+  definition: 记录近期状态或动作对当前 TD 误差应承担多少更新责任的机制。
+  aliases:
+  - eligibility trace
+  - TD lambda
+  status: published
+  confidence: 0.94
+- id: n-step-td
+  name: N-Step TD
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 使用未来 n 步奖励和第 n 步价值估计构造目标的 TD 方法。
+  aliases:
+  - n step return
+  - n-step return
+  status: published
+  confidence: 0.94
+- id: rl-function-approximation
+  name: RL Function Approximation
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用参数化模型近似价值函数、策略或环境模型的方法。
+  aliases:
+  - function approximation
+  - linear approximation
+  status: published
+  confidence: 0.94
+- id: tile-coding
+  name: Tile Coding
+  domain: reinforcement_learning
+  level: advanced
+  definition: 把连续状态空间用多组错开的网格编码成稀疏特征的方法。
+  aliases:
+  - tile coding
+  status: published
+  confidence: 0.94
+- id: dyna-q
+  name: Dyna-Q
+  domain: reinforcement_learning
+  level: advanced
+  definition: 把真实经验学习和模型生成的规划更新结合起来的强化学习算法。
+  aliases:
+  - Dyna
+  - Dyna Q
+  - blocking maze
+  - model updates
+  status: published
+  confidence: 0.94
+- id: policy-improvement
+  name: Policy Improvement
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 根据当前价值估计构造更好策略的强化学习步骤。
+  aliases:
+  - policy improvement
+  status: published
+  confidence: 0.94
+- id: byte-pair-encoding
+  name: Byte Pair Encoding
+  domain: nlp
+  level: intermediate
+  definition: 通过反复合并高频相邻符号来构造子词词表的分词方法。
+  aliases:
+  - BPE
+  - token pair BPE
+  - byte pair
+  status: published
+  confidence: 0.94
+- id: autoregressive-generation
+  name: Autoregressive Generation
+  domain: nlp
+  level: intermediate
+  definition: 每一步基于已有输出生成下一个 token 的序列生成方式。
+  aliases:
+  - token prediction
+  - text generation
+  status: published
+  confidence: 0.94
+- id: context-window
+  name: Context Window
+  domain: llm
+  level: beginner
+  definition: 模型一次推理能接收和关注的最大 token 范围。
+  aliases:
+  - context length
+  - context size
+  - million token context
+  status: published
+  confidence: 0.94
+- id: instruction-tuning
+  name: Instruction Tuning
+  domain: llm
+  level: intermediate
+  definition: 用指令和期望回答样本微调模型，使其更会遵循用户任务。
+  aliases:
+  - instruction fine tuning
+  - instruction data
+  status: published
+  confidence: 0.94
+- id: document-chunking
+  name: Document Chunking
+  domain: llm
+  level: beginner
+  definition: 把长文档切成适合检索和模型输入的小片段的过程。
+  aliases:
+  - chunking
+  - document chunk
+  status: published
+  confidence: 0.94
+- id: overlapping-chunks
+  name: Overlapping Chunks
+  domain: llm
+  level: beginner
+  definition: 文档切分时让相邻片段共享一部分内容的策略。
+  aliases:
+  - overlapping
+  - chunk overlap
+  status: published
+  confidence: 0.94
+- id: text-generation-evaluation
+  name: Text Generation Evaluation
+  domain: nlp
+  level: intermediate
+  definition: 评估生成文本质量、相关性和任务完成度的方法集合。
+  aliases:
+  - generation evaluation
+  - text evaluation
+  status: published
+  confidence: 0.94
+- id: bigram-language-model
+  name: Bigram Language Model
+  domain: nlp
+  level: beginner
+  definition: 用前一个 token 预测下一个 token 的简单语言模型。
+  aliases:
+  - bigram
+  status: published
+  confidence: 0.94
+- id: padding-and-truncation
+  name: Padding and Truncation
+  domain: nlp
+  level: beginner
+  definition: 把序列补齐到统一长度或截断到最大长度的预处理步骤。
+  aliases:
+  - pad truncate
+  - padding truncation
+  - tokenized sequences
+  status: published
+  confidence: 0.94
+- id: matrix-rank
+  name: Matrix Rank
+  domain: linear_algebra
+  level: intermediate
+  definition: 矩阵中线性独立行或列的最大数量。
+  aliases:
+  - rank
+  status: published
+  confidence: 0.94
+- id: row-reduction
+  name: Row Reduction
+  domain: linear_algebra
+  level: beginner
+  definition: 通过初等行变换把矩阵化成更容易分析的阶梯形形式。
+  aliases:
+  - row reduction
+  - gaussian elimination
+  status: published
+  confidence: 0.94
+- id: linear-system-solving
+  name: Linear System Solving
+  domain: linear_algebra
+  level: beginner
+  definition: 求解形如 Ax=b 的线性方程组的过程。
+  aliases:
+  - solve linear equations
+  - linear equations
+  status: published
+  confidence: 0.94
+- id: jacobi-method
+  name: Jacobi Method
+  domain: linear_algebra
+  level: advanced
+  definition: 用上一轮所有变量值并行更新线性方程组近似解的迭代方法。
+  aliases:
+  - Jacobi iteration
+  status: published
+  confidence: 0.94
+- id: orthonormal-basis
+  name: Orthonormal Basis
+  domain: linear_algebra
+  level: intermediate
+  definition: 由互相正交且长度为一的向量组成的基。
+  aliases:
+  - orthonormal basis
+  - basis vectors
+  status: published
+  confidence: 0.94
+- id: vector-projection
+  name: Vector Projection
+  domain: linear_algebra
+  level: beginner
+  definition: 把一个向量在另一个方向上的分量计算出来的操作。
+  aliases:
+  - projection
+  status: published
+  confidence: 0.94
+- id: determinant
+  name: Determinant
+  domain: linear_algebra
+  level: beginner
+  definition: 描述方阵缩放体积和是否可逆的标量。
+  aliases:
+  - det
+  status: published
+  confidence: 0.94
+- id: sparse-matrix
+  name: Sparse Matrix
+  domain: linear_algebra
+  level: intermediate
+  definition: 大多数元素为零，并用专门格式节省存储和计算的矩阵。
+  aliases:
+  - sparse format
+  - compressed sparse
+  status: published
+  confidence: 0.94
+- id: sql-select
+  name: SQL SELECT
+  domain: sql
+  level: beginner
+  definition: 从表中选择列并返回查询结果的 SQL 基本语句。
+  aliases:
+  - select all rows
+  - specific columns
+  - select columns
+  status: published
+  confidence: 0.94
+- id: select-distinct
+  name: SELECT DISTINCT
+  domain: sql
+  level: beginner
+  definition: 返回去重后结果行的 SQL 查询写法。
+  aliases:
+  - remove duplicates
+  - distinct
+  status: published
+  confidence: 0.94
+- id: top-n-per-group
+  name: Top N Per Group
+  domain: sql
+  level: intermediate
+  definition: 在每个分组内选出排名靠前若干行的查询模式。
+  aliases:
+  - per group
+  - top per group
+  status: published
+  confidence: 0.94
+- id: cohort-retention
+  name: Cohort Retention
+  domain: sql
+  level: intermediate
+  definition: 按用户首次行为时间分组，观察后续留存表现的分析方法。
+  aliases:
+  - cohort retention
+  - first login
+  status: published
+  confidence: 0.94
+- id: sql-date-functions
+  name: SQL Date Functions
+  domain: sql
+  level: beginner
+  definition: 处理日期截断、差值、提取和格式化的 SQL 函数集合。
+  aliases:
+  - date functions
+  - month
+  - days
+  status: published
+  confidence: 0.94
+- id: consecutive-activity
+  name: Consecutive Activity
+  domain: sql
+  level: intermediate
+  definition: 识别用户或实体连续多天、多周发生行为的分析模式。
+  aliases:
+  - consecutive days
+  - consecutive login
+  - longest consecutive visit
+  - consecutive visit streak
+  - visit streak
+  status: published
+  confidence: 0.94
+- id: first-value-window
+  name: FIRST_VALUE Window Function
+  domain: sql
+  level: intermediate
+  definition: 在窗口内返回排序后第一个值的 SQL 窗口函数。
+  aliases:
+  - first value
+  - first login
+  status: published
+  confidence: 0.94
+- id: bic-aic
+  name: BIC and AIC
+  domain: statistics
+  level: intermediate
+  definition: 在拟合质量和模型复杂度之间做权衡的信息准则。
+  aliases:
+  - BIC AIC
+  - AIC
+  - BIC
+  status: published
+  confidence: 0.94
+- id: rejection-sampling
+  name: Rejection Sampling
+  domain: probability
+  level: intermediate
+  definition: 从容易采样的提议分布中抽样，再按概率接受或拒绝的采样方法。
+  aliases:
+  - rejection sampling
+  status: published
+  confidence: 0.94
+- id: speculative-decoding
+  name: Speculative Decoding
+  domain: inference
+  level: advanced
+  definition: 用小模型先草拟多个 token，再由大模型验证以加速生成的解码方法。
+  aliases:
+  - speculative decoding
+  - speculative sampling
+  status: published
+  confidence: 0.94
+- id: rotary-positional-embedding
+  name: Rotary Positional Embedding
+  domain: llm
+  level: advanced
+  definition: 通过旋转 query 和 key 向量来注入相对位置信息的位置编码方法。
+  aliases:
+  - RoPE
+  - rotary embedding
+  status: published
+  confidence: 0.94
+- id: bessel-correction
+  name: Bessel Correction
+  domain: statistics
+  level: intermediate
+  definition: 用 n-1 而不是 n 估计样本方差时的自由度修正。
+  aliases:
+  - Bessel correction
+  - unbiased variance
+  status: published
+  confidence: 0.94
+- id: tf-idf
+  name: TF-IDF
+  domain: nlp
+  level: beginner
+  definition: 结合词频和逆文档频率来衡量词对文档重要性的表示方法。
+  aliases:
+  - IDF
+  - term frequency inverse document frequency
+  status: published
+  confidence: 0.94
+- id: prompt-template
+  name: Prompt Template
+  domain: llm
+  level: beginner
+  definition: 把任务说明、变量和输出格式组织成可复用提示词结构的模板。
+  aliases:
+  - prompt
+  - prompt template
+  status: published
+  confidence: 0.94
+- id: preference-dataset
+  name: Preference Dataset
+  domain: llm
+  level: intermediate
+  definition: 记录人类或模型对候选回答偏好关系的数据集。
+  aliases:
+  - preference data
+  - preference dataset
+  status: published
+  confidence: 0.94
+- id: token-frequency
+  name: Token Frequency
+  domain: nlp
+  level: beginner
+  definition: 统计 token 在语料或文档中出现次数的基础文本特征。
+  aliases:
+  - token frequency
+  - frequency
+  status: published
+  confidence: 0.94
+- id: cross-product
+  name: Cross Product
+  domain: linear_algebra
+  level: beginner
+  definition: 三维空间中由两个向量生成垂直向量的运算。
+  aliases:
+  - cross product
+  status: published
+  confidence: 0.94
+- id: rotation-matrix
+  name: Rotation Matrix
+  domain: linear_algebra
+  level: intermediate
+  definition: 表示保持长度和角度不变的旋转线性变换的矩阵。
+  aliases:
+  - rotation
+  - random rotation
+  status: published
+  confidence: 0.94
+- id: vector-norm
+  name: Vector Norm
+  domain: linear_algebra
+  level: beginner
+  definition: 衡量向量长度或大小的函数。
+  aliases:
+  - vector norms
+  - norm
+  status: published
+  confidence: 0.94
+- id: change-of-basis
+  name: Change of Basis
+  domain: linear_algebra
+  level: intermediate
+  definition: 把同一个向量从一组基的坐标表示转换到另一组基的过程。
+  aliases:
+  - basis transformation
+  - transformation basis
+  status: published
+  confidence: 0.94
+- id: optical-flow
+  name: Optical Flow
+  domain: computer_vision
+  level: intermediate
+  definition: 估计视频相邻帧中像素或局部区域运动方向和速度的任务。
+  aliases:
+  - optical flow
+  - EPE
+  status: published
+  confidence: 0.94
+- id: video-quality-metrics
+  name: Video Quality Metrics
+  domain: computer_vision
+  level: intermediate
+  definition: 衡量视频清晰度、稳定性、失真和生成质量的指标集合。
+  aliases:
+  - video quality
+  - quality evaluation
+  status: published
+  confidence: 0.94
+- id: frechet-inception-distance
+  name: Frechet Inception Distance
+  domain: computer_vision
+  level: advanced
+  definition: 比较生成图像和真实图像特征分布距离的指标。
+  aliases:
+  - FID
+  - frechet distance
+  status: published
+  confidence: 0.94
+- id: psnr-ssim
+  name: PSNR and SSIM
+  domain: computer_vision
+  level: beginner
+  definition: 评估图像重建质量的两个常用指标。
+  aliases:
+  - PSNR
+  - SSIM
+  status: published
+  confidence: 0.94
+- id: rgb-grayscale-conversion
+  name: RGB Grayscale Conversion
+  domain: computer_vision
+  level: beginner
+  definition: 把彩色图像转换为单通道灰度表示的处理步骤。
+  aliases:
+  - grayscale
+  - convert RGB image
+  status: published
+  confidence: 0.94
+- id: image-reconstruction
+  name: Image Reconstruction
+  domain: computer_vision
+  level: intermediate
+  definition: 从压缩、损坏或隐变量表示中恢复图像的任务。
+  aliases:
+  - image reconstruction
+  - frame reconstruction
+  status: published
+  confidence: 0.94
+- id: linked-list
+  name: Linked List
+  domain: data_structures
+  level: beginner
+  definition: 由节点和指针连接起来的线性数据结构。
+  aliases:
+  - linked list
+  - linked lists
+  status: published
+  confidence: 0.94
+- id: linked-list-cycle
+  name: Linked List Cycle
+  domain: algorithms
+  level: beginner
+  definition: 判断链表中是否存在节点重复指向形成环的算法问题。
+  aliases:
+  - detect cycle linked list
+  - cycle linked list
+  status: published
+  confidence: 0.94
+- id: grid-path-search
+  name: Grid Path Search
+  domain: algorithms
+  level: intermediate
+  definition: 在二维网格图中寻找可达路径或最短路径的算法模式。
+  aliases:
+  - grid path
+  - grid graph
+  status: published
+  confidence: 0.94
+- id: duplicate-detection
+  name: Duplicate Detection
+  domain: algorithms
+  level: beginner
+  definition: 在集合、数组或数据表中识别重复元素的方法集合。
+  aliases:
+  - find duplicates
+  - duplicates
+  status: published
+  confidence: 0.94
+- id: lru-cache
+  name: LRU Cache
+  domain: data_structures
+  level: intermediate
+  definition: 淘汰最近最少使用项的缓存策略和数据结构组合。
+  aliases:
+  - LRU
+  - lru
+  status: published
+  confidence: 0.94
+- id: key-value-store
+  name: Key-Value Store
+  domain: data_structures
+  level: beginner
+  definition: 通过 key 直接访问 value 的数据存储抽象。
+  aliases:
+  - key value store
+  - KV store
+  status: published
+  confidence: 0.94
+- id: binary-tree
+  name: Binary Tree
+  domain: data_structures
+  level: beginner
+  definition: 每个节点最多有两个子节点的树形数据结构。
+  aliases:
+  - binary tree
+  - tree
+  status: published
+  confidence: 0.94
+- id: trie
+  name: Trie
+  domain: data_structures
+  level: intermediate
+  definition: 按字符或 token 前缀组织字符串集合的树结构。
+  aliases:
+  - prefix matching
+  - prefix tree
+  status: published
+  confidence: 0.94
+- id: sql-delete-duplicates
+  name: SQL Delete Duplicates
+  domain: sql
+  level: intermediate
+  definition: 在 SQL 表中识别并删除重复记录的操作模式。
+  aliases:
+  - delete duplicate
+  - duplicate emails
+  status: published
+  confidence: 0.94
+- id: groupwise-ranking-sql
+  name: Groupwise Ranking SQL
+  domain: sql
+  level: intermediate
+  definition: 在每个分组内按指标排序并分配名次的 SQL 查询模式。
+  aliases:
+  - top salaries
+  - per department
+  - group ranking
+  status: published
+  confidence: 0.94
+- id: daily-active-users
+  name: Daily Active Users
+  domain: sql
+  level: beginner
+  definition: 按天统计发生有效行为的唯一用户数量的产品分析指标。
+  aliases:
+  - daily active users
+  - daily users
+  status: published
+  confidence: 0.94
+- id: pytorch-parameter-count
+  name: PyTorch Parameter Count
+  domain: pytorch
+  level: beginner
+  definition: 统计 PyTorch 模型中可训练或全部参数数量的方法。
+  aliases:
+  - count parameters
+  - parameters
+  status: published
+  confidence: 0.94
+- id: sequential-module
+  name: PyTorch Sequential
+  domain: pytorch
+  level: beginner
+  definition: 按顺序串联多个层或模块的 PyTorch 容器。
+  aliases:
+  - sequential
+  - torch Sequential
+  status: published
+  confidence: 0.94
+- id: single-training-step
+  name: Single Training Step
+  domain: pytorch
+  level: beginner
+  definition: 一次小批量训练中完成前向、损失、反向和参数更新的最小循环。
+  aliases:
+  - one training step
+  - training step
+  status: published
+  confidence: 0.94
+- id: etl-pipeline
+  name: ETL Pipeline
+  domain: mlops
+  level: beginner
+  definition: 把数据抽取、转换并加载到目标系统的工程流程。
+  aliases:
+  - ETL
+  - ETL pipeline
+  status: published
+  confidence: 0.94
+- id: model-monitoring
+  name: Model Monitoring
+  domain: mlops
+  level: intermediate
+  definition: 上线后持续观察模型输入、输出、性能和业务指标的过程。
+  aliases:
+  - monitoring
+  - inference monitoring
+  status: published
+  confidence: 0.94
+- id: canary-deployment
+  name: Canary Deployment
+  domain: mlops
+  level: intermediate
+  definition: 先向少量流量发布新版本，再逐步扩大范围的部署策略。
+  aliases:
+  - canary deployment
+  - health rollout
+  status: published
+  confidence: 0.94
+- id: request-logging
+  name: Request Logging
+  domain: mlops
+  level: beginner
+  definition: 记录模型服务请求、响应、耗时和关键元数据的工程机制。
+  aliases:
+  - request
+  - request log
+  status: published
+  confidence: 0.94
+- id: beta-distribution
+  name: Beta Distribution
+  domain: probability
+  level: intermediate
+  definition: 定义在 0 到 1 区间上的连续概率分布。
+  aliases:
+  - beta distribution
+  - beta pdf
+  status: published
+  confidence: 0.94
+- id: bhattacharyya-distance
+  name: Bhattacharyya Distance
+  domain: statistics
+  level: advanced
+  definition: 衡量两个概率分布重叠程度的距离式指标。
+  aliases:
+  - Bhattacharyya distance
+  status: published
+  confidence: 0.94
+- id: histogram
+  name: Histogram
+  domain: statistics
+  level: beginner
+  definition: 把数值范围分桶后统计每个桶中样本数量的图表和统计方法。
+  aliases:
+  - histogram counts
+  status: published
+  confidence: 0.94
+- id: classifier
+  name: Classifier
+  domain: machine_learning
+  level: beginner
+  definition: 把输入样本分配到离散类别的预测模型。
+  aliases:
+  - classifier
+  status: published
+  confidence: 0.94
+- id: polynomial-features
+  name: Polynomial Features
+  domain: machine_learning
+  level: beginner
+  definition: 把原始特征扩展为多项式项和交互项的特征工程方法。
+  aliases:
+  - polynomial
+  - polynomial feature
+  status: published
+  confidence: 0.94
+- id: kernel-method
+  name: Kernel Method
+  domain: machine_learning
+  level: advanced
+  definition: 通过核函数隐式计算高维特征空间相似度的方法。
+  aliases:
+  - kernel
+  - kernel trick
+  status: published
+  confidence: 0.94
+- id: linear-discriminant-analysis
+  name: Linear Discriminant Analysis
+  domain: machine_learning
+  level: intermediate
+  definition: 基于类条件高斯假设寻找线性分类边界的模型。
+  aliases:
+  - LDA
+  - discriminant analysis
+  status: published
+  confidence: 0.94
+- id: quadratic-discriminant-analysis
+  name: Quadratic Discriminant Analysis
+  domain: machine_learning
+  level: intermediate
+  definition: 允许不同类别拥有不同协方差矩阵的高斯判别分类模型。
+  aliases:
+  - QDA
+  status: published
+  confidence: 0.94
+- id: synthetic-dataset-generation
+  name: Synthetic Dataset Generation
+  domain: machine_learning
+  level: beginner
+  definition: 按规则或随机过程生成用于实验、教学和测试的数据集。
+  aliases:
+  - synthetic dataset
+  - procedurally generated
+  - bars sampling
+  status: published
+  confidence: 0.94
+- id: hidden-state
+  name: Hidden State
+  domain: deep_learning
+  level: beginner
+  definition: 序列模型在处理当前输入时保留的内部状态表示。
+  aliases:
+  - hidden states
+  - hidden state
+  status: published
+  confidence: 0.94
+- id: reward-modeling
+  name: Reward Modeling
+  domain: machine_learning
+  level: advanced
+  definition: 学习一个模型来评估候选行为或回答质量的过程。
+  aliases:
+  - reward model
+  - reward
+  - RM LLM quality filter
+  - LLM quality filter
+  status: published
+  confidence: 0.94
+- id: real-time-inference
+  name: Real-Time Inference
+  domain: inference
+  level: intermediate
+  definition: 在严格延迟约束下完成模型预测的推理场景。
+  aliases:
+  - real time
+  - real-time
+  status: published
+  confidence: 0.94
+- id: policy-optimization
+  name: Policy Optimization
+  domain: reinforcement_learning
+  level: advanced
+  definition: 直接改进策略参数以提高期望回报的一类强化学习方法。
+  aliases:
+  - policy optimization
+  status: published
+  confidence: 0.94
+- id: group-relative-policy-optimization
+  name: Group Relative Policy Optimization
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用同组样本相对表现构造优化信号的策略优化思路。
+  aliases:
+  - GRPO
+  - GRPO objective
+  status: published
+  confidence: 0.94
+- id: reward-baseline
+  name: Reward Baseline
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在策略梯度中减去的参考值，用于降低梯度估计方差。
+  aliases:
+  - baseline reward
+  - average rewards
+  - REINFORCE baseline
+  status: published
+  confidence: 0.94
+- id: reward-normalization
+  name: Reward Normalization
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 对奖励或回报做缩放、中心化或裁剪以稳定训练的处理方法。
+  aliases:
+  - exponential weighted average rewards
+  - weighted average rewards
+  - exponential weighted average
+  status: published
+  confidence: 0.94
+- id: sample-efficiency
+  name: Sample Efficiency
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 算法用较少交互样本学到有效策略的能力。
+  aliases:
+  - sample efficiency
+  - sample
+  status: published
+  confidence: 0.94
+- id: upper-confidence-bound
+  name: Upper Confidence Bound
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在多臂老虎机中用乐观估计平衡探索和利用的动作选择方法。
+  aliases:
+  - UCB
+  - confidence bound
+  status: published
+  confidence: 0.94
+- id: environment-model
+  name: Environment Model
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 预测环境转移和奖励的模型型强化学习组件。
+  aliases:
+  - environment model
+  status: published
+  confidence: 0.94
+- id: action-mapping
+  name: Action Mapping
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 把模型输出或抽象动作转换为环境可执行动作的过程。
+  aliases:
+  - action mapping
+  - hierarchical action space
+  - action space flattening
+  status: published
+  confidence: 0.94
+- id: latent-action-space
+  name: Latent Action Space
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在隐变量空间中表示动作，再映射到真实动作的建模方式。
+  aliases:
+  - latent action
+  - latent action mapping
+  status: published
+  confidence: 0.94
+- id: flatten-layer
+  name: Flatten Layer
+  domain: deep_learning
+  level: beginner
+  definition: 把多维张量除 batch 维外展平成一维特征的网络层。
+  aliases:
+  - flatten
+  - FlattenConsecutive layer
+  status: published
+  confidence: 0.94
+- id: associative-memory
+  name: Associative Memory
+  domain: deep_learning
+  level: advanced
+  definition: 通过部分线索检索或恢复相关模式的记忆机制。
+  aliases:
+  - associative memory
+  status: published
+  confidence: 0.94
+- id: delta-rule
+  name: Delta Rule
+  domain: deep_learning
+  level: beginner
+  definition: 按预测误差调整线性模型权重的早期学习规则。
+  aliases:
+  - delta rule
+  - delta rule update
+  status: published
+  confidence: 0.94
+- id: gated-linear-unit
+  name: Gated Linear Unit
+  domain: deep_learning
+  level: intermediate
+  definition: 用一个分支控制另一个分支通过比例的门控神经网络模块。
+  aliases:
+  - GLU
+  - gated
+  status: published
+  confidence: 0.94
+- id: hierarchical-feature-fusion
+  name: Hierarchical Feature Fusion
+  domain: deep_learning
+  level: intermediate
+  definition: 把不同层级或尺度的特征组合起来进行预测的方法。
+  aliases:
+  - hierarchical fusion
+  - feature fusion
+  status: published
+  confidence: 0.94
+- id: token-level-loss
+  name: Token-Level Loss
+  domain: nlp
+  level: beginner
+  definition: 对序列中每个需要预测的 token 计算并汇总的训练损失。
+  aliases:
+  - tokens loss
+  - loss computation
+  status: published
+  confidence: 0.94
+- id: instruction-loss-masking
+  name: Instruction Loss Masking
+  domain: llm
+  level: intermediate
+  definition: 训练指令模型时只让指定 token 参与损失计算的策略。
+  aliases:
+  - mask instruction tokens
+  - instruction tokens
+  status: published
+  confidence: 0.94
+- id: vocabulary
+  name: Vocabulary
+  domain: nlp
+  level: beginner
+  definition: 分词器可使用的 token 集合及其 ID 映射。
+  aliases:
+  - vocabulary
+  - vocabulary size
+  status: published
+  confidence: 0.94
+- id: benchmark-dataset
+  name: Benchmark Dataset
+  domain: machine_learning
+  level: beginner
+  definition: 用于比较模型或方法表现的标准化数据集。
+  aliases:
+  - benchmark
+  - benchmark dataset
+  status: published
+  confidence: 0.94
+- id: multi-document-retrieval
+  name: Multi-Document Retrieval
+  domain: llm
+  level: intermediate
+  definition: 从多个文档或片段中找出与问题最相关内容的检索过程。
+  aliases:
+  - multi document
+  - document retrieval
+  status: published
+  confidence: 0.94
+- id: linear-independence
+  name: Linear Independence
+  domain: linear_algebra
+  level: beginner
+  definition: 一组向量中没有任何一个可由其它向量线性组合得到的性质。
+  aliases:
+  - linear independence
+  status: published
+  confidence: 0.94
+- id: positive-definite-matrix
+  name: Positive Definite Matrix
+  domain: linear_algebra
+  level: intermediate
+  definition: 对任何非零向量都产生正二次型值的对称矩阵。
+  aliases:
+  - positive definite
+  - check positive definite
+  status: published
+  confidence: 0.94
+- id: cholesky-decomposition
+  name: Cholesky Decomposition
+  domain: linear_algebra
+  level: advanced
+  definition: 把正定矩阵分解为下三角矩阵和其转置乘积的方法。
+  aliases:
+  - Cholesky decomposition
+  status: published
+  confidence: 0.94
+- id: qr-decomposition
+  name: QR Decomposition
+  domain: linear_algebra
+  level: intermediate
+  definition: 把矩阵分解为正交矩阵 Q 和上三角矩阵 R 的方法。
+  aliases:
+  - QR decomposition
+  - decomposition
+  status: published
+  confidence: 0.94
+- id: affine-transformation
+  name: Affine Transformation
+  domain: linear_algebra
+  level: beginner
+  definition: 由线性变换和平移组成的几何变换。
+  aliases:
+  - affine
+  - transformation
+  - 2d translation
+  - translation
+  status: published
+  confidence: 0.94
+- id: web-crawler
+  name: Web Crawler
+  domain: software_engineering
+  level: intermediate
+  definition: 按链接或规则自动访问网页并提取信息的程序。
+  aliases:
+  - web crawler
+  - crawler
+  status: published
+  confidence: 0.94
+- id: concurrency-control
+  name: Concurrency Control
+  domain: systems_programming
+  level: intermediate
+  definition: 管理多个执行单元同时访问共享资源时正确性的机制。
+  aliases:
+  - sync concurrent
+  - distributed mode
+  - concurrent
+  status: published
+  confidence: 0.94
+- id: manhattan-median
+  name: Manhattan Median
+  domain: algorithms
+  level: intermediate
+  definition: 在曼哈顿距离下选择使总距离最小的位置的中位数性质。
+  aliases:
+  - best meeting point
+  - meeting point grid
+  status: published
+  confidence: 0.94
+- id: self-join
+  name: SQL Self Join
+  domain: sql
+  level: beginner
+  definition: 同一张表和自身进行连接的 SQL 查询模式。
+  aliases:
+  - self join
+  - manager hierarchy join
+  status: published
+  confidence: 0.94
+- id: count-having-pattern
+  name: COUNT HAVING Pattern
+  domain: sql
+  level: beginner
+  definition: 按字段分组计数后，用 HAVING 过滤满足次数条件的 SQL 模式。
+  aliases:
+  - values appearing three
+  - appearing three more
+  status: published
+  confidence: 0.94
+- id: rolling-average-sql
+  name: Rolling Average SQL
+  domain: sql
+  level: intermediate
+  definition: 用窗口函数计算随时间滑动的平均值的 SQL 模式。
+  aliases:
+  - rolling average
+  - average events
+  status: published
+  confidence: 0.94
+- id: image-flip
+  name: Image Flip
+  domain: computer_vision
+  level: beginner
+  definition: 把图像沿水平或垂直方向翻转的数据处理操作。
+  aliases:
+  - flip image
+  - flip an image
+  - horizontally vertically
+  status: published
+  confidence: 0.94
+- id: bilinear-resizing
+  name: Bilinear Resizing
+  domain: computer_vision
+  level: beginner
+  definition: 用相邻像素线性插值来调整图像尺寸的方法。
+  aliases:
+  - bilinear image resizing
+  - bilinear
+  - resizing
+  status: published
+  confidence: 0.94
+- id: frame-rate
+  name: Frame Rate
+  domain: computer_vision
+  level: beginner
+  definition: 视频每秒包含或处理的帧数。
+  aliases:
+  - FPS
+  - fps calculator
+  status: published
+  confidence: 0.94
+- id: video-chunking
+  name: Video Chunking
+  domain: computer_vision
+  level: intermediate
+  definition: 把长视频切分成较短片段进行处理或建模的方法。
+  aliases:
+  - video chunk
+  - chunk fps
+  status: published
+  confidence: 0.94
+- id: memory-buffer
+  name: Memory Buffer
+  domain: data_structures
+  level: beginner
+  definition: 临时保存数据以便批处理、排队或跨步骤传递的内存区域。
+  aliases:
+  - memory buffer
+  - buffer
+  status: published
+  confidence: 0.94
+- id: transaction-log
+  name: Transaction Log
+  domain: software_engineering
+  level: intermediate
+  definition: 按顺序记录系统状态变更事件的日志结构。
+  aliases:
+  - banking transaction system
+  - transaction log
+  status: published
+  confidence: 0.94
+- id: tinygrad-layer
+  name: tinygrad Layer
+  domain: tinygrad
+  level: intermediate
+  definition: 在 tinygrad 中组织参数和前向计算的模型层抽象。
+  aliases:
+  - tinygrad
+  - tinygrad layer
+  - layer mlp tinygrad
+  status: published
+  confidence: 0.94
+- id: tinygrad-training-loop
+  name: tinygrad Training Loop
+  domain: tinygrad
+  level: intermediate
+  definition: 在 tinygrad 中重复执行前向、损失、反向和参数更新的训练流程。
+  aliases:
+  - tinygrad iterate mini batches
+  - tinygrad training
+  status: published
+  confidence: 0.94
+- id: tinygrad-conv2d
+  name: tinygrad Conv2D
+  domain: tinygrad
+  level: advanced
+  definition: 在 tinygrad 中实现或使用二维卷积算子的方式。
+  aliases:
+  - tinygrad conv2d
+  - conv2d
+  - conv2d python loops
+  status: published
+  confidence: 0.94
+- id: tinygrad-batchnorm
+  name: tinygrad BatchNorm
+  domain: tinygrad
+  level: advanced
+  definition: 在 tinygrad 中实现 BatchNorm 训练和推理行为的层。
+  aliases:
+  - tinygrad batchnorm2d
+  - batchnorm2d
+  - batchnorm2d scratch
+  status: published
+  confidence: 0.94
+- id: linear-layer
+  name: Linear Layer
+  domain: pytorch
+  level: beginner
+  definition: 对输入向量做仿射变换的神经网络层。
+  aliases:
+  - single linear neuron
+  - linear neuron
+  - linear layer
+  - dense layer
+  - dense
+  status: published
+  confidence: 0.94
+- id: loss-computation
+  name: Loss Computation
+  domain: pytorch
+  level: beginner
+  definition: 把模型输出和目标标签转换为可优化标量损失的过程。
+  aliases:
+  - loss computation
+  - compute loss
+  status: published
+  confidence: 0.94
+- id: health-check
+  name: Health Check
+  domain: mlops
+  level: beginner
+  definition: 用于判断服务或模型端点是否可用的自动检查机制。
+  aliases:
+  - health check
+  - health
+  status: published
+  confidence: 0.94
+- id: rollout-analysis
+  name: Rollout Analysis
+  domain: mlops
+  level: intermediate
+  definition: 在新版本逐步发布过程中分析指标变化和风险的过程。
+  aliases:
+  - rollout analysis
+  - deployment analysis
+  status: published
+  confidence: 0.94
+- id: inference-statistics
+  name: Inference Statistics
+  domain: mlops
+  level: beginner
+  definition: 描述模型推理请求、延迟、输出分布和错误情况的统计信息。
+  aliases:
+  - inference statistics
+  - statistics monitoring
+  status: published
+  confidence: 0.94
+- id: memory-footprint-estimation
+  name: Memory Footprint Estimation
+  domain: performance_optimization
+  level: intermediate
+  definition: 估算模型、张量或服务在运行中占用内存的方法。
+  aliases:
+  - memory footprint
+  - footprint estimation
+  - memory ops byte ratio
+  status: published
+  confidence: 0.94
+- id: chat-template
+  name: Chat Template
+  domain: llm
+  level: beginner
+  definition: 把多轮对话角色和内容转换成模型输入文本的格式规则。
+  aliases:
+  - chat template
+  - template encoding
+  - encoding instruct
+  status: published
+  confidence: 0.94
+- id: dataset-balancing
+  name: Dataset Balancing
+  domain: machine_learning
+  level: beginner
+  definition: 调整不同类别或群体样本比例，使训练数据更符合任务目标的过程。
+  aliases:
+  - balance dataset
+  - dataset balancing
+  status: published
+  confidence: 0.94
+- id: undersampling
+  name: Undersampling
+  domain: machine_learning
+  level: beginner
+  definition: 减少多数类样本数量以缓解类别不平衡的方法。
+  aliases:
+  - undersampling
+  - dataset undersampling
+  status: published
+  confidence: 0.94
+- id: taylor-series
+  name: Taylor Series
+  domain: calculus
+  level: intermediate
+  definition: 用函数在某点的导数信息构造局部多项式近似的方法。
+  aliases:
+  - Taylor
+  - taylor approximation
+  status: published
+  confidence: 0.94
+- id: steering-vector
+  name: Steering Vector
+  domain: llm
+  level: advanced
+  definition: 在表示空间中用于引导模型行为或语义方向的向量。
+  aliases:
+  - steering vector
+  status: published
+  confidence: 0.94
+- id: target-network
+  name: Target Network
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在价值学习中用于提供较稳定目标值的延迟更新网络。
+  aliases:
+  - target network
+  - target
+  status: published
+  confidence: 0.94
+- id: transformer-block
+  name: Transformer Block
+  domain: llm
+  level: intermediate
+  definition: 由注意力、前馈网络、归一化和残差连接组成的 Transformer 基本层。
+  aliases:
+  - transformer block
+  - block
+  - transformers
+  status: published
+  confidence: 0.94
+- id: last-token-logits
+  name: Last Token Logits
+  domain: llm
+  level: beginner
+  definition: 自回归生成中最后一个位置输出的下一 token 分数。
+  aliases:
+  - last token
+  - sequence logits
+  - last token sequence logits
+  status: published
+  confidence: 0.94
+- id: context-cropping
+  name: Context Cropping
+  domain: llm
+  level: beginner
+  definition: 当输入超出上下文窗口时，裁剪或保留部分内容的处理策略。
+  aliases:
+  - context cropping
+  - block size context
+  status: published
+  confidence: 0.94
+- id: context-compression
+  name: Context Compression
+  domain: llm
+  level: intermediate
+  definition: 在保持关键信息的前提下压缩长上下文的技术集合。
+  aliases:
+  - context compression
+  - compression ratio
+  status: published
+  confidence: 0.94
+- id: translation-evaluation
+  name: Translation Evaluation
+  domain: nlp
+  level: intermediate
+  definition: 评估机器翻译输出质量、忠实度和流畅度的方法集合。
+  aliases:
+  - translation quality
+  - evaluate translation
+  status: published
+  confidence: 0.94
+- id: meteor-score
+  name: METEOR Score
+  domain: nlp
+  level: intermediate
+  definition: 一种用于机器翻译评估的自动指标，考虑词形、同义和词序等因素。
+  aliases:
+  - METEOR
+  - meteor
+  status: published
+  confidence: 0.94
+- id: rubric-based-evaluation
+  name: Rubric-Based Evaluation
+  domain: llm
+  level: beginner
+  definition: 用明确评分维度和等级标准评估回答质量的方法。
+  aliases:
+  - rubric based
+  - rubric
+  status: published
+  confidence: 0.94
+- id: llm-as-judge
+  name: LLM as Judge
+  domain: llm
+  level: intermediate
+  definition: 使用语言模型根据评分标准评估其它模型输出的方法。
+  aliases:
+  - LLM judge
+  - judge evaluation
+  - pairwise preference judge
+  status: published
+  confidence: 0.94
+- id: boxed-answer-extraction
+  name: Boxed Answer Extraction
+  domain: llm
+  level: beginner
+  definition: 从模型回答中抽取最终答案字段或特定标记答案的后处理步骤。
+  aliases:
+  - boxed answer
+  - answer extraction
+  status: published
+  confidence: 0.94
+- id: answer-equivalence-checking
+  name: Answer Equivalence Checking
+  domain: llm
+  level: intermediate
+  definition: 判断两个答案在语义、数值或符号上是否等价的评测步骤。
+  aliases:
+  - equivalence checking
+  - answer verification
+  status: published
+  confidence: 0.94
+- id: math-benchmark
+  name: Math Benchmark
+  domain: llm
+  level: beginner
+  definition: 用于评估模型数学推理和解题能力的数据集或测试集合。
+  aliases:
+  - math benchmarks
+  - math benchmark
+  status: published
+  confidence: 0.94
+- id: grammar-constrained-decoding
+  name: Grammar-Constrained Decoding
+  domain: inference
+  level: intermediate
+  definition: 在生成过程中按语法规则限制可选 token 的解码方法。
+  aliases:
+  - grammar constrained
+  - constrained token masking
+  status: published
+  confidence: 0.94
+- id: arithmetic-intensity
+  name: Arithmetic Intensity
+  domain: performance_optimization
+  level: advanced
+  definition: 计算操作量与内存访问量之间的比值。
+  aliases:
+  - arithmetic intensity
+  - ops byte ratio
+  - gpu ops byte ratio
+  - GPU Ops:Byte Ratio
+  - ops:byte ratio
+  status: published
+  confidence: 0.94
+- id: roofline-analysis
+  name: Roofline Analysis
+  domain: performance_optimization
+  level: advanced
+  definition: 用算术强度和硬件峰值估计程序性能上限的分析方法。
+  aliases:
+  - roofline analysis
+  - roofline
+  status: published
+  confidence: 0.94
+- id: gpu-bottleneck-analysis
+  name: GPU Bottleneck Analysis
+  domain: performance_optimization
+  level: advanced
+  definition: 定位 GPU 程序受计算、内存、调度或同步限制的分析过程。
+  aliases:
+  - gpu bottleneck
+  - classify bottleneck
+  status: published
+  confidence: 0.94
+- id: token-bucket-rate-limiter
+  name: Token Bucket Rate Limiter
+  domain: software_engineering
+  level: intermediate
+  definition: 用令牌生成和消耗机制限制请求速率的算法。
+  aliases:
+  - token bucket
+  - rate limiter
+  status: published
+  confidence: 0.94
+- id: weighted-batching
+  name: Weighted Batching
+  domain: inference
+  level: intermediate
+  definition: 按请求权重、成本或优先级组成批次的调度策略。
+  aliases:
+  - weighted batcher
+  - weighted batching
+  status: published
+  confidence: 0.94
+- id: resumable-processing
+  name: Resumable Processing
+  domain: software_engineering
+  level: intermediate
+  definition: 任务中断后能从已完成位置继续执行的工程设计。
+  aliases:
+  - resumable
+  - resume processing
+  status: published
+  confidence: 0.94
+- id: diagonal-matrix
+  name: Diagonal Matrix
+  domain: linear_algebra
+  level: beginner
+  definition: 非对角线元素全为零的矩阵。
+  aliases:
+  - diagonal
+  - vector diagonal
+  status: published
+  confidence: 0.94
+- id: scalar-multiplication
+  name: Scalar Multiplication
+  domain: linear_algebra
+  level: beginner
+  definition: 用一个标量乘以向量或矩阵中每个元素的操作。
+  aliases:
+  - scalar multiplication
+  status: published
+  confidence: 0.94
+- id: reduced-row-echelon-form
+  name: Reduced Row Echelon Form
+  domain: linear_algebra
+  level: intermediate
+  definition: 经过行化简后满足主元为一且主元列其它元素为零的矩阵形式。
+  aliases:
+  - RREF
+  - reduced row echelon form
+  - row echelon form
+  status: published
+  confidence: 0.94
+- id: gauss-seidel-method
+  name: Gauss-Seidel Method
+  domain: linear_algebra
+  level: advanced
+  definition: 用最新已更新变量值迭代求解线性方程组的方法。
+  aliases:
+  - Gauss Seidel
+  - Gauss-Seidel method
+  status: published
+  confidence: 0.94
+- id: image-corruption
+  name: Image Corruption
+  domain: computer_vision
+  level: beginner
+  definition: 图像中出现噪声、模糊、遮挡或压缩伪影等质量退化的现象。
+  aliases:
+  - corrupt
+  - image corruption
+  status: published
+  confidence: 0.94
+- id: frame-aware-processing
+  name: Frame-Aware Processing
+  domain: computer_vision
+  level: intermediate
+  definition: 在视频处理中显式考虑帧位置、时间顺序和邻近帧关系的方法。
+  aliases:
+  - frame aware
+  - historical context
+  status: published
+  confidence: 0.94
+- id: budget-constrained-optimization
+  name: Budget-Constrained Optimization
+  domain: optimization
+  level: intermediate
+  definition: 在资源、成本或约束预算内优化目标函数的方法视角。
+  aliases:
+  - budget constrained
+  - constrained loss
+  status: published
+  confidence: 0.94
+- id: feature-engineering
+  name: Feature Engineering
+  domain: machine_learning
+  level: beginner
+  definition: 根据数据和任务构造、转换或选择模型输入特征的过程。
+  aliases:
+  - feature engineering
+  status: published
+  confidence: 0.94
+- id: multi-agent-reinforcement-learning
+  name: Multi-Agent Reinforcement Learning
+  domain: reinforcement_learning
+  level: advanced
+  definition: 多个智能体在同一环境中学习和相互影响的强化学习设置。
+  aliases:
+  - multi agent
+  - multi-agent
+  status: published
+  confidence: 0.94
+- id: gini-impurity
+  name: Gini Impurity
+  domain: machine_learning
+  level: beginner
+  definition: 衡量一个节点中类别混杂程度的决策树指标。
+  aliases:
+  - gini
+  - apple colors
+  status: published
+  confidence: 0.94
+- id: information-gain
+  name: Information Gain
+  domain: machine_learning
+  level: beginner
+  definition: 划分前后不确定性下降的数量。
+  aliases:
+  - information gain
+  status: published
+  confidence: 0.94
+- id: frequent-itemset-mining
+  name: Frequent Itemset Mining
+  domain: machine_learning
+  level: intermediate
+  definition: 从交易或集合数据中发现经常一起出现项目组合的方法。
+  aliases:
+  - frequent itemset
+  - itemset mining
+  - Apriori
+  status: published
+  confidence: 0.94
+- id: association-rule-mining
+  name: Association Rule Mining
+  domain: machine_learning
+  level: intermediate
+  definition: 从频繁项集中生成形如 A 推出 B 的共现规则的方法。
+  aliases:
+  - association rule
+  - apriori rule
+  status: published
+  confidence: 0.94
+- id: dbscan-clustering
+  name: DBSCAN Clustering
+  domain: machine_learning
+  level: intermediate
+  definition: 基于密度连接发现簇并识别噪声点的聚类算法。
+  aliases:
+  - DBSCAN
+  - DBSCAN clustering
+  status: published
+  confidence: 0.94
+- id: distance-metrics
+  name: Distance Metrics
+  domain: machine_learning
+  level: beginner
+  definition: 衡量两个样本在特征空间中相距多远的方法集合。
+  aliases:
+  - distance metric
+  - distance
+  status: published
+  confidence: 0.94
+- id: rouge-score
+  name: ROUGE Score
+  domain: nlp
+  level: beginner
+  definition: 通过文本重叠衡量生成结果和参考文本相似度的自动指标。
+  aliases:
+  - ROUGE
+  - implementing rouge
+  status: published
+  confidence: 0.94
+- id: adagrad-optimizer
+  name: AdaGrad Optimizer
+  domain: optimization
+  level: intermediate
+  definition: 根据历史梯度平方和为每个参数自适应调整学习率的优化器。
+  aliases:
+  - AdaGrad
+  - adagrad optimizer
+  status: published
+  confidence: 0.94
+- id: adadelta-optimizer
+  name: AdaDelta Optimizer
+  domain: optimization
+  level: intermediate
+  definition: 通过滑动窗口统计梯度来缓解 AdaGrad 学习率持续衰减的优化器。
+  aliases:
+  - AdaDelta
+  - adadelta optimizer
+  status: published
+  confidence: 0.94
+- id: adamax-optimizer
+  name: Adamax Optimizer
+  domain: optimization
+  level: intermediate
+  definition: Adam 在无穷范数形式下的变体优化器。
+  aliases:
+  - Adamax
+  - adamax optimizer
+  status: published
+  confidence: 0.94
+- id: knowledge-distillation
+  name: Knowledge Distillation
+  domain: deep_learning
+  level: intermediate
+  definition: 用大模型或教师模型的输出指导小模型训练的方法。
+  aliases:
+  - knowledge distillation
+  - distillation
+  status: published
+  confidence: 0.94
+- id: distillation-loss
+  name: Distillation Loss
+  domain: deep_learning
+  level: intermediate
+  definition: 衡量学生模型输出分布和教师模型输出分布差异的训练损失。
+  aliases:
+  - distillation loss
+  status: published
+  confidence: 0.94
+- id: temperature-schedule
+  name: Temperature Schedule
+  domain: llm
+  level: intermediate
+  definition: 在训练或生成过程中动态调整温度参数的策略。
+  aliases:
+  - temperature decay
+  - temperature decay scheduler
+  status: published
+  confidence: 0.94
+- id: mixture-density-network
+  name: Mixture Density Network
+  domain: deep_learning
+  level: advanced
+  definition: 让神经网络输出混合概率分布参数的模型。
+  aliases:
+  - MDN
+  - mixture density network
+  status: published
+  confidence: 0.94
+- id: probabilistic-regression
+  name: Probabilistic Regression
+  domain: machine_learning
+  level: intermediate
+  definition: 预测完整不确定性分布而不是单个点估计的回归方法。
+  aliases:
+  - probabilistic regression
+  status: published
+  confidence: 0.94
+- id: verifiable-reward
+  name: Verifiable Reward
+  domain: reinforcement_learning
+  level: advanced
+  definition: 可以由规则、程序或外部检查器自动验证的奖励信号。
+  aliases:
+  - verifiable reward
+  - RLVR
+  - rlvr
+  status: published
+  confidence: 0.94
+- id: binary-reward
+  name: Binary Reward
+  domain: reinforcement_learning
+  level: beginner
+  definition: 只取成功或失败两个值的奖励信号。
+  aliases:
+  - binary rewards
+  - binary reward
+  status: published
+  confidence: 0.94
+- id: optimal-policy-extraction
+  name: Optimal Policy Extraction
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 从价值函数或动作价值函数中导出最优或贪心策略的过程。
+  aliases:
+  - optimal policy extraction
+  - policy extraction values
+  status: published
+  confidence: 0.94
+- id: full-return-prediction
+  name: Full Return Prediction
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 根据完整轨迹回报来估计状态或动作价值的方法视角。
+  aliases:
+  - full prediction value estimation
+  - return prediction
+  status: published
+  confidence: 0.94
+- id: robot-grid-simulation
+  name: Robot Grid Simulation
+  domain: algorithms
+  level: intermediate
+  definition: 在网格世界中模拟机器人移动、障碍和状态更新的算法模式。
+  aliases:
+  - robot simulation
+  - infinite grid
+  - obstacles
+  status: published
+  confidence: 0.94
+- id: reservoir-sampling
+  name: Reservoir Sampling
+  domain: algorithms
+  level: intermediate
+  definition: 从长度未知的数据流中等概率抽取固定数量样本的算法。
+  aliases:
+  - reservoir sampling
+  status: published
+  confidence: 0.94
+- id: set-frequency-counting
+  name: Set Frequency Counting
+  domain: algorithms
+  level: beginner
+  definition: 用哈希表统计元素在一个或多个集合中出现次数的算法模式。
+  aliases:
+  - count words appearing exactly once
+  - appearing exactly once
+  status: published
+  confidence: 0.94
+- id: running-median
+  name: Running Median
+  domain: data_structures
+  level: intermediate
+  definition: 在数据流不断到来时动态维护当前中位数的数据结构问题。
+  aliases:
+  - running median
+  - median stream
+  status: published
+  confidence: 0.94
+- id: order-book
+  name: Order Book
+  domain: data_structures
+  level: advanced
+  definition: 维护买卖报价、插入、取消和撮合订单的数据结构。
+  aliases:
+  - order book
+  - insert cancel match
+  status: published
+  confidence: 0.94
+- id: ledger
+  name: Ledger
+  domain: software_engineering
+  level: intermediate
+  definition: 按账户或实体记录余额变化和交易历史的账本结构。
+  aliases:
+  - credit ledger
+  - ledger
+  status: published
+  confidence: 0.94
+- id: column-space
+  name: Column Space
+  domain: linear_algebra
+  level: beginner
+  definition: 矩阵所有列向量线性组合能覆盖的向量空间。
+  aliases:
+  - column space
+  - find column space
+  status: published
+  confidence: 0.94
+- id: row-space
+  name: Row Space
+  domain: linear_algebra
+  level: beginner
+  definition: 矩阵所有行向量线性组合能覆盖的向量空间。
+  aliases:
+  - row space
+  - dataset row
+  status: published
+  confidence: 0.94
+- id: newton-schulz-iteration
+  name: Newton-Schulz Iteration
+  domain: linear_algebra
+  level: advanced
+  definition: 用矩阵迭代近似逆矩阵、矩阵符号或正交化的数值方法。
+  aliases:
+  - Newton Schulz
+  - Newton-Schulz iteration
+  status: published
+  confidence: 0.94
+- id: orthogonalization
+  name: Orthogonalization
+  domain: linear_algebra
+  level: intermediate
+  definition: 把一组向量转换为相互正交或近似正交向量的过程。
+  aliases:
+  - approximate orthogonalization
+  - orthogonalization
+  status: published
+  confidence: 0.94
+- id: grassmann-distance
+  name: Grassmann Distance
+  domain: linear_algebra
+  level: advanced
+  definition: 衡量两个子空间在 Grassmann 流形上相距多远的距离概念。
+  aliases:
+  - Grassmann distance
+  status: published
+  confidence: 0.94
+- id: hypervector
+  name: Hypervector
+  domain: machine_learning
+  level: advanced
+  definition: 高维向量计算中用于表示符号、对象或组合结构的高维随机向量。
+  aliases:
+  - hypervector
+  - composite hypervector
+  status: published
+  confidence: 0.94
+- id: kinematic-bicycle-model
+  name: Kinematic Bicycle Model
+  domain: robotics
+  level: intermediate
+  definition: 用简化车辆几何描述位置、朝向和转向变化的运动模型。
+  aliases:
+  - kinematic vehicle
+  - autonomous driving
+  status: published
+  confidence: 0.94
+- id: perceptual-distance
+  name: Perceptual Distance
+  domain: computer_vision
+  level: intermediate
+  definition: 用特征空间差异衡量两张图像在人类感知上相似程度的方法。
+  aliases:
+  - perceptual image distance
+  - perceptual distance
+  status: published
+  confidence: 0.94
+- id: pose-estimation-accuracy
+  name: Pose Estimation Accuracy
+  domain: computer_vision
+  level: intermediate
+  definition: 衡量模型预测关键点、位姿或姿态与真实标注接近程度的指标集合。
+  aliases:
+  - pose accuracy
+  - pose evaluation
+  status: published
+  confidence: 0.94
+- id: pipeline-dag
+  name: Pipeline DAG
+  domain: mlops
+  level: intermediate
+  definition: 用有向无环图表示数据或模型流水线任务依赖的结构。
+  aliases:
+  - pipeline DAG
+  - DAG scheduler
+  status: published
+  confidence: 0.94
+- id: critical-path-analysis
+  name: Critical Path Analysis
+  domain: mlops
+  level: intermediate
+  definition: 在任务依赖图中找出决定总耗时的最长依赖链的方法。
+  aliases:
+  - critical path
+  - path analysis
+  status: published
+  confidence: 0.94
+- id: quality-scoring-pipeline
+  name: Quality Scoring Pipeline
+  domain: mlops
+  level: intermediate
+  definition: 按固定维度自动评估内容、模型输出或数据质量的流水线。
+  aliases:
+  - quality scoring
+  - scoring pipelines
+  status: published
+  confidence: 0.94
+- id: human-review-queue
+  name: Human Review Queue
+  domain: mlops
+  level: beginner
+  definition: 把需要人工判断的样本或内容排队给审核者处理的机制。
+  aliases:
+  - review queue
+  - human review
+  status: published
+  confidence: 0.94
+- id: statistical-power
+  name: Statistical Power
+  domain: statistics
+  level: intermediate
+  definition: 当真实效果存在时，统计检验正确拒绝原假设的概率。
+  aliases:
+  - statistical power
+  - power experiment
+  status: published
+  confidence: 0.94
+- id: experiment-design
+  name: Experiment Design
+  domain: statistics
+  level: intermediate
+  definition: 在收集数据前规划处理组、样本量、指标和比较方式的过程。
+  aliases:
+  - experiment design
+  status: published
+  confidence: 0.94
+- id: exponential-distribution
+  name: Exponential Distribution
+  domain: probability
+  level: beginner
+  definition: 描述独立随机事件之间等待时间的连续概率分布。
+  aliases:
+  - exponential distribution
+  - exponential pdf
+  status: published
+  confidence: 0.94
+- id: poisson-distribution
+  name: Poisson Distribution
+  domain: probability
+  level: beginner
+  definition: 描述固定时间或空间内事件发生次数的离散概率分布。
+  aliases:
+  - Poisson
+  - poisson distribution
+  status: published
+  confidence: 0.94
+- id: cumulative-distribution-function
+  name: Cumulative Distribution Function
+  domain: probability
+  level: beginner
+  definition: 给出随机变量小于等于某个值概率的函数。
+  aliases:
+  - CDF
+  - distribution cdf
+  status: published
+  confidence: 0.94
+- id: probability-density-function
+  name: Probability Density Function
+  domain: probability
+  level: beginner
+  definition: 描述连续随机变量概率密度分布形状的函数。
+  aliases:
+  - PDF
+  - distribution pdf
+  status: published
+  confidence: 0.94
+- id: law-of-large-numbers
+  name: Law of Large Numbers
+  domain: probability
+  level: beginner
+  definition: 样本数量增大时，样本平均会趋近真实期望的概率定律。
+  aliases:
+  - law of large numbers
+  - large numbers
+  status: published
+  confidence: 0.94
+- id: bayesian-inference
+  name: Bayesian Inference
+  domain: probability
+  level: intermediate
+  definition: 用观测数据更新先验信念，得到后验分布的推断方法。
+  aliases:
+  - Bayesian inference
+  status: published
+  confidence: 0.94
+- id: beta-binomial-model
+  name: Beta-Binomial Model
+  domain: probability
+  level: intermediate
+  definition: 用 Beta 分布作为二项成功率先验的贝叶斯模型。
+  aliases:
+  - Beta Binomial
+  - beta binomial
+  status: published
+  confidence: 0.94
+- id: grid-search
+  name: Grid Search
+  domain: machine_learning
+  level: beginner
+  definition: 在预先给定的参数网格上枚举组合并比较验证表现的调参方法。
+  aliases:
+  - grid search
+  status: published
+  confidence: 0.94
+- id: random-search
+  name: Random Search
+  domain: machine_learning
+  level: beginner
+  definition: 从超参数空间中随机采样配置并比较验证表现的调参方法。
+  aliases:
+  - random search
+  status: published
+  confidence: 0.94
+- id: dataset-shuffling
+  name: Dataset Shuffling
+  domain: machine_learning
+  level: beginner
+  definition: 在训练前或每个 epoch 中随机打乱样本顺序的过程。
+  aliases:
+  - random shuffle
+  - shuffle dataset
+  status: published
+  confidence: 0.94
+- id: product-rule
+  name: Product Rule
+  domain: calculus
+  level: beginner
+  definition: 求两个函数乘积导数的微积分规则。
+  aliases:
+  - product rule
+  - rule derivatives
+  status: published
+  confidence: 0.94
+- id: objective-function
+  name: Objective Function
+  domain: optimization
+  level: beginner
+  definition: 优化算法希望最小化或最大化的目标表达式。
+  aliases:
+  - objective
+  - objective function
+  status: published
+  confidence: 0.94
+- id: multi-objective-optimization
+  name: Multi-Objective Optimization
+  domain: optimization
+  level: intermediate
+  definition: 同时优化多个可能冲突目标的优化问题。
+  aliases:
+  - multi objective
+  - multi-objective
+  status: published
+  confidence: 0.94
+- id: kmeans-plus-plus
+  name: K-Means++ Initialization
+  domain: machine_learning
+  level: intermediate
+  definition: 为 K-Means 选择初始中心的一种概率初始化方法。
+  aliases:
+  - k-means++
+  - means initialization
+  status: published
+  confidence: 0.94
+- id: catastrophic-forgetting
+  name: Catastrophic Forgetting
+  domain: deep_learning
+  level: intermediate
+  definition: 模型学习新任务后显著丢失旧任务能力的现象。
+  aliases:
+  - catastrophic forgetting
+  - forgetting prevention
+  status: published
+  confidence: 0.94
+- id: parameter-update
+  name: Parameter Update
+  domain: deep_learning
+  level: beginner
+  definition: 根据梯度和优化器规则改变模型参数的训练步骤。
+  aliases:
+  - parameter update
+  - update step
+  status: published
+  confidence: 0.94
+- id: rms-update-scaling
+  name: RMS Update Scaling
+  domain: optimization
+  level: advanced
+  definition: 用均方根统计量对梯度或更新量进行缩放的优化技巧。
+  aliases:
+  - RMS matched update
+  - update rescaling
+  - orthogonalized optimizers
+  status: published
+  confidence: 0.94
+- id: artificial-neuron
+  name: Artificial Neuron
+  domain: deep_learning
+  level: beginner
+  definition: 对输入做加权求和并经过激活函数的神经网络基本单元。
+  aliases:
+  - single neuron
+  - neuron
+  status: published
+  confidence: 0.94
+- id: relativistic-gan-critic
+  name: Relativistic GAN Critic
+  domain: deep_learning
+  level: advanced
+  definition: 比较真实样本和生成样本相对真实程度的 GAN 判别器思想。
+  aliases:
+  - relativistic critic
+  status: published
+  confidence: 0.94
+- id: policy-parallelism
+  name: Policy Parallelism
+  domain: reinforcement_learning
+  level: advanced
+  definition: 并行运行多个策略实例或环境交互以加速强化学习训练的方法。
+  aliases:
+  - policy parallelism
+  status: published
+  confidence: 0.94
+- id: conditioned-generation
+  name: Conditioned Generation
+  domain: deep_learning
+  level: intermediate
+  definition: 让生成模型根据条件信息控制输出内容的生成方式。
+  aliases:
+  - conditioned generation
+  - conditioned
+  status: published
+  confidence: 0.94
+- id: model-averaging
+  name: Model Averaging
+  domain: deep_learning
+  level: intermediate
+  definition: 把多个模型参数或预测结果平均以获得更稳健表现的方法。
+  aliases:
+  - model averaging
+  - averaging
+  status: published
+  confidence: 0.94
+- id: pointwise-mutual-information
+  name: Pointwise Mutual Information
+  domain: information_theory
+  level: intermediate
+  definition: 衡量两个具体事件共同出现比独立假设下多多少的信息量。
+  aliases:
+  - PMI
+  - pointwise mutual information
+  status: published
+  confidence: 0.94
+- id: bradley-terry-model
+  name: Bradley-Terry Model
+  domain: machine_learning
+  level: intermediate
+  definition: 用成对比较结果估计项目相对强度或偏好的概率模型。
+  aliases:
+  - Bradley Terry
+  - Bradley-Terry
+  status: published
+  confidence: 0.94
+- id: pairwise-ranking
+  name: Pairwise Ranking
+  domain: machine_learning
+  level: intermediate
+  definition: 通过比较两个候选谁更好来训练排序模型的方法。
+  aliases:
+  - pairwise rankings
+  - pairwise ranking
+  status: published
+  confidence: 0.94
+- id: mmlu-evaluation
+  name: MMLU Evaluation
+  domain: llm
+  level: beginner
+  definition: 用多学科选择题集合评估语言模型知识和推理能力的方式。
+  aliases:
+  - MMLU
+  - MMLU letter matching
+  status: published
+  confidence: 0.94
+- id: prefill-decode
+  name: Prefill and Decode
+  domain: inference
+  level: intermediate
+  definition: LLM 推理中先处理输入上下文，再逐步生成 token 的两个阶段。
+  aliases:
+  - prefill decode
+  - LLM prefill decode
+  - prefill vs decode
+  status: published
+  confidence: 0.94
+- id: communication-overhead
+  name: Communication Overhead
+  domain: performance_optimization
+  level: intermediate
+  definition: 分布式或并行系统中数据传输和同步带来的额外成本。
+  aliases:
+  - communication overhead
+  - communication
+  status: published
+  confidence: 0.94
+- id: multi-gpu-inference
+  name: Multi-GPU Inference
+  domain: inference
+  level: advanced
+  definition: 使用多个 GPU 协同完成模型推理的部署方式。
+  aliases:
+  - multi gpu
+  - multi batching
+  - multi-GPU
+  status: published
+  confidence: 0.94
+- id: iterative-repair
+  name: Iterative Repair
+  domain: optimization
+  level: intermediate
+  definition: 反复检测当前解的问题并局部修改，直到满足约束或改善目标的方法。
+  aliases:
+  - iterative repair
+  - repair scheduling
+  status: published
+  confidence: 0.94
+- id: batch-size-schedule
+  name: Batch Size Schedule
+  domain: optimization
+  level: intermediate
+  definition: 在训练过程中动态调整 batch size 的策略。
+  aliases:
+  - progressive batch size
+  - batch size scheduler
+  status: published
+  confidence: 0.94
+- id: image-brightness-adjustment
+  name: Image Brightness Adjustment
+  domain: computer_vision
+  level: beginner
+  definition: 改变图像整体亮度的数据增强或预处理操作。
+  aliases:
+  - image brightness
+  - brightness
+  status: published
+  confidence: 0.94
+- id: patch-embedding
+  name: Patch Embedding
+  domain: computer_vision
+  level: intermediate
+  definition: 把图像切成小块并映射为 token 向量的视觉 Transformer 输入方法。
+  aliases:
+  - image patch embedding
+  - patch embedding
+  status: published
+  confidence: 0.94
+- id: vision-transformer
+  name: Vision Transformer
+  domain: computer_vision
+  level: intermediate
+  definition: 把图像切成 patch token 后用 Transformer 处理的视觉模型。
+  aliases:
+  - ViT
+  - multi layer ViT
+  status: published
+  confidence: 0.94
+- id: video-frame-sampling
+  name: Video Frame Sampling
+  domain: computer_vision
+  level: beginner
+  definition: 从视频中按规则选取部分帧用于训练、推理或评估的方法。
+  aliases:
+  - video frame sampling
+  - frame sampling
+  status: published
+  confidence: 0.94
+- id: clip-model
+  name: CLIP Model
+  domain: computer_vision
+  level: intermediate
+  definition: 把图像和文本映射到共享向量空间的对比学习模型。
+  aliases:
+  - CLIP
+  - clip
+  status: published
+  confidence: 0.94
+- id: forward-kinematics
+  name: Forward Kinematics
+  domain: robotics
+  level: intermediate
+  definition: 根据关节参数计算机器人末端位姿的几何过程。
+  aliases:
+  - forward kinematics
+  - kinematics link planar arm
+  status: published
+  confidence: 0.94
+- id: inverse-kinematics
+  name: Inverse Kinematics
+  domain: robotics
+  level: advanced
+  definition: 根据目标末端位姿求解机器人关节参数的过程。
+  aliases:
+  - inverse kinematics
+  status: published
+  confidence: 0.94
+- id: quaternion-slerp
+  name: Quaternion SLERP
+  domain: robotics
+  level: advanced
+  definition: 在两个四元数旋转之间做球面线性插值的方法。
+  aliases:
+  - quaternion SLERP
+  - SLERP interpolation
+  status: published
+  confidence: 0.94
+- id: kalman-filter
+  name: Kalman Filter
+  domain: robotics
+  level: advanced
+  definition: 在线性高斯系统中融合预测和观测来估计隐藏状态的递推算法。
+  aliases:
+  - Kalman filter
+  - filter update step
+  status: published
+  confidence: 0.94
+- id: state-space-model
+  name: State Space Model
+  domain: machine_learning
+  level: advanced
+  definition: 用隐藏状态和观测方程描述动态系统的模型。
+  aliases:
+  - state space
+  - state-space model
+  status: published
+  confidence: 0.94
+- id: code-execution-verifier
+  name: Code Execution Verifier
+  domain: llm
+  level: intermediate
+  definition: 通过运行代码或测试来验证模型生成结果是否正确的评估组件。
+  aliases:
+  - code execution verifier
+  - programming benchmarks
+  status: published
+  confidence: 0.94
+- id: direct-preference-optimization
+  name: Direct Preference Optimization
+  domain: llm
+  level: advanced
+  definition: 直接用偏好数据优化语言模型，而不显式训练奖励模型的对齐方法。
+  aliases:
+  - DPO
+  - DPO loss
+  - direct preference optimization
+  status: published
+  confidence: 0.94
+- id: fibonacci-sequence
+  name: Fibonacci Sequence
+  domain: algorithms
+  level: beginner
+  definition: 每一项由前两项相加得到的经典递推数列。
+  aliases:
+  - Fibonacci
+  - first Fibonacci numbers
+  status: published
+  confidence: 0.94
+- id: path-normalization
+  name: Path Normalization
+  domain: software_engineering
+  level: beginner
+  definition: 把文件系统路径整理成规范形式的处理步骤。
+  aliases:
+  - normalize terminal path
+  - terminal path
+  - cd pwd
+  - path pwd
+  status: published
+  confidence: 0.94
+- id: valid-parentheses
+  name: Valid Parentheses
+  domain: algorithms
+  level: beginner
+  definition: 判断括号序列是否正确闭合和嵌套的栈算法问题。
+  aliases:
+  - valid parentheses
+  - make valid parentheses
+  - minimum remove
+  status: published
+  confidence: 0.94
+- id: palindrome-checking
+  name: Palindrome Checking
+  domain: algorithms
+  level: beginner
+  definition: 判断字符串或序列正读和反读是否相同的算法模式。
+  aliases:
+  - valid palindrome
+  - palindrome
+  status: published
+  confidence: 0.94
+- id: sql-date-range-filtering
+  name: SQL Date Range Filtering
+  domain: sql
+  level: beginner
+  definition: 用时间边界筛选指定日期范围内记录的 SQL 模式。
+  aliases:
+  - date range
+  - daily order cost date range
+  status: published
+  confidence: 0.94
+- id: percent-rank-sql
+  name: PERCENT_RANK SQL
+  domain: sql
+  level: intermediate
+  definition: 计算行在窗口排序中相对排名百分比的 SQL 窗口函数。
+  aliases:
+  - percent rank
+  - percent
+  status: published
+  confidence: 0.94
+- id: groupwise-min-max-sql
+  name: Groupwise Min Max SQL
+  domain: sql
+  level: intermediate
+  definition: 在每个分组内找最低或最高指标对应记录的 SQL 模式。
+  aliases:
+  - lowest priced order
+  - highest total daily order
+  status: published
+  confidence: 0.94
+- id: probability-normalization
+  name: Probability Normalization
+  domain: probability
+  level: beginner
+  definition: 把一组非负分数缩放为总和为 1 的概率分布。
+  aliases:
+  - normalize count probabilities
+  - normalize probabilities
+  - row normalize
+  - row-normalize probabilities
+  status: published
+  confidence: 0.94
+- id: descriptive-statistics
+  name: Descriptive Statistics
+  domain: statistics
+  level: beginner
+  definition: 用少量统计量概括数据集中位置、离散程度和分布形状的方法。
+  aliases:
+  - descriptive statistics
+  - statistics calculator
+  status: published
+  confidence: 0.94
+- id: expected-value
+  name: Expected Value
+  domain: probability
+  level: beginner
+  definition: 随机变量在长期重复实验中的平均水平。
+  aliases:
+  - expected value
+  - expectation
+  status: published
+  confidence: 0.94
+- id: variance
+  name: Variance
+  domain: statistics
+  level: beginner
+  definition: 衡量随机变量围绕均值波动大小的统计量。
+  aliases:
+  - variance
+  - sample variance
+  status: published
+  confidence: 0.94
+- id: hypergeometric-distribution
+  name: Hypergeometric Distribution
+  domain: probability
+  level: intermediate
+  definition: 描述不放回抽样中成功次数分布的离散概率模型。
+  aliases:
+  - hypergeometric
+  - hypergeometric pmf
+  status: published
+  confidence: 0.94
+- id: mutual-information
+  name: Mutual Information
+  domain: information_theory
+  level: intermediate
+  definition: 衡量一个变量包含多少关于另一个变量信息的量。
+  aliases:
+  - mutual information
+  - MI
+  status: published
+  confidence: 0.94
+- id: jensen-shannon-divergence
+  name: Jensen-Shannon Divergence
+  domain: information_theory
+  level: intermediate
+  definition: 用对称且有界的方式衡量两个概率分布差异的指标。
+  aliases:
+  - Jensen Shannon
+  - JS divergence
+  - JSD
+  status: published
+  confidence: 0.94
+- id: variational-inference
+  name: Variational Inference
+  domain: probabilistic_ml
+  level: advanced
+  definition: 用可优化的简单分布近似复杂后验分布的方法。
+  aliases:
+  - variational inference
+  - VI
+  status: published
+  confidence: 0.94
+- id: evidence-lower-bound
+  name: Evidence Lower Bound
+  domain: probabilistic_ml
+  level: advanced
+  definition: 变分推断中可优化的对数证据下界。
+  aliases:
+  - ELBO
+  - evidence lower bound
+  status: published
+  confidence: 0.94
+- id: phi-coefficient
+  name: Phi Coefficient
+  domain: statistics
+  level: intermediate
+  definition: 衡量两个二元变量相关程度的统计系数。
+  aliases:
+  - phi coefficient
+  - matthews correlation for binary table
+  status: published
+  confidence: 0.94
+- id: portfolio-variance
+  name: Portfolio Variance
+  domain: financial_engineering
+  level: intermediate
+  definition: 衡量资产组合收益波动风险的方差指标。
+  aliases:
+  - portfolio variance
+  - portfolio risk variance
+  status: published
+  confidence: 0.94
+- id: binary-classification
+  name: Binary Classification
+  domain: machine_learning
+  level: beginner
+  definition: 把样本划分到两个类别之一的监督学习任务。
+  aliases:
+  - binary classification
+  - binary classifier
+  status: published
+  confidence: 0.94
+- id: domain-adaptation
+  name: Domain Adaptation
+  domain: machine_learning
+  level: advanced
+  definition: 让模型从源域迁移到分布不同但相关的目标域的方法。
+  aliases:
+  - domain adaptation
+  - source domain
+  - target domain
+  status: published
+  confidence: 0.94
+- id: ordinal-encoding
+  name: Ordinal Encoding
+  domain: data_preprocessing
+  level: beginner
+  definition: 把有序类别映射成整数编码的数据预处理方法。
+  aliases:
+  - ordinal encoding
+  - label encoding ordinal
+  - ordinal variables
+  status: published
+  confidence: 0.94
+- id: data-cleaning
+  name: Data Cleaning
+  domain: data_preprocessing
+  level: beginner
+  definition: 修正缺失、重复、异常和格式不一致数据的预处理过程。
+  aliases:
+  - clean messy data
+  - clean a messy dataset
+  - dedup standardize
+  - dedup standardize impute
+  - drop duplicates
+  status: published
+  confidence: 0.94
+- id: triplet-loss
+  name: Triplet Loss
+  domain: deep_learning
+  level: intermediate
+  definition: 用 anchor、positive、negative 三元组训练表征距离的损失函数。
+  aliases:
+  - triplet loss
+  - triplet margin loss
+  status: published
+  confidence: 0.94
+- id: matrix-addition
+  name: Matrix Addition
+  domain: linear_algebra
+  level: beginner
+  definition: 对形状相同的两个矩阵逐元素相加的运算。
+  aliases:
+  - matrix addition
+  - add matrices
+  - addition add matrices
+  status: published
+  confidence: 0.94
+- id: elementwise-operations
+  name: Elementwise Operations
+  domain: performance_optimization
+  level: beginner
+  definition: 对数组或张量中每个位置独立执行同一运算的计算模式。
+  aliases:
+  - elementwise
+  - scalar multiply
+  - matrix scalar multiply
+  - vector addition
+  status: published
+  confidence: 0.94
+- id: expression-evaluation
+  name: Expression Evaluation
+  domain: algorithms
+  level: intermediate
+  definition: 按运算符优先级、括号和结合性计算表达式结果的算法问题。
+  aliases:
+  - evaluate expression
+  - calculator expression
+  - expression calculator
+  status: published
+  confidence: 0.94
+- id: merge-intervals
+  name: Merge Intervals
+  domain: algorithms
+  level: beginner
+  definition: 把重叠区间合并成互不重叠区间的排序扫描算法。
+  aliases:
+  - merge intervals
+  - interval merging
+  status: published
+  confidence: 0.94
+- id: minimax-algorithm
+  name: Minimax Algorithm
+  domain: game_theory
+  level: intermediate
+  definition: 在零和博弈中假设双方都理性，选择最优行动的搜索算法。
+  aliases:
+  - minimax
+  - tic tac toe minimax
+  - tic-tac-toe
+  status: published
+  confidence: 0.94
+- id: temporal-difference-prediction
+  name: Temporal Difference Prediction
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用当前奖励和下一状态估计更新状态价值的 TD 预测方法。
+  aliases:
+  - TD prediction
+  - TD update
+  - td prediction
+  status: published
+  confidence: 0.94
+- id: on-policy-learning
+  name: On-Policy Learning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用当前正在执行的策略产生的数据来学习同一个策略的方法。
+  aliases:
+  - on-policy
+  - on policy
+  status: published
+  confidence: 0.94
+- id: reinforce-algorithm
+  name: REINFORCE Algorithm
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 直接用完整回合回报估计策略梯度的蒙特卡洛策略梯度算法。
+  aliases:
+  - REINFORCE
+  - reinforce baseline
+  - reinforce algorithm
+  status: published
+  confidence: 0.94
+- id: rl-trajectory
+  name: RL Trajectory
+  domain: reinforcement_learning
+  level: beginner
+  definition: 强化学习中由状态、动作、奖励和下一状态组成的连续交互序列。
+  aliases:
+  - trajectory
+  - rollout
+  - episode trajectory
+  status: published
+  confidence: 0.94
+- id: gymnasium-environment
+  name: Gymnasium Environment
+  domain: reinforcement_learning
+  level: beginner
+  definition: 用统一接口封装强化学习环境的工程抽象。
+  aliases:
+  - gym environment
+  - gymnasium environment
+  - RL environment
+  - variable environment reset
+  status: published
+  confidence: 0.94
+- id: vectorized-environment
+  name: Vectorized Environment
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 并行运行多个环境实例以批量采样 RL 经验的工程模式。
+  aliases:
+  - vectorized env
+  - parallel environments
+  - parallel RL environments
+  status: published
+  confidence: 0.94
+- id: zero-copy-data-loading
+  name: Zero-Copy Data Loading
+  domain: performance_optimization
+  level: advanced
+  definition: 减少或避免数据在进程、设备或内存区域之间复制的加载策略。
+  aliases:
+  - zero-copy
+  - zero copy loading
+  - zero-copy loading
+  status: published
+  confidence: 0.94
+- id: shared-memory-ipc
+  name: Shared Memory IPC
+  domain: systems_programming
+  level: advanced
+  definition: 让多个进程通过同一块内存区域交换数据的进程间通信方式。
+  aliases:
+  - shared memory IPC
+  - shared memory
+  - IPC shared memory
+  - IPC methods
+  status: published
+  confidence: 0.94
+- id: lock-free-synchronization
+  name: Lock-Free Synchronization
+  domain: systems_programming
+  level: expert
+  definition: 不依赖互斥锁阻塞线程的并发同步设计。
+  aliases:
+  - lock-free
+  - lock free synchronization
+  - synchronization flags
+  status: published
+  confidence: 0.94
+- id: data-parallelism
+  name: Data Parallelism
+  domain: deep_learning
+  level: intermediate
+  definition: 把不同数据 batch 分配到多个设备上训练同一模型的并行方式。
+  aliases:
+  - data parallel
+  - distributed data parallel
+  - DDP
+  status: published
+  confidence: 0.94
+- id: tensor-parallelism
+  name: Tensor Parallelism
+  domain: deep_learning
+  level: advanced
+  definition: 把单层张量计算切分到多个设备上共同完成的并行方式。
+  aliases:
+  - tensor parallel
+  - model parallel tensor
+  status: published
+  confidence: 0.94
+- id: pipeline-parallelism
+  name: Pipeline Parallelism
+  domain: deep_learning
+  level: advanced
+  definition: 把模型不同层分配到多个设备，并以流水线方式执行的并行策略。
+  aliases:
+  - pipeline parallel
+  - model pipeline
+  - wave based pipelining
+  status: published
+  confidence: 0.94
+- id: expert-parallelism
+  name: Expert Parallelism
+  domain: deep_learning
+  level: advanced
+  definition: 在 MoE 模型中把不同专家模块分布到多个设备上的并行方式。
+  aliases:
+  - expert parallelism
+  - expert parallel
+  - wave-based expert parallelism
+  status: published
+  confidence: 0.94
+- id: zero-redundancy-optimizer
+  name: Zero Redundancy Optimizer
+  domain: deep_learning
+  level: advanced
+  definition: 通过切分优化器状态、梯度或参数来降低分布式训练冗余的策略。
+  aliases:
+  - ZeRO
+  - zero redundancy
+  - zero optimizer
+  - zero bucket
+  status: published
+  confidence: 0.94
+- id: bucket-assignment
+  name: Bucket Assignment
+  domain: performance_optimization
+  level: advanced
+  definition: 把参数、梯度或任务分配到若干桶中以平衡内存和通信的调度方法。
+  aliases:
+  - bucket assignment
+  - zero bucket assignment
+  - knapsack-based zero bucket
+  status: published
+  confidence: 0.94
+- id: compute-bound-vs-memory-bound
+  name: Compute-Bound vs Memory-Bound
+  domain: performance_optimization
+  level: intermediate
+  definition: 判断程序瓶颈主要来自计算能力还是内存带宽的性能分析视角。
+  aliases:
+  - compute-bound
+  - memory-bound
+  - compute bound memory bound
+  status: published
+  confidence: 0.94
+- id: needle-in-a-haystack-evaluation
+  name: Needle-in-a-Haystack Evaluation
+  domain: llm
+  level: intermediate
+  definition: 在长上下文中插入关键信息，并测试模型能否准确检索的评估方法。
+  aliases:
+  - needle in a haystack
+  - multi needle
+  - long context retrieval
+  status: published
+  confidence: 0.94
+- id: diffusion-noise-schedule
+  name: Diffusion Noise Schedule
+  domain: deep_learning
+  level: advanced
+  definition: 扩散模型中控制每一步加噪或去噪强度的时间计划。
+  aliases:
+  - noise schedule
+  - noise scheduling
+  - diffusion schedule
+  status: published
+  confidence: 0.94
+- id: binomial-distribution
+  name: Binomial Distribution
+  domain: probability
+  level: beginner
+  definition: 描述固定次数独立伯努利试验中成功次数的离散分布。
+  aliases:
+  - binomial
+  - binomial distribution
+  status: published
+  confidence: 0.94
+- id: chi-square-test
+  name: Chi-Square Test
+  domain: statistics
+  level: intermediate
+  definition: 用于检验类别频数是否偏离期望频数的统计检验方法。
+  aliases:
+  - chi square
+  - chi-square
+  - chi2 test
+  status: published
+  confidence: 0.94
+- id: quadratic-programming
+  name: Quadratic Programming
+  domain: optimization
+  level: advanced
+  definition: 目标函数为二次型且约束通常为线性的优化问题。
+  aliases:
+  - quadratic programming
+  - QP
+  status: published
+  confidence: 0.94
+- id: transfer-learning
+  name: Transfer Learning
+  domain: machine_learning
+  level: intermediate
+  definition: 把一个任务或数据域学到的表示迁移到另一个相关任务的方法。
+  aliases:
+  - transfer learning
+  - pretrained transfer
+  status: published
+  confidence: 0.94
+- id: load-balancing
+  name: Load Balancing
+  domain: performance_optimization
+  level: intermediate
+  definition: 把工作量分配到多个资源上，使整体执行更均衡的调度思想。
+  aliases:
+  - load balancing
+  - balanced assignment
+  status: published
+  confidence: 0.94
+- id: hierarchical-clustering
+  name: Hierarchical Clustering
+  domain: machine_learning
+  level: intermediate
+  definition: 通过逐步合并或拆分样本，形成树状聚类结构的方法。
+  aliases:
+  - hierarchical clustering
+  - agglomerative clustering
+  status: published
+  confidence: 0.94
+- id: calinski-harabasz-index
+  name: Calinski-Harabasz Index
+  domain: machine_learning
+  level: intermediate
+  definition: 用簇间分散度和簇内分散度之比评估聚类质量的指标。
+  aliases:
+  - Calinski Harabasz
+  - calinski score
+  - clustering score
+  status: published
+  confidence: 0.94
+- id: davies-bouldin-index
+  name: Davies-Bouldin Index
+  domain: machine_learning
+  level: intermediate
+  definition: 用簇内散度和簇间距离评估聚类效果的内部指标。
+  aliases:
+  - Davies Bouldin
+  - DB index
+  - davies bouldin score
+  status: published
+  confidence: 0.94
+- id: adjusted-rand-index
+  name: Adjusted Rand Index
+  domain: machine_learning
+  level: intermediate
+  definition: 比较两个聚类划分相似度并校正随机一致性的外部指标。
+  aliases:
+  - adjusted rand
+  - ARI score
+  status: published
+  confidence: 0.94
+- id: normalized-mutual-information
+  name: Normalized Mutual Information
+  domain: information_theory
+  level: intermediate
+  definition: 把互信息归一化后用于比较两个离散划分相似度的指标。
+  aliases:
+  - NMI
+  - normalized mutual information
+  status: published
+  confidence: 0.94
+- id: alpha-beta-pruning
+  name: Alpha-Beta Pruning
+  domain: algorithms
+  level: intermediate
+  definition: 在 minimax 搜索中剪掉不可能影响最终决策分支的加速方法。
+  aliases:
+  - alpha beta
+  - alpha-beta
+  - alpha-beta pruning
+  status: published
+  confidence: 0.94
+- id: connected-components
+  name: Connected Components
+  domain: algorithms
+  level: beginner
+  definition: 图中内部互相可达、彼此之间不可达的节点集合。
+  aliases:
+  - connected components
+  - number of islands
+  - islands grid
+  status: published
+  confidence: 0.94
+- id: quotient-rule
+  name: Quotient Rule
+  domain: calculus
+  level: beginner
+  definition: 计算两个可导函数相除时导数的微积分规则。
+  aliases:
+  - quotient rule
+  status: published
+  confidence: 0.94
+- id: gpu-utilization
+  name: GPU Utilization
+  domain: performance_optimization
+  level: intermediate
+  definition: 衡量 GPU 计算单元在一段时间内被有效使用程度的指标。
+  aliases:
+  - GPU utilization
+  - gpu utilization tracker
+  status: published
+  confidence: 0.94
+- id: mig-partitioning
+  name: MIG Partitioning
+  domain: inference
+  level: advanced
+  definition: 把支持 MIG 的 GPU 切分成多个隔离实例的资源管理方式。
+  aliases:
+  - MIG
+  - multi-instance GPU
+  - gpu instance
+  status: published
+  confidence: 0.94
+- id: gpu-resource-allocation
+  name: GPU Resource Allocation
+  domain: mlops
+  level: intermediate
+  definition: 为训练、推理或数据任务分配 GPU、显存和并发额度的调度过程。
+  aliases:
+  - GPU resource allocation
+  - gpu allocation
+  - resource allocation
+  - minimum gpu deployment
+  - minimum GPU count
+  - gpu deployment
+  status: published
+  confidence: 0.94
+- id: instruction-following-evaluation
+  name: Instruction Following Evaluation
+  domain: llm
+  level: intermediate
+  definition: 评估语言模型是否按用户指令、约束和格式要求完成任务的方法。
+  aliases:
+  - instruction evaluation
+  - instruction following
+  - follow instruction score
+  status: published
+  confidence: 0.94
+- id: reasoning-trace
+  name: Reasoning Trace
+  domain: llm
+  level: advanced
+  definition: 模型解决问题时显式或隐式形成的中间推理过程表示。
+  aliases:
+  - reasoning trace
+  - reasoning trajectory
+  - trace quality
+  status: published
+  confidence: 0.94
+- id: context-management
+  name: Context Management
+  domain: llm
+  level: intermediate
+  definition: 选择、组织、压缩和更新模型上下文信息的工程方法。
+  aliases:
+  - context management
+  - context memory management
+  status: published
+  confidence: 0.94
+- id: long-context-evaluation
+  name: Long Context Evaluation
+  domain: llm
+  level: advanced
+  definition: 评估模型在长输入中保持检索、推理和指令遵循能力的方法。
+  aliases:
+  - long context evaluation
+  - million-token context
+  - long-context
+  status: published
+  confidence: 0.94
+- id: sparse-reward
+  name: Sparse Reward
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 只有少数状态或任务完成时才提供反馈的奖励设定。
+  aliases:
+  - sparse reward
+  - sparse rewards
+  status: published
+  confidence: 0.94
+- id: self-play
+  name: Self-Play
+  domain: reinforcement_learning
+  level: advanced
+  definition: 让智能体通过和自身或历史版本对战来生成训练数据的方法。
+  aliases:
+  - self-play
+  - self play
+  status: published
+  confidence: 0.94
+- id: alphazero
+  name: AlphaZero
+  domain: reinforcement_learning
+  level: expert
+  definition: 结合自博弈、神经网络和搜索的通用棋类强化学习方法。
+  aliases:
+  - AlphaZero
+  - alpha zero
+  status: published
+  confidence: 0.94
+- id: td-lambda
+  name: TD Lambda
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用资格迹在一步 TD 和蒙特卡洛回报之间折中的强化学习方法。
+  aliases:
+  - TD(lambda)
+  - TD(λ)
+  - TD lambda
+  - lambda return
+  - convergence verification
+  - TD lambda convergence
+  status: published
+  confidence: 0.94
+- id: semi-gradient-td
+  name: Semi-Gradient TD
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在函数近似 TD 更新中，只对当前价值估计求梯度的方法。
+  aliases:
+  - semi-gradient
+  - semi gradient TD
+  - TD(0) prediction
+  status: published
+  confidence: 0.94
+- id: rl-experiment-configuration
+  name: RL Experiment Configuration
+  domain: software_engineering
+  level: intermediate
+  definition: 记录 RL 实验环境、算法、随机种子和评估设置的配置结构。
+  aliases:
+  - RL experiment configuration
+  - RL config
+  - experiment configuration system
+  status: published
+  confidence: 0.94
+- id: action-masking
+  name: Action Masking
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在策略输出中屏蔽当前状态下非法动作的约束方法。
+  aliases:
+  - action masking
+  - invalid action mask
+  status: published
+  confidence: 0.94
+- id: derivative
+  name: Derivative
+  domain: calculus
+  level: beginner
+  definition: 描述函数输出随输入微小变化而变化速度的数学对象。
+  aliases:
+  - derivative
+  - derivatives
+  status: published
+  confidence: 0.94
+- id: chain-of-thought
+  name: Chain-of-Thought
+  domain: llm
+  level: advanced
+  definition: 让模型用中间步骤组织复杂推理的一类提示和训练思想。
+  aliases:
+  - CoT
+  - chain of thought
+  - reasoning steps
+  status: published
+  confidence: 0.94
+- id: curriculum-learning
+  name: Curriculum Learning
+  domain: machine_learning
+  level: intermediate
+  definition: 按从易到难或从简单到复杂的顺序组织训练样本的方法。
+  aliases:
+  - curriculum learning
+  - training curriculum
+  status: published
+  confidence: 0.94
+- id: continuous-batching
+  name: Continuous Batching
+  domain: inference
+  level: advanced
+  definition: 在推理服务中持续把新请求插入正在执行批次的调度方法。
+  aliases:
+  - continuous batching
+  - in-flight batching
+  - in flight batching
+  status: published
+  confidence: 0.94
+- id: ngram-model
+  name: N-gram Model
+  domain: nlp
+  level: beginner
+  definition: 用连续 n 个 token 片段表示文本局部统计规律的语言模型。
+  aliases:
+  - n-gram
+  - ngram
+  - n gram
+  status: published
+  confidence: 0.94
+- id: ngram-coverage
+  name: N-gram Coverage
+  domain: nlp
+  level: intermediate
+  definition: 衡量文本中 n-gram 被另一文本或语料覆盖程度的指标。
+  aliases:
+  - n-gram coverage
+  - ngram coverage
+  - coverage ratio
+  status: published
+  confidence: 0.94
+- id: text-deduplication
+  name: Text Deduplication
+  domain: nlp
+  level: intermediate
+  definition: 识别并移除完全重复或高度相似文本的数据清洗方法。
+  aliases:
+  - text deduplication
+  - deduplicated n-gram
+  - near duplicate text
+  status: published
+  confidence: 0.94
+- id: document-summarization
+  name: Document Summarization
+  domain: nlp
+  level: intermediate
+  definition: 把长文档压缩成短文本，同时保留核心信息的生成或抽取任务。
+  aliases:
+  - document summarization
+  - hierarchical document summarization
+  status: published
+  confidence: 0.94
+- id: contrastive-loss
+  name: Contrastive Loss
+  domain: deep_learning
+  level: intermediate
+  definition: 通过拉近相似样本、推远不相似样本来学习表示的损失函数。
+  aliases:
+  - contrastive loss
+  - contrastive objective
+  status: published
+  confidence: 0.94
+- id: gating-mechanism
+  name: Gating Mechanism
+  domain: deep_learning
+  level: intermediate
+  definition: 用可学习权重控制信息流通过、混合或抑制的神经网络结构。
+  aliases:
+  - gating
+  - context-aware gating
+  - gate mechanism
+  status: published
+  confidence: 0.94
+- id: memory-augmented-network
+  name: Memory-Augmented Network
+  domain: deep_learning
+  level: advanced
+  definition: 在神经网络中加入外部或显式记忆结构以保存和检索信息的模型。
+  aliases:
+  - memory augmented
+  - external memory
+  - engram memory
+  status: published
+  confidence: 0.94
+- id: random-fourier-features
+  name: Random Fourier Features
+  domain: machine_learning
+  level: advanced
+  definition: 用随机投影近似平移不变核函数的特征构造方法。
+  aliases:
+  - random Fourier features
+  - random feature
+  - RFF
+  status: published
+  confidence: 0.94
+- id: random-projection
+  name: Random Projection
+  domain: machine_learning
+  level: intermediate
+  definition: 用随机矩阵把高维数据映射到较低维空间的降维方法。
+  aliases:
+  - random projection
+  - random projections
+  status: published
+  confidence: 0.94
+- id: linear-probing
+  name: Linear Probing
+  domain: machine_learning
+  level: intermediate
+  definition: 冻结预训练表示，只训练线性分类器来评估表示质量的方法。
+  aliases:
+  - linear probing
+  - linear probe
+  status: published
+  confidence: 0.94
+- id: feature-space
+  name: Feature Space
+  domain: machine_learning
+  level: beginner
+  definition: 样本被特征表示后所在的向量空间。
+  aliases:
+  - feature space
+  - representation space
+  - embedding space
+  status: published
+  confidence: 0.94
+- id: simulation-environment
+  name: Simulation Environment
+  domain: reinforcement_learning
+  level: beginner
+  definition: 用可交互仿真系统为智能体提供状态、动作和反馈的环境。
+  aliases:
+  - simulated environment
+  - simulation environment
+  - simulator
+  status: published
+  confidence: 0.94
+- id: rl-training-diagnostics
+  name: RL Training Diagnostics
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用曲线、统计量和行为检查定位强化学习训练问题的方法。
+  aliases:
+  - RL training diagnostics
+  - RL training verification
+  - training diagnostics
+  - RL sanity check
+  - sanity check environments
+  status: published
+  confidence: 0.94
+- id: elo-rating
+  name: Elo Rating
+  domain: machine_learning
+  level: intermediate
+  definition: 用成对比赛结果更新参与者相对强弱分数的评分系统。
+  aliases:
+  - Elo
+  - ELO rating
+  - rating system
+  status: published
+  confidence: 0.94
+- id: maximum-a-posteriori-estimation
+  name: Maximum A Posteriori Estimation
+  domain: probability
+  level: intermediate
+  definition: 在给定数据后，选择后验概率最大的参数估计方法。
+  aliases:
+  - MAP estimation
+  - maximum posteriori
+  - maximum a posteriori
+  - posteriori MAP
+  - Bernoulli parameter estimation
+  status: published
+  confidence: 0.94
+- id: out-of-bag-estimate
+  name: Out-of-Bag Estimate
+  domain: machine_learning
+  level: intermediate
+  definition: 用 bootstrap 未抽中的样本估计集成模型泛化表现的方法。
+  aliases:
+  - out-of-bag
+  - OOB
+  - OOB score
+  - out-of-bag calculation
+  status: published
+  confidence: 0.94
+- id: adaboost
+  name: AdaBoost
+  domain: machine_learning
+  level: intermediate
+  definition: 通过反复提高错分样本权重来训练弱分类器集成的方法。
+  aliases:
+  - AdaBoost
+  - adaboost fit
+  - boosting
+  status: published
+  confidence: 0.94
+- id: locally-linear-embedding
+  name: Locally Linear Embedding
+  domain: machine_learning
+  level: advanced
+  definition: 通过保留局部线性重构关系进行非线性降维的方法。
+  aliases:
+  - LLE
+  - locally linear embedding
+  - linear embedding
+  status: published
+  confidence: 0.94
+- id: expert-feature-fusion
+  name: Expert Feature Fusion
+  domain: machine_learning
+  level: intermediate
+  definition: 把领域专家设计的特征和模型学习特征进行组合的建模方法。
+  aliases:
+  - domain expert fusion
+  - model fusion
+  - domain expert feature fusion
+  - expert feature fusion
+  - expert features
+  status: published
+  confidence: 0.94
+- id: mini-batch-kmeans
+  name: Mini-Batch k-Means
+  domain: machine_learning
+  level: intermediate
+  definition: 用小批量样本近似更新聚类中心的 k-means 变体。
+  aliases:
+  - mini-batch k-means
+  - minibatch kmeans
+  - mini batch kmeans
+  status: published
+  confidence: 0.94
+- id: inference-latency-metrics
+  name: Inference Latency Metrics
+  domain: inference
+  level: intermediate
+  definition: 衡量推理服务首 token、单 token 和整体吞吐表现的指标集合。
+  aliases:
+  - TTFT
+  - ITL
+  - TPS
+  - timestamp stream
+  - inference latency metrics
+  status: published
+  confidence: 0.94
+- id: prioritized-sweeping
+  name: Prioritized Sweeping
+  domain: reinforcement_learning
+  level: advanced
+  definition: 优先更新预计价值变化最大的状态的模型式强化学习方法。
+  aliases:
+  - prioritized sweeping
+  status: published
+  confidence: 0.94
+- id: coarse-coding
+  name: Coarse Coding
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用重叠的粗粒度特征表示连续状态空间的方法。
+  aliases:
+  - coarse coding
+  status: published
+  confidence: 0.94
+- id: multi-task-rl
+  name: Multi-Task RL
+  domain: reinforcement_learning
+  level: advanced
+  definition: 让一个智能体或系统在多个相关任务上共同学习的强化学习设定。
+  aliases:
+  - multi-task RL
+  - multi task RL
+  - unified task handler
+  status: published
+  confidence: 0.94
+- id: deadly-triad
+  name: Deadly Triad
+  domain: reinforcement_learning
+  level: advanced
+  definition: 离策略学习、bootstrapping 和函数近似同时出现时可能导致不稳定的现象。
+  aliases:
+  - deadly triad
+  - instability deadly triad
+  status: published
+  confidence: 0.94
+- id: maximization-bias
+  name: Maximization Bias
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 在带噪声价值估计中取最大值会系统性高估价值的偏差。
+  aliases:
+  - maximization bias
+  - overestimation bias
+  status: published
+  confidence: 0.94
+- id: options-framework
+  name: Options Framework
+  domain: reinforcement_learning
+  level: advanced
+  definition: 把持续多步的高层动作纳入强化学习决策的时间抽象框架。
+  aliases:
+  - options framework
+  - temporal abstraction options
+  - options
+  status: published
+  confidence: 0.94
+- id: successor-representation
+  name: Successor Representation
+  domain: reinforcement_learning
+  level: advanced
+  definition: 表示当前状态未来会访问哪些状态或特征的强化学习表示方法。
+  aliases:
+  - successor representation
+  - successor features
+  status: published
+  confidence: 0.94
+- id: kanerva-coding
+  name: Kanerva Coding
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用随机原型点对高维连续状态进行稀疏特征编码的方法。
+  aliases:
+  - Kanerva coding
+  - high-dimensional coding
+  status: published
+  confidence: 0.94
+- id: r-learning
+  name: R-Learning
+  domain: reinforcement_learning
+  level: advanced
+  definition: 面向平均奖励目标的时序差分控制方法。
+  aliases:
+  - R-learning
+  - r learning
+  - average reward RL
+  status: published
+  confidence: 0.94
+- id: ddim-sampling
+  name: DDIM Sampling
+  domain: deep_learning
+  level: advanced
+  definition: 扩散模型中可用较少步骤进行确定性或近确定性采样的方法。
+  aliases:
+  - DDIM
+  - DDIM deterministic sampling
+  - deterministic sampling
+  status: published
+  confidence: 0.94
+- id: numeric-precision-formats
+  name: Numeric Precision Formats
+  domain: deep_learning
+  level: intermediate
+  definition: FP32、FP16、BF16、FP8 等数值格式在模型训练和推理中的表示方式。
+  aliases:
+  - FP16
+  - BF16
+  - FP8
+  - FP4
+  - format precision
+  status: published
+  confidence: 0.94
+- id: vision-language-model
+  name: Vision-Language Model
+  domain: deep_learning
+  level: advanced
+  definition: 同时处理图像和文本，并在两种模态之间建立联系的模型。
+  aliases:
+  - VLM
+  - vision language model
+  - visual language model
+  status: published
+  confidence: 0.94
+- id: visual-resolution
+  name: Visual Resolution
+  domain: computer_vision
+  level: intermediate
+  definition: 视觉输入中图像尺寸、patch 大小和可见细节之间的设置。
+  aliases:
+  - visual resolution
+  - resolution patch size
+  - image resolution
+  status: published
+  confidence: 0.94
+- id: patchification
+  name: Patchification
+  domain: computer_vision
+  level: intermediate
+  definition: 把图像或视频切分成固定大小 patch 以供模型处理的步骤。
+  aliases:
+  - patchification
+  - patchify
+  - patch size
+  status: published
+  confidence: 0.94
+- id: bm25-ranking
+  name: BM25 Ranking
+  domain: nlp
+  level: intermediate
+  definition: 基于词项频率、文档频率和长度归一化的经典文本检索排序方法。
+  aliases:
+  - BM25
+  - BM25 ranking
+  - bm25 ranking
+  status: published
+  confidence: 0.94
+- id: semantic-similarity
+  name: Semantic Similarity
+  domain: nlp
+  level: intermediate
+  definition: 衡量两个词、句子或文本片段语义接近程度的任务和指标。
+  aliases:
+  - semantic similarity
+  - text similarity
+  status: published
+  confidence: 0.94
+- id: wu-palmer-similarity
+  name: Wu-Palmer Similarity
+  domain: nlp
+  level: intermediate
+  definition: 基于词汇层级结构中最近共同祖先深度的语义相似度方法。
+  aliases:
+  - Wu Palmer
+  - Wu-Palmer
+  - Wu-Palmer similarity
+  status: published
+  confidence: 0.94
+- id: open-ended-qa-evaluation
+  name: Open-Ended QA Evaluation
+  domain: nlp
+  level: advanced
+  definition: 评估开放式问答答案质量、正确性和覆盖度的方法集合。
+  aliases:
+  - open-ended QA evaluation
+  - open ended QA
+  - QA evaluation
+  status: published
+  confidence: 0.94
+- id: instruction-constraint-checking
+  name: Instruction Constraint Checking
+  domain: llm
+  level: intermediate
+  definition: 用规则或模型检查回答是否满足格式、字段、禁止项和任务约束的方法。
+  aliases:
+  - instruction constraint checker
+  - verifiable instruction
+  - constraint checker
+  status: published
+  confidence: 0.94
+- id: conditional-aggregation-sql
+  name: Conditional Aggregation SQL
+  domain: sql
+  level: intermediate
+  definition: 在 SQL 聚合中按条件统计不同子集指标的查询模式。
+  aliases:
+  - conditional aggregation
+  - conditional counts
+  - compare conditional counts
+  status: published
+  confidence: 0.94
+- id: click-through-rate
+  name: Click-Through Rate
+  domain: statistics
+  level: beginner
+  definition: 点击次数与曝光次数之比，用于衡量内容或广告吸引力的指标。
+  aliases:
+  - CTR
+  - click-through rate
+  - ad click-through rate
+  - click through rate
+  status: published
+  confidence: 0.94
+- id: session-duration-analysis
+  name: Session Duration Analysis
+  domain: sql
+  level: intermediate
+  definition: 用事件时间计算用户会话开始、结束和持续时长的分析方法。
+  aliases:
+  - session duration
+  - average session duration
+  - load exit events
+  - session duration events
+  status: published
+  confidence: 0.94
+- id: pandas-merge
+  name: pandas Merge
+  domain: data_preprocessing
+  level: beginner
+  definition: 在 pandas 中按键把多个 DataFrame 合并的表格操作。
+  aliases:
+  - merge dataframes
+  - pandas merge
+  - merge DataFrames
+  status: published
+  confidence: 0.94
+- id: in-memory-database
+  name: In-Memory Database
+  domain: data_structures
+  level: intermediate
+  definition: 主要把数据保存在内存中以获得低延迟读写的数据存储系统。
+  aliases:
+  - in-memory database
+  - memory database
+  - insert filtered select
+  status: published
+  confidence: 0.94
+- id: prefix-cache
+  name: Prefix Cache
+  domain: inference
+  level: advanced
+  definition: 复用相同提示前缀的 KV cache，以减少重复 prefill 计算的推理优化方法。
+  aliases:
+  - prefix cache
+  - prefix caching
+  - prefix cache hit
+  status: published
+  confidence: 0.94
+- id: cache-hit-rate
+  name: Cache Hit Rate
+  domain: performance_optimization
+  level: beginner
+  definition: 请求命中已有缓存的比例，用来衡量缓存复用效果。
+  aliases:
+  - cache hit rate
+  - hit rate
+  - cache hit
+  status: published
+  confidence: 0.94
+- id: radial-basis-function
+  name: Radial Basis Function
+  domain: machine_learning
+  level: intermediate
+  definition: 只依赖样本到中心点距离的函数，常用于核方法和局部特征。
+  aliases:
+  - RBF
+  - RBF center
+  - RBF center placement
+  status: published
+  confidence: 0.94
+- id: sparse-distributed-memory
+  name: Sparse Distributed Memory
+  domain: machine_learning
+  level: advanced
+  definition: 用稀疏高维地址和分布式存储表示相似模式的记忆模型。
+  aliases:
+  - sparse distributed memory
+  - distributed memory
+  status: published
+  confidence: 0.94
+- id: negative-log-likelihood
+  name: Negative Log Likelihood
+  domain: machine_learning
+  level: beginner
+  definition: 把模型赋给真实观测的概率取负对数得到的损失。
+  aliases:
+  - NLL
+  - negative log likelihood
+  - nll loss
+  status: published
+  confidence: 0.94
+- id: uncertainty-estimation
+  name: Uncertainty Estimation
+  domain: machine_learning
+  level: advanced
+  definition: 估计模型预测中数据噪声、参数不确定性或分布外风险的方法。
+  aliases:
+  - uncertainty estimation
+  - prediction uncertainty
+  status: published
+  confidence: 0.94
+- id: heteroscedastic-regression
+  name: Heteroscedastic Regression
+  domain: machine_learning
+  level: advanced
+  definition: 允许不同输入位置具有不同噪声尺度的回归建模方法。
+  aliases:
+  - heteroscedastic
+  - heteroscedastic Laplace NLL
+  - Laplace NLL
+  status: published
+  confidence: 0.94
+- id: behavior-cloning
+  name: Behavior Cloning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 用专家示范数据直接监督学习策略的模仿学习方法。
+  aliases:
+  - behavior cloning
+  - expert demonstrations
+  - cloning learning
+  status: published
+  confidence: 0.94
+- id: domain-randomization
+  name: Domain Randomization
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在训练中随机改变环境参数，以提升策略对真实变化的鲁棒性。
+  aliases:
+  - domain randomization
+  - randomization robust policy
+  status: published
+  confidence: 0.94
+- id: retrace-algorithm
+  name: Retrace Algorithm
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用截断重要性权重进行安全离策略多步价值学习的方法。
+  aliases:
+  - Retrace
+  - retrace algorithm
+  status: published
+  confidence: 0.94
+- id: acrobot-environment
+  name: Acrobot Environment
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 一个欠驱动双连杆摆动控制基准环境。
+  aliases:
+  - Acrobot
+  - Acrobot swing-up
+  - swing-up
+  status: published
+  confidence: 0.94
+- id: td-error-bound
+  name: TD Error Bound
+  domain: reinforcement_learning
+  level: advanced
+  definition: 分析 TD 学习误差随步数、折扣和函数近似变化的理论界。
+  aliases:
+  - TD asymptotic error
+  - error bound verification
+  - TD error bound
+  status: published
+  confidence: 0.94
+- id: action-conditional-trace
+  name: Action-Conditional Trace
+  domain: reinforcement_learning
+  level: advanced
+  definition: 按状态动作对维护资格迹的信用分配方法。
+  aliases:
+  - action-conditional trace
+  - action conditional trace
+  status: published
+  confidence: 0.94
+- id: trace-clearing
+  name: Trace Clearing
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在某些动作或状态访问后清除不再有效资格迹的稳定化技巧。
+  aliases:
+  - trace clearing
+  - trace reset
+  status: published
+  confidence: 0.94
+- id: feature-receptive-field
+  name: Feature Receptive Field
+  domain: machine_learning
+  level: intermediate
+  definition: 一个特征对输入空间中哪些区域或模式产生响应的范围。
+  aliases:
+  - feature receptive field
+  - receptive field visualization
+  status: published
+  confidence: 0.94
+- id: directional-stripe-tiling
+  name: Directional Stripe Tiling
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用带方向的条纹式覆盖对连续状态空间做特征编码的方法。
+  aliases:
+  - directional stripe tilings
+  - stripe tilings
+  - directional tiling
+  status: published
+  confidence: 0.94
+- id: copy-on-write-memory
+  name: Copy-on-Write Memory
+  domain: systems_programming
+  level: advanced
+  definition: 多个对象先共享同一份内存，直到发生写入时才复制的内存管理策略。
+  aliases:
+  - copy-on-write
+  - copy on write memory
+  - memory sharing
+  status: published
+  confidence: 0.94
+- id: memory-fragmentation
+  name: Memory Fragmentation
+  domain: performance_optimization
+  level: intermediate
+  definition: 内存被切成许多不连续空洞，导致可用总量和可分配大块不一致的现象。
+  aliases:
+  - memory fragmentation
+  - fragmentation LLM serving
+  status: published
+  confidence: 0.94
+- id: unipc-sampling
+  name: UniPC Sampling
+  domain: deep_learning
+  level: advanced
+  definition: 扩散模型中结合 predictor-corrector 思路的快速采样器家族。
+  aliases:
+  - UniPC
+  - UniPC predictor-corrector
+  - predictor-corrector sampling
+  status: published
+  confidence: 0.94
+- id: frame-anchor-noise
+  name: Frame Anchor Noise
+  domain: deep_learning
+  level: advanced
+  definition: 视频或序列生成中围绕关键帧或锚帧注入噪声的训练和采样设计。
+  aliases:
+  - frame anchor noise
+  - anchor noise injection
+  status: published
+  confidence: 0.94
+- id: four-dimensional-parallelism
+  name: Four-Dimensional Parallelism
+  domain: deep_learning
+  level: expert
+  definition: 组合数据、张量、流水线和专家等多个维度的大模型并行训练策略。
+  aliases:
+  - 4D parallelism
+  - four dimensional parallelism
+  status: published
+  confidence: 0.94
+- id: dueling-dqn
+  name: Dueling DQN
+  domain: reinforcement_learning
+  level: advanced
+  definition: 把状态价值和动作优势分开估计的 DQN 架构变体。
+  aliases:
+  - dueling DQN
+  - dueling architecture
+  - dueling network
+  status: published
+  confidence: 0.94
+- id: time-delay-neural-network
+  name: Time Delay Neural Network
+  domain: deep_learning
+  level: intermediate
+  definition: 通过固定时间窗口处理序列局部上下文的神经网络结构。
+  aliases:
+  - TDNN
+  - time delay neural network
+  - variable-length sequences
+  status: published
+  confidence: 0.94
+- id: chunked-prefill
+  name: Chunked Prefill
+  domain: inference
+  level: advanced
+  definition: 把长提示的 prefill 阶段切成块，以便和 decode 或其它请求交错调度。
+  aliases:
+  - chunked prefill
+  - prefill scheduling
+  - prefill scheduling alongside decode
+  status: published
+  confidence: 0.94
+- id: bidirectional-sql-union
+  name: Bidirectional SQL Union
+  domain: sql
+  level: intermediate
+  definition: 把一条双向关系拆成两个方向后再合并分析的 SQL 模式。
+  aliases:
+  - caller receiver union
+  - bidirectional union
+  - combine caller receiver
+  - combine caller receiver union
+  - combine caller and receiver
+  - combine caller and receiver users
+  status: published
+  confidence: 0.94
+- id: current-status-from-events
+  name: Current Status From Events
+  domain: sql
+  level: intermediate
+  definition: 从事件流中取每个实体最新状态的 SQL 分析模式。
+  aliases:
+  - current status
+  - currently status events
+  - status events
+  - latest status event
+  status: published
+  confidence: 0.94
+- id: social-engagement-metrics
+  name: Social Engagement Metrics
+  domain: statistics
+  level: beginner
+  definition: 衡量帖子、评论、点赞和互动行为强度的一组产品指标。
+  aliases:
+  - friend posts
+  - likes friend posts
+  - comment threads per post
+  - posting reaction thresholds
+  - power users
+  - power users posting reaction thresholds
+  - posting and reaction thresholds
+  status: published
+  confidence: 0.94
+- id: instruction-complexity-scoring
+  name: Instruction Complexity Scoring
+  domain: llm
+  level: intermediate
+  definition: 按约束数量、意图数量和输出要求评估指令复杂度的方法。
+  aliases:
+  - instruction complexity
+  - complexity scoring
+  - unique intention tags
+  status: published
+  confidence: 0.94
+- id: corpus-qa-evaluation
+  name: Corpus QA Evaluation
+  domain: nlp
+  level: advanced
+  definition: 评估模型在大规模语料中检索、定位和回答问题能力的方法。
+  aliases:
+  - corpus answering evaluation
+  - million-token corpus answering
+  - million token corpus answering
+  - million-token corpus question answering
+  - million token corpus question answering
+  status: published
+  confidence: 0.94
+- id: supervised-learning
+  name: Supervised Learning
+  domain: machine_learning
+  level: beginner
+  definition: 使用带标签样本学习输入到目标输出映射的机器学习范式。
+  aliases:
+  - supervised learning
+  - labeled learning
+  status: published
+  confidence: 0.94
+- id: imitation-learning
+  name: Imitation Learning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 利用专家行为示范来学习策略的强化学习相关方法族。
+  aliases:
+  - imitation learning
+  - learning from demonstrations
+  status: published
+  confidence: 0.94
+- id: robust-optimization
+  name: Robust Optimization
+  domain: optimization
+  level: advanced
+  definition: 在参数扰动、数据变化或最坏情形下仍保持较好表现的优化方法。
+  aliases:
+  - robust optimization
+  - robust policy
+  status: published
+  confidence: 0.94
+- id: offline-reinforcement-learning
+  name: Offline Reinforcement Learning
+  domain: reinforcement_learning
+  level: advanced
+  definition: 只使用已收集数据学习策略，而不继续和环境交互的强化学习设定。
+  aliases:
+  - offline RL
+  - batch RL
+  - offline reinforcement learning
+  status: published
+  confidence: 0.94
+- id: r-squared
+  name: R-Squared
+  domain: statistics
+  level: beginner
+  definition: 衡量回归模型解释目标变量方差比例的指标。
+  aliases:
+  - R-squared
+  - R2
+  - r squared
+  - r-squared analysis
+  status: published
+  confidence: 0.94
+- id: random-subset-sampling
+  name: Random Subset Sampling
+  domain: machine_learning
+  level: beginner
+  definition: 从总体中随机抽取子集，用于训练、评估或近似计算的方法。
+  aliases:
+  - generate random subsets
+  - random subsets
+  - random subset
+  status: published
+  confidence: 0.94
+- id: closed-loop-driving-policy
+  name: Closed-Loop Driving Policy
+  domain: machine_learning
+  level: advanced
+  definition: 在仿真或真实反馈中连续观察状态并输出驾驶动作的策略。
+  aliases:
+  - closed-loop driving
+  - driving policy
+  - lane centering
+  - lane changes
+  - simulated lateral deviation
+  status: published
+  confidence: 0.94
+- id: inverse-dynamics
+  name: Inverse Dynamics
+  domain: robotics
+  level: advanced
+  definition: 根据期望运动状态反推出需要施加力或动作的动力学问题。
+  aliases:
+  - inverse dynamics
+  - unsupervised action labeling
+  status: published
+  confidence: 0.94
+- id: write-ahead-log
+  name: Write-Ahead Log
+  domain: software_engineering
+  level: intermediate
+  definition: 先把变更记录写入日志，再应用到主数据结构的可靠性机制。
+  aliases:
+  - write-ahead log
+  - WAL
+  - token-granular write-ahead log
+  status: published
+  confidence: 0.94
+- id: compute-optimal-training
+  name: Compute-Optimal Training
+  domain: deep_learning
+  level: advanced
+  definition: 在固定计算预算下选择模型规模和数据规模的训练缩放方法。
+  aliases:
+  - compute-optimal
+  - isoflop
+  - isoflop parabola
+  status: published
+  confidence: 0.94
+- id: euler-sampling
+  name: Euler Sampling
+  domain: deep_learning
+  level: intermediate
+  definition: 用欧拉离散化步骤求解生成模型采样轨迹的方法。
+  aliases:
+  - Euler sampling
+  - euler sampler
+  status: published
+  confidence: 0.94
+- id: rectified-flow
+  name: Rectified Flow
+  domain: deep_learning
+  level: advanced
+  definition: 学习从噪声到数据的连续速度场，并用 ODE 方式生成样本的方法。
+  aliases:
+  - rectified flow
+  - flow models
+  status: published
+  confidence: 0.94
+- id: maskgit-decoding
+  name: MaskGIT Decoding
+  domain: deep_learning
+  level: advanced
+  definition: 通过多轮并行预测和逐步取消 mask 来生成离散视觉 token 的解码方法。
+  aliases:
+  - MaskGIT
+  - iterative unmasking
+  - maskgit decoding
+  status: published
+  confidence: 0.94
+- id: model-flops-utilization
+  name: Model FLOPs Utilization
+  domain: performance_optimization
+  level: advanced
+  definition: 衡量训练或推理中实际模型计算量占硬件理论峰值比例的指标。
+  aliases:
+  - MFU
+  - FLOPs utilization
+  - model flops utilization
+  status: published
+  confidence: 0.94
+- id: multilayer-perceptron
+  name: Multilayer Perceptron
+  domain: deep_learning
+  level: beginner
+  definition: 由多层全连接层和非线性激活组成的前馈神经网络。
+  aliases:
+  - MLP
+  - auto-sized MLP
+  - feedforward network
+  status: published
+  confidence: 0.94
+- id: gym-space-validation
+  name: Gym Space Validation
+  domain: reinforcement_learning
+  level: beginner
+  definition: 检查强化学习环境 observation 和 action 是否符合声明空间的方法。
+  aliases:
+  - gym space validation
+  - runtime gym space
+  - MLP gym spaces
+  status: published
+  confidence: 0.94
+- id: parallel-environment-simulation
+  name: Parallel Environment Simulation
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 同时运行多个环境实例以提高强化学习采样吞吐的系统模式。
+  aliases:
+  - parallel environment simulation
+  - multi-environment worker process
+  - environment simulation multiprocessing
+  status: published
+  confidence: 0.94
+- id: model-based-planning
+  name: Model-Based Planning
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 利用环境模型模拟未来结果，并据此改进价值或策略的方法。
+  aliases:
+  - model-based planning
+  - model-based expansion
+  - planning simulated experience
+  - simulated experience
+  status: published
+  confidence: 0.94
+- id: scaling-law
+  name: Scaling Law
+  domain: deep_learning
+  level: advanced
+  definition: 描述模型规模、数据规模、计算量和损失之间经验关系的规律。
+  aliases:
+  - scaling law
+  - scaling laws
+  status: published
+  confidence: 0.94
+- id: training-compute-estimation
+  name: Training Compute Estimation
+  domain: deep_learning
+  level: intermediate
+  definition: 估计模型训练所需 FLOPs、时间和硬件资源的方法。
+  aliases:
+  - training compute
+  - compute estimation
+  - training FLOPs
+  status: published
+  confidence: 0.94
+- id: accuracy-score
+  name: Accuracy Score
+  domain: machine_learning
+  level: beginner
+  definition: 分类任务中预测正确样本占全部样本的比例。
+  aliases:
+  - accuracy score
+  - classification accuracy
+  status: published
+  confidence: 0.94
+- id: dice-score
+  name: Dice Score
+  domain: machine_learning
+  level: intermediate
+  definition: 衡量两个集合或二值预测重叠程度的指标。
+  aliases:
+  - dice score
+  - dice coefficient
+  - dice score classification
+  status: published
+  confidence: 0.94
+- id: extra-trees
+  name: Extra Trees
+  domain: machine_learning
+  level: intermediate
+  definition: 在树分裂时引入更强随机性的集成树模型。
+  aliases:
+  - extra trees
+  - ExtraTrees
+  - split selection
+  status: published
+  confidence: 0.94
+- id: bagging-ensemble
+  name: Bagging Ensemble
+  domain: machine_learning
+  level: intermediate
+  definition: 对多个基学习器使用重采样数据训练，并聚合预测的集成方法。
+  aliases:
+  - bagging
+  - pasting ensemble
+  - pasting ensemble with base learners
+  status: published
+  confidence: 0.94
+- id: random-patches-ensemble
+  name: Random Patches Ensemble
+  domain: machine_learning
+  level: intermediate
+  definition: 同时随机抽取样本子集和特征子集来训练多个基学习器的方法。
+  aliases:
+  - random patches
+  - bagging random patches
+  - random patches nearest neighbor
+  status: published
+  confidence: 0.94
+- id: isomap
+  name: Isomap
+  domain: machine_learning
+  level: advanced
+  definition: 用邻域图上的测地距离做非线性降维的流形学习方法。
+  aliases:
+  - isomap
+  - isomap geodesic distances
+  - geodesic distances
+  status: published
+  confidence: 0.94
+- id: spectral-clustering
+  name: Spectral Clustering
+  domain: machine_learning
+  level: advanced
+  definition: 基于样本相似图和图拉普拉斯矩阵特征向量进行聚类的方法。
+  aliases:
+  - spectral clustering
+  - graph laplacian clustering
+  - spectral clustering graph laplacian
+  status: published
+  confidence: 0.94
+- id: birch-clustering
+  name: BIRCH Clustering
+  domain: machine_learning
+  level: intermediate
+  definition: 用聚类特征树压缩数据后再聚类的大规模聚类方法。
+  aliases:
+  - BIRCH
+  - birch clustering
+  - large dataset clustering
+  status: published
+  confidence: 0.94
+- id: affinity-propagation
+  name: Affinity Propagation
+  domain: machine_learning
+  level: advanced
+  definition: 通过样本之间传递责任和可用性消息来选择代表点的聚类方法。
+  aliases:
+  - affinity propagation
+  status: published
+  confidence: 0.94
+- id: elbow-method
+  name: Elbow Method
+  domain: machine_learning
+  level: beginner
+  definition: 通过观察聚类误差随簇数变化的拐点来选择 K 的启发式方法。
+  aliases:
+  - elbow method
+  - elbow method k-means
+  - choose k for k-means
+  status: published
+  confidence: 0.94
+- id: local-outlier-factor
+  name: Local Outlier Factor
+  domain: machine_learning
+  level: intermediate
+  definition: 比较样本局部密度与邻居密度来检测异常点的方法。
+  aliases:
+  - LOF
+  - local outlier factor
+  - local outlier factor anomaly score
+  status: published
+  confidence: 0.94
+- id: column-transformer
+  name: Column Transformer
+  domain: machine_learning
+  level: intermediate
+  definition: 按列类型或列名对不同特征应用不同预处理流程的表格管道模式。
+  aliases:
+  - ColumnTransformer
+  - column transformer
+  - columntransformer style dispatcher
+  status: published
+  confidence: 0.94
+- id: feature-hashing
+  name: Feature Hashing
+  domain: machine_learning
+  level: intermediate
+  definition: 用哈希函数把高维离散特征映射到固定维度向量的方法。
+  aliases:
+  - feature hashing
+  - hashing trick
+  - feature hashing trick
+  - sparse feature hashing
+  status: published
+  confidence: 0.94
+- id: dummy-regressor
+  name: Dummy Regressor
+  domain: machine_learning
+  level: beginner
+  definition: 不学习复杂关系，只输出简单统计量的回归基线模型。
+  aliases:
+  - dummy regressor
+  - regressor baseline
+  - constant regressor
+  status: published
+  confidence: 0.94
+- id: path-patching
+  name: Path Patching
+  domain: deep_learning
+  level: advanced
+  definition: 在神经网络内部替换特定激活路径，以估计信息流因果影响的分析方法。
+  aliases:
+  - path patching
+  - indirect effect isolation
+  - activation patching
+  status: published
+  confidence: 0.94
+- id: generalization-gap-diagnosis
+  name: Generalization Gap Diagnosis
+  domain: machine_learning
+  level: intermediate
+  definition: 通过训练集、验证集和测试集表现差异判断欠拟合或过拟合的方法。
+  aliases:
+  - detect overfitting
+  - detect underfitting
+  - overfitting underfitting diagnosis
+  status: published
+  confidence: 0.94
+- id: superposition-feature-reconstruction
+  name: Superposition Feature Reconstruction
+  domain: deep_learning
+  level: advanced
+  definition: 研究多个稀疏特征共享同一表示空间时如何被重建的可解释性主题。
+  aliases:
+  - superposition
+  - toy models of superposition
+  - feature reconstruction
+  status: published
+  confidence: 0.94
+- id: self-critique-loss
+  name: Self-Critique Loss
+  domain: llm
+  level: advanced
+  definition: 让模型利用自我评审信号改进输出质量的训练或筛选目标。
+  aliases:
+  - self-critique loss
+  - constitutional AI critique
+  - critique loss
+  status: published
+  confidence: 0.94
+- id: puct-selection
+  name: PUCT Selection
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在树搜索中结合先验策略和价值估计选择动作的规则。
+  aliases:
+  - PUCT
+  - PUCT selection
+  - PUCT selection rule
+  - MCTS selection rule
+  status: published
+  confidence: 0.94
+- id: game-move-resolution
+  name: Game Move Resolution
+  domain: algorithms
+  level: intermediate
+  definition: 按游戏规则处理一次动作后状态变化的算法模式。
+  aliases:
+  - game move resolution
+  - go move resolution
+  - move resolution captures
+  status: published
+  confidence: 0.94
+- id: q-sigma-algorithm
+  name: Q Sigma Algorithm
+  domain: reinforcement_learning
+  level: advanced
+  definition: 在采样式 SARSA 和期望式树备份之间连续折中的多步控制算法。
+  aliases:
+  - Q(sigma)
+  - Q σ
+  - Q(σ)
+  - q sigma unified algorithm
+  status: published
+  confidence: 0.94
+- id: model-based-value-expansion
+  name: Model-Based Value Expansion
+  domain: reinforcement_learning
+  level: advanced
+  definition: 用模型向前模拟若干步，再接价值函数估计构造目标的方法。
+  aliases:
+  - model-based value expansion
+  - value expansion
+  - MBVE
+  status: published
+  confidence: 0.94
+- id: feature-density-approximation
+  name: Feature Density Approximation
+  domain: reinforcement_learning
+  level: advanced
+  definition: 估计状态特征空间中访问密度或覆盖质量的近似方法。
+  aliases:
+  - feature density
+  - feature density approximation
+  - approximation quality
+  status: published
+  confidence: 0.94
+- id: value-generalization-analysis
+  name: Value Generalization Analysis
+  domain: reinforcement_learning
+  level: advanced
+  definition: 分析价值函数在未见状态或相似状态之间传播和泛化质量的方法。
+  aliases:
+  - value generalization
+  - generalization pattern analysis
+  status: published
+  confidence: 0.94
+- id: rl-backup-diagram
+  name: RL Backup Diagram
+  domain: reinforcement_learning
+  level: beginner
+  definition: 用图示表达强化学习更新目标中状态、动作和奖励依赖关系的方法。
+  aliases:
+  - backup diagram
+  - RL backup diagram
+  - backup diagram generator
+  status: published
+  confidence: 0.94
+- id: td-gammon
+  name: TD-Gammon
+  domain: reinforcement_learning
+  level: advanced
+  definition: 使用时序差分学习训练双陆棋位置评估网络的经典系统。
+  aliases:
+  - TD-Gammon
+  - TD Gammon
+  - position evaluation network
+  status: published
+  confidence: 0.94
+- id: resource-dilation-scheduling
+  name: Resource Dilation Scheduling
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 根据任务进展或瓶颈动态放大资源分配权重的调度思想。
+  aliases:
+  - resource dilation
+  - resource dilation factor
+  - resource dilation scheduling
+  status: published
+  confidence: 0.94
+- id: forward-backward-td
+  name: Forward and Backward TD
+  domain: reinforcement_learning
+  level: advanced
+  definition: 从前向回报定义和后向资格迹更新两种视角理解 TD 学习的方法。
+  aliases:
+  - forward TD
+  - backward TD
+  - TD updates
+  status: published
+  confidence: 0.94
+- id: rote-learning-rl
+  name: Rote Learning in RL
+  domain: reinforcement_learning
+  level: beginner
+  definition: 记忆具体状态或经验结果，而不是学习可泛化规律的学习方式。
+  aliases:
+  - rote learning
+  - game state rote learning
+  - rote learning game states
+  status: published
+  confidence: 0.94
+- id: error-dependent-weight-updates
+  name: Error-Dependent Weight Updates
+  domain: reinforcement_learning
+  level: intermediate
+  definition: 根据预测误差大小和方向调整模型权重的学习规则。
+  aliases:
+  - error-dependent weight updates
+  - multiple weight updates
+  - TD error weight update
+  status: published
+  confidence: 0.94
+- id: decentralized-expert-model
+  name: Decentralized Expert Model
+  domain: deep_learning
+  level: advanced
+  definition: 让多个专家模块以分散方式处理不同子任务或数据区域的模型设计。
+  aliases:
+  - decentralized expert
+  - decentralized expert model
+  status: published
+  confidence: 0.94
+- id: video-latent-memory-estimation
+  name: Video Latent Memory Estimation
+  domain: deep_learning
+  level: advanced
+  definition: 估算视频生成或视频表征中 latent 张量占用显存的方法。
+  aliases:
+  - video generation latent space memory
+  - latent space memory estimation
+  - video latent memory
+  status: published
+  confidence: 0.94
+- id: hypernetwork
+  name: Hypernetwork
+  domain: deep_learning
+  level: advanced
+  definition: 生成另一个网络参数或部分参数的神经网络结构。
+  aliases:
+  - hypernetwork
+  - dynamic parameter generation
+  - hyper-connections
+  status: published
+  confidence: 0.94
+- id: hybrid-attention-layer-assignment
+  name: Hybrid Attention Layer Assignment
+  domain: deep_learning
+  level: advanced
+  definition: 在不同网络层中交替或分配多种注意力机制的架构设计方法。
+  aliases:
+  - hybrid attention
+  - layer assignment
+  - CSA-HCA layer assignment
+  status: published
+  confidence: 0.94
+- id: special-token-instruction
+  name: Special Token Instruction
+  domain: nlp
+  level: intermediate
+  definition: 使用特殊 token 标记角色、任务边界或控制信号的指令建模方法。
+  aliases:
+  - special token instruction
+  - quick instruction
+  - quick instruction token
+  status: published
+  confidence: 0.94
+- id: gradient-checking
+  name: Gradient Checking
+  domain: deep_learning
+  level: intermediate
+  definition: 用有限差分近似数值梯度，并与反向传播给出的解析梯度比较的正确性检查方法。
+  aliases:
+  - gradcheck
+  - finite-difference gradient check
+  status: published
+  confidence: 0.97
+- id: checkpoint-resume-training
+  name: Checkpoint Resume Training
+  domain: mlops
+  level: intermediate
+  definition: 保存并恢复模型、优化器、进度和随机状态，使中断后的训练从一致现场继续的工程流程。
+  aliases:
+  - resume training
+  - training state checkpoint
+  status: published
+  confidence: 0.98
+- id: adamw-optimizer
+  name: AdamW Optimizer
+  domain: optimization
+  level: intermediate
+  definition: 把权重衰减与 Adam 的自适应梯度更新解耦，使参数收缩不再被逐坐标预条件缩放的优化器。
+  aliases:
+  - decoupled weight decay
+  status: published
+  confidence: 0.98
+- id: muon-optimizer
+  name: Muon Optimizer
+  domain: optimization
+  level: advanced
+  definition: 对二维隐藏层权重的动量更新做矩阵正交化，并把其它参数交给常规优化器处理的混合优化策略。
+  aliases:
+  - momentum orthogonalized update
+  status: published
+  confidence: 0.92
+- id: instance-normalization
+  name: Instance Normalization
+  domain: computer_vision
+  level: intermediate
+  definition: 对每个样本的每个通道独立使用空间位置统计量进行标准化的归一化方法。
+  aliases:
+  - InstanceNorm
+  status: published
+  confidence: 0.97
+- id: group-normalization
+  name: Group Normalization
+  domain: computer_vision
+  level: intermediate
+  definition: 把单个样本的通道划分为若干组，并在每组通道与空间位置上计算统计量的归一化方法。
+  aliases:
+  - GroupNorm
+  status: published
+  confidence: 0.98
+- id: attention-io-bottleneck
+  name: Attention IO Bottleneck
+  domain: performance_optimization
+  level: advanced
+  definition: 标准注意力因显式读写 N×N 分数与概率中间矩阵而受到显存容量和 HBM 带宽限制的系统瓶颈。
+  aliases:
+  - IO-bound attention
+  - attention memory traffic
+  status: published
+  confidence: 0.98
+- id: flash-attention
+  name: FlashAttention
+  domain: performance_optimization
+  level: advanced
+  definition: 通过分块、算子融合与 online softmax 减少 HBM 访问，同时精确计算标准注意力的 IO-aware 算法。
+  aliases:
+  - memory-efficient exact attention
+  - online-softmax attention
+  status: published
+  confidence: 0.99

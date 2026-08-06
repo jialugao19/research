@@ -1,0 +1,20 @@
+{
+  "article_id": "covariance-matrix",
+  "claim": "Automated editorial checks only; this record is not a human or factual certification.",
+  "score": {
+    "citation_completeness": 0.94,
+    "concept_completeness": 1.0,
+    "formula_validity": 1.0,
+    "originality": 0.96,
+    "overall": 0.982,
+    "pedagogical_structure": 1.0
+  },
+  "status": "published",
+  "weights": {
+    "citation_completeness": 0.2,
+    "concept_completeness": 0.25,
+    "formula_validity": 0.1,
+    "originality": 0.15,
+    "pedagogical_structure": 0.3
+  }
+}

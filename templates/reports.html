@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% set nav_section = "reports" %}
-{% block title %}报告目录 · Jialu Gao Research{% endblock %}
+{% block title %}Publications · JG Research Lab{% endblock %}
 {% block content %}
 <section class="page-hero shell">
-  <p class="eyebrow">PUBLIC REPORT CATALOG <span>公开报告</span></p>
-  <h1>研究报告</h1>
-  <p class="lead">每份报告都是经过验证和脱敏的静态快照。历史链接保持不变。</p>
+  <p class="eyebrow">PUBLICATION INDEX <span>{{ reports|length }} CURRENT REVISIONS</span></p>
+  <h1>Research publications</h1>
+  <p class="lead">Validated, sanitized static snapshots of research evidence. Historical report URLs remain stable.</p>
 </section>
 <section class="shell section compact">
   <div class="filter-bar">
-    <label><span>搜索报告</span><input id="report-search" type="search" placeholder="标题、项目或标签" autocomplete="off"></label>
-    <label><span>按项目筛选</span><select id="project-filter"><option value="">全部项目</option>{% for project in catalog.projects %}{% if catalog.reports_for_project(project.id) %}<option value="{{ project.id }}">{{ project.title }}</option>{% endif %}{% endfor %}</select></label>
+    <label><span>SEARCH PUBLICATIONS</span><input id="report-search" type="search" placeholder="Title, project, or tag" autocomplete="off"></label>
+    <label><span>FILTER BY PROJECT</span><select id="project-filter"><option value="">All projects</option>{% for project in catalog.projects %}{% if catalog.reports_for_project(project.id) %}<option value="{{ project.id }}">{{ project.title }}</option>{% endif %}{% endfor %}</select></label>
   </div>
   <div id="report-catalog" class="catalog-grid report-list">
     {% for report in reports %}
@@ -22,6 +22,6 @@
     </article>
     {% endfor %}
   </div>
-  <p id="no-results" class="empty-state" role="status" aria-live="polite" hidden>没有匹配的公开报告，请尝试更短的关键词或选择全部项目。</p>
+  <p id="no-results" class="empty-state" role="status" aria-live="polite" hidden>No publication matches. Try a shorter query or select all projects.</p>
 </section>
 {% endblock %}

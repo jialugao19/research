@@ -1,0 +1,113 @@
+path:
+  name: Generative AI
+modules:
+- id: representations-1
+  stage: representations
+  stage_title: representations
+  stage_summary: ''
+  objective: 串联 autoencoder 到 variational-autoencoder，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - autoencoder-overview
+  - variational-autoencoder-overview
+  optional_units: []
+  articles:
+  - autoencoder.md
+  - variational-autoencoder.md
+- id: image-generation-1
+  stage: image-generation
+  stage_title: image-generation
+  stage_summary: ''
+  objective: 串联 generative-adversarial-network 到 unipc-sampling，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - generative-adversarial-network-overview
+  - diffusion-model-overview
+  - denoising-process-overview
+  - diffusion-noise-schedule-overview
+  - euler-sampling-overview
+  - rectified-flow-overview
+  - ddim-sampling-overview
+  - unipc-sampling-overview
+  optional_units: []
+  articles:
+  - ddim-sampling.md
+  - denoising-process.md
+  - diffusion-model.md
+  - diffusion-noise-schedule.md
+  - euler-sampling.md
+  - generative-adversarial-network.md
+  - rectified-flow.md
+  - unipc-sampling.md
+- id: image-generation-2
+  stage: image-generation
+  stage_title: image-generation
+  stage_summary: ''
+  objective: 串联 maskgit-decoding 到 classifier-free-guidance，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - maskgit-decoding-overview
+  - video-latent-memory-estimation-overview
+  - frame-anchor-noise-overview
+  - classifier-free-guidance-overview
+  optional_units: []
+  articles:
+  - classifier-free-guidance.md
+  - frame-anchor-noise.md
+  - maskgit-decoding.md
+  - video-latent-memory-estimation.md
+- id: language-generation-1
+  stage: language-generation
+  stage_title: language-generation
+  stage_summary: ''
+  objective: 串联 language-modeling 到 preference-dataset，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - language-modeling-overview
+  - autoregressive-generation-overview
+  - chat-template-overview
+  - prompt-template-overview
+  - fine-tuning-overview
+  - instruction-tuning-overview
+  - instruction-loss-masking-overview
+  - preference-dataset-overview
+  optional_units: []
+  articles:
+  - beam-search.md
+  - chat-template.md
+  - fine-tuning.md
+  - instruction-loss-masking.md
+  - instruction-tuning.md
+  - language-modeling.md
+  - preference-dataset.md
+  - prompt-template.md
+- id: language-generation-2
+  stage: language-generation
+  stage_title: language-generation
+  stage_summary: ''
+  objective: 串联 reward-modeling 到 retrieval-augmented-generation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - reward-modeling-overview
+  - low-rank-adaptation-overview
+  - retrieval-augmented-generation-overview
+  optional_units: []
+  articles:
+  - low-rank-adaptation.md
+  - retrieval-augmented-generation.md
+  - reward-modeling.md
+- id: representation-learning-1
+  stage: representation-learning
+  stage_title: representation-learning
+  stage_summary: ''
+  objective: 串联 contrastive-learning 到 feature-space，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - contrastive-learning-overview
+  - contrastive-loss-overview
+  - feature-space-overview
+  optional_units: []
+  articles:
+  - contrastive-learning.md
+  - contrastive-loss.md
+  - feature-space.md

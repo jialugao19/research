@@ -1,0 +1,121 @@
+path:
+  name: Machine Learning Foundation
+modules:
+- id: foundation-1
+  stage: foundation
+  stage_title: foundation
+  stage_summary: ''
+  objective: 串联 linear-algebra 到 matrix-multiplication，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - linear-algebra-overview
+  - probability-overview
+  - probability-normalization-overview
+  - matrix-multiplication-overview
+  optional_units: []
+  articles:
+  - linear-algebra.md
+  - probability-normalization.md
+  - probability.md
+- id: statistics-1
+  stage: statistics
+  stage_title: statistics
+  stage_summary: ''
+  objective: 串联 descriptive-statistics 到 maximum-a-posteriori-estimation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - descriptive-statistics-overview
+  - expected-value-overview
+  - variance-overview
+  - covariance-matrix-overview
+  - standard-deviation-overview
+  - correlation-coefficient-overview
+  - normalization-overview
+  - maximum-a-posteriori-estimation-overview
+  optional_units: []
+  articles:
+  - correlation-coefficient.md
+  - covariance-matrix.md
+  - descriptive-statistics.md
+  - expected-value.md
+  - maximum-a-posteriori-estimation.md
+  - normalization.md
+  - standard-deviation.md
+  - variance.md
+- id: statistics-2
+  stage: statistics
+  stage_title: statistics
+  stage_summary: ''
+  objective: 串联 entropy 到 bic-aic，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - entropy-overview
+  - mutual-information-overview
+  - kl-divergence-overview
+  - jensen-shannon-divergence-overview
+  - bootstrap-sampling-overview
+  - law-of-large-numbers-overview
+  - bic-aic-overview
+  optional_units: []
+  articles:
+  - bic-aic.md
+  - bootstrap-sampling.md
+  - entropy.md
+  - jensen-shannon-divergence.md
+  - kl-divergence.md
+  - law-of-large-numbers.md
+  - mutual-information.md
+- id: evaluation-1
+  stage: evaluation
+  stage_title: evaluation
+  stage_summary: ''
+  objective: 串联 train-validation-test-split 到 dice-score，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - train-validation-test-split-overview
+  - data-leakage-overview
+  - model-evaluation-metrics-overview
+  - confusion-matrix-overview
+  - accuracy-score-overview
+  - precision-recall-overview
+  - f1-score-overview
+  - dice-score-overview
+  optional_units: []
+  articles:
+  - data-leakage.md
+  - dice-score.md
+  - model-evaluation-metrics.md
+  - train-validation-test-split.md
+- id: evaluation-2
+  stage: evaluation
+  stage_title: evaluation
+  stage_summary: ''
+  objective: 串联 roc-auc 到 threshold-selection，形成一个可执行的阶段性学习块。
+  estimated_minutes: 100
+  required_units:
+  - roc-auc-overview
+  - r-squared-overview
+  - model-calibration-overview
+  - threshold-selection-overview
+  optional_units: []
+  articles:
+  - model-evaluation-metrics.md
+  - r-squared.md
+- id: optimization-1
+  stage: optimization
+  stage_title: optimization
+  stage_summary: ''
+  objective: 串联 gradient-descent 到 adam-optimizer，形成一个可执行的阶段性学习块。
+  estimated_minutes: 150
+  required_units:
+  - gradient-descent-overview
+  - mini-batch-training-overview
+  - stochastic-gradient-descent-overview
+  - regularization-overview
+  - early-stopping-overview
+  - adam-optimizer-overview
+  optional_units: []
+  articles:
+  - early-stopping.md
+  - gradient-descent.md
+  - regularization.md

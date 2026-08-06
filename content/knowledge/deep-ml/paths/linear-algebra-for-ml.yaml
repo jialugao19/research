@@ -1,0 +1,49 @@
+path:
+  name: Linear Algebra for ML
+stages:
+- name: vectors-and-matrices
+  topics:
+  - linear-algebra
+  - linear-independence
+  - scalar-multiplication
+  - dot-product
+  - matrix-addition
+  - matrix-multiplication
+  - diagonal-matrix
+  - determinant
+  - vector-norm
+  - cross-product
+- name: spaces-and-systems
+  topics:
+  - matrix-rank
+  - positive-definite-matrix
+  - row-reduction
+  - reduced-row-echelon-form
+  - linear-system-solving
+  - column-space
+  - row-space
+  - jacobi-method
+  - gauss-seidel-method
+  - sparse-matrix
+- name: similarity-and-shapes
+  topics:
+  - cosine-similarity
+  - tensor-shape
+  - broadcasting
+  - reshape-view
+  - orthonormal-basis
+  - orthogonalization
+  - vector-projection
+  - rotation-matrix
+  - affine-transformation
+  - change-of-basis
+  - grassmann-distance
+- name: decomposition
+  topics:
+  - matrix-inverse
+  - newton-schulz-iteration
+  - qr-decomposition
+  - cholesky-decomposition
+  - eigendecomposition
+  - singular-value-decomposition
+  - principal-component-analysis

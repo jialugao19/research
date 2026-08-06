@@ -1,0 +1,142 @@
+---
+id: article-generalization-gap-diagnosis
+slug: generalization-gap-diagnosis
+title: Generalization Gap Diagnosis：概念、直觉与边界
+concepts:
+- generalization-gap-diagnosis
+learning_units:
+- generalization-gap-diagnosis-overview
+domain: machine_learning
+level: intermediate
+content_type: theory
+depth_level: level_1_card
+target_chars:
+  minimum: 700
+  maximum: 1400
+keywords:
+- Generalization Gap Diagnosis
+- detect overfitting
+- detect underfitting
+- machine learning
+- intermediate
+- train validation test split
+- learning curve
+- regularization
+profile:
+  required_sections:
+  - 为什么需要它
+  - 核心直觉
+  - 数学定义
+  - 推导
+  - 常见误区
+  - 相关概念
+  - 延伸阅读
+  formula_required: true
+  formula_mode: display
+  algorithm_flow_required: false
+  complexity_required: false
+status: published
+article_plan:
+  id: article-plan-generalization-gap-diagnosis
+  covered_concepts: 1
+  primary_concept: generalization-gap-diagnosis
+confidence:
+  concept: 0.94
+  prerequisite: 0.92
+  prerequisite_path_eligible: true
+generated_version:
+  model: curated-catalog-v3
+  prompt_version: chapter-profile-v3
+review:
+  state: automated_editorial
+  last_review: null
+  reviewer: null
+  triggers:
+  - routine_auto_check
+  claim: Automated editorial checks passed; no human or factual certification is implied.
+references:
+- title: scikit-learn User Guide
+  url: https://scikit-learn.org/stable/user_guide.html
+  type: official_docs
+- title: CS229 Machine Learning Notes
+  url: https://cs229.stanford.edu/main_notes.pdf
+  type: course_notes
+---
+# Generalization Gap Diagnosis：概念、直觉与边界
+
+通过训练集、验证集和测试集表现差异判断欠拟合或过拟合的方法。
+
+关键词：Generalization Gap Diagnosis
+- detect overfitting
+- detect underfitting
+- machine learning
+- intermediate
+- train validation test split
+- learning curve
+- regularization
+
+## 为什么需要它
+
+指标下降时，需要知道是模型太弱、太强，还是数据流程有问题。
+
+## 核心直觉
+
+- 输入：Generalization Gap Diagnosis 所处理的数据、状态或评价对象。
+- 操作：训练差且验证差常是欠拟合，训练好但验证差常是过拟合。
+- 观察结果：指标下降时，需要知道是模型太弱、太强，还是数据流程有问题。
+
+它像同时看练习成绩和考试成绩来判断学习状态。
+
+例子：训练误差很低而验证误差高，应优先查正则化、数据量和泄漏。
+
+## 数学定义
+
+### 表达方式
+
+$$
+gap = train_score - validation_score
+$$
+
+### 变量解释
+
+- 符号的输入项表示方法接收的数据、状态或中间表示
+- 等号或箭头右侧表示计算得到的统计量、预测、表示或决策
+- Generalization Gap Diagnosis 的变量口径必须结合数据形状、单位和任务目标解释
+
+### 含义
+
+该表达式记录 Generalization Gap Diagnosis 的核心变量关系。解释结果时，需要把每个符号重新绑定到具体任务的输入、状态或评价口径。
+
+## 推导
+
+从 Generalization Gap Diagnosis 的定义出发，先写清事件、变量或对象，再代入条件关系。
+
+## 常见误区
+
+### 概念误解
+- 单个 epoch 的差距不可靠，要结合学习曲线和数据分布看。
+### 数学误解
+- 公式给出的是条件关系，不会自动保证数据满足这些条件。
+- 对 Generalization Gap Diagnosis 来说，符号相同不代表变量口径相同。
+### 使用误区
+- 在 Generalization Gap Diagnosis 上得到更高分，也可能只是换了阈值、样本分布或评估口径。
+- 如果只看 它用于实验诊断、调参、早停和模型选择。 的平均表现，很容易高估方法的稳定性。
+
+## 相关概念
+
+### 前置
+- Train Validation Test Split
+- Learning Curve
+
+### 关联
+- Regularization
+- Early Stopping
+
+### 延伸
+- Regularization
+- Early Stopping
+
+## 延伸阅读
+
+- **scikit-learn User Guide**：https://scikit-learn.org/stable/user_guide.html。用途：查看 API 行为、参数约定和工程实现边界。
+- **CS229 Machine Learning Notes**：https://cs229.stanford.edu/main_notes.pdf。用途：补足理论背景、标准符号和课堂推导。

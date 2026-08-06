@@ -1,0 +1,134 @@
+path:
+  name: Linear Algebra for ML
+modules:
+- id: vectors-and-matrices-1
+  stage: vectors-and-matrices
+  stage_title: vectors-and-matrices
+  stage_summary: ''
+  objective: 串联 linear-algebra 到 determinant，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - linear-algebra-overview
+  - linear-independence-overview
+  - scalar-multiplication-overview
+  - dot-product-overview
+  - matrix-addition-overview
+  - matrix-multiplication-overview
+  - diagonal-matrix-overview
+  - determinant-overview
+  optional_units: []
+  articles:
+  - determinant.md
+  - diagonal-matrix.md
+  - dot-product.md
+  - linear-algebra.md
+  - matrix-addition.md
+  - scalar-multiplication.md
+- id: vectors-and-matrices-2
+  stage: vectors-and-matrices
+  stage_title: vectors-and-matrices
+  stage_summary: ''
+  objective: 串联 vector-norm 到 cross-product，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - vector-norm-overview
+  - cross-product-overview
+  optional_units: []
+  articles:
+  - cross-product.md
+  - vector-norm.md
+- id: spaces-and-systems-1
+  stage: spaces-and-systems
+  stage_title: spaces-and-systems
+  stage_summary: ''
+  objective: 串联 matrix-rank 到 jacobi-method，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - matrix-rank-overview
+  - positive-definite-matrix-overview
+  - row-reduction-overview
+  - reduced-row-echelon-form-overview
+  - linear-system-solving-overview
+  - column-space-overview
+  - row-space-overview
+  - jacobi-method-overview
+  optional_units: []
+  articles:
+  - jacobi-method.md
+  - linear-algebra.md
+  - positive-definite-matrix.md
+  - reduced-row-echelon-form.md
+  - row-reduction.md
+- id: spaces-and-systems-2
+  stage: spaces-and-systems
+  stage_title: spaces-and-systems
+  stage_summary: ''
+  objective: 串联 gauss-seidel-method 到 sparse-matrix，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - gauss-seidel-method-overview
+  - sparse-matrix-overview
+  optional_units: []
+  articles:
+  - gauss-seidel-method.md
+  - sparse-matrix.md
+- id: similarity-and-shapes-1
+  stage: similarity-and-shapes
+  stage_title: similarity-and-shapes
+  stage_summary: ''
+  objective: 串联 cosine-similarity 到 rotation-matrix，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - cosine-similarity-overview
+  - tensor-shape-overview
+  - broadcasting-overview
+  - reshape-view-overview
+  - orthonormal-basis-overview
+  - orthogonalization-overview
+  - vector-projection-overview
+  - rotation-matrix-overview
+  optional_units: []
+  articles:
+  - cosine-similarity.md
+  - linear-algebra.md
+  - orthogonalization.md
+  - pytorch-tensor.md
+  - rotation-matrix.md
+  - vector-projection.md
+- id: similarity-and-shapes-2
+  stage: similarity-and-shapes
+  stage_title: similarity-and-shapes
+  stage_summary: ''
+  objective: 串联 affine-transformation 到 grassmann-distance，形成一个可执行的阶段性学习块。
+  estimated_minutes: 75
+  required_units:
+  - affine-transformation-overview
+  - change-of-basis-overview
+  - grassmann-distance-overview
+  optional_units: []
+  articles:
+  - affine-transformation.md
+  - change-of-basis.md
+  - grassmann-distance.md
+- id: decomposition-1
+  stage: decomposition
+  stage_title: decomposition
+  stage_summary: ''
+  objective: 串联 matrix-inverse 到 principal-component-analysis，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - matrix-inverse-overview
+  - newton-schulz-iteration-overview
+  - qr-decomposition-overview
+  - cholesky-decomposition-overview
+  - eigendecomposition-overview
+  - singular-value-decomposition-overview
+  - principal-component-analysis-overview
+  optional_units: []
+  articles:
+  - cholesky-decomposition.md
+  - eigendecomposition.md
+  - linear-algebra.md
+  - matrix-inverse.md
+  - newton-schulz-iteration.md
+  - qr-decomposition.md

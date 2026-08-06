@@ -1,0 +1,49 @@
+path:
+  name: Data and SQL
+stages:
+- name: tables
+  topics:
+  - pandas-dataframe
+  - sql-select
+  - select-distinct
+  - sql-where-filtering
+  - sql-joins
+  - sql-null-handling
+- name: analytics
+  topics:
+  - sql-aggregation
+  - having-clause
+  - count-having-pattern
+  - sql-case-when
+  - conditional-aggregation-sql
+  - click-through-rate
+  - social-engagement-metrics
+  - sql-subquery
+  - common-table-expression
+  - sql-window-functions
+  - first-value-window
+  - self-join
+  - bidirectional-sql-union
+  - groupwise-ranking-sql
+  - percent-rank-sql
+  - groupwise-min-max-sql
+  - current-status-from-events
+- name: time-analysis
+  topics:
+  - sql-date-functions
+  - sql-date-range-filtering
+  - daily-active-users
+  - session-duration-analysis
+  - rolling-average-sql
+  - cohort-retention
+  - consecutive-activity
+- name: performance
+  topics:
+  - query-execution-plan
+  - sql-index
+  - sql-constraints
+- name: cleanup-and-presentation
+  topics:
+  - sql-delete-duplicates
+  - sql-order-limit
+  - top-n-per-group

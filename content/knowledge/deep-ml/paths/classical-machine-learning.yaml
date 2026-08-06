@@ -1,0 +1,132 @@
+path:
+  name: Classical Machine Learning
+stages:
+- name: linear-models
+  topics:
+  - supervised-learning
+  - linear-regression
+  - mean-squared-error
+  - negative-log-likelihood
+  - heteroscedastic-regression
+  - polynomial-features
+  - logistic-regression
+  - multinomial-logistic-regression
+  - linear-discriminant-analysis
+  - quadratic-discriminant-analysis
+  - maximum-likelihood-estimation
+- name: regularized-models
+  topics:
+  - regularization
+  - ridge-regression
+  - lasso-regression
+  - elastic-net
+- name: losses
+  topics:
+  - mae-loss
+  - huber-loss
+  - binary-cross-entropy
+  - focal-loss
+  - triplet-loss
+  - class-imbalance
+  - label-smoothing
+- name: classification
+  topics:
+  - classifier
+  - binary-classification
+  - multiclass-classification
+  - multilabel-classification
+  - accuracy-score
+  - precision-recall
+  - f1-score
+  - dice-score
+  - model-calibration
+  - threshold-selection
+  - ranking-metrics
+- name: neighbors-and-clusters
+  topics:
+  - distance-metrics
+  - knn-classification
+  - k-means-clustering
+  - mini-batch-kmeans
+  - kmeans-plus-plus
+  - elbow-method
+  - hierarchical-clustering
+  - locally-linear-embedding
+  - isomap
+  - spectral-clustering
+  - birch-clustering
+  - affinity-propagation
+  - dbscan-clustering
+  - clustering-evaluation
+  - silhouette-score
+  - calinski-harabasz-index
+  - davies-bouldin-index
+  - adjusted-rand-index
+  - normalized-mutual-information
+  - principal-component-analysis
+- name: tree-models
+  topics:
+  - decision-tree
+  - gini-impurity
+  - information-gain
+  - random-forest
+  - extra-trees
+  - gradient-boosting
+- name: other-baselines
+  topics:
+  - support-vector-machine
+  - kernel-method
+  - radial-basis-function
+  - naive-bayes
+  - voting-classifier
+  - bagging-ensemble
+  - random-patches-ensemble
+  - adaboost
+  - out-of-bag-estimate
+  - dummy-regressor
+  - bias-variance-tradeoff
+  - isolation-forest
+  - local-outlier-factor
+- name: selection-and-diagnosis
+  topics:
+  - cross-validation
+  - grid-search
+  - random-search
+  - hyperparameter-tuning
+  - dataset-shuffling
+  - random-subset-sampling
+  - learning-curve
+  - generalization-gap-diagnosis
+  - feature-engineering
+  - column-transformer
+  - feature-hashing
+  - expert-feature-fusion
+  - feature-space
+  - feature-receptive-field
+  - sparse-distributed-memory
+  - feature-selection
+  - feature-importance
+  - shap-values
+  - random-projection
+  - random-fourier-features
+  - path-patching
+  - linear-probing
+  - transfer-learning
+  - domain-adaptation
+- name: patterns-and-representation
+  topics:
+  - frequent-itemset-mining
+  - association-rule-mining
+  - hypervector
+  - superposition-feature-reconstruction
+- name: special-settings
+  topics:
+  - synthetic-dataset-generation
+  - benchmark-dataset
+  - time-series-forecasting
+  - probabilistic-regression
+  - anomaly-detection
+  - semi-supervised-learning
+  - bradley-terry-model
+  - pairwise-ranking
+  - elo-rating

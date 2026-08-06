@@ -8,18 +8,22 @@ studies:
     status: completed
     maturity: signal-only
     updated_at: 2026-07-01
-    objective: 建立 checkpoint、测试全集和报告产物完整的分钟级参考基线。
-    summary: 稳健 selector 选择 20k checkpoint，test pooled IC 为 0.07034。
-    decision: 作为历史 close-label 信号比较锚点，不作为组合成本和容量证明。
+    method: Minute-level GRU baseline
+    dataset: stock1m full test
+    decision_state: retain
+    primary_metric: test-pooled-ic
+    objective: Establish a minute-level reference baseline with complete checkpoints, full-test evaluation, and report artifacts.
+    summary: The robust selector chose the 20k checkpoint; test pooled IC was 0.07034.
+    decision: Retain as a historical close-label signal anchor, not as evidence for portfolio cost or capacity.
     caveats:
-      - 仅证明信号质量，尚未证明成本后组合收益。
+      - This establishes signal quality only; net portfolio performance remains unproven.
     metrics:
       - id: test-pooled-ic
         label: Test pooled IC
         value: 0.0703447025
         format: decimal
         decimals: 4
-        context: test_full，单次参考基线
+        context: test_full, single reference run
       - id: selected-checkpoint
         label: Selected checkpoint
         value: 20000
@@ -33,29 +37,33 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: reference-baseline
-    title: B+VWAP 信号基线
+    title: B+VWAP Signal Baseline
     status: completed
     maturity: signal-only
     updated_at: 2026-07-21
-    objective: 旧基线使用 close 收益作为监督目标，但收盘价标签与可执行成交区间并不完全一致。为判断改进究竟来自标签定义还是样本变化，本实验固定 paired_vwap_valid 有效行集合，只把未来收益端点替换为 VWAP，并保留相同行集合上的 close 标签作为配对对照。
-    summary: 实验在相同数据切分和训练协议下分别训练 VWAP 与 close 版本，并用三个随机种子复核差值。seed13 的 VWAP test IC 为 0.07445，close control 为 0.06051，差值为 0.01395；其余两个 seed 的配对差值也为正。信号改善成立，但 10 分钟成本后年化收益仍为负，因此结果只支持更新信号基线。
-    decision: 晋升为当前信号基线，但不晋升为 execution-ready 组合基线。
+    method: Paired VWAP endpoint comparison
+    dataset: stock1m paired_vwap_valid
+    decision_state: promote
+    primary_metric: vwap-test-ic
+    objective: The old baseline used close returns even though close labels do not fully align with an executable interval. This experiment fixes the paired_vwap_valid rows, changes only the future-return endpoint to VWAP, and retains close labels on the same rows as a paired control.
+    summary: VWAP and close variants use identical splits and training protocols across three seeds. For seed13, VWAP test IC is 0.07445 versus 0.06051 for close, a 0.01395 gain; the other paired seed deltas are also positive. Signal quality improves, but 10-minute net annual return remains negative.
+    decision: Promote B+VWAP as the current signal baseline, but not as an execution-ready portfolio baseline.
     caveats:
-      - 缺少原生 inference_test manifest，当前执行与成本门槛未通过。
-      - 10m 成本后年化收益为负，不能用 gross 结果替代。
+      - A native inference_test manifest is missing, and execution and cost gates have not passed.
+      - Ten-minute net annual return is negative; gross results cannot substitute for it.
     metrics:
       - id: vwap-test-ic
         label: B+VWAP test IC
         value: 0.0744533729
         format: decimal
         decimals: 4
-        context: seed13，paired_vwap_valid
+        context: seed13, paired_vwap_valid
       - id: close-control-ic
         label: Paired close IC
         value: 0.0605061430
         format: decimal
         decimals: 4
-        context: seed13，同一行集合
+        context: seed13, identical row set
       - id: ic-delta
         label: Paired IC delta
         value: 0.0139472299
@@ -63,11 +71,11 @@ studies:
         decimals: 4
         context: VWAP minus close
       - id: net-annual-return
-        label: 10m 成本后年化
+        label: 10m net annual return
         value: -99.48
         format: percent
         decimals: 2
-        context: portfolio gate，seed13
+        context: portfolio gate, seed13
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/reference-baseline-v2/results.yaml
     featured: true
@@ -76,15 +84,19 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: optimize-1min-model
-    title: 分钟级模型结构最终评估
+    title: Final 1min Architecture Evaluation
     status: completed
     maturity: decision-ready
     updated_at: 2026-07-25
-    objective: 旧默认模型使用 GRU384×2 和两层 512 单元 MLP，约有 181 万个参数，但更大的容量没有自动带来更稳定的样本外信号。实验先在统一训练预算下筛选 18 个较小的 GRU/MLP 结构，再固定候选，用 seeds 7、11、13 比较 GRU192×2 的 last-hidden 表示与 attention 表示，确认结构收益不是单个随机种子的偶然结果。
-    summary: 三个随机种子的最终评估中，GRU192×2 last-hidden 的 test pooled IC 和 Rank IC 均高于 attention 对照；pooled IC 均值为 0.07895，Rank IC 均值为 0.04651，而 attention 的 test IC 为 0.07066。保留模型有 342,337 个参数，约为旧模型的五分之一，在缩小容量的同时提高了多 seed 信号表现。
-    decision: 保留 GRU192×2 MLP[] last-hidden；不晋升 attention 或 TCN。
+    method: GRU / MLP architecture screen
+    dataset: stock1m · seeds 7/11/13
+    decision_state: retain
+    primary_metric: test-pooled-ic
+    objective: The former default used GRU384×2 with two 512-unit MLP layers and roughly 1.81 million parameters, yet capacity did not improve out-of-sample stability. Eighteen smaller GRU/MLP candidates were screened under one budget, then GRU192×2 last-hidden and attention representations were compared across seeds 7, 11, and 13.
+    summary: GRU192×2 last-hidden beats attention on both test pooled IC and Rank IC across all three seeds. Mean pooled IC is 0.07895 and mean Rank IC is 0.04651 versus 0.07066 test IC for attention. The retained model has 342,337 parameters, about one fifth of the old model.
+    decision: Retain GRU192×2 MLP[] last-hidden; do not promote attention or TCN.
     caveats:
-      - 该结论是结构与信号选择，不是成本后交易证明。
+      - This is architecture and signal-selection evidence, not proof of net trading performance.
     metrics:
       - id: test-pooled-ic
         label: Test pooled IC mean
@@ -103,12 +115,22 @@ studies:
         value: 0.0706621299
         format: decimal
         decimals: 5
-        context: 三 seed 对照
+        context: three-seed control
       - id: parameters
         label: Trainable parameters
         value: 342337
         format: integer
         context: retained last-hidden model
+      - id: baseline-parameters
+        label: Previous baseline parameters
+        value: 1808129
+        format: integer
+        context: GRU384×2 + MLP512×512
+      - id: architecture-candidates
+        label: Architectures screened
+        value: 18
+        format: integer
+        context: fixed-budget 1min screen
     report_ids: [0725-1min-model-screening-v2]
     evidence_ref: exp-nn/0-select&report/experiments/optimize-1min-model/results.yaml
     featured: true
@@ -121,24 +143,28 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-07-25
-    objective: 比较 MSE、相关性、moment 与预测尺度约束损失。
-    summary: 单 seed Stage B 中 mse_std_floor_0p1 的 test IC 为 0.07776，高于 MSE control 的 0.06888。
-    decision: 只晋升到多 seed Stage C 候选，不作为最终默认损失。
+    method: Loss-function screen
+    dataset: stock1m · seed7
+    decision_state: iterate
+    primary_metric: candidate-test-ic
+    objective: Compare MSE, correlation, moment, and prediction-scale constrained losses.
+    summary: In single-seed Stage B, mse_std_floor_0p1 reaches 0.07776 test IC versus 0.06888 for the MSE control.
+    decision: Promote only to a multi-seed Stage C candidate, not to the default loss.
     caveats:
-      - 当前是 seed7 筛选；所有方案的预测波动仍明显低于目标波动。
+      - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
     metrics:
       - id: candidate-test-ic
         label: Candidate test IC
         value: 0.0777618206
         format: decimal
         decimals: 5
-        context: mse_std_floor_0p1，seed7
+        context: mse_std_floor_0p1, seed7
       - id: mse-test-ic
         label: MSE control IC
         value: 0.0688795701
         format: decimal
         decimals: 5
-        context: seed7，同协议 control
+        context: seed7, same-protocol control
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/loss-function-1min/results.yaml
     featured: false
@@ -147,43 +173,52 @@ studies:
     project: prediction-nn
     track: one-second
     subproject: baseline-1s-0720
-    title: 秒级 GRU384 基线评估
+    title: 1s GRU384 Baseline Evaluation
     status: doing
     maturity: developmental
     updated_at: 2026-08-02
-    objective: 秒级数据包含成交、盘口和委托流，信息量与噪声、换手都明显高于分钟级主线，因此不能沿用 1min 的结论。本实验先对 stock1s/v2 的 78 维去重特征完成 fold0 数据审计，再训练 GRU384 与双层 MLP512×512，并把逐样本信号、重要股票池聚合及 10 分钟成本后组合放在同一评价链路中。
-    summary: fold0 测试集包含约 794.8 万个有效评价行，test pooled IC 为 0.09842，Rank IC 为 0.09469，说明模型输出与未来收益存在较强横截面相关性。但成本后候选使用了 test 参与选择，且 10 分钟成本后日均收益为 -0.168%、Sharpe 为 -18.27；当前结果只能证明信号链路值得继续研究，不能证明可交易性。
-    decision: 保持 1s 独立研究线，修正选择协议并降低换手后再讨论晋升。
+    method: GRU384 + MLP512×512
+    dataset: stock1s/v2 fold0
+    decision_state: iterate
+    primary_metric: test-pooled-ic
+    objective: Second-level trades, quotes, and order flow carry more information, noise, and turnover than the minute-level mainline. The experiment audits 78 deduplicated stock1s/v2 features on fold0, trains GRU384 with a two-layer MLP512×512 head, and evaluates sample-level signals, key-universe aggregation, and 10-minute net portfolios in one chain.
+    summary: Fold0 contains 7,947,567 valid evaluation rows. Test pooled IC is 0.09842 and Rank IC is 0.09469, but the net candidate used test during selection. Its 10-minute net daily return is -0.168% and Sharpe is -18.27. The signal chain merits continued research, but tradability is not established.
+    decision: Keep 1s as an independent research line; correct selection policy and reduce turnover before promotion.
     caveats:
-      - 成本换手候选使用 test 参与选择，不能作为正式晋升证据。
-      - 10m 成本后日均收益和 Sharpe 为负，gross 表现不可单独引用。
+      - The cost and turnover candidate used test during selection and cannot support formal promotion.
+      - Ten-minute net daily return and Sharpe are negative; gross performance cannot be cited in isolation.
     metrics:
       - id: test-pooled-ic
         label: Test pooled IC
         value: 0.0984152803
         format: decimal
         decimals: 5
-        context: fold0，7,947,567 rows
+        context: fold0, 7,947,567 rows
       - id: test-rank-ic
         label: Test Rank IC
         value: 0.0946858020
         format: decimal
         decimals: 5
-        context: fold0，7,947,567 rows
+        context: fold0, 7,947,567 rows
+      - id: evaluation-rows
+        label: Evaluation rows
+        value: 7947567
+        format: integer
+        context: fold0 test set
       - id: net-daily-return
-        label: 10m 成本后日均收益
+        label: 10m net daily return
         value: -0.1679929498
         format: percent
         decimals: 3
-        context: c60_top05，test-selected
+        context: c60_top05, test-selected
       - id: net-sharpe
-        label: 10m 成本后 Sharpe
+        label: 10m net Sharpe
         value: -18.2703766
         format: number
         decimals: 2
-        context: 59 个交易日
+        context: 59 trading days
       - id: daily-turnover
-        label: 日均换手
+        label: Daily turnover
         value: 7.9912119
         format: number
         decimals: 2
@@ -201,11 +236,14 @@ studies:
     status: doing
     maturity: blocked
     updated_at: 2026-07-25
-    objective: 登记 mainline baseline 的配置、运行和 artifact 事实。
-    summary: 尚未找到完成且可复刻的 run、配置、指标和 artifact 记录。
-    decision: 不用于任何比较，完成登记后再恢复。
+    method: Baseline registration audit
+    dataset: Mainline artifacts
+    decision_state: blocked
+    objective: Register configuration, run, and artifact facts for the mainline baseline.
+    summary: No completed and reproducible run with configuration, metrics, and artifacts has been located.
+    decision: Exclude from all comparisons until registration is complete.
     caveats:
-      - checkout 在登记时为 dirty，当前只有报告提纲。
+      - The checkout was dirty during registration and only a report outline is available.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/baseline-main-20260622/results.yaml
@@ -219,11 +257,15 @@ studies:
     status: archived
     maturity: diagnostic
     updated_at: 2026-07-25
-    objective: 记录 touch 训练过滤、unfiltered test 的诊断性结果。
-    summary: 观察到 test IC 0.08884，但测试全集与主矩阵不同。
-    decision: 只保留为 limit-pool 诊断 provenance，不参与 all/touch/limit 排名。
+    method: Touch-train / full-test diagnostic
+    dataset: stock1m unfiltered test
+    decision_state: diagnostic
+    primary_metric: diagnostic-test-ic
+    objective: Record diagnostic results for touch-filtered training against an unfiltered test set.
+    summary: Test IC reaches 0.08884, but the full test universe differs from the main comparison matrix.
+    decision: Retain only as limit-pool diagnostic provenance; exclude it from all/touch/limit ranking.
     caveats:
-      - 同时改变测试 universe 和 source checkout，不能直接比较。
+      - Both the test universe and source checkout changed, so the result is not directly comparable.
     metrics:
       - id: diagnostic-test-ic
         label: Diagnostic test IC
@@ -243,18 +285,22 @@ studies:
     status: completed
     maturity: decision-ready
     updated_at: 2026-07-11
-    objective: 在同协议下比较 all、touch 和 limit 监督样本池。
-    summary: touch 在主矩阵中取得最高 test IC、top prediction return 和 ETF top95 hit。
-    decision: 主矩阵优先 touch；test-all 仅作为不可比诊断。
+    method: Sample-pool comparison
+    dataset: stock1m all / touch / limit
+    decision_state: retain
+    primary_metric: touch-test-ic
+    objective: Compare all, touch, and limit supervised sample pools under one protocol.
+    summary: Touch achieves the highest test IC, top-prediction return, and ETF top95 hit rate in the main matrix.
+    decision: Prefer touch in the main matrix; retain test-all only as a non-comparable diagnostic.
     caveats:
-      - 策略指标仍依赖报告中的成本和执行代理。
+      - Strategy metrics still rely on cost and execution proxies documented in the report.
     metrics:
       - id: touch-test-ic
         label: Touch test IC
         value: 0.0691368300
         format: decimal
         decimals: 5
-        context: all/touch/limit 主矩阵
+        context: all/touch/limit main matrix
       - id: top-return
         label: Top prediction return
         value: 9.2415430
@@ -279,11 +325,15 @@ studies:
     status: completed
     maturity: decision-ready
     updated_at: 2026-06-17
-    objective: 比较精确零和近零收益特征过滤对信号与样本保留率的影响。
-    summary: ret-ge2-nz5e-4 的 test IC 与 top return 最高；flat-ret123-oc 的 top95 命中率最高。
-    decision: 把 IC/return 与 hit-rate 两类目标分开保留，不宣称单一全局赢家。
+    method: Return-feature filter screen
+    dataset: stock1m · seed7
+    decision_state: retain
+    primary_metric: best-test-ic
+    objective: Compare exact-zero and near-zero return-feature filters for signal quality and sample retention.
+    summary: ret-ge2-nz5e-4 has the highest test IC and top return; flat-ret123-oc has the highest top95 hit rate.
+    decision: Retain separate IC/return and hit-rate objectives rather than declaring one global winner.
     caveats:
-      - 交易与成本指标仍是 proxy，不等同实盘收益。
+      - Trading and cost metrics remain proxies and are not equivalent to live returns.
     metrics:
       - id: best-test-ic
         label: Best test IC
@@ -315,11 +365,15 @@ studies:
     status: completed
     maturity: decision-ready
     updated_at: 2026-06-26
-    objective: 固定 final-step 协议，选择稳定学习率和调度器。
-    summary: warmup_cosine、lr=0.009 在 seeds 7/11/19 上平均 test IC 为 0.07354。
-    decision: 后续同模型、batch、数据和训练长度使用 warmup_cosine + 0.009。
+    method: Learning-rate / scheduler screen
+    dataset: stock1m · seeds 7/11/19
+    decision_state: retain
+    primary_metric: mean-test-ic
+    objective: Select a stable learning rate and scheduler under a fixed final-step protocol.
+    summary: warmup_cosine with lr=0.009 averages 0.07354 test IC across seeds 7/11/19.
+    decision: Use warmup_cosine + 0.009 for later runs with the same model, batch, data, and training length.
     caveats:
-      - 架构、batch、split 或训练长度变化后应重跑局部学习率邻域。
+      - Re-run the local learning-rate neighborhood after changes to architecture, batch, split, or training length.
     metrics:
       - id: mean-test-ic
         label: Mean test IC
@@ -332,7 +386,7 @@ studies:
         value: 0.0019912445
         format: decimal
         decimals: 5
-        context: 三 seed
+        context: three seeds
       - id: final-iter
         label: Final iteration
         value: 110000
@@ -350,11 +404,15 @@ studies:
     status: completed
     maturity: decision-ready
     updated_at: 2026-06-28
-    objective: 检查三个滚动时期的 validation IC 是否出现明显衰减。
-    summary: 三折 validation pooled IC 均值 0.06590，范围 0.00455，没有观察到明显晚期崩塌。
-    decision: 当前无需仅因时期衰减而更换架构；交易决策仍需组合级验证。
+    method: Rolling purged validation
+    dataset: stock1m · three folds
+    decision_state: retain
+    primary_metric: validation-ic-mean
+    objective: Test whether validation IC decays materially across three rolling periods.
+    summary: Mean pooled validation IC is 0.06590 across three folds with a 0.00455 range; no material late-period collapse is observed.
+    decision: Do not replace the architecture solely for temporal decay; trading decisions still require portfolio-level validation.
     caveats:
-      - test 只保留作 pipeline contract，不作为选择或交易证据。
+      - Test is retained only as a pipeline contract, not as selection or trading evidence.
     metrics:
       - id: validation-ic-mean
         label: Validation IC mean
@@ -376,15 +434,19 @@ studies:
     project: prediction-nn
     track: one-minute
     subproject: validation
-    title: 稳健 Checkpoint 选择规则
+    title: Robust Checkpoint Selection Rule
     status: completed
     maturity: decision-ready
     updated_at: 2026-06-29
-    objective: 如果直接选择单个 validation 窗口上 IC 最高的 checkpoint，结果容易追随短期噪声，并在反复查看 test 后形成隐性过拟合。本实验把 checkpoint 选择改为多时期规则：同时考察三个 rolling/purged validation fold 和最后 20 个交易日，用 IC 均值减去 0.5 倍标准差衡量表现与稳定性，再从前两名中选择更早的 checkpoint。
-    summary: 新规则在不读取 test 排名的情况下选择 20k checkpoint，并把 30k 保留为更激进的对照。一次性 test 审计中，20k 相对事后最优 checkpoint 的 regret 为 0，说明保守选择没有损失本次测试表现；这一结果支持固定 selector，但同一 test 不应继续用于迭代规则。
-    decision: 使用 20k robust default；30k 只保留为 aggressive comparison。
+    method: Robust checkpoint selector
+    dataset: stock1m rolling / purged folds
+    decision_state: retain
+    primary_metric: selected-checkpoint
+    objective: A single-window validation argmax can follow short-term noise and create hidden overfitting after repeated test inspection. This experiment scores checkpoints across three rolling/purged folds and the final 20 trading days using mean IC minus 0.5 standard deviations, then selects the earlier of the top two.
+    summary: The rule selects 20k without reading test ranking and keeps 30k as an aggressive control. In a one-time test audit, the 20k checkpoint has zero regret versus the post-hoc optimum. This supports freezing the selector, not iterating it on the same test set.
+    decision: Use 20k as the robust default; retain 30k only as an aggressive comparison.
     caveats:
-      - 同一 test audit 不应被反复用于继续调 selector。
+      - The same test audit must not be reused to tune the selector.
     metrics:
       - id: selected-checkpoint
         label: Robust checkpoint
@@ -415,18 +477,22 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-06-28
-    objective: 判断降容量、dropout、稳健损失和去相关采样能否缓解早期过拟合。
-    summary: 五个方案均在 10k 达到最佳 validation IC；降容量改善晚期保持率，但没有推迟峰值。
-    decision: 后续优先验证更小容量和早停；不扩展 Huber/clip 或当前去相关采样。
+    method: Capacity and sampling screen
+    dataset: stock1m · single validation period
+    decision_state: iterate
+    primary_metric: small-model-best-val-ic
+    objective: Test whether lower capacity, dropout, robust losses, and decorrelated sampling reduce early overfitting.
+    summary: All five variants peak at 10k validation IC. Lower capacity improves late-checkpoint retention but does not delay the peak.
+    decision: Prioritize smaller models and early stopping; do not expand Huber/clip or the current decorrelated sampler.
     caveats:
-      - 只覆盖一个 validation 时期，仍需 rolling/purged 复核。
+      - Only one validation period is covered; rolling/purged confirmation is still required.
     metrics:
       - id: small-model-best-val-ic
         label: Small model best val IC
         value: 0.0793455647
         format: decimal
         decimals: 5
-        context: GRU192 + MLP256，10k
+        context: GRU192 + MLP256, 10k
       - id: small-model-gap-60k
         label: Train–val gap at 60k
         value: 0.2915384650
@@ -445,11 +511,15 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-07-08
-    objective: 在配对样本上检验 VWAP 端点和稳健标签处理的信号与校准效果。
-    summary: VWAP endpoint 相对 paired close 同时改善 IC、Rank IC、top-bottom spread 和 calibration error；A3 方案均未通过晋升门槛。
-    decision: 保留 A2 VWAP 方向并进入多 seed 验证，不晋升 A3 稳健标签方案。
+    method: Paired endpoint / label study
+    dataset: stock1m paired samples
+    decision_state: iterate
+    primary_metric: vwap-test-ic
+    objective: Evaluate VWAP endpoints and robust label treatments for signal and calibration on paired samples.
+    summary: The VWAP endpoint improves IC, Rank IC, top-bottom spread, and calibration error versus paired close. No A3 variant passes promotion gates.
+    decision: Retain the A2 VWAP direction for multi-seed validation; do not promote A3 robust-label variants.
     caveats:
-      - 当前筛选为单 seed；波动率归一化方案还改变了有效行集合。
+      - The current screen uses one seed, and volatility normalization also changes the valid row set.
     metrics:
       - id: vwap-test-ic
         label: VWAP paired test IC
@@ -481,11 +551,14 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-07-11
-    objective: 检查自然年滚动重训和 endpoint stride 对跨期信号的影响。
-    summary: stride5 接近标准参考结果；rolling-year 表现差异明显，原 stride10 selector 选择 iter0 后失败。
-    decision: 保留 stride5 为开发候选，stride10 的 10k 恢复只作为 post-hoc 诊断。
+    method: Rolling-year / stride comparison
+    dataset: stock1m rolling years
+    decision_state: iterate
+    objective: Test the effects of calendar-year retraining and endpoint stride on cross-period signals.
+    summary: Stride5 is close to the standard reference. Rolling-year results vary materially, and the original stride10 selector fails after selecting iter0.
+    decision: Retain stride5 as a development candidate; treat the stride10 10k recovery as post-hoc diagnosis only.
     caveats:
-      - 不同 variant 的测试年份不同，且全部为 seed7，不能给出统一相对 baseline 结论。
+      - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/generalization-rolling-stride/results.yaml
@@ -499,11 +572,14 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-07-10
-    objective: 比较 dense 与 block60/block70 endpoint sampling。
-    summary: 单 seed 中 dense pooled IC 最高，block70 epoch 的 rank IC 和报告 gap 较好。
-    decision: block70 仅作为开发建议，不替换 dense。
+    method: Endpoint sampling comparison
+    dataset: stock1m partial 2024 test
+    decision_state: iterate
+    objective: Compare dense and block60/block70 endpoint sampling.
+    summary: Dense has the highest pooled IC in the single-seed screen, while block70 epoch has stronger Rank IC and reported gap.
+    decision: Keep block70 as a development suggestion only; do not replace dense.
     caveats:
-      - 单 seed 且只覆盖部分 2024 测试期。
+      - The result uses one seed and only part of the 2024 test period.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window/results.yaml
@@ -517,11 +593,15 @@ studies:
     status: completed
     maturity: decision-ready
     updated_at: 2026-07-11
-    objective: 用 seeds 7/17/27 复核 Dense 与 Block70 epoch 的稳定性。
-    summary: Dense 的 test IC 均值更高且标准差显著更低，Block70 只在 seed7 缩小 gap。
-    decision: 当前协议下不晋升 Block70 epoch，保留 Dense。
+    method: Multi-seed sampling validation
+    dataset: stock1m · seeds 7/17/27
+    decision_state: reject
+    primary_metric: dense-test-ic
+    objective: Confirm Dense versus Block70 epoch stability across seeds 7/17/27.
+    summary: Dense has higher mean test IC and materially lower variance. Block70 reduces the gap only for seed7.
+    decision: Do not promote Block70 epoch under the current protocol; retain Dense.
     caveats:
-      - OOS 日期仍属于开发 folds；比较按 optimizer step 而非有效 exposure 匹配。
+      - OOS dates remain development folds, and comparisons match optimizer steps rather than effective exposure.
     metrics:
       - id: dense-test-ic
         label: Dense test IC mean
@@ -540,7 +620,7 @@ studies:
         value: 0.0001382819
         format: decimal
         decimals: 5
-        context: 三 seed
+        context: three seeds
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window-multiseed/results.yaml
     featured: false
@@ -553,11 +633,14 @@ studies:
     status: completed
     maturity: diagnostic
     updated_at: 2026-07-11
-    objective: 观察 Block70 epoch 的 11 个 checkpoint 曲线和过训练形态。
-    summary: 30k 后 test IC 下降且 generalization gap 扩大。
-    decision: 只用于诊断过训练，不用于生产 checkpoint 选择。
+    method: Checkpoint-curve audit
+    dataset: stock1m Block70 · 11 checkpoints
+    decision_state: diagnostic
+    objective: Inspect eleven checkpoints along the Block70 epoch curve for overtraining behavior.
+    summary: Test IC declines after 30k while the generalization gap widens.
+    decision: Use only to diagnose overtraining, not to select a production checkpoint.
     caveats:
-      - 全部 checkpoint 的 test 指标已被查看，存在 test exposure。
+      - Test metrics have been viewed for every checkpoint, creating test exposure.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/generalization-block70-checkpoint-curve/results.yaml
@@ -571,11 +654,14 @@ studies:
     status: completed
     maturity: blocked
     updated_at: 2026-07-11
-    objective: 在同一 seed7 矩阵中组合 touch、ret-ge2 和两者叠加。
-    summary: 未过滤 baseline 胜出，三个改造均未改善 test pooled IC。
-    decision: 保留负结果；因注册 run root 已被清理，如需继续比较必须重跑。
+    method: Controlled integration matrix
+    dataset: stock1m · seed7
+    decision_state: blocked
+    objective: Combine touch, ret-ge2, and their interaction in one seed7 matrix.
+    summary: The unfiltered baseline wins; none of the three modifications improves test pooled IC.
+    decision: Retain the negative result. Registered run roots have been cleaned, so any further comparison requires a rerun.
     caveats:
-      - 当前只剩报告证据，登记的 cache run roots 均不存在。
+      - Only report evidence remains; all registered cache run roots are missing.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/main-combo-integration/results.yaml
@@ -589,11 +675,14 @@ studies:
     status: completed
     maturity: blocked
     updated_at: 2026-07-11
-    objective: 比较四种零值感知特征变换。
-    summary: 三个 F24 方案 test IC 聚集在约 0.0722–0.0725，但缺少无变换 control。
-    decision: 不作提升结论，补齐 off control 和模型卡一致性后再比较。
+    method: Zero-aware transform screen
+    dataset: stock1m F24
+    decision_state: blocked
+    objective: Compare four zero-aware feature transforms.
+    summary: Three F24 variants cluster near 0.0722–0.0725 test IC, but a no-transform control is missing.
+    decision: Make no improvement claim until the off control and model-card consistency are restored.
     caveats:
-      - F24 model-card metadata 与 prepared data 不一致。
+      - F24 model-card metadata does not match the prepared data.
     metrics: []
     report_ids: []
     evidence_ref: exp-nn/0-select&report/experiments/zero-aware-normalization/results.yaml
@@ -607,18 +696,22 @@ studies:
     status: archived
     maturity: blocked
     updated_at: 2026-07-11
-    objective: 评估 snapshot fast12 L2 特征相对 stock1m baseline 的贡献。
-    summary: all_fast12 观察到 test IC 约 0.0805，但不同实验臂使用了 11-vs-1-vs-11 checkpoint 候选政策。
-    decision: 保存观察值，阻止跨臂贡献归因结论。
+    method: L2 feature ablation
+    dataset: stock1m + snapshot fast12
+    decision_state: blocked
+    primary_metric: observed-all-fast12-ic
+    objective: Evaluate the contribution of snapshot fast12 L2 features against the stock1m baseline.
+    summary: all_fast12 shows approximately 0.0805 test IC, but experiment arms use an 11-vs-1-vs-11 checkpoint-candidate policy.
+    decision: Preserve the observation but block cross-arm attribution claims.
     caveats:
-      - 特征内容与 checkpoint 训练程度相互混淆，必须按统一政策重跑。
+      - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
     metrics:
       - id: observed-all-fast12-ic
         label: Observed all_fast12 IC
         value: 0.0805
         format: decimal
         decimals: 4
-        context: 不可归因的观察值
+        context: non-attributable observation
     report_ids: [0702-l2-ablation-v2]
     evidence_ref: exp-nn/0-select&report/experiments/l2-features/results.yaml
     featured: false
@@ -631,11 +724,15 @@ studies:
     status: archived
     maturity: archived
     updated_at: 2026-07-11
-    objective: 保存历史 F15 特征清洗 run 的结果和复刻缺口。
-    summary: 历史 test IC 为 0.07389，但精确启动 override 和 artifact 已缺失。
-    decision: 不作为当前 baseline，只保留 provenance。
+    method: Historical artifact audit
+    dataset: stock1m F15 archived run
+    decision_state: archived
+    primary_metric: historical-test-ic
+    objective: Preserve results and reproducibility gaps for a historical F15 feature-cleaning run.
+    summary: Historical test IC is 0.07389, but exact launch overrides and artifacts are missing.
+    decision: Retain as provenance only, not as a current baseline.
     caveats:
-      - 缺少当前 artifact root 和精确 NN_* 启动配置。
+      - The current artifact root and exact NN_* launch configuration are missing.
     metrics:
       - id: historical-test-ic
         label: Historical test IC
@@ -661,11 +758,15 @@ studies:
     status: archived
     maturity: archived
     updated_at: 2026-07-11
-    objective: 检验 lr=0.009 下 touch 与 near-zero 组合。
-    summary: 预定主组合没有完成，只有旧学习率臂复现了 0.06248 的既有结果。
-    decision: 由 main-combo-integration 取代，不参与当前比较。
+    method: Combined-filter experiment
+    dataset: stock1m superseded run
+    decision_state: archived
+    primary_metric: old-lr-test-ic
+    objective: Test the touch and near-zero combination at lr=0.009.
+    summary: The intended combination did not complete; only the old-learning-rate arm reproduced the existing 0.06248 result.
+    decision: Superseded by main-combo-integration and excluded from current comparisons.
     caveats:
-      - 目标 lr=0.009 组合没有可用证据，观察 run root 已缺失。
+      - No usable evidence exists for the target lr=0.009 combination, and the observed run root is missing.
     metrics:
       - id: old-lr-test-ic
         label: Old-LR observed IC
@@ -683,19 +784,23 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-05-02
-    objective: 验证个股 alpha、篮子合成、基差模型、ETF 预测和 30 分钟非重叠回测链路。
-    summary: ETF test IC 为 0.10765；validation 选择的 piecewise 映射收益 70.62%，高于 close-path long ETF 的 59.55%。
-    decision: 保留 piecewise 为当前候选，下一步优先加入成本、滑点和滚动验证。
+    method: Two-stage ETF mapping backtest
+    dataset: CSI 500 / 510500 ETF · 2024-02–2025-12
+    decision_state: iterate
+    primary_metric: etf-test-ic
+    objective: Validate the stock-alpha, basket aggregation, basis model, ETF forecast, and non-overlapping 30-minute backtest chain.
+    summary: ETF test IC is 0.10765. The validation-selected piecewise map returns 70.62% versus 59.55% for close-path long ETF.
+    decision: Retain piecewise as the current candidate; add costs, slippage, and rolling validation next.
     caveats:
-      - 当前收益没有交易成本和滑点，不能视为可交易结果。
-      - 报告中两种 excess benchmark 的定义不同，不跨表混用。
+      - Returns exclude transaction costs and slippage and are not tradable results.
+      - The report uses two different excess benchmarks; do not compare them across tables.
     metrics:
       - id: etf-test-ic
         label: ETF test IC
         value: 0.107647
         format: decimal
         decimals: 5
-        context: 2024-02 至 2025-12
+        context: 2024-02 to 2025-12
       - id: etf-rank-ic
         label: ETF Rank IC
         value: 0.037103
@@ -707,7 +812,7 @@ studies:
         value: 70.62
         format: percent
         decimals: 2
-        context: 无成本和滑点
+        context: excludes costs and slippage
       - id: max-drawdown
         label: Max drawdown
         value: -6.70
@@ -724,25 +829,29 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-07-31
-    objective: 在规则、成交和机械退出固定后检验 20/30/50bp 压力成本及仿真盘门槛。
-    summary: 30bp 下 validation+test 年化 2.85%、胜率 60%，收益门槛未通过。
-    decision: 当前不进入仿真盘，先扩大冻结测试并改善成本后收益。
+    method: Walk-forward T+1 backtest
+    dataset: A-share first-limit · 2025–2026
+    decision_state: reject
+    primary_metric: annual-return
+    objective: Test 20/30/50bp stressed costs and simulation gates after fixing rules, fills, and mechanical exits.
+    summary: At 30bp, validation plus test annual return is 2.85% with a 60% win rate; the return gate fails.
+    decision: Do not enter simulation. Expand the frozen test and improve net returns first.
     caveats:
-      - 冻结测试只有 1 笔交易，不能据此判断稳定性。
-      - 2025-06-30 之后缺少真实 L2，成交结果包含模型外推。
+      - The frozen test contains one trade and cannot establish stability.
+      - Actual L2 data is unavailable after 2025-06-30, so fill results include model extrapolation.
     metrics:
       - id: annual-return
-        label: 30bp 年化收益
+        label: 30bp annual return
         value: 2.85
         format: percent
         decimals: 2
-        context: validation + frozen test，15 trades
+        context: validation + frozen test, 15 trades
       - id: win-rate
         label: Win rate
         value: 60.00
         format: percent
         decimals: 2
-        context: validation + frozen test，15 trades
+        context: validation + frozen test, 15 trades
       - id: max-drawdown
         label: Max drawdown
         value: -2.26
@@ -764,11 +873,14 @@ studies:
     status: doing
     maturity: blocked
     updated_at: 2026-08-02
-    objective: 确认首板 Top-K 历史结果的项目归属并重建可独立查看的静态报告。
-    summary: 已发现 0310 MHTML 候选，但文件引用本地 Streamlit 资源，当前无法作为静态报告发布。
-    decision: 保留项目入口；从源产物重建 self-contained HTML 后再提取量化结论。
+    method: Publication provenance audit
+    dataset: Historical MHTML artifacts
+    decision_state: blocked
+    objective: Confirm ownership of historical First Board Top-K results and rebuild a standalone static report.
+    summary: A 0310 MHTML candidate was found, but it references local Streamlit resources and cannot be published as a static report.
+    decision: Keep the project entry; extract quantitative conclusions only after rebuilding self-contained HTML from source artifacts.
     caveats:
-      - 不从 MHTML 文件名推断最终结果或胜率。
+      - Do not infer final results or win rate from the MHTML filename.
     metrics: []
     report_ids: []
     evidence_ref: archive-audit/0310-shouban2-firstboard-topk-v1
@@ -780,11 +892,14 @@ studies:
     status: archived
     maturity: archived
     updated_at: 2026-08-02
-    objective: 盘点数字货币 alpha 历史代码、报告和可复刻证据。
-    summary: 当前没有通过审核的量化快照或静态报告。
-    decision: 保持归档状态，后续只在来源和评价口径明确时补录结果。
+    method: Historical evidence inventory
+    dataset: Crypto minute data · provenance incomplete
+    decision_state: archived
+    objective: Inventory historical crypto-alpha code, reports, and reproducibility evidence.
+    summary: No quantitative snapshot or static report has passed review.
+    decision: Keep the project archived and add results only when provenance and evaluation contracts are explicit.
     caveats:
-      - 目录存在不代表实验已完成或结果可复用。
+      - Directory presence does not prove experiment completion or reusable results.
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/alphas
@@ -796,11 +911,15 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-03-27
-    objective: 衡量 GPU 遗传算法搜索吞吐，并对小样本优胜因子做 250 日大样本复评。
-    summary: 30 代平均吞吐约 21,218 factors/s；小样本最佳 IC 0.10487，在 200 个候选的 250 日复评中最佳 IC 降至 0.04252。
-    decision: 保留大样本复评后的候选，不把小样本最佳 IC 作为最终因子质量。
+    method: GPU genetic search + re-evaluation
+    dataset: Crypto factors · 250-day review
+    decision_state: iterate
+    primary_metric: large-sample-ic
+    objective: Measure GPU genetic-search throughput and re-evaluate small-sample winners over 250 days.
+    summary: Thirty generations average about 21,218 factors/s. The best small-sample IC is 0.10487, while the best of 200 candidates falls to 0.04252 in the 250-day review.
+    decision: Retain candidates after large-sample review; do not treat the small-sample maximum as final factor quality.
     caveats:
-      - 现有 HTML 为表格型报告，未通过包含嵌入图像的严格报告门禁。
+      - The existing table-only HTML does not pass the strict report gate requiring embedded figures.
     metrics:
       - id: generations
         label: Generations
@@ -836,11 +955,15 @@ studies:
     status: completed
     maturity: developmental
     updated_at: 2026-04-07
-    objective: 在统一流动性过滤、winsorize、rank、Top10 和换手成本口径下比较日频因子。
-    summary: 2021–2024 的 8 个因子成本后总收益均为负；最佳 Sharpe 仍为 -0.0266。
-    decision: 保留负结果，重新检查组合构造、换手和因子方向后再扩展。
+    method: Cost-aware Top10 factor backtest
+    dataset: A-share daily · 2021–2024
+    decision_state: reject
+    primary_metric: best-total-return
+    objective: Compare daily factors under one liquidity, winsorization, ranking, Top10, and turnover-cost contract.
+    summary: All eight factors have negative net total returns over 2021–2024; the best Sharpe remains -0.0266.
+    decision: Preserve the negative result and revisit portfolio construction, turnover, and factor direction before expansion.
     caveats:
-      - 正 IC 不自动意味着成本后 Top10 组合盈利。
+      - Positive IC does not imply a profitable net Top10 portfolio.
     metrics:
       - id: factor-count
         label: Factors evaluated
@@ -875,12 +998,16 @@ studies:
     status: completed
     maturity: diagnostic
     updated_at: 2026-07-29
-    objective: 在冻结源码和同分母下复核有效范围与开盘集合竞价规则修订。
-    summary: 14,025 个证券日、54,176,260 个 tick 全部完成，处理错误和 invariant 为 0；候选错行减少 89,103 行。
-    decision: 保留 v16 作为当前规则回归基准，继续优先排查开盘竞价与可见量残差。
+    method: Deterministic reconstruction regression
+    dataset: A-share L2 · 14,025 security-days
+    decision_state: retain
+    primary_metric: candidate-mismatch
+    objective: Re-evaluate legal boundaries and opening-auction rule revisions with frozen source and identical denominators.
+    summary: All 14,025 security-days and 54,176,260 ticks complete with zero processing and invariant errors; candidate mismatches fall by 89,103 rows.
+    decision: Retain v16 as the current rule-regression baseline and prioritize opening-auction and visible-volume residuals.
     caveats:
-      - 候选口径使用当期真值选择合法边界，不是独立预测准确率。
-      - 24.0992% 的候选错行率说明重建仍有显著剩余问题。
+      - Candidate boundaries use contemporaneous truth and are not an independent prediction-accuracy measure.
+      - A 24.0992% candidate mismatch rate shows material reconstruction issues remain.
     metrics:
       - id: security-days
         label: Security-days
@@ -919,17 +1046,21 @@ studies:
     status: doing
     maturity: developmental
     updated_at: 2026-08-02
-    objective: 盘点日级文件、manifest、审计和年度覆盖缺口。
-    summary: 当前有 960 个覆盖文件和 manifest、956 个审计结果；日期从 2021-01-04 到 2025-12-31。
-    decision: 数据产品继续维护；在用于正式跨年实验前解释并补齐 2024 年覆盖缺口。
+    method: Coverage and audit inventory
+    dataset: stock1s/v2 · 2021–2025
+    decision_state: iterate
+    primary_metric: coverage-files
+    objective: Inventory daily files, manifests, audits, and annual coverage gaps.
+    summary: The dataset has 960 coverage files and manifests plus 956 audits, spanning 2021-01-04 to 2025-12-31.
+    decision: Continue maintaining the data product; explain and close the 2024 gap before formal cross-year experiments.
     caveats:
-      - 2024 年只有 4 个覆盖文件，不能把首末日期解释为连续完整覆盖。
+      - Only four files cover 2024, so the first and last dates do not imply continuous complete coverage.
     metrics:
       - id: coverage-files
         label: Coverage files
         value: 960
         format: integer
-        context: 2021-01-04 至 2025-12-31
+        context: 2021-01-04 to 2025-12-31
       - id: manifests
         label: Daily manifests
         value: 960
@@ -944,7 +1075,7 @@ studies:
         label: 2024 coverage files
         value: 4
         format: integer
-        context: 显著年度缺口
+        context: material annual gap
     report_ids: []
     evidence_ref: workspace-audit/ashare-1s-v2-2026-08-02
     featured: true
@@ -955,11 +1086,14 @@ studies:
     status: doing
     maturity: blocked
     updated_at: 2026-08-02
-    objective: 为指数成分、权重和 ETF 映射建立覆盖率与更新时间快照。
-    summary: 当前未登记经过审核的覆盖和更新成功率指标。
-    decision: 保留数据入口，补齐指标后再展示数据健康结论。
+    method: Coverage / freshness audit
+    dataset: Index constituents, weights, ETF mappings
+    decision_state: blocked
+    objective: Establish coverage and freshness snapshots for index constituents, weights, and ETF mappings.
+    summary: No reviewed coverage or update-success metric is registered.
+    decision: Keep the data entry point and publish health conclusions only after metrics are available.
     caveats:
-      - 不从目录或配置存在推断数据已经完整更新。
+      - Directory or configuration presence does not prove complete current data.
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/get-index-data
@@ -971,11 +1105,14 @@ studies:
     status: doing
     maturity: blocked
     updated_at: 2026-08-02
-    objective: 统一登记日频、分钟、交易日历和市场镜像的覆盖与最近成功运行。
-    summary: 当前没有统一、可公开的数据覆盖快照。
-    decision: 项目继续作为基础设施入口；后续按数据集补充日期、缺口和更新时间。
+    method: Dataset registry audit
+    dataset: Daily / minute / calendar / market mirror
+    decision_state: blocked
+    objective: Register coverage and latest successful runs for daily, minute, calendar, and market-mirror datasets.
+    summary: No unified public data-coverage snapshot exists.
+    decision: Keep the infrastructure entry point and add dates, gaps, and freshness by dataset.
     caveats:
-      - 不把 pipeline 代码存在解释为数据当前无缺口。
+      - Pipeline code does not prove that current data has no gaps.
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/get-data
@@ -987,13 +1124,17 @@ studies:
     status: doing
     maturity: diagnostic
     updated_at: 2026-08-05
-    objective: 验证直接一分钟 K 线、能力感知实时逐笔、历史 quorum 归档和 ExHQ 期货服务的运行边界。
-    summary: 三个独立逐笔 endpoint 对 1,800 标的的连续 sweep 均为 1,800 非空、0 失败，p95 1.289 秒；5,211 只全市场 sweep 为 5,199 非空、12 合法空响应、0 失败，p95 3.638 秒。
-    decision: 逐笔池可按 10 秒 cadence 继续 audit；live-predictor 主链路仍使用直接一分钟 K 线，单有效 bar endpoint 不宣称高可用。
+    method: Capability-aware endpoint sweep
+    dataset: TDX · 1,800-symbol and 5,211-symbol sweeps
+    decision_state: retain
+    primary_metric: market-sweep-p95
+    objective: Validate operating boundaries for direct one-minute bars, capability-aware live transactions, historical quorum archives, and ExHQ futures.
+    summary: Three independent transaction endpoints complete repeated 1,800-symbol sweeps with 1,800 nonempty responses, zero failures, and 1.289s p95. A 5,211-symbol market sweep returns 5,199 nonempty and 12 valid-empty responses with zero failures and 3.638s p95.
+    decision: Continue auditing the transaction pool on a 10-second cadence. Live Predictor remains on direct one-minute bars; a single effective bar endpoint is not high availability.
     caveats:
-      - 直接 K 线当前只有一个有效 endpoint，属于单一 failure domain。
-      - 逐笔 snapshot 没有 trade id 或秒级交易时间，完整性仍依赖 overlap 与有界 backfill。
-      - 服务不内置 auth/TLS，对外暴露前需要可信代理。
+      - Direct bars currently have one effective endpoint and one failure domain.
+      - Transaction snapshots have no trade ID or second-level event time; integrity still depends on overlap and bounded backfill.
+      - The service has no built-in auth or TLS and requires a trusted proxy before external exposure.
     metrics:
       - id: quorum-threshold
         label: History quorum
@@ -1030,11 +1171,14 @@ studies:
     status: doing
     maturity: blocked
     updated_at: 2026-08-02
-    objective: 为订单簿快照诊断页面建立稳定的静态示例和审阅说明。
-    summary: 当前只确认应用与构建产物存在，尚无经过审核的静态研究报告。
-    decision: 保留交互工具入口；后续选择一个可脱敏样本生成静态演示。
+    method: Static demonstration audit
+    dataset: Sanitized order-book snapshot
+    decision_state: blocked
+    objective: Create a stable static example and review note for order-book snapshot diagnostics.
+    summary: Application and build artifacts exist, but no static research report has passed review.
+    decision: Keep the interactive-tool entry and later generate a static demonstration from one sanitized sample.
     caveats:
-      - Next 构建文件不是研究结果，不能作为公开报告直接复制。
+      - Next build files are not research results and cannot be copied directly as a public report.
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/snapshot-visualizer2
@@ -1046,11 +1190,15 @@ studies:
     status: doing
     maturity: developmental
     updated_at: 2026-08-02
-    objective: 盘点表达式因子从计算到报告输出的完整链路。
-    summary: 当前项目目录中有 7 份因子评估 HTML 输出。
-    decision: 先展示平台产物规模；确认 factor-generation 缓存 provenance 后再合并批量统计。
+    method: Artifact inventory
+    dataset: Expression-factor report outputs
+    decision_state: iterate
+    primary_metric: factor-reports
+    objective: Inventory the expression-factor chain from computation through report output.
+    summary: Seven factor-evaluation HTML outputs exist in the project directory.
+    decision: Show platform output scale first; merge batch statistics only after factor-generation cache provenance is confirmed.
     caveats:
-      - 报告数量不等于因子有效性，效果结论仍需按报告逐项审核。
+      - Report count does not establish factor validity; each performance claim still requires report-level review.
     metrics:
       - id: factor-reports
         label: Factor report outputs
@@ -1067,13 +1215,17 @@ studies:
     status: completed
     maturity: diagnostic
     updated_at: 2026-08-05
-    objective: 验证 1,800 只成分股的直接分钟数据、模型推理、三 ETF 聚合和因果事后评价链路。
-    summary: 10:39–11:30 共生成 156 条三 ETF 预测，在 13:10 水位下全部成熟；1,800 只证券成功、0 失败，上午合计方向胜率 48.98%。
-    decision: 数据与评估链路通过本次门禁；模型保持 shadow_candidate 和 non-actionable，不进入纸面或实盘执行。
+    method: Causal shadow evaluation
+    dataset: 1,800 constituents / three ETFs · 2026-08-05
+    decision_state: observe
+    primary_metric: morning-win-rate
+    objective: Validate direct minute data, inference, three-ETF aggregation, and causal post-event evaluation for 1,800 constituents.
+    summary: The system produced 156 three-ETF predictions from 10:39 to 11:30, all matured by 13:10. All 1,800 securities succeeded with zero failures; aggregate morning direction accuracy was 48.98%.
+    decision: The data and evaluation chain passes this gate. Keep the model shadow_candidate and non-actionable; do not enter paper or live execution.
     caveats:
-      - 只有一个有效直接 K 线 endpoint，吞吐通过不代表节点级高可用。
-      - 单日上午和互相重叠的十分钟窗口不能支持稳定性或显著性结论。
-      - 成分篮子收益不等于 ETF 实际可成交收益。
+      - One effective direct-bar endpoint means throughput does not establish node-level high availability.
+      - One morning of overlapping ten-minute windows cannot establish stability or significance.
+      - Constituent-basket returns are not equivalent to executable ETF returns.
     metrics:
       - id: predictions
         label: Matured predictions
@@ -1102,53 +1254,20 @@ studies:
     evidence_ref: live-predictor/reports/20260805T140155+0800_report.html
     featured: true
 
-  - id: deep-ml-content
-    project: deep-ml
-    title: Knowledge Package Snapshot
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-08-02
-    objective: 验证知识内容包的概念、文章、关系和学习路径规模。
-    summary: 内容包包含 597 个 Concept、597 篇原创中文文章、1,974 条关系和 18 条课程路径。
-    decision: 作为知识工程项目纳入主页；后续更新同时展示质量门禁通过状态。
-    caveats:
-      - 这些是内容规模指标，不是机器学习模型性能指标。
-    metrics:
-      - id: concepts
-        label: Concepts
-        value: 597
-        format: integer
-        context: current content package
-      - id: articles
-        label: Published articles
-        value: 597
-        format: integer
-        context: original Chinese content
-      - id: relations
-        label: Graph relations
-        value: 1974
-        format: integer
-        context: confidence-weighted edges
-      - id: learning-paths
-        label: Learning paths
-        value: 18
-        format: integer
-        context: course views
-    report_ids: []
-    evidence_ref: deep-ml/README.md
-    featured: true
-
   - id: ipcheck-evidence
     project: ipcheck
     title: Operational Evidence Backlog
     status: doing
     maturity: blocked
     updated_at: 2026-08-02
-    objective: 记录最近检查时间、地址变化和通知投递是否成功。
-    summary: 当前没有经过审核的运行成功率或通知投递指标。
-    decision: 保留工具入口，后续仅发布脱敏后的运行健康摘要。
+    method: Operational evidence audit
+    dataset: Sanitized runtime checks
+    decision_state: blocked
+    objective: Record the latest check, address changes, and notification-delivery outcome.
+    summary: No reviewed runtime-success or delivery metric is available.
+    decision: Keep the tool entry and publish only sanitized operational-health summaries.
     caveats:
-      - 不公开具体 IP、通知目标或凭据。
+      - Never publish specific IPs, notification targets, or credentials.
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/ipcheck

@@ -1,0 +1,31 @@
+path:
+  name: Software Data Tools
+stages:
+- name: text-and-formats
+  topics:
+  - regular-expression
+  - json-data-format
+- name: service-interface
+  topics:
+  - api-design
+  - web-crawler
+  - token-bucket-rate-limiter
+  - model-serving
+  - concurrency-control
+  - shared-memory-ipc
+  - copy-on-write-memory
+  - lock-free-synchronization
+  - transaction-log
+  - write-ahead-log
+  - resumable-processing
+- name: data-prep
+  topics:
+  - data-cleaning
+  - pandas-merge
+  - missing-value-imputation
+  - categorical-encoding
+  - ordinal-encoding
+  - feature-scaling
+  - random-subset-sampling
+  - dataset-balancing
+  - undersampling

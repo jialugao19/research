@@ -1,0 +1,163 @@
+path:
+  name: Inference Systems
+modules:
+- id: service-basics-1
+  stage: service-basics
+  stage_title: service-basics
+  stage_summary: ''
+  objective: 串联 model-serving 到 resumable-processing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 175
+  required_units:
+  - model-serving-overview
+  - latency-throughput-overview
+  - real-time-inference-overview
+  - batch-inference-overview
+  - weighted-batching-overview
+  - token-bucket-rate-limiter-overview
+  - resumable-processing-overview
+  optional_units: []
+  articles:
+  - batch-inference.md
+  - latency-throughput.md
+  - model-serving.md
+  - real-time-inference.md
+  - resumable-processing.md
+  - token-bucket-rate-limiter.md
+  - weighted-batching.md
+- id: gpu-serving-1
+  stage: gpu-serving
+  stage_title: gpu-serving
+  stage_summary: ''
+  objective: 串联 dynamic-batching 到 memory-fragmentation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - dynamic-batching-overview
+  - continuous-batching-overview
+  - chunked-prefill-overview
+  - model-quantization-overview
+  - numeric-precision-formats-overview
+  - mixed-precision-training-overview
+  - memory-footprint-estimation-overview
+  - memory-fragmentation-overview
+  optional_units: []
+  articles:
+  - chunked-prefill.md
+  - continuous-batching.md
+  - dynamic-batching.md
+  - memory-footprint-estimation.md
+  - memory-fragmentation.md
+  - mixed-precision-training.md
+  - model-quantization.md
+  - numeric-precision-formats.md
+- id: gpu-serving-2
+  stage: gpu-serving
+  stage_title: gpu-serving
+  stage_summary: ''
+  objective: 串联 arithmetic-intensity 到 kv-cache，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - arithmetic-intensity-overview
+  - compute-bound-vs-memory-bound-overview
+  - roofline-analysis-overview
+  - gpu-bottleneck-analysis-overview
+  - gpu-utilization-overview
+  - model-flops-utilization-overview
+  - streaming-inference-overview
+  - kv-cache-overview
+  optional_units: []
+  articles:
+  - arithmetic-intensity.md
+  - compute-bound-vs-memory-bound.md
+  - gpu-bottleneck-analysis.md
+  - gpu-utilization.md
+  - kv-cache.md
+  - model-flops-utilization.md
+  - roofline-analysis.md
+  - streaming-inference.md
+- id: gpu-serving-3
+  stage: gpu-serving
+  stage_title: gpu-serving
+  stage_summary: ''
+  objective: 串联 prefix-cache 到 gpu-resource-allocation，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - prefix-cache-overview
+  - prefill-decode-overview
+  - inference-latency-metrics-overview
+  - attention-io-bottleneck-overview
+  - flash-attention-overview
+  - communication-overhead-overview
+  - multi-gpu-inference-overview
+  - gpu-resource-allocation-overview
+  optional_units: []
+  articles:
+  - communication-overhead.md
+  - flash-attention.md
+  - gpu-resource-allocation.md
+  - inference-latency-metrics.md
+  - multi-gpu-inference.md
+  - prefill-decode.md
+  - prefix-cache.md
+- id: gpu-serving-4
+  stage: gpu-serving
+  stage_title: gpu-serving
+  stage_summary: ''
+  objective: 串联 mig-partitioning 到 grouped-query-attention，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - mig-partitioning-overview
+  - zero-copy-data-loading-overview
+  - copy-on-write-memory-overview
+  - data-parallelism-overview
+  - tensor-parallelism-overview
+  - pipeline-parallelism-overview
+  - expert-parallelism-overview
+  - grouped-query-attention-overview
+  optional_units: []
+  articles:
+  - attention-mechanism.md
+  - copy-on-write-memory.md
+  - data-parallelism.md
+  - expert-parallelism.md
+  - mig-partitioning.md
+  - pipeline-parallelism.md
+  - tensor-parallelism.md
+  - zero-copy-data-loading.md
+- id: gpu-serving-5
+  stage: gpu-serving
+  stage_title: gpu-serving
+  stage_summary: ''
+  objective: 串联 speculative-decoding 到 grammar-constrained-decoding，形成一个可执行的阶段性学习块。
+  estimated_minutes: 50
+  required_units:
+  - speculative-decoding-overview
+  - grammar-constrained-decoding-overview
+  optional_units: []
+  articles:
+  - grammar-constrained-decoding.md
+  - speculative-decoding.md
+- id: operations-1
+  stage: operations
+  stage_title: operations
+  stage_summary: ''
+  objective: 串联 request-logging 到 checkpointing，形成一个可执行的阶段性学习块。
+  estimated_minutes: 200
+  required_units:
+  - request-logging-overview
+  - inference-statistics-overview
+  - health-check-overview
+  - model-monitoring-overview
+  - rollout-analysis-overview
+  - data-drift-overview
+  - experiment-tracking-overview
+  - checkpointing-overview
+  optional_units: []
+  articles:
+  - checkpointing.md
+  - data-drift.md
+  - experiment-tracking.md
+  - health-check.md
+  - inference-statistics.md
+  - model-monitoring.md
+  - request-logging.md
+  - rollout-analysis.md
