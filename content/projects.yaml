@@ -22,7 +22,12 @@ projects:
     status: active
     description: Neural forecasting research for minute- and second-level A-share returns, with separate evidence for data, models, validation, and trading evaluation.
     objective: Build a reproducible and comparable neural research system that clearly separates signal quality from trading feasibility.
-    review_summary: The 1min program has multi-seed conclusions for architecture and checkpoint selection. The latest 1s fold0 has strong signal IC, but net performance is negative and the current candidate used test data during selection.
+    review_summary: >-
+      The 1min registry now includes date-pure batching, matched feature-family ablations,
+      and a 10/15/30-minute horizon comparison alongside the established multi-seed
+      architecture results. The 1s line has two incompatible contracts: the legacy fold0
+      signal is strong but test-selected, while the OHLCV-only v2 run has weak pooled IC
+      and a sharply negative 10 bps net backtest. Neither line is execution-ready.
     source_refs: [prediction-NN-main, exp-nn]
     tracks:
       - id: one-minute
@@ -38,7 +43,7 @@ projects:
           - 'Model input: sequence models consume batch × time-step × feature tensors. Architecture studies use 60 minute steps and 14 market features; experiments that change either dimension declare it separately.'
           - 'Labels and controls: the current mainline uses future 10-minute VWAP returns, a one-minute entry lag, and the paired_vwap_valid row set, with close-return labels retained on the same rows as a paired control.'
           - 'Evaluation artifacts: each experiment preserves configuration, checkpoints, split predictions, and aggregate metrics. Feature and label normalization is estimated from train only, validation selects candidates, and test is reserved for final audit.'
-        conclusion: Current evidence supports B+VWAP as the minute-level signal baseline, GRU192×2 last-hidden as the default compact model, and the robust 20k checkpoint as the conservative selection. Paired samples, multiple seeds, or multiple periods support all three decisions, but net results do not yet justify trading execution.
+        conclusion: Current evidence supports B+VWAP as the minute-level signal baseline, GRU192×2 last-hidden as the compact architecture, and the robust 20k checkpoint as the conservative selector. New single-seed evidence shows that date-pure batching is feasible, three non-market feature families improve over legacy14, and 15/30-minute labels alter signal ranking under a matched contract. These additions remain ablations rather than execution evidence, the native v2 baseline refactor has not produced a formal prediction run, and net results still do not justify trading execution.
       - id: one-second
         title: 1s Forecasting Research
         description: Second-level stock1s/v2 features, models, fold evaluation, turnover, and cost research.
@@ -52,7 +57,7 @@ projects:
           - 'Feature vector: the baseline contains 78 deduplicated features spanning short-window return and volatility, trading intensity, spread and depth, quote quality, and order flow, with explicit missingness semantics.'
           - 'Models and labels: GRU384 plus a two-layer MLP512×512 head consumes the second-level sequence. Labels and endpoints follow a dedicated 1s protocol and are not mixed with 1min labels.'
           - 'Evaluation artifacts: sample predictions, grouped signal metrics, key-universe aggregates, turnover, and cost results jointly determine whether an experiment remains comparable.'
-        conclusion: Fold0 shows strong test pooled IC and Rank IC, but the portfolio candidate used test during selection and its 10-minute net daily return and Sharpe remain negative. The current conclusion is that the data and signal chain merit further research, not that the model is tradable. Selection discipline and turnover must be fixed first.
+        conclusion: The legacy fold0 result has strong pooled IC and Rank IC, but its portfolio candidate used test during selection and remains net-negative. The independent OHLCV-only v2 contract avoids a direct uplift claim and yields only 0.00925 pooled IC; its fixed 10 bps cohort backtest loses 95.14% cumulatively with Sharpe -92.55. The data and signal chain merit further research, but both contracts remain research-only and the v2 checkpoint is explicitly rejected for deployment.
     subprojects:
       - id: reference-baseline
         title: Reference Baseline
@@ -144,6 +149,42 @@ projects:
         group: 1s Baseline & Execution Gates
         description: stock1s/v2 data, feature health, GRU models, fold evaluation, costs, and turnover.
         objective: Establish an independent second-level baseline and keep it in research status until predeclared selection and net-return gates pass.
+      - id: day-pure-batch-1min
+        title: Date-pure Batch Sampling
+        track: one-minute
+        group: Data, Labels & Sampling
+        description: One-equivalent-epoch training with every batch restricted to a single trading date.
+        objective: Verify date-pure sampler integrity and feasibility before estimating any causal uplift against a matched mixed-date control.
+      - id: multiscale-market-features-1min
+        title: Multiscale Market Features
+        track: one-minute
+        group: Feature Extensions & Integration
+        description: Corrected-label 63-feature training and matched add-one ablations for market, liquidity, volatility, and trend families.
+        objective: Identify which feature families add signal under a frozen row, model, optimizer, and selection contract.
+      - id: baseline-1min-0813
+        title: Native v2 1min Baseline
+        track: one-minute
+        group: Baselines & Model Design
+        description: Production-chain refactor for the native 63-feature v2 contract with maintained leakage diagnostics.
+        objective: Establish an auditable native v2 baseline before making IC or model-quality comparisons.
+      - id: crossday-rolling
+        title: Cross-session Rolling Features
+        track: one-minute
+        group: Data, Labels & Sampling
+        description: A/B/C boundary semantics for carrying, dropping, or shifting rolling history across valid trading sessions.
+        objective: Validate boundary identity, coverage, and distinctness before any matched training comparison.
+      - id: horizon-labels
+        title: Label Horizon Comparison
+        track: one-minute
+        group: Data, Labels & Sampling
+        description: Matched 10-, 15-, and 30-minute forward-return labels on one common 47-feature test universe.
+        objective: Measure how label horizon changes IC, ranking, and spread without changing features, rows, model, seed, or budget.
+      - id: baseline-1s-v2
+        title: OHLCV-only Stock1s v2
+        track: one-second
+        group: 1s Baseline & Execution Gates
+        description: Independent 42-feature OHLCV-only second-level contract with validation-only early stopping and fixed-cost cohort backtest.
+        objective: Test whether the simplified v2 data contract produces a stable and cost-covering signal without reusing the legacy fold0 comparison claim.
   - id: index500-predict
     title: Index500 Predict
     category: forecasting-models

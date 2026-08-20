@@ -176,7 +176,7 @@ studies:
     title: 1s GRU384 Baseline Evaluation
     status: doing
     maturity: developmental
-    updated_at: 2026-08-02
+    updated_at: 2026-08-08
     method: GRU384 + MLP512×512
     dataset: stock1s/v2 fold0
     decision_state: iterate
@@ -224,8 +224,12 @@ studies:
         decimals: 2
         unit: x
         context: c60_top05
-    report_ids: [0730-stock1s-feature-health-v2, 0802-stock1s-gru384-v2]
-    evidence_ref: public-report/0802-stock1s-gru384
+    report_ids:
+      - 0730-stock1s-feature-health-v2
+      - 0807-stock1s-fold0-full-evaluation
+      - 0807-stock1s-cost-turnover-sweep
+      - 0808-stock1s-p0-p4-research
+    evidence_ref: public-report/0807-stock1s-fold0-full-evaluation
     featured: true
 
   - id: baseline-main-20260622
@@ -1271,4 +1275,294 @@ studies:
     metrics: []
     report_ids: []
     evidence_ref: workspace-audit/ipcheck
+    featured: true
+
+  - id: day-pure-batch-1min
+    project: prediction-nn
+    track: one-minute
+    subproject: day-pure-batch-1min
+    title: Date-pure Batch Sampling Feasibility
+    status: completed
+    maturity: developmental
+    updated_at: 2026-08-11
+    method: Single-date weighted batch sampler · seed7 · one equivalent epoch
+    dataset: stock1m · 727/37/205 train/validation/test days
+    decision_state: iterate
+    primary_metric: test-pooled-ic
+    objective: Determine whether every training batch can be restricted to one trading date while preserving the frozen 1min training, checkpoint-selection, and full-evaluation contract.
+    summary: All 1,374 recorded purity samples contained exactly one date. Validation-only selection chose step 30,000; full-test pooled IC was 0.10388 and Rank IC was 0.06425 over 176,945,440 rows.
+    decision: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit mixed-date one-epoch control and additional seeds are run.
+    caveats:
+      - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal sampler estimates.
+      - Signal diagnostics do not establish execution-ready net profitability.
+    metrics:
+      - id: test-pooled-ic
+        label: Test pooled IC
+        value: 0.1038777019
+        format: decimal
+        decimals: 5
+        context: seed7 · selected step 30,000 · 176,945,440 rows
+      - id: test-rank-ic
+        label: Test Rank IC
+        value: 0.0642453585
+        format: decimal
+        decimals: 5
+        context: same full-test universe
+      - id: purity-samples
+        label: Date-pure batches audited
+        value: 1374
+        format: integer
+        context: unique_dates=1 and top_date_share=1 throughout
+      - id: top-prediction-return
+        label: Top prediction return
+        value: 8.02
+        format: bps
+        decimals: 2
+        context: signal-quality diagnostic
+    report_ids: [0811-day-pure-batch-1min]
+    evidence_ref: exp-nn/0-select&report/experiments/day-pure-batch-1min/results.yaml
+    featured: true
+
+  - id: multiscale-market-features-1min
+    project: prediction-nn
+    track: one-minute
+    subproject: multiscale-market-features-1min
+    title: Multiscale Feature-family Ablation
+    status: completed
+    maturity: developmental
+    updated_at: 2026-08-14
+    method: Matched add-one family ablation · seed7 · fixed 63-column tensor
+    dataset: stock1m · common 727/37/205 split · corrected 10-minute label
+    decision_state: iterate
+    primary_metric: relative-liquidity-test-ic
+    objective: Separate the contribution of appended market, relative-strength/liquidity, volatility/range, and trend/return families under identical rows, sampler order, model shape, budget, and validation-only selection.
+    summary: Relative-strength/liquidity9 is the strongest completed family at 0.09818 test IC and 0.07589 Rank IC. Volatility/range12 and trend/return12 also beat legacy14; market16 hit the preregistered train-validation gap gate before test. The all-63 reference underperformed legacy14.
+    decision: Retain the three non-market families as multi-seed candidates, reject the full-63 bundle as a monotonic improvement claim, and keep market16 test metrics unread after the gate.
+    caveats:
+      - Single-seed family add-one results do not estimate retraining variance, field-level contribution, or interactions among passing families.
+      - The earlier full-63 run changed label, features, sampler, and row universe together and is not comparable to historical baselines.
+    metrics:
+      - id: relative-liquidity-test-ic
+        label: Relative/liquidity9 test IC
+        value: 0.0981825662
+        format: decimal
+        decimals: 5
+        context: 23 active features · seed7
+      - id: relative-liquidity-rank-ic
+        label: Relative/liquidity9 Rank IC
+        value: 0.0758862387
+        format: decimal
+        decimals: 5
+        context: matched full-test evaluation
+      - id: legacy14-test-ic
+        label: Legacy14 control IC
+        value: 0.0899505737
+        format: decimal
+        decimals: 5
+        context: same rows, order, model, and budget
+      - id: full63-test-ic
+        label: Full63 reference IC
+        value: 0.0614963898
+        format: decimal
+        decimals: 5
+        context: combined treatment · not a causal baseline comparison
+      - id: market16-gap
+        label: Market16 train–validation Rank IC gap
+        value: 0.3287979409
+        format: decimal
+        decimals: 4
+        context: preregistered gate at step 6,762 · test not read
+    report_ids: [0812-multiscale-63feature-evaluation, 0814-feature-family-ablation]
+    evidence_ref: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
+    featured: true
+
+  - id: baseline-1min-0813
+    project: prediction-nn
+    track: one-minute
+    subproject: baseline-1min-0813
+    title: Native v2 Baseline Engineering Gate
+    status: doing
+    maturity: diagnostic
+    updated_at: 2026-08-20
+    method: Native 63-feature contract and maintained synthetic leakage checks
+    dataset: synthetic causal diagnostic · formal stock1m run not started
+    decision_state: diagnostic
+    primary_metric: proper-causal-r2
+    objective: Validate the production-chain v2 contract and leakage checks before running a formal 63-feature prediction baseline.
+    summary: The maintained sanity check separates a proper causal construction from shuffled and shifted controls, but no formal training, checkpoint selection, IC evaluation, or research report is registered.
+    decision: Keep this entry engineering-only and exclude it from model-quality and trading comparisons until a formal native v2 run is registered.
+    caveats:
+      - Synthetic R² is a pipeline sanity metric, not evidence of stock-return predictability.
+      - The registry remains insufficient for a formal reuse or comparability claim.
+    metrics:
+      - id: proper-causal-r2
+        label: Proper causal synthetic R²
+        value: 0.9997001664
+        format: decimal
+        decimals: 4
+        context: maintained leakage diagnostic only
+      - id: shuffled-control-r2
+        label: Shuffled-label control R²
+        value: -0.4458755565
+        format: decimal
+        decimals: 4
+        context: negative control
+      - id: shifted-control-r2
+        label: Shifted-label control R²
+        value: -0.0832539244
+        format: decimal
+        decimals: 4
+        context: negative control
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/baseline-1min-0813/results.yaml
+    featured: false
+
+  - id: baseline-1s-v2
+    project: prediction-nn
+    track: one-second
+    subproject: baseline-1s-v2
+    title: OHLCV-only Stock1s v2 Full Evaluation
+    status: completed
+    maturity: decision-ready
+    updated_at: 2026-08-20
+    method: 42-feature OHLCV-only GRU · validation-only early stopping · fixed 10 bps cohort backtest
+    dataset: stock1s v2 · 165,740,198 full-test endpoints
+    decision_state: reject
+    primary_metric: test-pooled-ic
+    objective: Evaluate an independent simplified second-level data and training contract without treating it as a direct uplift comparison to the legacy stock1s fold0 line.
+    summary: Full-test pooled IC is 0.00925 and Rank IC is 0.00464, although mean timestamp Rank IC is 0.04770. The fixed 10 bps cohort backtest loses 95.14% cumulatively with annualized Sharpe -92.55.
+    decision: Reject the selected checkpoint for deployment. Any continuation requires preregistered isolated ablations, turnover-aware objectives, and a frozen test policy.
+    caveats:
+      - The OHLCV-only v2 data, features, sequence, label, and training contract differ from baseline-1s-0720 and cannot support a direct uplift claim.
+      - Positive timestamp-level rank correlation does not offset the sharply negative fixed-cost portfolio result.
+    metrics:
+      - id: test-pooled-ic
+        label: Full-test pooled IC
+        value: 0.0092485066
+        format: decimal
+        decimals: 5
+        context: selected step 20,000 · 165,740,198 endpoints
+      - id: test-rank-ic
+        label: Full-test Rank IC
+        value: 0.0046431500
+        format: decimal
+        decimals: 5
+        context: same full-test universe
+      - id: timestamp-rank-ic
+        label: Mean timestamp Rank IC
+        value: 0.0476965051
+        format: decimal
+        decimals: 5
+        context: cross-sectional timestamp aggregation
+      - id: cumulative-net-return
+        label: 10 bps cumulative net return
+        value: -95.1361692727
+        format: percent
+        decimals: 2
+        context: fixed cohort rule · 204 dates
+      - id: net-sharpe
+        label: Annualized net Sharpe
+        value: -92.5492966226
+        format: number
+        decimals: 2
+        context: fixed 10 bps cohort backtest
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/baseline-1s-v2/results.yaml
+    featured: true
+
+  - id: crossday-rolling
+    project: prediction-nn
+    track: one-minute
+    subproject: crossday-rolling
+    title: Cross-session Rolling Boundary Diagnostics
+    status: doing
+    maturity: diagnostic
+    updated_at: 2026-08-20
+    method: A/B/C session-boundary identity, coverage, and distinctness gates
+    dataset: synthetic plus bounded real sample · 3 days × 128 stocks
+    decision_state: diagnostic
+    primary_metric: real-ac-max-diff
+    objective: Verify that carry and drop treatments match on common valid rows, that drop reduces coverage, and that shifted history is observably distinct before formal training.
+    summary: On 92,544 bounded real rows, carry and drop match exactly on 87,424 common rows; drop removes 5,120 feature rows and 2,540 sequences, while the shifted treatment differs by up to 0.96850. No model was trained.
+    decision: Retain the boundary implementation as a passed pre-training gate, but do not choose an arm or claim model quality until matched formal runs exist.
+    caveats:
+      - There is no full prepared view, formal training, checkpoint selection, test IC, or comparison report.
+      - The implementation was untracked at registry capture, so the recorded HEAD alone cannot reproduce the diagnostic.
+    metrics:
+      - id: real-ac-max-diff
+        label: Carry vs shifted max difference
+        value: 0.9685039409
+        format: decimal
+        decimals: 4
+        context: bounded real gate · distinctness check
+      - id: real-ab-max-diff
+        label: Carry vs drop matched-row difference
+        value: 0.0
+        format: decimal
+        decimals: 1
+        context: 87,424 common rows
+      - id: deleted-feature-rows
+        label: Rows removed by drop treatment
+        value: 5120
+        format: integer
+        context: 254 valid session boundaries
+      - id: bounded-real-rows
+        label: Bounded real diagnostic rows
+        value: 92544
+        format: integer
+        context: 3 days × 128 stocks
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/crossday-rolling/results.yaml
+    featured: false
+
+  - id: horizon-labels
+    project: prediction-nn
+    track: one-minute
+    subproject: horizon-labels
+    title: Matched 10/15/30-minute Label Ablation
+    status: completed
+    maturity: developmental
+    updated_at: 2026-08-20
+    method: Common 47-feature universe · seed7 · exact-epoch matched horizon ablation
+    dataset: stock1m · 154,254,282 common test rows per horizon
+    decision_state: iterate
+    primary_metric: h15-pooled-ic
+    objective: Isolate the effect of 10-, 15-, and 30-minute forward-return horizons while holding features, endpoints, split, model, seed, sampler, optimizer, and training budget fixed.
+    summary: H15 leads pooled IC at 0.09116 and equal-timestamp top-decile hit rate at 55.63%; h30 leads Rank IC at 0.07082 and top-bottom spread at 12.10 bps. Both spread gains over h10 are positive in a 10,000-replicate paired date bootstrap.
+    decision: Retain h15 and h30 as matched signal candidates for multi-seed and rolling-split confirmation; do not infer executable net profitability.
+    caveats:
+      - This is one seed and one temporal split; the paired bootstrap excludes retraining variance.
+      - Label base rates differ by horizon, so hit rates require horizon-specific context.
+    metrics:
+      - id: h15-pooled-ic
+        label: H15 pooled IC
+        value: 0.0911561104
+        format: decimal
+        decimals: 5
+        context: common full-test universe · selected step 20,000
+      - id: h30-rank-ic
+        label: H30 pooled Rank IC
+        value: 0.0708242169
+        format: decimal
+        decimals: 5
+        context: common full-test universe · selected step 50,000
+      - id: h15-top10-hit
+        label: H15 top-decile hit rate
+        value: 55.6337513596
+        format: percent
+        decimals: 2
+        context: equal-timestamp aggregation
+      - id: h30-top-bottom-spread
+        label: H30 top-bottom spread
+        value: 12.1032033947
+        format: bps
+        decimals: 2
+        context: equal-timestamp aggregation
+      - id: common-test-rows
+        label: Test rows per horizon
+        value: 154254282
+        format: integer
+        context: 205 days · 28,905 timestamps
+    report_ids: [0815-horizon-label-comparison]
+    evidence_ref: exp-nn/0-select&report/experiments/horizon-labels/results.yaml
     featured: true

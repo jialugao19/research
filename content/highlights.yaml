@@ -51,7 +51,7 @@ metrics:
     scope: public catalog coverage
 
 featured:
-  report: 0802-stock1s-gru384-v2
+  report: 0807-stock1s-fold0-full-evaluation
   study: baseline-1s-0720
   decision_label: Keep in research
   decision_summary: Strong fold0 signal evidence does not pass the current selection and trading gates.

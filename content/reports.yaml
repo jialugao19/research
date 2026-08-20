@@ -1,5 +1,5 @@
 schema_version: 2
-featured_report: 0802-stock1s-gru384-v2
+featured_report: 0807-stock1s-fold0-full-evaluation
 reports:
   - id: 0502-index-6backtest
     project: index500-predict
@@ -131,3 +131,88 @@ reports:
     bundle_sha256: 5e5d500b9148388590ce9915faafb443f4be78a1f4e91b7bfc65a49c1e539446
     match_method: path-evidence
     match_evidence: live-predictor/reports/20260805T140155+0800_report.html
+  - id: 0807-stock1s-fold0-full-evaluation
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    title: Stock1s Fold0 Corrected Full Evaluation
+    source_file: 0807-nn1s-fold0-67d-gru384-full-evaluation.html
+    date: 2026-08-07
+    summary: 修正后 fold0 67 维 GRU384 全量评估，保留信号质量、股票池、成本和选择偏差边界。
+    tags: [prediction-nn, stock1s, gru, evaluation]
+    featured: true
+    revision_of: 0802-stock1s-gru384-v2
+    match_method: sha256
+    match_evidence: exp-nn/baseline-1s-0720/report/fold0_dedup67_gru384_mlp512x512_postprocess_af944d6_full_evaluation_report.html
+    source_sha256: ff16907e0c5bf7fe962eed4c587daab72c55faf178f106cd4aceca55234b23c1
+  - id: 0807-stock1s-cost-turnover-sweep
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    title: Stock1s Fold0 Cost and Turnover Sweep
+    source_file: 0807-nn1s-fold0-cost-turnover-sweep.html
+    date: 2026-08-07
+    summary: 对 fold0 信号进行成本、持有期和换手敏感性扫描，并明确 test-selected 候选不能用于正式晋级。
+    tags: [prediction-nn, stock1s, turnover, cost]
+    featured: true
+    match_method: central-catalog
+    match_evidence: exp-nn/0-select&report/experiments/baseline-1s-0720/results.yaml
+    source_sha256: 62882dcd1e06228f40610071eee2a335f7354ae41ef49dd1e267d11fe0eff45c
+  - id: 0808-stock1s-p0-p4-research
+    project: prediction-nn
+    subproject: baseline-1s-0720
+    title: Stock1s P0–P4 Research Review
+    source_file: 0808-p0_p4_full_research_report.html
+    date: 2026-08-08
+    summary: 汇总 P0–P4 对 selection bias、missingness、模型结构和训练目标的系统诊断与处置结论。
+    tags: [prediction-nn, stock1s, selection, missingness]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/baseline-1s-0720/report/20260808_p0_p4_full_research_report.html
+    source_sha256: 37d5f4979e129629b007dc26568fe3bfa0b11c4786c0f7f9912e30f7f29bad5b
+  - id: 0811-day-pure-batch-1min
+    project: prediction-nn
+    subproject: day-pure-batch-1min
+    title: Date-pure Batch 1min Full Evaluation
+    source_file: 0811-nn1min-batch-full_evaluation_report.html
+    date: 2026-08-11
+    summary: 单交易日 batch sampler 的完整一轮训练、validation-only 选模及全量 train/test 信号评估。
+    tags: [prediction-nn, stock1m, sampling, batch]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/day-pure-batch-1min/report/081111_full_evaluation_report.html
+    source_sha256: 479ae3fe35e5eda67468b6c4650d142b3571b198466d1400e996db9ebd587119
+  - id: 0812-multiscale-63feature-evaluation
+    project: prediction-nn
+    subproject: multiscale-market-features-1min
+    title: Multiscale 63-feature 1min Evaluation
+    source_file: 0812-nn1min-69features_full_evaluation_report.html
+    date: 2026-08-12
+    summary: 修正标签与缓存后，63 维多尺度特征、全局无放回 sampler 的单 seed 全量评估。
+    tags: [prediction-nn, stock1m, features, multiscale]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/multiscale-market-features-1min/report/081223_full_evaluation_report.html
+    source_sha256: 592bee29a427f57ebb84511b25ddf8d1159bce15ca2d1e712a77be02b2d6c2d5
+  - id: 0814-feature-family-ablation
+    project: prediction-nn
+    subproject: multiscale-market-features-1min
+    title: Matched 1min Feature-family Ablation
+    source_file: 0814-nn1min-feature_ablation_comparison_report.html
+    date: 2026-08-14
+    summary: 在相同样本、顺序、模型和预算下，对新增 market、liquidity、volatility 与 trend 特征族进行 add-one 消融。
+    tags: [prediction-nn, stock1m, features, ablation]
+    featured: true
+    match_method: central-catalog
+    match_evidence: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
+    source_sha256: 1eaeada3fa6436d200eebc9361463ec4e9dc14eab86224d43cac1b71f1f467f4
+  - id: 0815-horizon-label-comparison
+    project: prediction-nn
+    subproject: horizon-labels
+    title: 10/15/30-minute Label Horizon Comparison
+    source_file: 0815-nn1min-horizon_label_comparison_report.html
+    date: 2026-08-15
+    summary: 在共同 47-feature 样本、单 seed 和完全匹配训练合同下比较 10、15、30 分钟标签尺度。
+    tags: [prediction-nn, stock1m, labels, horizon]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/horizon-labels/report/horizon_label_comparison_report.html
+    source_sha256: 644da0d036c9bcc816f60b49dc02ee9b72d4f5335d690a1e264d7ebfc531a0c0

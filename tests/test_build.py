@@ -123,8 +123,8 @@ def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
     assert "Building reproducible evidence pipelines<br>for machine learning alpha research." in index
     assert "EVIDENCE CHAIN" in index
     assert "FEATURED RESEARCH" in index
-    assert "Stock1s GRU384 / MLP512×512 Evaluation" in index
-    assert 'href="/reports/prediction-nn/0802-stock1s-gru384-v2/"' in index
+    assert "Stock1s Fold0 Corrected Full Evaluation" in index
+    assert 'href="/reports/prediction-nn/0807-stock1s-fold0-full-evaluation/"' in index
     assert "assets/report-heroes/0802-stock1s-gru384-v2.png" not in index
     assert '<svg viewBox="0 0 820 420"' in index
     assert "Q01" in index
@@ -132,8 +132,8 @@ def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
     assert "-8.054 bps" in index
     assert "7.072 bps" in index
     assert "16</dt><dd>Research projects" in index
-    assert "38</dt><dd>Experiments" in index
-    assert "7</dt><dd>Published evaluations" in index
+    assert "44</dt><dd>Experiments" in index
+    assert "13</dt><dd>Published evaluations" in index
     assert "0.10765</dt><dd>Best reported test IC" in index
     assert "0.07895</dt><dd>Multi-seed test IC" in index
     assert "-18.27</dt><dd>Featured net Sharpe" in index
@@ -375,7 +375,7 @@ def test_catalog_json_keeps_internal_presentation_fields_private(tmp_path: Path)
     assert '"dataset": "stock1m · seeds 7/11/13"' in payload
     assert '"decision_state": "retain"' in payload
     assert '"primary_metric": "test-pooled-ic"' in payload
-    assert payload.count('"is_current": true') == 7
+    assert payload.count('"is_current": true') == 13
 
 
 def test_catalog_json_excludes_private_evidence_paths(tmp_path: Path) -> None:

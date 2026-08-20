@@ -22,12 +22,15 @@ def test_repository_catalog_is_valid() -> None:
     assert len(catalog.projects) == 18
     assert len(catalog.research_projects) == 16
     assert len(catalog.knowledge_projects) == 2
-    assert len(catalog.studies) == 38
-    assert len(catalog.reports) == 13
-    assert len(catalog.current_reports) == 7
-    assert catalog.featured_report_id == "0802-stock1s-gru384-v2"
-    assert catalog.featured_report is catalog.report_by_id["0802-stock1s-gru384-v2"]
+    assert len(catalog.studies) == 44
+    assert len(catalog.reports) == 20
+    assert len(catalog.current_reports) == 13
+    assert catalog.featured_report_id == "0807-stock1s-fold0-full-evaluation"
+    assert catalog.featured_report is catalog.report_by_id["0807-stock1s-fold0-full-evaluation"]
     assert catalog.report_by_id["0802-stock1s-gru384-v2"].revision_of == "0802-stock1s-gru384"
+    assert catalog.report_by_id["0807-stock1s-fold0-full-evaluation"].revision_of == (
+        "0802-stock1s-gru384-v2"
+    )
     assert catalog.report_by_id["0805-live-predictor-quality"].project == "live-predictor"
     assert catalog.report_by_id["0805-live-predictor-quality"].hero_image == (
         "images/extreme-tail-performance.png"
@@ -41,6 +44,19 @@ def test_repository_catalog_is_valid() -> None:
     assert "net results" in one_minute.conclusion
     assert catalog.project_by_id["prediction-nn"].track("one-second") is not None
     assert catalog.project_by_id["prediction-nn"].subproject("l2-features").group == "Feature Extensions & Integration"
+    latest_prediction_nn_ids = {
+        "baseline-1min-0813",
+        "baseline-1s-v2",
+        "crossday-rolling",
+        "day-pure-batch-1min",
+        "horizon-labels",
+        "multiscale-market-features-1min",
+    }
+    prediction_nn = catalog.project_by_id["prediction-nn"]
+    assert all(prediction_nn.subproject(study_id) is not None for study_id in latest_prediction_nn_ids)
+    assert latest_prediction_nn_ids <= catalog.study_by_id.keys()
+    assert catalog.study_by_id["baseline-1s-v2"].decision_state == "reject"
+    assert catalog.study_by_id["horizon-labels"].report_ids == ("0815-horizon-label-comparison",)
     assert catalog.study_by_id["baseline-1s-0720"].metrics[0].display_value == "0.09842"
     evaluation_rows = next(
         metric
@@ -240,8 +256,8 @@ def test_featured_report_must_be_current(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
     reports = (tmp_path / "reports.yaml").read_text(encoding="utf-8")
     reports = reports.replace(
+        "featured_report: 0807-stock1s-fold0-full-evaluation",
         "featured_report: 0802-stock1s-gru384-v2",
-        "featured_report: 0802-stock1s-gru384",
         1,
     )
     (tmp_path / "reports.yaml").write_text(reports, encoding="utf-8")
