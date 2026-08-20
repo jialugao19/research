@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = mean(scores over folds)
+\widehat R_{\mathrm{CV}}=\frac1K\sum_{k=1}^{K}R\!\left(f^{(-k)},D_k\right)
 $$
 
 ### 变量解释

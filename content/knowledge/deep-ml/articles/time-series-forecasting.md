@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y_{t+h} = f(y_t, y_{t-1}, features)
+\hat y_{t+h\mid t}=f_\theta\!\left(y_t,y_{t-1},\ldots,x_t\right),\qquad h\ge1
 $$
 
 ### 变量解释

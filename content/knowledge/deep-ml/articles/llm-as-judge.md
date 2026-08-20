@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-judge_score = judge(prompt, answer, rubric)
+S_{\mathrm{judge}}(y\mid x,r)=J_\phi(x,y,r)
 $$
 
 ### 变量解释

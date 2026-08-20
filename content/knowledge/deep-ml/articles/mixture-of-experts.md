@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-output = sum gate_i(x) expert_i(x)
+y=\sum_{k\in\operatorname{TopK}(g(x))}\tilde g_k(x)E_k(x),\qquad \sum_k\tilde g_k(x)=1
 $$
 
 ### 变量解释

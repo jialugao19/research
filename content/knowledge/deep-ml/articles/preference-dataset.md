@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-chosen response ranked above rejected response
+D_{\mathrm{pref}}=\{(x_i,y_i^+,y_i^-):y_i^+\succ y_i^-\}_{i=1}^{n}
 $$
 
 ### 变量解释

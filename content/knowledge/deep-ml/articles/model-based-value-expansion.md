@@ -102,7 +102,7 @@ Model-Based Value Expansion 的表达能力来自模型结构，但泛化能力�
 ### 表达方式
 
 $$
-target = simulated_rewards + gamma^k V(s_k)
+\hat G_t^{(H)}=\sum_{k=0}^{H-1}\gamma^k\hat r_{t+k+1}+\gamma^H V_\phi(\hat S_{t+H})
 $$
 
 ### 变量解释

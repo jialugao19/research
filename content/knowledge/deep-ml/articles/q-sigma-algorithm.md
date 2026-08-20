@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-sigma=1 resembles SARSA, sigma=0 resembles tree backup
+G_{t:t+n}^{\sigma}=R_{t+1}+\gamma\left[\sigma_{t+1}G_{t+1:t+n}^{\sigma}+(1-\sigma_{t+1})\sum_a\pi(a\mid S_{t+1})Q(S_{t+1},a)\right]
 $$
 
 ### 变量解释

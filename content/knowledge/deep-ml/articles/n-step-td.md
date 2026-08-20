@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-G_t^{(n)} = r_1 + ... + gamma^n V(s_{t+n})
+G_{t:t+n}=\sum_{k=0}^{n-1}\gamma^kR_{t+k+1}+\gamma^nV(S_{t+n})
 $$
 
 ### 变量解释

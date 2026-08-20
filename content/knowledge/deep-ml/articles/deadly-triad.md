@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-instability risk = off_policy + bootstrapping + approximation
+w_{t+1}=w_t+\alpha\rho_t\delta_t\nabla_w\hat V_w(S_t),\qquad \rho_t=\frac{\pi(A_t\mid S_t)}{b(A_t\mid S_t)}
 $$
 
 ### 变量解释

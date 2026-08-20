@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sigma_p^2 = w^T Sigma w
+\sigma_p^2=\operatorname{Var}(w^{\top}r)=w^{\top}\Sigma w
 $$
 
 ### 变量解释

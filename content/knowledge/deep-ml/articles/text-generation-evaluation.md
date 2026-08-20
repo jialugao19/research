@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-quality = task_score + human_or_model_judgment
+S(y)=\sum_{j=1}^{J}w_jm_j(y,y^{\star})+w_hH(y),\qquad \sum_jw_j+w_h=1
 $$
 
 ### 变量解释

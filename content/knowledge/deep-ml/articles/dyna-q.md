@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-real update + planning updates from learned model
+Q(S,A)\leftarrow Q(S,A)+\alpha\left[R+\gamma\max_a Q(S^{\prime},a)-Q(S,A)\right]
 $$
 
 ### 变量解释

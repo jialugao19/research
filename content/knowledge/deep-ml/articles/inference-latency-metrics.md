@@ -83,7 +83,7 @@ references:
 ### 表达方式
 
 $$
-E2E latency = TTFT + decode_time
+T_{\mathrm{E2E}}=T_{\mathrm{TTFT}}+\sum_{t=2}^{N}T_{\mathrm{intertoken},t}
 $$
 
 ### 变量解释

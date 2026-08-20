@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-theta_hat = argmax_theta log p(data | theta)
+\hat\theta_{\mathrm{MLE}}=\underset{\theta}{\operatorname{arg\,max}}\ \ell(\theta;D),\qquad \ell(\theta;D)=\sum_{i=1}^{n}\log p(x_i\mid\theta)
 $$
 
 ### 变量解释

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-A = L L^T
+A=LL^{\top},\qquad L_{ii}>0\quad\text{for symmetric positive-definite }A
 $$
 
 ### 变量解释

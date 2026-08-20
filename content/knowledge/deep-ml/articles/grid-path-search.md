@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-neighbors = four or eight adjacent cells
+\mathcal N_4(i,j)=\{(i-1,j),(i+1,j),(i,j-1),(i,j+1)\}\cap\mathcal G
 $$
 
 ### 变量解释

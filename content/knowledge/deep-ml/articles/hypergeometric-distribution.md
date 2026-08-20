@@ -83,7 +83,7 @@ references:
 ### 表达方式
 
 $$
-P(X=k)=C(K,k)C(N-K,n-k)/C(N,n)
+\Pr(X=k)=\frac{\binom{K}{k}\binom{N-K}{n-k}}{\binom{N}{n}},\qquad \max(0,n-N+K)\le k\le\min(n,K)
 $$
 
 ### 变量解释

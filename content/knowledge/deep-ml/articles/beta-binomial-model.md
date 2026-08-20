@@ -102,7 +102,7 @@ Beta-Binomial Model 的表达能力来自模型结构，但泛化能力还取决
 ### 表达方式
 
 $$
-Beta(alpha,beta) + successes/failures \rightarrow updated Beta
+p\sim\operatorname{Beta}(\alpha,\beta),\quad X\mid p\sim\operatorname{Binomial}(n,p)\ \Longrightarrow\ p\mid X=x\sim\operatorname{Beta}(\alpha+x,\beta+n-x)
 $$
 
 ### 变量解释

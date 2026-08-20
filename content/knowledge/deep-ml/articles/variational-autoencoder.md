@@ -95,7 +95,7 @@ ELBO 的重建项拟合数据，KL 项约束后验接近先验。两者失衡可
 ### 表达方式
 
 $$
-loss = reconstruction loss + KL(q(z|x) || p(z))
+\mathcal L_{\mathrm{VAE}}(x)=-\mathbb E_{q_\phi(z\mid x)}[\log p_\theta(x\mid z)]+D_{\mathrm{KL}}\!\left(q_\phi(z\mid x)\Vert p(z)\right)
 $$
 
 ### 变量解释

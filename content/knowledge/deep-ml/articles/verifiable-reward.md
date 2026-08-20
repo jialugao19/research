@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-reward = verifier(output, target)
+R(y,y^{\star})=\mathbf 1_{\{v(y,y^{\star})=\mathrm{pass}\}}
 $$
 
 ### 变量解释

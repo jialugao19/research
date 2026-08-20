@@ -102,7 +102,7 @@ references:
 ### 表达方式
 
 $$
-policy evaluation + policy improvement
+\pi_{k+1}(s)\in\underset{a}{\operatorname{arg\,max}}\ \sum_{s^{\prime},r}p(s^{\prime},r\mid s,a)\left[r+\gamma V_{\pi_k}(s^{\prime})\right]
 $$
 
 ### 变量解释

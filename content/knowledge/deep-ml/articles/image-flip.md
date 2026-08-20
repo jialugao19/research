@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-pixel(x, y) \rightarrow pixel(width-1-x, y)
+I_{\mathrm{hflip}}(x,y)=I(W-1-x,y)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-latency \approx memory_access + synchronization_overhead
+T_{\mathrm{query}}\approx T_{\mathrm{memory}}+T_{\mathrm{synchronization}}+T_{\mathrm{compute}}
 $$
 
 ### 变量解释

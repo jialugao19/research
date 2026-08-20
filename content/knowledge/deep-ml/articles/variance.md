@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-Var(X)=E[(X-E[X])^2]
+\operatorname{Var}(X)=\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]=\mathbb{E}[X^2]-\mathbb{E}[X]^2
 $$
 
 ### 变量解释

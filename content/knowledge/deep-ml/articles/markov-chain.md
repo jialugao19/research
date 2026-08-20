@@ -90,7 +90,7 @@ references:
 ### 表达方式
 
 $$
-P(X_{t+1} | X_t, X_{t-1}, ...) = P(X_{t+1} | X_t)
+\Pr(X_{t+1}=x_{t+1}\mid X_t=x_t,\ldots,X_0=x_0)=\Pr(X_{t+1}=x_{t+1}\mid X_t=x_t)
 $$
 
 ### 变量解释

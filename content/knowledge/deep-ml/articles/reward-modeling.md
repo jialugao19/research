@@ -102,7 +102,7 @@ Reward Modeling 的表达能力来自模型结构，但泛化能力还取决于�
 ### 表达方式
 
 $$
-reward = r_theta(context, response)
+r_\theta(c,y)\in\mathbb R,\qquad \Pr_\theta(y^+\succ y^-\mid c)=\sigma\!\left(r_\theta(c,y^+)-r_\theta(c,y^-)\right)
 $$
 
 ### 变量解释

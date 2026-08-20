@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-match when best_bid \ge best_ask
+p_{\mathrm{bid}}^{\star}\ge p_{\mathrm{ask}}^{\star}\quad\Longrightarrow\quad q_{\mathrm{trade}}=\min(q_{\mathrm{bid}}^{\star},q_{\mathrm{ask}}^{\star})
 $$
 
 ### 变量解释

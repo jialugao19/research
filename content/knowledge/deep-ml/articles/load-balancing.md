@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-min max_i load_i
+\underset{\{W_i\}_{i=1}^{P}}{\operatorname{minimize}}\ \max_{1\le i\le P}W_i\qquad\text{subject to }\sum_{i=1}^{P}W_i=W
 $$
 
 ### 变量解释

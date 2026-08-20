@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-delta = r + gamma V(s') - V(s)
+\delta_t=R_{t+1}+\gamma V(S_{t+1})-V(S_t)
 $$
 
 ### 变量解释

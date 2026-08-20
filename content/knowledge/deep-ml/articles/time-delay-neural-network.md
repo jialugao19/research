@@ -102,7 +102,7 @@ Time Delay Neural Network 的表达能力来自模型结构，但泛化能力还
 ### 表达方式
 
 $$
-h_t = f(x_{t-k}, ..., x_{t+k})
+h_t=\phi\!\left(\sum_{\tau=-k}^{k}W_\tau x_{t+\tau}+b\right)
 $$
 
 ### 变量解释

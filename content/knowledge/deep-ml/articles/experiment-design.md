@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-design defines treatment, control, metric and sample size
+\hat\tau=\bar Y_{T}-\bar Y_{C},\qquad \bar Y_T=\frac1{n_T}\sum_{i:T_i=1}Y_i,\quad \bar Y_C=\frac1{n_C}\sum_{i:T_i=0}Y_i
 $$
 
 ### 变量解释

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-median comes from heap tops
+m_t=\begin{cases}\max(H_L),&|H_L|>|H_R|,\\\frac{\max(H_L)+\min(H_R)}{2},&|H_L|=|H_R|,\end{cases}
 $$
 
 ### 变量解释

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-features = transform(raw_data)
+z=\phi(x),\qquad \phi:\mathcal X\to\mathbb R^d
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = next_token_loss on instruction-response data
+\mathcal L_{\mathrm{SFT}}=-\sum_{t\in\mathcal R}\log p_\theta(y_t\mid y_{<t},x_{\mathrm{instruction}})
 $$
 
 ### 变量解释

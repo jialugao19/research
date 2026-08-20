@@ -94,7 +94,7 @@ BatchNorm 输出依赖 batch 均值和方差。反向时梯度会跨样本相互
 ### 表达方式
 
 $$
-grad_gamma = sum(grad_output \cdot  x_hat)
+\frac{\partial L}{\partial\gamma}=\sum_{i=1}^{m}\frac{\partial L}{\partial y_i}\odot\hat x_i,\qquad \frac{\partial L}{\partial\beta}=\sum_{i=1}^{m}\frac{\partial L}{\partial y_i}
 $$
 
 ### 变量解释

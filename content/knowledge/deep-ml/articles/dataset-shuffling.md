@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-dataset_order = random_permutation(indices)
+\pi\sim\operatorname{Unif}(S_n),\qquad D^{\prime}=(z_{\pi(1)},\ldots,z_{\pi(n)})
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-grad_small = sum_to_shape(grad_big, small_shape)
+\frac{\partial L}{\partial x}=\operatorname{sum\_to}\!\left(\frac{\partial L}{\partial y},\operatorname{shape}(x)\right),\qquad y=\operatorname{broadcast}(x)
 $$
 
 ### 变量解释

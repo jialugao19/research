@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-y_hat = model(x)
+h^{(0)}=x,\qquad h^{(\ell+1)}=f^{(\ell)}\!\left(W^{(\ell)}h^{(\ell)}+b^{(\ell)}\right)
 $$
 
 ### 变量解释

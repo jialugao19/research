@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-advantage = reward - group_average_reward
+\hat A_i=\frac{r_i-\bar r_G}{s_G+\varepsilon},\qquad \bar r_G=\frac1G\sum_{j=1}^{G}r_j
 $$
 
 ### 变量解释

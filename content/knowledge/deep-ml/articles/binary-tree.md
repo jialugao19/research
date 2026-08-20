@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-node = (value, left, right)
+\operatorname{node}=(v,p_L,p_R),\qquad p_L,p_R\in\{\varnothing,\operatorname{addr}(\operatorname{node})\}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-theta_new = theta_old - step_size \cdot  update_direction
+\theta_{t+1}=\theta_t-\eta_t u_t
 $$
 
 ### 变量解释

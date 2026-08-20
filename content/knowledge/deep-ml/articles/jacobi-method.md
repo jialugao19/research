@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-x^{k+1}=D^{-1}(b-(L+U)x^k)
+x^{(k+1)}=D^{-1}\!\left(b-(L+U)x^{(k)}\right),\qquad A=D+L+U
 $$
 
 ### 变量解释

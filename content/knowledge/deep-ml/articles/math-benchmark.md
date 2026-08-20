@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-accuracy = correct_math_answers / total_questions
+\operatorname{Accuracy}=\frac1N\sum_{i=1}^{N}\mathbf 1_{\{\hat a_i\equiv a_i\}}
 $$
 
 ### 变量解释

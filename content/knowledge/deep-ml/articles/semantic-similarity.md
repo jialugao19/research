@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-similarity = sim(representation_a, representation_b)
+\operatorname{sim}(x,y)=\frac{f(x)^{\top}f(y)}{\lVert f(x)\rVert_2\lVert f(y)\rVert_2}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-rho \leftarrow rho + beta \cdot  TD_error_for_greedy_action
+Q(S_t,A_t)\leftarrow Q(S_t,A_t)+\alpha\left[R_{t+1}-\bar R+\max_aQ(S_{t+1},a)-Q(S_t,A_t)\right]
 $$
 
 ### 变量解释

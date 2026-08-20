@@ -102,7 +102,7 @@ Lasso Regression 的表达能力来自模型结构，但泛化能力还取决于
 ### 表达方式
 
 $$
-loss = MSE + lambda ||w||_1
+\hat w=\underset{w}{\operatorname{arg\,min}}\left\{\frac1n\lVert y-Xw\rVert_2^2+\lambda\lVert w\rVert_1\right\},\qquad \lambda\ge0
 $$
 
 ### 变量解释

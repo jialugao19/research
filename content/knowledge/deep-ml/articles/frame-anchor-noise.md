@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-noisy_frame = anchor_frame + scheduled_noise
+x_t^{(k)}=\sqrt{\bar\alpha_t}\,x_0^{(k)}+\sqrt{1-\bar\alpha_t}\left(\rho\varepsilon_{\mathrm{anchor}}+\sqrt{1-\rho^2}\varepsilon_k\right)
 $$
 
 ### 变量解释

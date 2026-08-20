@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-theta\cdot  = argmin objective(theta)
+\theta^{\star}=\underset{\theta\in\Theta}{\operatorname{arg\,min}}\ J(\theta)
 $$
 
 ### 变量解释

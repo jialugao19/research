@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-CF = (N, linear_sum, squared_sum)
+\operatorname{CF}(C)=\left(N,\operatorname{LS},\operatorname{SS}\right),\qquad \operatorname{LS}=\sum_{x\in C}x,\quad \operatorname{SS}=\sum_{x\in C}\lVert x\rVert_2^2
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-batch_size_t = schedule(step_t)
+B_t=\mathcal S(t),\qquad B_t\in\mathbb N_{>0}
 $$
 
 ### 变量解释

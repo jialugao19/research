@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-features = [x, x^2, x1\cdot x2]
+\phi_d(x)=\left\{\prod_{j=1}^{p}x_j^{\alpha_j}:\alpha_j\in\mathbb N_0,\ \sum_{j=1}^{p}\alpha_j\le d\right\}
 $$
 
 ### 变量解释

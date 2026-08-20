@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = f(length, position, distractors, task_type)
+S(L,p,d)=\frac1N\sum_{i=1}^{N}m\!\left(\hat y_i(L,p,d),y_i\right)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-value[state] is updated from repeated visits
+V_{n+1}(s)=V_n(s)+\frac{1}{N_{n+1}(s)}\left(G_n-V_n(s)\right)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-partial f / partial x_i
+\frac{\partial f}{\partial x_i}(x)=\lim_{h\to0}\frac{f(x+h e_i)-f(x)}{h}
 $$
 
 ### 变量解释

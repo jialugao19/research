@@ -124,7 +124,7 @@ Gradient Descent 的子概念分工：
 ### 表达方式
 
 $$
-\theta_{t+1}=\theta_t-\eta\nabla J(\theta_t)
+\theta_{t+1}=\theta_t-\eta_t\nabla J(\theta_t)
 $$
 
 ### 变量解释
@@ -141,7 +141,7 @@ $$
 推导依赖一阶泰勒近似：在当前位置附近，用梯度描述目标函数的局部变化。
 
 $$
-J(\theta+\Delta)\approx J(\theta)+\nabla J(\theta)^\top\Delta,\quad \Delta=-\eta\nabla J(\theta)
+J(\theta+\Delta)\approx J(\theta)+\nabla J(\theta)^{\top}\Delta,\qquad \Delta=-\eta\nabla J(\theta)
 $$
 
 如果学习率足够小，负梯度方向会在局部线性近似下让目标下降。

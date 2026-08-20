@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-tokens \rightarrow router \rightarrow selected experts
+y_i=E_{r(i)}(x_i),\qquad r(i)=\operatorname{TopK}\!\left(g(x_i)\right)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-selected_features = argmax validation_score(subset)
+S^{\star}=\underset{S\subseteq\{1,\ldots,p\}}{\operatorname{arg\,min}}\ \widehat R_{\mathrm{val}}(S)
 $$
 
 ### 变量解释

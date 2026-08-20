@@ -87,7 +87,7 @@ references:
 ### 表达方式
 
 $$
-loss = criterion(prediction, target)
+\mathcal L(\theta)=\operatorname{reduce}_{i=1}^{n}\ell\!\left(f_\theta(x_i),y_i\right)
 $$
 
 ### 变量解释

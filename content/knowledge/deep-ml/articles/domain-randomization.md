@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-train over environment parameters sampled from distribution
+\xi\sim p(\xi),\qquad \theta^{\star}=\underset{\theta}{\operatorname{arg\,max}}\ \mathbb E_{\xi}[J(\pi_\theta;\xi)]
 $$
 
 ### 变量解释

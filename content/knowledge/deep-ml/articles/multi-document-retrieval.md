@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-top_docs = rank(retrieve(query))
+D_k(q)=\underset{D\subseteq\mathcal D,\,|D|=k}{\operatorname{arg\,max}}\ \sum_{d\in D}s(q,d)
 $$
 
 ### 变量解释

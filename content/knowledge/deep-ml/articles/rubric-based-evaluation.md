@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = sum weighted criterion scores
+S(y)=\sum_{j=1}^{J}w_js_j(y),\qquad w_j\ge0,\quad \sum_{j=1}^{J}w_j=1
 $$
 
 ### 变量解释

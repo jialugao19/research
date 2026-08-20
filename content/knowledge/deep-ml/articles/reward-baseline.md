@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-advantage = return - baseline
+\hat A_t=G_t-b(S_t),\qquad \mathbb E\!\left[\nabla_\theta\log\pi_\theta(A_t\mid S_t)b(S_t)\right]=0
 $$
 
 ### 变量解释

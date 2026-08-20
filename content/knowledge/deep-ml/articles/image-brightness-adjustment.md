@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-image' = clip(image \cdot  factor)
+I^{\prime}(x,y,c)=\operatorname{clip}\!\left(\alpha I(x,y,c),0,L\right)
 $$
 
 ### 变量解释

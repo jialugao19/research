@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-CTR = clicks / impressions
+\widehat{\operatorname{CTR}}=\frac{N_{\mathrm{clicks}}}{N_{\mathrm{impressions}}}
 $$
 
 ### 变量解释

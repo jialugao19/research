@@ -94,7 +94,7 @@ Transformer 需要序列输入。图像要先转换成 patch 序列。
 ### 表达方式
 
 $$
-tokens = split(image, patch_size)
+X\in\mathbb R^{C\times H\times W}\longmapsto X_p\in\mathbb R^{N\times(CP_hP_w)},\qquad N=\frac{HW}{P_hP_w}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-memory = elements \cdot  bytes_per_element plus runtime overhead
+M_{\mathrm{tensor}}=N\frac{b}{8}\ \text{bytes},\qquad M_{\mathrm{peak}}=M_{\mathrm{persistent}}+M_{\mathrm{temporary}}
 $$
 
 ### 变量解释

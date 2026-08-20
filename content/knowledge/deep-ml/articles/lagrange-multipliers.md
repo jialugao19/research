@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-L(x, lambda) = f(x) + lambda g(x)
+\mathcal L(x,\lambda,\nu)=f_0(x)+\sum_{i=1}^{m}\lambda_i f_i(x)+\sum_{j=1}^{p}\nu_j h_j(x)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-answer = generate(query, retrieved_context)
+D_k=\operatorname{TopK}_{d\in\mathcal D}\ s(q,d),\qquad p(y\mid q)=\sum_{d\in D_k}p_\eta(d\mid q)p_\theta(y\mid q,d)
 $$
 
 ### 变量解释

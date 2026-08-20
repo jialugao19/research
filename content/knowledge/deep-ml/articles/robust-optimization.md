@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-min_x max_delta loss(x, delta)
+\underset{x\in\mathcal X}{\operatorname{minimize}}\ \underset{\delta\in\Delta}{\operatorname{maximize}}\ L(x,\delta)
 $$
 
 ### 变量解释

@@ -102,7 +102,7 @@ Probabilistic Regression 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-predict p(y|x) instead of y_hat
+p_\theta(y\mid x),\qquad \hat y(x)=\mathbb E_{p_\theta(y\mid x)}[Y]
 $$
 
 ### 变量解释

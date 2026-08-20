@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-h_t = f(x_t, h_{t-1})
+h_t=f_\theta(x_t,h_{t-1})
 $$
 
 ### 变量解释

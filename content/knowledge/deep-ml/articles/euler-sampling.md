@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-x_{t+dt} = x_t + dt \cdot  f(x_t,t)
+x_{n+1}=x_n+\Delta t\,v_\theta(x_n,t_n)
 $$
 
 ### 变量解释

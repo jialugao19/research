@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-index = hash(feature) mod n_features
+z_j=\sum_{i:h(i)=j}\xi(i)x_i,\qquad h(i)\in\{1,\ldots,m\},\quad \xi(i)\in\{-1,1\}
 $$
 
 ### 变量解释

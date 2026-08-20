@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-flow = (dx, dy) for each pixel
+I_xu+I_yv+I_t=0,\qquad (u,v)=\left(\frac{dx}{dt},\frac{dy}{dt}\right)
 $$
 
 ### 变量解释

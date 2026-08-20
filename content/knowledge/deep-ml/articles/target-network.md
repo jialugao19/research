@@ -102,7 +102,7 @@ Target Network 的表达能力来自模型结构，但泛化能力还取决于�
 ### 表达方式
 
 $$
-target = r + gamma max_a Q_target(s',a)
+y_t=R_{t+1}+\gamma\max_{a^{\prime}}Q_{\bar\theta}(S_{t+1},a^{\prime})
 $$
 
 ### 变量解释

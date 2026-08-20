@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-loss = masked_mean(token_loss, response_mask)
+\mathcal L=-\frac{\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid y_{<t},x)}{\sum_{t=1}^{T}m_t}
 $$
 
 ### 变量解释

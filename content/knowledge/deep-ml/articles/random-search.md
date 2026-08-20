@@ -91,7 +91,7 @@ references:
 ### 表达方式
 
 $$
-sample config from search_space
+\lambda_1,\ldots,\lambda_T\overset{\mathrm{iid}}{\sim}p(\lambda),\qquad \lambda^{\star}=\operatorname{arg\,min}_{t\le T}\widehat R_{\mathrm{val}}(\lambda_t)
 $$
 
 ### 变量解释

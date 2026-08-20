@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-action_t = policy(observation_t)
+a_t=\pi_\theta(o_t),\qquad s_{t+1}\sim P(\cdot\mid s_t,a_t)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-H(X) = - sum_x p(x) log p(x)
+H(X)=-\sum_{x\in\mathcal X}p(x)\log p(x)
 $$
 
 ### 变量解释

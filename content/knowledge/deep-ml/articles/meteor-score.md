@@ -81,7 +81,7 @@ references:
 ### 表达方式
 
 $$
-score balances unigram precision and recall with penalty
+F_{\mathrm{mean}}=\frac{PR}{\alpha P+(1-\alpha)R},\qquad \operatorname{METEOR}=F_{\mathrm{mean}}\left(1-\gamma\left(\frac{c}{m}\right)^\beta\right)
 $$
 
 ### 变量解释

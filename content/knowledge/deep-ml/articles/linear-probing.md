@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-features = frozen_encoder(x), y = linear_probe(features)
+z=f_{\mathrm{frozen}}(x),\qquad \hat W=\underset{W}{\operatorname{arg\,min}}\ \frac1n\sum_{i=1}^{n}\ell(Wz_i,y_i)
 $$
 
 ### 变量解释

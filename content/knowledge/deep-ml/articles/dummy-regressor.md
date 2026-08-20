@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prediction = mean(y_train)
+\hat y(x)=\bar y_{\mathrm{train}}=\frac1n\sum_{i=1}^{n}y_i
 $$
 
 ### 变量解释

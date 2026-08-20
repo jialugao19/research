@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-usable_tokens \le context_length
+T_{\mathrm{prompt}}+T_{\mathrm{generated}}\le L_{\mathrm{context}}
 $$
 
 ### 变量解释

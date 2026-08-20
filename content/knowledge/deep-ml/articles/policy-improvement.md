@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-pi_new(s) = argmax_a Q_pi(s,a)
+\pi^{\prime}(s)\in\underset{a}{\operatorname{arg\,max}}\ Q_\pi(s,a)\quad\Longrightarrow\quad V_{\pi^{\prime}}(s)\ge V_\pi(s)
 $$
 
 ### 变量解释

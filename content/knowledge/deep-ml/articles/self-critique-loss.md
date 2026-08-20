@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-loss = task_loss + weight \cdot  critique_loss
+\mathcal L=\mathcal L_{\mathrm{task}}+\lambda\mathcal L_{\mathrm{critique}}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-J_ij = partial y_i / partial x_j
+J_f(x)=\left[\frac{\partial f_i}{\partial x_j}(x)\right]_{i=1,\ldots,m;\,j=1,\ldots,n}
 $$
 
 ### 变量解释

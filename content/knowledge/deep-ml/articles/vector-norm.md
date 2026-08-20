@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-||x||_2 = sqrt(sum x_i^2)
+\lVert x\rVert_2=\sqrt{\sum_{i=1}^{n}x_i^2}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss favors chosen response over rejected response
+\mathcal L_{\mathrm{DPO}}=-\mathbb E_{(x,y^+,y^-)}\log\sigma\!\left(\beta\log\frac{\pi_\theta(y^+\mid x)}{\pi_{\mathrm{ref}}(y^+\mid x)}-\beta\log\frac{\pi_\theta(y^-\mid x)}{\pi_{\mathrm{ref}}(y^-\mid x)}\right)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-det(A) = 0 implies A is singular
+A\text{ is invertible}\iff\det(A)\ne0
 $$
 
 ### 变量解释

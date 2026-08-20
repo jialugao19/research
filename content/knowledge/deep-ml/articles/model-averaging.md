@@ -102,7 +102,7 @@ Model Averaging 的表达能力来自模型结构，但泛化能力还取决于�
 ### 表达方式
 
 $$
-prediction = mean(prediction_i)
+\hat f_{\mathrm{avg}}(x)=\sum_{m=1}^{M}w_m f_m(x),\qquad w_m\ge0,\quad \sum_{m=1}^{M}w_m=1
 $$
 
 ### 变量解释

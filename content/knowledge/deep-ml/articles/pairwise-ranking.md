@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = max(0, margin - score_pos + score_neg)
+\ell(s^+,s^-)=\max\!\left(0,m-s^++s^-\right)
 $$
 
 ### 变量解释

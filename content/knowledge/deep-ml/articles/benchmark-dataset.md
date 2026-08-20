@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-report metric on fixed split
+\widehat M(f;D_{\mathrm{test}})=\frac1n\sum_{i=1}^{n}m\!\left(f(x_i),y_i\right)
 $$
 
 ### 变量解释

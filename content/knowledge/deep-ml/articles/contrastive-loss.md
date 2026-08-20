@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-loss rewards high similarity for positives and low similarity for negatives
+\ell_i=-\log\frac{\exp(\operatorname{sim}(z_i,z_i^+)/\tau)}{\sum_{j=1}^{N}\exp(\operatorname{sim}(z_i,z_j)/\tau)}
 $$
 
 ### 变量解释

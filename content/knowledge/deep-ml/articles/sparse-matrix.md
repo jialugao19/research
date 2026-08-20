@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-store only nonzero entries and indices
+\operatorname{nnz}(A)=\left|\{(i,j):A_{ij}\ne0\}\right|\ll mn,\qquad A\in\mathbb{R}^{m\times n}
 $$
 
 ### 变量解释

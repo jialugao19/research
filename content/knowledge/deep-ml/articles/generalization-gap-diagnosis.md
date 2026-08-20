@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-gap = train_score - validation_score
+\widehat\Delta_{\mathrm{gen}}=\widehat R_{\mathrm{val}}(f)-\widehat R_{\mathrm{train}}(f)
 $$
 
 ### 变量解释

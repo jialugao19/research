@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = reconstruction_error(features, decoded_representation)
+\mathcal L_{\mathrm{recon}}=\frac1n\sum_{i=1}^{n}\left\lVert x_i-g_\phi(f_\theta(x_i))\right\rVert_2^2
 $$
 
 ### 变量解释

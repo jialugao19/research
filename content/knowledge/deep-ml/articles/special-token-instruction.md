@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sequence = special_token + instruction + content
+x=(t_{\mathrm{bos}},t_{\mathrm{system}},s,t_{\mathrm{user}},u,t_{\mathrm{assistant}},y,t_{\mathrm{eos}})
 $$
 
 ### 变量解释

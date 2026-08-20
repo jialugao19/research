@@ -95,7 +95,7 @@ references:
 ### 表达方式
 
 $$
-loss = reconstruction_error(x, decoder(encoder(x)))
+z=f_\theta(x),\quad \hat x=g_\phi(z),\quad (\theta^{\star},\phi^{\star})=\operatorname{arg\,min}_{\theta,\phi}\frac1n\sum_{i=1}^{n}\ell\!\left(x_i,g_\phi(f_\theta(x_i))\right)
 $$
 
 ### 变量解释

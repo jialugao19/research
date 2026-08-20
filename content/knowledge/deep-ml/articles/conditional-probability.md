@@ -90,7 +90,7 @@ references:
 ### 表达方式
 
 $$
-P(A|B) = P(A and B) / P(B)
+\Pr(A\mid B)=\frac{\Pr(A\cap B)}{\Pr(B)},\qquad \Pr(B)>0
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-effective_batch = micro_batch \cdot  accumulation_steps
+g=\frac1K\sum_{k=1}^{K}g_k,\qquad B_{\mathrm{effective}}=K B_{\mathrm{micro}}
 $$
 
 ### 变量解释

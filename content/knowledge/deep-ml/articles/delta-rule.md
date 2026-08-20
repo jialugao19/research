@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-w \leftarrow w + eta \cdot  error \cdot  x
+w_{t+1}=w_t+\eta\,(y_t-\hat y_t)x_t
 $$
 
 ### 变量解释

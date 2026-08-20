@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = satisfied_constraints / total_constraints
+S(y)=\frac1J\sum_{j=1}^{J}\mathbf 1_{\{c_j(y)=1\}}
 $$
 
 ### 变量解释

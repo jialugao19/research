@@ -101,7 +101,7 @@ Bayes Theorem 的价值在于给模糊问题划出可推理的边界。定义清
 ### 表达方式
 
 $$
-P(A\mid B)=\frac{P(A\cap B)}{P(B)}
+\Pr(A\mid B)=\frac{\Pr(A\cap B)}{\Pr(B)},\qquad \Pr(B)>0
 $$
 
 ### 变量解释
@@ -124,7 +124,7 @@ $$
 推导从条件概率定义开始：先写出交集概率，再替换成似然和先验。
 
 $$
-P(A\cap B)=P(B\mid A)P(A)\Rightarrow P(A\mid B)=\frac{P(B\mid A)P(A)}{P(B)}
+\Pr(A\mid B)=\frac{\Pr(B\mid A)\Pr(A)}{\Pr(B)}=\frac{\Pr(B\mid A)\Pr(A)}{\sum_i\Pr(B\mid A_i)\Pr(A_i)}
 $$
 
 这一步把后验写成先验乘以似然再归一化，因此证据越符合假设，后验越容易上升。

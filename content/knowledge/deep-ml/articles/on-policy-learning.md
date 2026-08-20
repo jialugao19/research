@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-data ~ pi_theta, update pi_theta
+(S_t,A_t)\sim d^{\pi_\theta}(s)\pi_\theta(a\mid s)
 $$
 
 ### 变量解释

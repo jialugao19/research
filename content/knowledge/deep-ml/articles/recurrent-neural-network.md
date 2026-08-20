@@ -102,7 +102,7 @@ RNN 像一边阅读一边做笔记。每读入一个 token，就更新一次内�
 ### 表达方式
 
 $$
-h_t = f(Wx_t + Uh_{t-1} + b)
+h_t=\phi(W_{xh}x_t+W_{hh}h_{t-1}+b_h),\qquad y_t=W_{hy}h_t+b_y
 $$
 
 ### 变量解释

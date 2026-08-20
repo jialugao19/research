@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-r_norm = (r - mean) / std
+\tilde R_t=\frac{R_t-\hat\mu_R}{\sqrt{\hat\sigma_R^2+\varepsilon}}
 $$
 
 ### 变量解释

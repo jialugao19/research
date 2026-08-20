@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-component(v) = all nodes reachable from v
+C(v)=\{u\in V:\exists\text{ a path }v\leadsto u\}
 $$
 
 ### 变量解释

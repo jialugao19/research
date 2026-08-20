@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-each class has its own covariance matrix
+\delta_k(x)=-\frac12\log|\Sigma_k|-\frac12(x-\mu_k)^{\top}\Sigma_k^{-1}(x-\mu_k)+\log\pi_k
 $$
 
 ### 变量解释

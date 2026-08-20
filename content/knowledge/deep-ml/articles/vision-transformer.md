@@ -102,7 +102,7 @@ Vision Transformer 的表达能力来自模型结构，但泛化能力还取决�
 ### 表达方式
 
 $$
-image \rightarrow patch tokens \rightarrow transformer \rightarrow prediction
+Z_{\ell}^{\prime}=\operatorname{MSA}(\operatorname{LN}(Z_{\ell-1}))+Z_{\ell-1},\qquad Z_\ell=\operatorname{MLP}(\operatorname{LN}(Z_\ell^{\prime}))+Z_\ell^{\prime}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-f(tx + (1-t)y) \le t f(x) + (1-t) f(y)
+f(tx+(1-t)y)\le tf(x)+(1-t)f(y),\qquad t\in[0,1]
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-grad = d loss / d parameter
+g_\theta=\nabla_\theta L(f_\theta(x),y)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y = gate \cdot  a + (1-gate) \cdot  b
+y=g\odot a+(1-g)\odot b,\qquad g=\sigma(Wx+c)
 $$
 
 ### 变量解释

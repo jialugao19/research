@@ -94,7 +94,7 @@ Transformer 需要知道 token 顺序。RoPE 用旋转形式表达位置关系�
 ### 表达方式
 
 $$
-rotate q and k by position-dependent angles
+\operatorname{RoPE}(x_m,m)=R_mx_m,\qquad R_m^{\top}R_n=R_{n-m}
 $$
 
 ### 变量解释

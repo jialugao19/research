@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-memory_read = aggregate(nearby_address_cells)
+\hat v(q)=\operatorname{sgn}\!\left(\sum_{i:\,d_H(a_i,q)\le r}m_i\right)
 $$
 
 ### 变量解释

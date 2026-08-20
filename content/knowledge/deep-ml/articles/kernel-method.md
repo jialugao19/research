@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-K(x, z) = phi(x)^T phi(z)
+K(x,z)=\langle\phi(x),\phi(z)\rangle_{\mathcal H}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-compressed_context = compress(original_context, budget)
+z=C_\phi(x_{1:T};B),\qquad |z|\le B
 $$
 
 ### 变量解释

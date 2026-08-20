@@ -102,7 +102,7 @@ Classifier-Free Guidance 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-pred = uncond + s \cdot  (cond - uncond)
+\hat\varepsilon_{\mathrm{cfg}}(x_t,c)=\varepsilon_\theta(x_t,\varnothing)+s\left[\varepsilon_\theta(x_t,c)-\varepsilon_\theta(x_t,\varnothing)\right]
 $$
 
 ### 变量解释

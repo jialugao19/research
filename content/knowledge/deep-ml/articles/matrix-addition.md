@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-C_ij = A_ij + B_ij
+C=A+B,\qquad C_{ij}=A_{ij}+B_{ij}
 $$
 
 ### 变量解释

@@ -100,7 +100,7 @@ references:
 ### 表达方式
 
 $$
-accept with probability p(x)/(M q(x))
+X\sim q,\quad U\sim\operatorname{Unif}(0,1),\qquad \text{accept }X\iff U\le\frac{p(X)}{M q(X)},\quad Mq(x)\ge p(x)
 $$
 
 ### 变量解释

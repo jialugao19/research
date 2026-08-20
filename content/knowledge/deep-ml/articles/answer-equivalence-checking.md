@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-is_correct = equivalent(predicted, reference)
+\operatorname{correct}(\hat a,a)=\mathbf 1_{\{\operatorname{normalize}(\hat a)\equiv\operatorname{normalize}(a)\}}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-tokens = select_subset(tokens, max_context)
+I^{\star}=\underset{I\subseteq\{1,\ldots,T\},\,|I|\le L}{\operatorname{arg\,max}}\ \sum_{i\in I}r_i,\qquad x^{\prime}=x_I
 $$
 
 ### 变量解释

@@ -101,7 +101,7 @@ Random Forest 的价值在于给模糊问题划出可推理的边界。定义清
 ### 表达方式
 
 $$
-\hat y=\operatorname{aggregate}_{b=1}^{B} T_b(x)
+\hat y(x)=\frac1B\sum_{b=1}^{B}T_b(x)\ \text{(regression)},\qquad \hat c(x)=\operatorname{mode}\{T_b(x)\}_{b=1}^{B}\ \text{(classification)}
 $$
 
 ### 变量解释
@@ -124,7 +124,7 @@ $$
 推导从 Random Forest 的标准定义出发，保留会改变输出解释的变量。
 
 $$
-\operatorname{Var}\left(\frac{1}{B}\sum_b T_b\right)=\rho\sigma^2+\frac{1-\rho}{B}\sigma^2
+\operatorname{Var}\!\left(\frac1B\sum_{b=1}^{B}T_b\right)=\rho\sigma^2+\frac{1-\rho}{B}\sigma^2
 $$
 
 推导的结果要回到 Random Forest 的使用场景中解释，不能只停留在符号变形。

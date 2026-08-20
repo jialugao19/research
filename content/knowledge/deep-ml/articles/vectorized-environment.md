@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-batch_obs = VecEnv.step(batch_actions)
+\mathbf o_{t+1},\mathbf r_{t+1},\mathbf d_{t+1}=\operatorname{VecEnv.step}(\mathbf a_t)
 $$
 
 ### 变量解释

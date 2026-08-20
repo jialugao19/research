@@ -102,7 +102,7 @@ Bradley-Terry Model 的表达能力来自模型结构，但泛化能力还取决
 ### 表达方式
 
 $$
-P(i beats j)=sigmoid(s_i-s_j)
+\Pr(i\succ j)=\frac{e^{s_i}}{e^{s_i}+e^{s_j}}=\sigma(s_i-s_j)
 $$
 
 ### 变量解释

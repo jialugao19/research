@@ -94,7 +94,7 @@ RL 训练不稳定，单看最终回报很难知道哪里出了问题。
 ### 表达方式
 
 $$
-diagnosis = inspect(metrics, rollouts, seeds)
+\widehat J_N=\frac1N\sum_{i=1}^{N}\sum_{t=0}^{T_i-1}\gamma^tR_{t+1}^{(i)}
 $$
 
 ### 变量解释

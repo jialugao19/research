@@ -83,7 +83,7 @@ references:
 ### 表达方式
 
 $$
-Dice = 2TP / (2TP + FP + FN)
+\operatorname{Dice}=\frac{2\operatorname{TP}}{2\operatorname{TP}+\operatorname{FP}+\operatorname{FN}}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-A(s,a) = Q(s,a) - V(s)
+A_\pi(s,a)=Q_\pi(s,a)-V_\pi(s)
 $$
 
 ### 变量解释

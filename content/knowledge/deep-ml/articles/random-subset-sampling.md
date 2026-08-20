@@ -87,7 +87,7 @@ references:
 ### 表达方式
 
 $$
-subset = sample(data, size=m)
+S\sim\operatorname{Unif}\!\left(\{A\subseteq D:|A|=m\}\right)
 $$
 
 ### 变量解释

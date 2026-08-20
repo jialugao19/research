@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-next_state = resolve(state, action, rules)
+s_{t+1}=T(s_t,a_t;r),\qquad a_t\in\mathcal A(s_t)
 $$
 
 ### 变量解释

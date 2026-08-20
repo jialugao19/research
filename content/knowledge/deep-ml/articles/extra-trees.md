@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-ensemble prediction = average(tree_predictions)
+\hat f(x)=\frac1B\sum_{b=1}^{B}T_b(x),\qquad \tau_{bj}\sim\operatorname{Unif}(a_j,b_j)
 $$
 
 ### 变量解释

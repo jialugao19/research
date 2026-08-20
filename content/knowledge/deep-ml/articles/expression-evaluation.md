@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-tokens \rightarrow parse tree \rightarrow value
+\operatorname{eval}(u)=\begin{cases}\operatorname{value}(u),&u\text{ is a leaf},\\\operatorname{op}_u(\operatorname{eval}(u_L),\operatorname{eval}(u_R)),&\text{otherwise},\end{cases}
 $$
 
 ### 变量解释

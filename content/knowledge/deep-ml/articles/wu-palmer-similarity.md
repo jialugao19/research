@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sim = 2 \cdot  depth(lcs) / (depth(c1)+depth(c2))
+\operatorname{sim}_{\mathrm{WP}}(c_1,c_2)=\frac{2\,\operatorname{depth}(\operatorname{lcs}(c_1,c_2))}{\operatorname{depth}(c_1)+\operatorname{depth}(c_2)}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x_{t-1} = denoise(x_t, t)
+x_{t-1}=\mu_\theta(x_t,t)+\sigma_t z,\qquad z\sim\mathcal N(0,I)
 $$
 
 ### 变量解释

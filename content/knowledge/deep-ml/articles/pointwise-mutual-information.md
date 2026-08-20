@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-PMI(x,y)=log p(x,y)/(p(x)p(y))
+\operatorname{PMI}(x,y)=\log\frac{p(x,y)}{p(x)p(y)}
 $$
 
 ### 变量解释

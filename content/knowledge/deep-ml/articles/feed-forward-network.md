@@ -102,7 +102,7 @@ Feed-Forward Network 的表达能力来自模型结构，但泛化能力还取�
 ### 表达方式
 
 $$
-FFN(x) = W2 activation(W1 x + b1) + b2
+\operatorname{FFN}(x)=W_2\phi(W_1x+b_1)+b_2
 $$
 
 ### 变量解释

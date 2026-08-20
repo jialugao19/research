@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = -y log(p) - (1-y) log(1-p)
+\ell(y,p)=-y\log p-(1-y)\log(1-p),\qquad 0<p<1
 $$
 
 ### 变量解释

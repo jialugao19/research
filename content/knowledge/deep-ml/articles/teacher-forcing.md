@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-decoder_input_t = target_{t-1}
+h_t=f_\theta(h_{t-1},y_{t-1}^{\star},c),\qquad \Pr(\text{teacher input at }t)=p_{\mathrm{TF}}
 $$
 
 ### 变量解释

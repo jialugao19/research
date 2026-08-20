@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-answer = solve(input, intermediate_steps)
+p_\theta(z_{1:K},y\mid x)=\left(\prod_{k=1}^{K}p_\theta(z_k\mid x,z_{<k})\right)p_\theta(y\mid x,z_{1:K})
 $$
 
 ### 变量解释

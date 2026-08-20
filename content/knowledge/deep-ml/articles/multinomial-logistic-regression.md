@@ -102,7 +102,7 @@ Multinomial Logistic Regression 的表达能力来自模型结构，但泛化能
 ### 表达方式
 
 $$
-p(y=k|x) = softmax(Wx+b)_k
+\Pr(y=k\mid x)=\frac{\exp(w_k^{\top}x+b_k)}{\sum_{j=1}^{K}\exp(w_j^{\top}x+b_j)}
 $$
 
 ### 变量解释

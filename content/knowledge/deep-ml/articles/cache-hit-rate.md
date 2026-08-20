@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-hit_rate = cache_hits / total_requests
+H=\frac{N_{\mathrm{hit}}}{N_{\mathrm{hit}}+N_{\mathrm{miss}}}
 $$
 
 ### 变量解释

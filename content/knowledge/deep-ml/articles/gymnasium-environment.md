@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-obs, reward, done = env.step(action)
+(o_{t+1},r_{t+1},d_{t+1},\iota_{t+1})=\operatorname{step}(a_t)
 $$
 
 ### 变量解释

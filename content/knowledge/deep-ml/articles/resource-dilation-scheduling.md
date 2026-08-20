@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-allocated_resource = base_resource \cdot  dilation_factor
+c_t=c_0d_t,\qquad d_t\ge1
 $$
 
 ### 变量解释

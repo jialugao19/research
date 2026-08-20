@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-priority(s)=abs(predicted_value_change)
+p(s,a)=\left|R_{t+1}+\gamma\max_{a^{\prime}}Q(S_{t+1},a^{\prime})-Q(s,a)\right|
 $$
 
 ### 变量解释

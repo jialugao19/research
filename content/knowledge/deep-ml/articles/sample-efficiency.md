@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-performance per environment step
+\operatorname{SE}(N)=\frac{J(\pi_N)-J(\pi_0)}{N_{\mathrm{env}}}
 $$
 
 ### 变量解释

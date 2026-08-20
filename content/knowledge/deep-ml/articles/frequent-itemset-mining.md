@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-support(itemset) = count(itemset) / total_transactions
+\operatorname{supp}(A)=\frac1N\sum_{i=1}^{N}\mathbf 1_{\{A\subseteq T_i\}}
 $$
 
 ### 变量解释

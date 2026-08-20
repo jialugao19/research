@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-NLL = - log p(y|x)
+\mathcal L_{\mathrm{NLL}}(\theta)=-\sum_{i=1}^{n}\log p_\theta(y_i\mid x_i)
 $$
 
 ### 变量解释

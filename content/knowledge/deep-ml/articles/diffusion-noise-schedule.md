@@ -102,7 +102,7 @@ Diffusion Noise Schedule 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-x_t = sqrt(alpha_t) x_0 + sqrt(1-alpha_t) epsilon
+x_t=\sqrt{\bar\alpha_t}\,x_0+\sqrt{1-\bar\alpha_t}\,\varepsilon,\qquad \varepsilon\sim\mathcal N(0,I)
 $$
 
 ### 变量解释

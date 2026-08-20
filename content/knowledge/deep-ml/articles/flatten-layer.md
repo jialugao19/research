@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-shape (N,C,H,W) \rightarrow (N,C\cdot H\cdot W)
+X\in\mathbb R^{N\times C\times H\times W}\longmapsto \operatorname{reshape}(X)\in\mathbb R^{N\times(C H W)}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-fused = combine(feature_low, feature_high)
+z=\phi\!\left(\operatorname{concat}(F_{\mathrm{low}},\operatorname{up}(F_{\mathrm{high}}))\right)
 $$
 
 ### 变量解释

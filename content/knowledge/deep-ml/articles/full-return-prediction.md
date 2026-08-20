@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-G_t = sum_k gamma^k r_{t+k+1}
+G_t=\sum_{k=0}^{T-t-1}\gamma^kR_{t+k+1}
 $$
 
 ### 变量解释

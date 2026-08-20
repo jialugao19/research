@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-parallelism = data x tensor x pipeline x expert
+P=P_{\mathrm{data}}P_{\mathrm{tensor}}P_{\mathrm{pipeline}}P_{\mathrm{expert}}
 $$
 
 ### 变量解释

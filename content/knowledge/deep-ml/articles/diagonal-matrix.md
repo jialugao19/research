@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-D_ij = 0 when i \ne j
+D_{ij}=0\quad(i\ne j),\qquad D=\operatorname{diag}(d_1,\ldots,d_n)
 $$
 
 ### 变量解释

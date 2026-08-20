@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-P(a\leX\leb)=integral_a^b f(x) dx
+\Pr(a\le X\le b)=\int_a^b f_X(x)\,dx,\qquad f_X(x)\ge0,\quad \int_{-\infty}^{\infty}f_X(x)\,dx=1
 $$
 
 ### 变量解释

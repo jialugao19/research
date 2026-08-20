@@ -137,7 +137,7 @@ Attention Mechanism 的表达能力来自模型结构，但泛化能力还取决
 ### 表达方式
 
 $$
-\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+\operatorname{Attention}(Q,K,V)=\operatorname{softmax}\!\left(\frac{QK^{\top}}{\sqrt{d_k}}\right)V
 $$
 
 ### 变量解释
@@ -160,7 +160,7 @@ Q 决定当前要找什么，K 决定每个位置能被怎样匹配，V 是被�
 推导先计算 query 与 key 的相似度，再用 softmax 把分数变成权重。
 
 $$
-score_{ij}=\frac{q_i^\top k_j}{\sqrt{d_k}},\quad weight_{ij}=\operatorname{softmax}(score_i)_j
+e_{ij}=\frac{q_i^{\top}k_j}{\sqrt{d_k}},\qquad \alpha_{ij}=\frac{e^{e_{ij}}}{\sum_{\ell}e^{e_{i\ell}}},\qquad o_i=\sum_j\alpha_{ij}v_j
 $$
 
 softmax 权重把相似度变成可加权的信息路由，V 则承载真正被汇聚的内容。

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-node = (value, next)
+\operatorname{node}_i=(v_i,p_{i+1}),\qquad p_{i+1}\in\{\varnothing,\operatorname{addr}(\operatorname{node}_{i+1})\}
 $$
 
 ### 变量解释

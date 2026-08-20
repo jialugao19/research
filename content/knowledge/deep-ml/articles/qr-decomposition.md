@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-A = Q R
+A=QR,\qquad Q^{\top}Q=I
 $$
 
 ### 变量解释

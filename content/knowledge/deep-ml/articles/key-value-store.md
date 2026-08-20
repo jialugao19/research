@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-value = store[key]
+\operatorname{get}(k)=V[h(k)],\qquad \mathbb E[T_{\mathrm{get}}]=O(1)\ \text{for a hash table}
 $$
 
 ### 变量解释

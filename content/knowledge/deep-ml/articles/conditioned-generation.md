@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sample x from p(x | condition)
+x\sim p_\theta(x\mid c)
 $$
 
 ### 变量解释

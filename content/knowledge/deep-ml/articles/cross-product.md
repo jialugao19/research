@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-||a x b|| = ||a|| ||b|| sin(theta)
+\lVert a\times b\rVert_2=\lVert a\rVert_2\lVert b\rVert_2\sin\theta
 $$
 
 ### 变量解释

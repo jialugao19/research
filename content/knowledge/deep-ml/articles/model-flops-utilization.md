@@ -102,7 +102,7 @@ Model FLOPs Utilization 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-MFU = model_FLOPs_per_second / hardware_peak_FLOPs
+\operatorname{MFU}=\frac{N_{\mathrm{model\,FLOP}}/T_{\mathrm{step}}}{P_{\mathrm{hardware\,peak}}}
 $$
 
 ### 变量解释

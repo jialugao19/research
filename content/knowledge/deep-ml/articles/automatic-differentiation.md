@@ -151,8 +151,7 @@ references:
 设中间变量 (y=g(x))、标量输出 (L=f(y))。反向传播先收到上游梯度 (\partial L/\partial y)，再与本地 Jacobian 组合：
 
 $$
-\frac{\partial L}{\partial x}
-=\frac{\partial L}{\partial y}\frac{\partial y}{\partial x}
+\bar x=\bar y\,\frac{\partial y}{\partial x},\qquad \bar y=\frac{\partial L}{\partial y},\quad \bar x=\frac{\partial L}{\partial x}
 $$
 
 框架通常不显式构造完整 Jacobian，而是直接计算 vector--Jacobian product。若一个张量沿多条分支影响损失，各路径贡献会在该节点相加。这样既复用上游梯度，也避免为每个参数重新执行完整前向。

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-effective_weight per class can offset imbalance
+w_k=\frac{n}{K n_k},\qquad \mathcal L=\frac1n\sum_{i=1}^{n}w_{y_i}\ell_i
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ PSNR 看像素误差。SSIM 更关注结构相似度。
 ### 表达方式
 
 $$
-PSNR = 10 log10(MAX^2 / MSE)
+\operatorname{PSNR}=10\log_{10}\frac{L^2}{\operatorname{MSE}},\qquad \operatorname{SSIM}(x,y)=\frac{(2\mu_x\mu_y+C_1)(2\sigma_{xy}+C_2)}{(\mu_x^2+\mu_y^2+C_1)(\sigma_x^2+\sigma_y^2+C_2)}
 $$
 
 ### 变量解释

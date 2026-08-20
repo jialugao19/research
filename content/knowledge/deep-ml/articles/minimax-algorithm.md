@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-V(s)=max_a min_b V(s,a,b)
+V(s)=\max_{a\in\mathcal A(s)}\min_{b\in\mathcal B(s,a)}V(T(s,a,b))
 $$
 
 ### 变量解释

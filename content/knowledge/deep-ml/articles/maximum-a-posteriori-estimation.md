@@ -94,7 +94,7 @@ MLE 只看数据似然。MAP 还能加入先验知识。
 ### 表达方式
 
 $$
-theta_MAP = argmax_theta p(D|theta)p(theta)
+\hat\theta_{\mathrm{MAP}}=\underset{\theta}{\operatorname{arg\,max}}\ p(\theta\mid D)=\underset{\theta}{\operatorname{arg\,max}}\left[\log p(D\mid\theta)+\log p(\theta)\right]
 $$
 
 ### 变量解释

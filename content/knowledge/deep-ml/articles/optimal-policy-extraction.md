@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-pi(s)=argmax_a Q(s,a)
+\pi^{\star}(s)\in\underset{a}{\operatorname{arg\,max}}\ Q^{\star}(s,a)
 $$
 
 ### 变量解释

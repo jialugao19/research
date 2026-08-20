@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-G^lambda = weighted sum of n-step returns
+G_t^{\lambda}=(1-\lambda)\sum_{n=1}^{T-t-1}\lambda^{n-1}G_{t:t+n}+\lambda^{T-t-1}G_t
 $$
 
 ### 变量解释

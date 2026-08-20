@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-performance \le min(peak_flops, bandwidth \cdot  arithmetic_intensity)
+P\le\min\!\left(P_{\mathrm{peak}},\,B_{\mathrm{mem}}I\right)
 $$
 
 ### 变量解释

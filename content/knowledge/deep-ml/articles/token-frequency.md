@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-freq(token) = count(token) / total_tokens
+\hat p(v)=\frac{\sum_{t=1}^{T}\mathbf 1_{\{x_t=v\}}}{T}
 $$
 
 ### 变量解释

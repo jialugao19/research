@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-usable_large_block \le total_free_memory
+F=1-\frac{M_{\mathrm{largest\,free\,block}}}{M_{\mathrm{total\,free}}}
 $$
 
 ### 变量解释

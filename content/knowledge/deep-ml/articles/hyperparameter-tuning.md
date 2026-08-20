@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-best_config = argmax validation_score(config)
+\lambda^{\star}=\underset{\lambda\in\Lambda}{\operatorname{arg\,min}}\ \widehat R_{\mathrm{val}}\!\left(\hat\theta(\lambda)\right)
 $$
 
 ### 变量解释

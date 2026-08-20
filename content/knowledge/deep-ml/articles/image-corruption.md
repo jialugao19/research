@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-corrupted_image = transform(clean_image, severity)
+\tilde X=T_c(X;s),\qquad c\in\mathcal C,\quad s\in\{1,\ldots,S\}
 $$
 
 ### 变量解释

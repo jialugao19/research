@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = mean_reward + confidence_bonus
+A_t=\underset{a}{\operatorname{arg\,max}}\left[\hat\mu_a+c\sqrt{\frac{\log t}{N_t(a)}}\right]
 $$
 
 ### 变量解释

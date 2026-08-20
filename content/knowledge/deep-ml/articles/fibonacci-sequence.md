@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-F(n)=F(n-1)+F(n-2)
+F_0=0,\quad F_1=1,\quad F_n=F_{n-1}+F_{n-2}\ \ (n\ge2)
 $$
 
 ### 变量解释

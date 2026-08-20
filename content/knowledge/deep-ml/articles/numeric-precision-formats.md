@@ -83,7 +83,7 @@ FP32、FP16、BF16、FP8 等数值格式在模型训练和推理中的表示方�
 ### 表达方式
 
 $$
-memory = num_values \cdot  bits_per_value
+M=N\frac{b}{8}\ \text{bytes},\qquad N=\text{number of stored values},\quad b=\text{bits per value}
 $$
 
 ### 变量解释

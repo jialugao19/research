@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-Gini = 1 - sum_k p_k^2
+G(S)=1-\sum_{k=1}^{K}p_k^2,\qquad p_k=\frac1{|S|}\sum_{i\in S}\mathbf 1_{\{y_i=k\}}
 $$
 
 ### 变量解释

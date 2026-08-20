@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-A^{-1} A = I
+AA^{-1}=A^{-1}A=I,\qquad \det(A)\ne0
 $$
 
 ### 变量解释

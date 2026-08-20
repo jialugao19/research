@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-old_task_score drops after new_task_training
+\Delta R_{\mathrm{old}}=R_{\mathrm{old}}(\theta_{\mathrm{after}})-R_{\mathrm{old}}(\theta_{\mathrm{before}})
 $$
 
 ### 变量解释

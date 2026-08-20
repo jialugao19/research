@@ -87,7 +87,7 @@ references:
 ### 表达方式
 
 $$
-loss = mean(cross_entropy(logits_t, target_t))
+\mathcal L=-\frac{1}{\sum_tm_t}\sum_{t=1}^{T}m_t\log p_\theta(y_t\mid y_{<t},x)
 $$
 
 ### 变量解释

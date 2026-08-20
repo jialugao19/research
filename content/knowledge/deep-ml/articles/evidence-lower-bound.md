@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-log p(x) \ge E_q[log p(x,z)-log q(z)]
+\log p(x)\ge\mathcal L(q)=\mathbb{E}_{q(z)}\!\left[\log p(x,z)-\log q(z)\right]
 $$
 
 ### 变量解释

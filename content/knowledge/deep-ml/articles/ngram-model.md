@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-P(w_t | w_{t-n+1}, ..., w_{t-1})
+p(w_{1:T})\approx\prod_{t=1}^{T}p(w_t\mid w_{\max(1,t-n+1):t-1})
 $$
 
 ### 变量解释

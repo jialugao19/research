@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-merged = left.merge(right, on='key', how='left')
+R\bowtie_k S=\{r\cup s:r\in R,\ s\in S,\ r.k=s.k\}
 $$
 
 ### 变量解释

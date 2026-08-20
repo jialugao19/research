@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-pose = f(joint_angles)
+T_0^n(q)=\prod_{i=1}^{n}T_{i-1}^{i}(q_i)
 $$
 
 ### 变量解释

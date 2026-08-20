@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-R_new = R_old + K \cdot  (score - expected)
+R_i^{\prime}=R_i+K(S_i-E_i),\qquad E_i=\frac{1}{1+10^{(R_j-R_i)/400}}
 $$
 
 ### 变量解释

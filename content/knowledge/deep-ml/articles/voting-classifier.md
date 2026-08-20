@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prediction = majority_vote(model_i(x))
+\hat y(x)=\underset{k}{\operatorname{arg\,max}}\ \sum_{b=1}^{B}w_b\mathbf 1_{\{h_b(x)=k\}}
 $$
 
 ### 变量解释

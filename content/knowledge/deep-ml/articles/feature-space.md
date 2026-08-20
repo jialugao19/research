@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x \rightarrow phi(x) in feature space
+\phi:\mathcal X\to\mathcal H,\qquad x\mapsto\phi(x)
 $$
 
 ### 变量解释

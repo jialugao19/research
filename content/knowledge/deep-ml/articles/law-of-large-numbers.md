@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sample_mean \rightarrow E[X] as n grows
+\bar X_n=\frac1n\sum_{i=1}^{n}X_i\xrightarrow{\,P\,}\mathbb{E}[X]\qquad(n\to\infty)
 $$
 
 ### 变量解释

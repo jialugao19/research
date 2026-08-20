@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-D_KL(P||Q) = sum_x P(x) log(P(x)/Q(x))
+D_{\mathrm{KL}}(P\Vert Q)=\sum_{x\in\mathcal X}P(x)\log\frac{P(x)}{Q(x)}
 $$
 
 ### 变量解释

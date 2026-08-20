@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-V(s) \leftarrow V(s) + alpha [r + gamma V(s') - V(s)]
+V(S_t)\leftarrow V(S_t)+\alpha\left[R_{t+1}+\gamma V(S_{t+1})-V(S_t)\right]
 $$
 
 ### 变量解释

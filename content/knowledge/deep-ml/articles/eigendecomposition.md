@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-Av = lambda v
+Av_i=\lambda_i v_i,\qquad A=V\Lambda V^{-1}\ \text{when }A\text{ is diagonalizable}
 $$
 
 ### 变量解释

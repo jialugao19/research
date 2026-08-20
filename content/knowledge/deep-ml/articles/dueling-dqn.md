@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-Q(s,a)=V(s)+A(s,a)-mean_a A(s,a)
+Q(s,a)=V(s)+A(s,a)-\frac1{|\mathcal A|}\sum_{a^{\prime}\in\mathcal A}A(s,a^{\prime})
 $$
 
 ### 变量解释

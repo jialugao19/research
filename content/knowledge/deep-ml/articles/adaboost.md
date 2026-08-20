@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-F(x)=sum_t alpha_t h_t(x)
+F_T(x)=\sum_{t=1}^{T}\alpha_t h_t(x),\qquad \alpha_t=\frac12\log\frac{1-\varepsilon_t}{\varepsilon_t}
 $$
 
 ### 变量解释

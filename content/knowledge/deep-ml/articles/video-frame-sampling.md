@@ -87,7 +87,7 @@ references:
 ### 表达方式
 
 $$
-selected_frames = sample(video, stride or count)
+i_j=\left\lfloor\frac{j(T-1)}{K-1}\right\rfloor,\qquad j=0,\ldots,K-1
 $$
 
 ### 变量解释

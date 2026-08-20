@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-cue \rightarrow retrieved pattern
+\hat\xi(q)=\underset{\xi^\mu}{\operatorname{arg\,max}}\ \langle q,\xi^\mu\rangle
 $$
 
 ### 变量解释

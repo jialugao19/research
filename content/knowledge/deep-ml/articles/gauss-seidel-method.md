@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x_i^{k+1} uses x_1^{k+1}...x_{i-1}^{k+1}
+x_i^{(k+1)}=\frac{1}{a_{ii}}\!\left(b_i-\sum_{j<i}a_{ij}x_j^{(k+1)}-\sum_{j>i}a_{ij}x_j^{(k)}\right)
 $$
 
 ### 变量解释

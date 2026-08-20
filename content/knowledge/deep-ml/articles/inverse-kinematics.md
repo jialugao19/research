@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-find q such that f(q)=target_pose
+q^{\star}=\underset{q\in\mathcal Q}{\operatorname{arg\,min}}\ \lVert f(q)-x_{\mathrm{target}}\rVert_W^2
 $$
 
 ### 变量解释

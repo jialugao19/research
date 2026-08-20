@@ -102,7 +102,7 @@ Model Monitoring 的表达能力来自模型结构，但泛化能力还取决于
 ### 表达方式
 
 $$
-alert when metric crosses threshold
+A_t=\mathbf 1_{\{m_t<L_t\ \lor\ m_t>U_t\}}
 $$
 
 ### 变量解释

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-F(x)=P(X\lex)
+F_X(x)=\Pr(X\le x),\qquad F_X(x)=\int_{-\infty}^{x}f_X(t)\,dt\ \text{for continuous }X
 $$
 
 ### 变量解释

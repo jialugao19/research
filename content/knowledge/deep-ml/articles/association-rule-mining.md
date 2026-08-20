@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-confidence(A\rightarrowB) = support(A and B) / support(A)
+\operatorname{conf}(A\Rightarrow B)=\frac{\operatorname{supp}(A\cup B)}{\operatorname{supp}(A)},\qquad \operatorname{supp}(A)>0
 $$
 
 ### 变量解释

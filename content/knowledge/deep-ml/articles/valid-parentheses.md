@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-push opening, pop matching closing
+b_t=b_{t-1}+\mathbf 1_{\{x_t=(\}}-\mathbf 1_{\{x_t=)\}},\qquad b_t\ge0,\quad b_T=0
 $$
 
 ### 变量解释

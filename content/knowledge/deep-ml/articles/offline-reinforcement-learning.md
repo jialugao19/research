@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-learn policy from fixed dataset D
+\hat\pi=\underset{\pi}{\operatorname{arg\,max}}\ J(\pi)\qquad\text{using only }D=\{(s_i,a_i,r_i,s_i^{\prime})\}_{i=1}^{n}
 $$
 
 ### 变量解释

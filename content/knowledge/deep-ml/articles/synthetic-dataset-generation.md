@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x, y = generator(seed, parameters)
+(X,y)\sim P_\psi,\qquad \psi\ \text{controls the data-generating process}
 $$
 
 ### 变量解释

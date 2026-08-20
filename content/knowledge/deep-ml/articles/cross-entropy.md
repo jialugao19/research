@@ -102,7 +102,7 @@ Cross Entropy 的价值在于给模糊问题划出可推理的边界。定义清
 ### 表达方式
 
 $$
-H(p,q)=-\sum_i p_i\log q_i
+H(p,q)=-\sum_{i\in\mathcal X}p_i\log q_i
 $$
 
 ### 变量解释

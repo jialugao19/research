@@ -95,7 +95,7 @@ Softmax 接收的是一整组相对分数。指数会放大分数差异，归一
 ### 表达方式
 
 $$
-softmax(x_i) = exp(x_i) / sum_j exp(x_j)
+\operatorname{softmax}(z)_i=\frac{e^{z_i}}{\sum_{j=1}^{K}e^{z_j}},\qquad i=1,\ldots,K
 $$
 
 ### 变量解释

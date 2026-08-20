@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-class = decision_rule(model_score(x))
+\hat y(x)=\underset{k\in\mathcal Y}{\operatorname{arg\,max}}\ s_k(x)
 $$
 
 ### 变量解释

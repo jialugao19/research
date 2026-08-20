@@ -94,7 +94,7 @@ encoder 像阅读理解。decoder 像根据理解写答案。
 ### 表达方式
 
 $$
-decoder_output = decoder(previous_tokens, encoder_states)
+h_{1:m}=\operatorname{Enc}_\phi(x_{1:m}),\qquad p_\theta(y_{1:T}\mid x)=\prod_{t=1}^{T}p_\theta(y_t\mid y_{<t},h_{1:m})
 $$
 
 ### 变量解释

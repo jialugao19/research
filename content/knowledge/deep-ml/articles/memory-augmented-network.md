@@ -102,7 +102,7 @@ Memory-Augmented Network 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-output = model(input, read(memory, query))
+r_t=\sum_{i=1}^{M}\alpha_{ti}m_i,\qquad \alpha_{ti}=\frac{\exp(s(q_t,m_i))}{\sum_{j=1}^{M}\exp(s(q_t,m_j))}
 $$
 
 ### 变量解释

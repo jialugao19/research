@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = supervised_loss + unsupervised_loss
+\mathcal L(\theta)=\frac1{|D_L|}\sum_{(x,y)\in D_L}\ell(f_\theta(x),y)+\lambda\frac1{|D_U|}\sum_{x\in D_U}\ell_U(f_\theta,x)
 $$
 
 ### 变量解释

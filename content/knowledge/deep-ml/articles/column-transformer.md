@@ -102,7 +102,7 @@ Column Transformer 的表达能力来自模型结构，但泛化能力还取决�
 ### 表达方式
 
 $$
-features = concat(transformer_j(columns_j))
+z=\operatorname{concat}_{j=1}^{m}\phi_j\!\left(X_{C_j}\right)
 $$
 
 ### 变量解释

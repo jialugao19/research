@@ -94,7 +94,7 @@ GPU 显存占满不代表算力被用满。利用率能帮助定位瓶颈。
 ### 表达方式
 
 $$
-utilization = active_time / total_time
+U_{\mathrm{GPU}}=\frac{T_{\mathrm{active}}}{T_{\mathrm{wall}}}
 $$
 
 ### 变量解释

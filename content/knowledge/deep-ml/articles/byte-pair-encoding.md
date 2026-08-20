@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-merge most frequent pair until vocab size reached
+(u^{\star},v^{\star})=\underset{(u,v)}{\operatorname{arg\,max}}\ \operatorname{count}(uv),\qquad uv\mapsto w_{uv}
 $$
 
 ### 变量解释

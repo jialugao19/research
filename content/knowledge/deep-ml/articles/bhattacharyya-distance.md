@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-D_B = -ln(sum sqrt(p_i q_i))
+D_B(p,q)=-\log\!\left(\sum_i\sqrt{p_iq_i}\right)
 $$
 
 ### 变量解释

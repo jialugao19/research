@@ -94,7 +94,7 @@ RL 样本采集慢。并行策略能提高环境交互吞吐。
 ### 表达方式
 
 $$
-collect trajectories from many workers in parallel
+\widehat g=\frac1P\sum_{p=1}^{P}\frac1{|D_p|}\sum_{\tau\in D_p}\widehat g(\tau)
 $$
 
 ### 变量解释

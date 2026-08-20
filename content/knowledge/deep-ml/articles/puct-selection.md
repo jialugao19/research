@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = Q + c \cdot  P \cdot  sqrt(N_parent) / (1 + N_child)
+a^{\star}=\underset{a}{\operatorname{arg\,max}}\left[Q(s,a)+c_{\mathrm{puct}}P(s,a)\frac{\sqrt{\sum_bN(s,b)}}{1+N(s,a)}\right]
 $$
 
 ### 变量解释

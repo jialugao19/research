@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-s[i] == s[n-1-i] for all i
+s_i=s_{n-1-i}\qquad\text{for }i=0,\ldots,\left\lfloor\frac{n-1}{2}\right\rfloor
 $$
 
 ### 变量解释

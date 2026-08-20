@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-answer = parse(final_answer_region)
+\hat a=\operatorname{parse}\!\left(y_{i:j}:y_{i:j}\in\mathcal R_{\mathrm{final}}\right)
 $$
 
 ### 变量解释

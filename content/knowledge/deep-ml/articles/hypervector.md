@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-composite = bind(a, b) plus bundle(c)
+h=\bigoplus_{i=1}^{n}\bigl(r_i\otimes v_i\bigr)
 $$
 
 ### 变量解释

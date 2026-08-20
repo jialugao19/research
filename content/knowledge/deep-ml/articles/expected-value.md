@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-E[X] = sum_x x P(X=x)
+\mathbb{E}[X]=\sum_x x\,p_X(x)\quad\text{or}\quad \mathbb{E}[X]=\int_{-\infty}^{\infty}x f_X(x)\,dx
 $$
 
 ### 变量解释

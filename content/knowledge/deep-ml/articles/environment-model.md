@@ -100,7 +100,7 @@ Environment Model 的表达能力来自模型结构，但泛化能力还取决�
 ### 表达方式
 
 $$
-model predicts p(s', r | s, a)
+(S_{t+1},R_{t+1})\sim p_\phi(s^{\prime},r\mid S_t,A_t)
 $$
 
 ### 变量解释

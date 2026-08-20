@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-s_{t+1}, r_t = simulator(s_t, a_t)
+S_{t+1}\sim P(\cdot\mid S_t,A_t),\qquad R_{t+1}=r(S_t,A_t,S_{t+1})
 $$
 
 ### 变量解释

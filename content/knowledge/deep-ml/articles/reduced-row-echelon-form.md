@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-A \rightarrow rref(A)
+R=E_k\cdots E_1A=\operatorname{rref}(A)
 $$
 
 ### 变量解释

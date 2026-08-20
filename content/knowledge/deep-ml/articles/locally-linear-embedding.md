@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-minimize reconstruction error in low-dimensional embedding
+\underset{Z}{\operatorname{minimize}}\ \sum_{i=1}^{n}\left\lVert z_i-\sum_j w_{ij}z_j\right\rVert_2^2,\qquad Z^{\top}\mathbf 1=0,\quad Z^{\top}Z=I
 $$
 
 ### 变量解释

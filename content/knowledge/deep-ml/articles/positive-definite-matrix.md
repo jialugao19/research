@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x^T A x > 0 for all nonzero x
+A=A^{\top},\qquad x^{\top}Ax>0\quad\text{for every }x\ne0
 $$
 
 ### 变量解释

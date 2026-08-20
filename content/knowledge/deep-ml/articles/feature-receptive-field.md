@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-response = feature(input_region)
+\mathcal R_{\ell}=\mathcal R_{\ell-1}+(k_\ell-1)\prod_{j=1}^{\ell-1}s_j
 $$
 
 ### 变量解释

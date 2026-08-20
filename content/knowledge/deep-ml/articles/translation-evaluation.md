@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-quality combines adequacy and fluency signals
+S_{\mathrm{MT}}=w_aS_{\mathrm{adequacy}}+w_fS_{\mathrm{fluency}},\qquad w_a+w_f=1
 $$
 
 ### 变量解释

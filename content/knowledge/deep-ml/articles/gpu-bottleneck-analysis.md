@@ -94,7 +94,7 @@ GPU 程序慢不一定是算法复杂度问题。瓶颈分析能指导优化方�
 ### 表达方式
 
 $$
-bottleneck = max limiting resource pressure
+P=\min\!\left(P_{\mathrm{compute}},B_{\mathrm{HBM}}I,B_{\mathrm{network}}I_{\mathrm{comm}}\right)
 $$
 
 ### 变量解释

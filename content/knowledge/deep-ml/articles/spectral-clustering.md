@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-cluster on eigenvectors of graph Laplacian
+L_{\mathrm{sym}}=I-D^{-1/2}WD^{-1/2},\qquad L_{\mathrm{sym}}u_k=\lambda_k u_k
 $$
 
 ### 变量解释

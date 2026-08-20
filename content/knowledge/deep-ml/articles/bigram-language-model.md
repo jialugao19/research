@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-p(x_t | x_{t-1})
+p(w_{1:T})=p(w_1)\prod_{t=2}^{T}p(w_t\mid w_{t-1})
 $$
 
 ### 变量解释

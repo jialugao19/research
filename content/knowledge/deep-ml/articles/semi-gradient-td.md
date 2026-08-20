@@ -94,7 +94,7 @@ TD 目标中包含下一状态估计。完整梯度会引入额外复杂性。
 ### 表达方式
 
 $$
-w \leftarrow w + alpha delta grad V_w(s)
+w_{t+1}=w_t+\alpha\delta_t\nabla_w\hat V_w(S_t),\qquad \delta_t=R_{t+1}+\gamma\hat V_w(S_{t+1})-\hat V_w(S_t)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-predicted_class = argmax logits
+\hat y(x)=\underset{k\in\{1,\ldots,K\}}{\operatorname{arg\,max}}\ s_k(x)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-weight \leftarrow weight + alpha \cdot  error \cdot  feature
+w_{t+1}=w_t+\alpha\,\delta_t\,x_t
 $$
 
 ### 变量解释

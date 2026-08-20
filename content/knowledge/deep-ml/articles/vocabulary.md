@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-token_id = vocab[token]
+V:\mathcal T\leftrightarrow\{0,1,\ldots,|\mathcal V|-1\}
 $$
 
 ### 变量解释

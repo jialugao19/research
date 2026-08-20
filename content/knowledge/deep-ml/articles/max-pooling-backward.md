@@ -94,7 +94,7 @@ pooling 会压缩空间信息。反向时要知道每个输出来自哪个输入
 ### 表达方式
 
 $$
-grad_input[argmax] += grad_output
+\frac{\partial L}{\partial x_j}=\sum_i\frac{\partial L}{\partial y_i}\,\mathbf 1_{\{j=\operatorname{arg\,max}_{k\in\mathcal W_i}x_k\}}
 $$
 
 ### 变量解释

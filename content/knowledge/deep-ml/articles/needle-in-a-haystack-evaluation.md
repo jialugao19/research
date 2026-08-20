@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = correct_retrievals / trials
+\operatorname{Recall}(L,p)=\frac1N\sum_{i=1}^{N}\mathbf 1_{\{\operatorname{retrieve}(x_i;L,p)=a_i\}}
 $$
 
 ### 变量解释

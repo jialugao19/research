@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-a = decoder(z_action)
+z_t\sim\pi_\theta(\cdot\mid s_t),\qquad a_t=d_\phi(z_t)
 $$
 
 ### 变量解释

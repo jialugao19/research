@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-count[x] = count.get(x, 0) + 1
+c(x)=\sum_{i=1}^{n}\mathbf 1_{\{x_i=x\}}
 $$
 
 ### 变量解释

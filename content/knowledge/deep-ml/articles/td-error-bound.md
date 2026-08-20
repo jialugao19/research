@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-error \le approximation_error + estimation_error
+\lVert V^{\star}-\hat V\rVert_\infty\le\frac{1}{1-\gamma}\lVert\mathcal T\hat V-\hat V\rVert_\infty
 $$
 
 ### 变量解释

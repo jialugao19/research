@@ -95,7 +95,7 @@ references:
 ### 表达方式
 
 $$
-new_attention uses cached K,V plus current token Q
+K_{1:t}=\operatorname{concat}(K_{1:t-1},k_t),\quad V_{1:t}=\operatorname{concat}(V_{1:t-1},v_t),\quad o_t=\operatorname{Attention}(q_t,K_{1:t},V_{1:t})
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = MSE + lambda ||w||^2
+\hat w=\underset{w}{\operatorname{arg\,min}}\left\{\frac1n\lVert y-Xw\rVert_2^2+\lambda\lVert w\rVert_2^2\right\},\qquad \lambda\ge0
 $$
 
 ### 变量解释

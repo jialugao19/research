@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-power = P(reject H0 | effect exists)
+\operatorname{Power}(\theta)=\Pr_{\theta}(\text{reject }H_0)=1-\beta(\theta),\qquad \theta\in H_1
 $$
 
 ### 变量解释

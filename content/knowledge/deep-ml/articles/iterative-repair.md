@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-solution \leftarrow repair(solution, violation)
+x_{k+1}=\mathcal R(x_k,c(x_k)),\qquad c(x_{k+1})\le c(x_k)
 $$
 
 ### 变量解释

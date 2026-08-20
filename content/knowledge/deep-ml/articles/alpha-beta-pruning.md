@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prune when alpha \ge beta
+\alpha\ge\beta\quad\Longrightarrow\quad\text{remaining children cannot affect the minimax value}
 $$
 
 ### 变量解释

@@ -102,7 +102,7 @@ Kinematic Bicycle Model 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-heading_dot = v / L \cdot  tan(delta)
+\dot x=v\cos\psi,\qquad \dot y=v\sin\psi,\qquad \dot\psi=\frac{v}{L}\tan\delta
 $$
 
 ### 变量解释

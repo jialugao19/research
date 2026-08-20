@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-question \rightarrow intermediate reasoning \rightarrow answer
+p_\theta(y\mid x)=\sum_zp_\theta(z\mid x)p_\theta(y\mid x,z)
 $$
 
 ### 变量解释

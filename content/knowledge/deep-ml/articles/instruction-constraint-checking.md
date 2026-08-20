@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-passed = all(check_i(output) for check_i in constraints)
+\operatorname{pass}(y)=\prod_{j=1}^{J}\mathbf 1_{\{c_j(y)=1\}}
 $$
 
 ### 变量解释

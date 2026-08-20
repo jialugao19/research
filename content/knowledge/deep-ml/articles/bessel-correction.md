@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-s^2 = sum((x_i - mean)^2)/(n-1)
+s^2=\frac{1}{n-1}\sum_{i=1}^{n}(x_i-\bar x)^2,\qquad \bar x=\frac1n\sum_{i=1}^{n}x_i
 $$
 
 ### 变量解释

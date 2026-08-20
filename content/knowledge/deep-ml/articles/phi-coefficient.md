@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-phi=(ad-bc)/sqrt((a+b)(c+d)(a+c)(b+d))
+\phi=\frac{ad-bc}{\sqrt{(a+b)(c+d)(a+c)(b+d)}}
 $$
 
 ### 变量解释

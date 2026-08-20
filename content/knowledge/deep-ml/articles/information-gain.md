@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-IG = H(parent) - weighted_sum H(children)
+\operatorname{IG}(S,a)=H(S)-\sum_{v\in\mathcal V(a)}\frac{|S_v|}{|S|}H(S_v)
 $$
 
 ### 变量解释

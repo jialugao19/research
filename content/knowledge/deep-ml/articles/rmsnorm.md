@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y = x / rms(x) \cdot  g
+\operatorname{RMSNorm}(x)=g\odot\frac{x}{\sqrt{\frac1d\sum_{i=1}^{d}x_i^2+\varepsilon}}
 $$
 
 ### 变量解释

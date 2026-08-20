@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prompt = template.format(variables)
+p=T(v_1,\ldots,v_k)
 $$
 
 ### 变量解释

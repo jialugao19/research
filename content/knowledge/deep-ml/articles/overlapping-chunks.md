@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-next_chunk starts before previous_chunk ends
+C_j=x_{1+(j-1)(L-O):\,L+(j-1)(L-O)},\qquad 0\le O<L
 $$
 
 ### 变量解释

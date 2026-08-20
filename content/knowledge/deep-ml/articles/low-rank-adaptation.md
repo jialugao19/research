@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-W' = W + B A
+W^{\prime}=W+\frac{\alpha}{r}BA,\qquad A\in\mathbb R^{r\times d_{\mathrm{in}}},\quad B\in\mathbb R^{d_{\mathrm{out}}\times r}
 $$
 
 ### 变量解释

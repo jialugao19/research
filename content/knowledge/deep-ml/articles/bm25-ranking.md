@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score(D,Q)=sum IDF(q) \cdot  normalized_tf(q,D)
+\operatorname{BM25}(D,Q)=\sum_{q\in Q}\operatorname{IDF}(q)\frac{f(q,D)(k_1+1)}{f(q,D)+k_1\left(1-b+b\frac{|D|}{\operatorname{avgdl}}\right)}
 $$
 
 ### 变量解释

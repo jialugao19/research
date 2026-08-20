@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-document \rightarrow chunks of bounded token length
+C_j=x_{s_j:\min(s_j+L-1,T)},\qquad s_{j+1}=s_j+L-O
 $$
 
 ### 变量解释

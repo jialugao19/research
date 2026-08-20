@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-activation' = activation + alpha \cdot  steering_vector
+h^{\prime}_{\ell,t}=h_{\ell,t}+\alpha v_{\ell}
 $$
 
 ### 变量解释

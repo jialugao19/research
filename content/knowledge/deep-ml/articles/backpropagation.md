@@ -160,7 +160,7 @@ $$
 推导直接来自链式法则：后层误差信号乘以本层局部导数。
 
 $$
-\delta_l=(W_{l+1}^\top\delta_{l+1})\odot f'(z_l)
+\delta^{(\ell)}=\left(W^{(\ell+1)\top}\delta^{(\ell+1)}\right)\odot f^{\prime}\!\left(z^{(\ell)}\right)
 $$
 
 反向传播高效的原因是复用上游梯度，而不是为每个参数重新做完整扰动实验。

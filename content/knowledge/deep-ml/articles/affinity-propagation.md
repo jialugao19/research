@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-responsibility and availability messages are iteratively updated
+r(i,k)=s(i,k)-\max_{k^{\prime}\ne k}\{a(i,k^{\prime})+s(i,k^{\prime})\},\qquad a(i,k)=\min\!\left(0,r(k,k)+\sum_{i^{\prime}\notin\{i,k\}}\max(0,r(i^{\prime},k))\right)
 $$
 
 ### 变量解释

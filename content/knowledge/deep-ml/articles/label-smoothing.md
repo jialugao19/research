@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y_smooth = (1 - epsilon) y + epsilon / K
+\tilde y_k=(1-\varepsilon)y_k+\frac{\varepsilon}{K},\qquad \varepsilon\in[0,1]
 $$
 
 ### 变量解释

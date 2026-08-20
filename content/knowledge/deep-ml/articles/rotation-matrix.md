@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-R^T R = I and det(R)=1
+R^{\top}R=I,\qquad \det(R)=1
 $$
 
 ### 变量解释

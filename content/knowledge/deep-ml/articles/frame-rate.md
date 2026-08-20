@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-fps = frames / seconds
+\operatorname{FPS}=\frac{N_{\mathrm{frames}}}{T_{\mathrm{seconds}}}
 $$
 
 ### 变量解释

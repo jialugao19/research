@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-replace with probability k / i
+\Pr(x_i\in R_k\ \text{after }n\text{ items})=\frac{k}{n},\qquad 1\le i\le n
 $$
 
 ### 变量解释

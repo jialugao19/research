@@ -94,7 +94,7 @@ padding 像补空格。truncation 像只保留允许长度内的内容。
 ### 表达方式
 
 $$
-sequence_length \rightarrow fixed_length
+\tilde x_{1:L}=\begin{cases}(x_1,\ldots,x_T,\underbrace{p,\ldots,p}_{L-T}),&T<L,\\(x_1,\ldots,x_L),&T\ge L,\end{cases}
 $$
 
 ### 变量解释

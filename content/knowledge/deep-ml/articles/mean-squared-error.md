@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-MSE = mean((y - y_hat)^2)
+\operatorname{MSE}(y,\hat y)=\frac1n\sum_{i=1}^{n}(y_i-\hat y_i)^2
 $$
 
 ### 变量解释

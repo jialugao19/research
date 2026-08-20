@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-f'(x)=lim_{h\rightarrow0}(f(x+h)-f(x))/h
+f^{\prime}(x)=\lim_{h\to0}\frac{f(x+h)-f(x)}{h}
 $$
 
 ### 变量解释

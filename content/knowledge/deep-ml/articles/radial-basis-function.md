@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-phi(x)=exp(-||x-c||^2 / (2 sigma^2))
+\phi_j(x)=\exp\!\left(-\frac{\lVert x-c_j\rVert_2^2}{2\sigma_j^2}\right)
 $$
 
 ### 变量解释

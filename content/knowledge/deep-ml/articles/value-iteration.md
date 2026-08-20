@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-V(s) \leftarrow max_a E[R + gamma V(s')]
+V_{k+1}(s)=\max_a\sum_{s^{\prime},r}p(s^{\prime},r\mid s,a)\left[r+\gamma V_k(s^{\prime})\right]
 $$
 
 ### 变量解释

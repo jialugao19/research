@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-weights \leftarrow weights + alpha \cdot  TD_error \cdot  gradient V(s)
+w_{t+1}=w_t+\alpha\left[R_{t+1}+\gamma V_w(S_{t+1})-V_w(S_t)\right]\nabla_wV_w(S_t)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-train on samples ordered by difficulty schedule
+i_t\sim q_t(i),\qquad q_t(i)\propto\exp\!\left(-\frac{d_i}{\tau_t}\right)
 $$
 
 ### 变量解释

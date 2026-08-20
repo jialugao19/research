@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-minimize sum |x_i - m| at median m
+m^{\star}\in\underset{m\in\mathbb R}{\operatorname{arg\,min}}\ \sum_{i=1}^{n}|x_i-m|\iff m^{\star}\in\operatorname{Median}(x_1,\ldots,x_n)
 $$
 
 ### 变量解释

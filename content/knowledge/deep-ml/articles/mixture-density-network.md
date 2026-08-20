@@ -102,7 +102,7 @@ Mixture Density Network 的表达能力来自模型结构，但泛化能力还�
 ### 表达方式
 
 $$
-p(y|x)=sum_k pi_k N(y|mu_k, sigma_k)
+p_\theta(y\mid x)=\sum_{k=1}^{K}\pi_k(x)\,\mathcal N\!\left(y;\mu_k(x),\Sigma_k(x)\right),\qquad \sum_{k=1}^{K}\pi_k(x)=1
 $$
 
 ### 变量解释

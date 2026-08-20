@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-vector = E[token_id]
+e_t=E^{\top}\mathbf 1_{t}=E_{t,:},\qquad E\in\mathbb R^{|\mathcal V|\times d}
 $$
 
 ### 变量解释

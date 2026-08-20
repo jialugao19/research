@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-action = f^{-1}(state, next_state)
+\tau=M(q)\ddot q+C(q,\dot q)\dot q+g(q)
 $$
 
 ### 变量解释

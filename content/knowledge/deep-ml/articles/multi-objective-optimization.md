@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-optimize f1(theta), f2(theta), ...
+\underset{\theta\in\Theta}{\operatorname{minimize}}\ \bigl(f_1(\theta),\ldots,f_K(\theta)\bigr)
 $$
 
 ### 变量解释

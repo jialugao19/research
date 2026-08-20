@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-summary = compress(document, target_length)
+p_\theta(y_{1:T}\mid x_{1:M})=\prod_{t=1}^{T}p_\theta(y_t\mid y_{<t},x_{1:M})
 $$
 
 ### 变量解释

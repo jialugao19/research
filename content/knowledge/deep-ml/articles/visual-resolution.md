@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-num_patches = image_area / patch_area
+N_{\mathrm{patch}}=\frac{H}{P_h}\frac{W}{P_w},\qquad P_h\mid H,\quad P_w\mid W
 $$
 
 ### 变量解释

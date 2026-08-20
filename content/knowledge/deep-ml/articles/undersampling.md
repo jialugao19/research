@@ -95,7 +95,7 @@ references:
 ### 表达方式
 
 $$
-sample majority class down to target ratio
+D^{\prime}=D_{\mathrm{minority}}\cup S,\qquad S\subset D_{\mathrm{majority}},\quad |S|=\rho|D_{\mathrm{minority}}|
 $$
 
 ### 变量解释

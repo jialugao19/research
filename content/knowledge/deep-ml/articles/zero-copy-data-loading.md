@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-latency = compute + transfer + copy_overhead
+T_{\mathrm{pipeline}}=T_{\mathrm{compute}}+T_{\mathrm{transfer}}+T_{\mathrm{copy}},\qquad T_{\mathrm{copy}}\approx0\ \text{under zero-copy}
 $$
 
 ### 变量解释

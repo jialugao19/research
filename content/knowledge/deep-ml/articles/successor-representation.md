@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-M(s,s') = E[sum_t gamma^t 1(S_t=s')]
+M_\pi(s,s^{\prime})=\mathbb E_\pi\!\left[\sum_{t=0}^{\infty}\gamma^t\mathbf 1_{\{S_t=s^{\prime}\}}\mid S_0=s\right]
 $$
 
 ### 变量解释

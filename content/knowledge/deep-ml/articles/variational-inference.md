@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-q\cdot (z)=argmin_q KL(q(z)||p(z|x))
+q^{\star}=\underset{q\in\mathcal Q}{\operatorname{arg\,min}}\ D_{\mathrm{KL}}\!\left(q(z)\Vert p(z\mid x)\right)
 $$
 
 ### 变量解释

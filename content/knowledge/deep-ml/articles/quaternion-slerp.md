@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-q(t)=slerp(q0,q1,t)
+\operatorname{slerp}(q_0,q_1;t)=\frac{\sin((1-t)\Omega)}{\sin\Omega}q_0+\frac{\sin(t\Omega)}{\sin\Omega}q_1,\qquad \cos\Omega=q_0^{\top}q_1
 $$
 
 ### 变量解释

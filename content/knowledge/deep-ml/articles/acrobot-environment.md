@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-state includes joint angles and angular velocities
+s_t=(\cos\theta_{1,t},\sin\theta_{1,t},\cos\theta_{2,t},\sin\theta_{2,t},\dot\theta_{1,t},\dot\theta_{2,t})
 $$
 
 ### 变量解释

@@ -87,7 +87,7 @@ backward 像算出建议。step 像按建议真正调整旋钮。
 ### 表达方式
 
 $$
-theta \leftarrow optimizer(theta, grad)
+\theta_{t+1}=\mathcal U(\theta_t,g_t;\eta_t),\qquad g_t=\nabla_\theta\mathcal L_t(\theta_t)
 $$
 
 ### 变量解释

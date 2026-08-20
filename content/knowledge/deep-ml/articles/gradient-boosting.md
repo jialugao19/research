@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-F_m(x) = F_{m-1}(x) + learning_rate \cdot  h_m(x)
+F_m(x)=F_{m-1}(x)+\eta h_m(x),\qquad h_m\approx-\left.\frac{\partial\ell(y,F(x))}{\partial F(x)}\right|_{F=F_{m-1}}
 $$
 
 ### 变量解释

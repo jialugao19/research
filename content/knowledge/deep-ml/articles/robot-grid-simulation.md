@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-state_{t+1} = transition(state_t, action_t)
+S_{t+1}=T(S_t,A_t),\qquad T:\mathcal S\times\mathcal A\to\mathcal S
 $$
 
 ### 变量解释

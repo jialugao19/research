@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-q_i^T q_j = 0 for i \ne j
+q_i^{\top}q_j=\delta_{ij},\qquad Q^{\top}Q=I
 $$
 
 ### 变量解释

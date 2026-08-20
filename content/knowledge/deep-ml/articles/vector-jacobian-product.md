@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-v^T J
+v^{\top}J_f(x)=\nabla_x\!\left(v^{\top}f(x)\right)^{\top}
 $$
 
 ### 变量解释

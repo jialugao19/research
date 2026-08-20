@@ -90,7 +90,7 @@ references:
 ### 表达方式
 
 $$
-posterior proportional to likelihood times prior
+p(\theta\mid D)=\frac{p(D\mid\theta)p(\theta)}{p(D)},\qquad p(D)=\int p(D\mid\theta)p(\theta)\,d\theta
 $$
 
 ### 变量解释

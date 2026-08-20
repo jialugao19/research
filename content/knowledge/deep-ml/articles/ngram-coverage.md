@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-coverage = matched_ngrams / total_ngrams
+\operatorname{coverage}_n=\frac{|G_n(y)\cap G_n(y^{\star})|}{|G_n(y^{\star})|}
 $$
 
 ### 变量解释

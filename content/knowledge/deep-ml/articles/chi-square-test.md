@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-chi2 = sum((observed-expected)^2/expected)
+\chi^2=\sum_{j=1}^{m}\frac{(O_j-E_j)^2}{E_j},\qquad E_j>0
 $$
 
 ### 变量解释

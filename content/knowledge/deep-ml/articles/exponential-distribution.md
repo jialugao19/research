@@ -90,7 +90,7 @@ references:
 ### 表达方式
 
 $$
-f(x)=lambda exp(-lambda x), x\ge0
+f_X(x;\lambda)=\lambda e^{-\lambda x}\mathbf{1}_{\{x\ge0\}},\qquad \lambda>0
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = f(retrieval, grounding, answer_quality)
+S(q,y)=w_r\operatorname{Recall@}k(q)+w_gS_{\mathrm{ground}}(y,D_q)+w_aS_{\mathrm{answer}}(y)
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = hard_label_loss + alpha \cdot  distillation_loss
+\mathcal L=(1-\alpha)\,\ell(y,p_s)+\alpha T^2D_{\mathrm{KL}}\!\left(p_t^{(T)}\Vert p_s^{(T)}\right)
 $$
 
 ### 变量解释

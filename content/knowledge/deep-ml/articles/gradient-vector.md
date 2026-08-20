@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-grad f = [partial f/partial x_1, ..., partial f/partial x_n]
+\nabla f(x)=\begin{bmatrix}\frac{\partial f}{\partial x_1}&\cdots&\frac{\partial f}{\partial x_n}\end{bmatrix}^{\!\top}
 $$
 
 ### 变量解释

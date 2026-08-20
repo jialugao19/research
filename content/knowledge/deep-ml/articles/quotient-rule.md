@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-(f/g)' = (f'g - fg') / g^2
+\frac{d}{dx}\left(\frac{f(x)}{g(x)}\right)=\frac{f^{\prime}(x)g(x)-f(x)g^{\prime}(x)}{g(x)^2},\qquad g(x)\ne0
 $$
 
 ### 变量解释

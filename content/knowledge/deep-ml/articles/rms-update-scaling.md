@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-scaled_update = update / sqrt(running_mean(update^2) + eps)
+u_t=\frac{g_t}{\sqrt{v_t}+\varepsilon},\qquad v_t=\beta v_{t-1}+(1-\beta)g_t^2
 $$
 
 ### 变量解释

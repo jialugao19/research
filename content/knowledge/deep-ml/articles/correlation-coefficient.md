@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-corr(X,Y) = cov(X,Y) / (std(X) std(Y))
+\rho_{X,Y}=\frac{\operatorname{Cov}(X,Y)}{\sigma_X\sigma_Y},\qquad \sigma_X\sigma_Y>0
 $$
 
 ### 变量解释

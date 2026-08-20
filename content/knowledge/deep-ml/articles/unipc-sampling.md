@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-x_next = correct(predict(x_t))
+x_{t_{i-1}}=\sum_{j=0}^{p}a_{ij}x_{t_{i-j}}+\sum_{j=0}^{p}b_{ij}\varepsilon_\theta(x_{t_{i-j}},t_{i-j})
 $$
 
 ### 变量解释

@@ -83,7 +83,7 @@ references:
 ### 表达方式
 
 $$
-engagement_rate = interactions / exposures_or_posts
+\widehat r_{\mathrm{engagement}}=\frac{N_{\mathrm{interactions}}}{N_{\mathrm{exposures}}}
 $$
 
 ### 变量解释

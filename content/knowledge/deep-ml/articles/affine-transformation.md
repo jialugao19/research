@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y = A x + b
+y=Ax+b,\qquad A\in\mathbb{R}^{m\times n},\ b\in\mathbb{R}^{m}
 $$
 
 ### 变量解释

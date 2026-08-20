@@ -102,7 +102,7 @@ Language Modeling 的表达能力来自模型结构，但泛化能力还取决�
 ### 表达方式
 
 $$
-p(text) = product_t p(token_t | previous tokens)
+p_\theta(x_{1:T})=\prod_{t=1}^{T}p_\theta(x_t\mid x_{<t})
 $$
 
 ### 变量解释

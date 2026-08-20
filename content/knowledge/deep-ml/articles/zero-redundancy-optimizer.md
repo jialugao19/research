@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-memory_per_device \approx total_state / num_devices
+M_{\mathrm{device}}\approx M_{\mathrm{model}}+\frac{M_{\mathrm{optimizer}}+M_{\mathrm{grad}}}{P}
 $$
 
 ### 变量解释

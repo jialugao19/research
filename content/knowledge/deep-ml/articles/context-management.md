@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-context = select(relevant_memory, task_budget)
+C^{\star}=\underset{C\subseteq\mathcal M,\,\operatorname{tokens}(C)\le B}{\operatorname{arg\,max}}\ \sum_{m\in C}r(m,q)
 $$
 
 ### 变量解释

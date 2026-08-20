@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-plot(score versus training_size or step)
+R_{\mathrm{train}}(m)=R(\hat f_m,D_{\mathrm{train},m}),\qquad R_{\mathrm{val}}(m)=R(\hat f_m,D_{\mathrm{val}})
 $$
 
 ### 变量解释

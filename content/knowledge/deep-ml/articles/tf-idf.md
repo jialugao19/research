@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-tfidf = tf \cdot  log(N / df)
+\operatorname{tfidf}(t,d)=\operatorname{tf}(t,d)\log\frac{N}{\operatorname{df}(t)}
 $$
 
 ### 变量解释

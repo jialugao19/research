@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-features = concat(model_features, expert_features)
+z=\operatorname{concat}\!\left(f_\theta(x),e(x)\right)
 $$
 
 ### 变量解释

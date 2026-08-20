@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-output = block(input) + input
+y=x+F(x;\theta)
 $$
 
 ### 变量解释

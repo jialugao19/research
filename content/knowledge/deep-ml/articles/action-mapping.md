@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-env_action = map(policy_output)
+a_t=g(u_t),\qquad u_t\sim\pi_\theta(\cdot\mid s_t),\quad a_t\in\mathcal A_{\mathrm{env}}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-e(s,a) = 0 for invalidated traces
+e_t(s,a)=0\qquad\text{for actions invalidated by the current policy}
 $$
 
 ### 变量解释

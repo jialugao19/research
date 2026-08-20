@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-P(X=k)=C(n,k)p^k(1-p)^(n-k)
+\Pr(X=k)=\binom{n}{k}p^k(1-p)^{n-k},\qquad k=0,1,\ldots,n
 $$
 
 ### 变量解释

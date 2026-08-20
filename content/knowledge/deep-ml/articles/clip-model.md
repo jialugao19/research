@@ -102,7 +102,7 @@ CLIP Model 的表达能力来自模型结构，但泛化能力还取决于数据
 ### 表达方式
 
 $$
-maximize similarity(image_embedding, text_embedding) for pairs
+\mathcal L_{\mathrm{CLIP}}=-\frac1{2N}\sum_{i=1}^{N}\left[\log\frac{e^{s_{ii}/\tau}}{\sum_je^{s_{ij}/\tau}}+\log\frac{e^{s_{ii}/\tau}}{\sum_je^{s_{ji}/\tau}}\right]
 $$
 
 ### 变量解释

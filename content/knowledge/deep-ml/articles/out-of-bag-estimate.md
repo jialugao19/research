@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-OOB score = metric(y_i, vote_trees_not_using_i)
+\widehat R_{\mathrm{OOB}}=\frac1n\sum_{i=1}^{n}\ell\!\left(y_i,\operatorname{agg}_{b:i\notin D_b}T_b(x_i)\right)
 $$
 
 ### 变量解释

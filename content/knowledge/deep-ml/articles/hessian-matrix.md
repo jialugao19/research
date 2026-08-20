@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-H_ij = partial^2 f / partial x_i partial x_j
+\nabla^2 f(x)=\left[\frac{\partial^2 f}{\partial x_i\partial x_j}(x)\right]_{i,j=1}^{n}
 $$
 
 ### 变量解释

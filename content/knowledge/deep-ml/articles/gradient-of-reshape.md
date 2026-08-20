@@ -94,7 +94,7 @@ reshape 改变张量形状，但不改变元素。反向时需要把梯度形状
 ### 表达方式
 
 $$
-grad_input = reshape(grad_output, input_shape)
+\frac{\partial L}{\partial x}=\operatorname{reshape}\!\left(\frac{\partial L}{\partial y},\operatorname{shape}(x)\right),\qquad y=\operatorname{reshape}(x)
 $$
 
 ### 变量解释

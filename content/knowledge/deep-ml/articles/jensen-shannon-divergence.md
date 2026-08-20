@@ -94,7 +94,7 @@ KL 散度不对称，有时不便比较两个分布。JSD 更稳定。
 ### 表达方式
 
 $$
-JSD(P,Q)=0.5 KL(P||M)+0.5 KL(Q||M)
+D_{\mathrm{JS}}(P,Q)=\frac12D_{\mathrm{KL}}(P\Vert M)+\frac12D_{\mathrm{KL}}(Q\Vert M),\qquad M=\frac12(P+Q)
 $$
 
 ### 变量解释

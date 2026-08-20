@@ -93,7 +93,7 @@ LayerNorm 不跨样本统计。对 `(batch, sequence, hidden)`，`LayerNorm(hidd
 ### 表达方式
 
 $$
-x_hat = (x - mean_features) / sqrt(var_features + epsilon)
+\mu=\frac1D\sum_{j=1}^{D}x_j,\quad \sigma^2=\frac1D\sum_{j=1}^{D}(x_j-\mu)^2,\quad y_j=\gamma_j\frac{x_j-\mu}{\sqrt{\sigma^2+\varepsilon}}+\beta_j
 $$
 
 ### 变量解释

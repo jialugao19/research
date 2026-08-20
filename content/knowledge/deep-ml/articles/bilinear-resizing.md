@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-new_pixel = weighted average of four neighbors
+I(x,y)=\sum_{i\in\{\lfloor x\rfloor,\lceil x\rceil\}}\sum_{j\in\{\lfloor y\rfloor,\lceil y\rceil\}}I(i,j)(1-|x-i|)(1-|y-j|)
 $$
 
 ### 变量解释

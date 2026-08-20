@@ -134,13 +134,11 @@ Instance Normalization 的子概念分工：
 对归一化集合 (S)，共同骨架是：
 
 $$
-\mu_S=\frac{1}{|S|}\sum_{i\in S}x_i,\qquad
-\sigma_S^2=\frac{1}{|S|}\sum_{i\in S}(x_i-\mu_S)^2
+\mu_S=\frac1{|S|}\sum_{i\in S}x_i,\qquad \sigma_S^2=\frac1{|S|}\sum_{i\in S}(x_i-\mu_S)^2
 $$
 
 $$
-\hat x_i=\frac{x_i-\mu_S}{\sqrt{\sigma_S^2+\epsilon}},\qquad
-y_i=\gamma_i\hat x_i+\beta_i
+\hat x_i=\frac{x_i-\mu_S}{\sqrt{\sigma_S^2+\varepsilon}},\qquad y_i=\gamma_i\hat x_i+\beta_i
 $$
 
 ### 变量解释

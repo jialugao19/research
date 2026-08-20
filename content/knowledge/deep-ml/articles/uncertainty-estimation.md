@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prediction = mean plus uncertainty interval
+\hat y(x)\pm z_{1-\alpha/2}\,\widehat{\operatorname{se}}\!\left(\hat y(x)\right)
 $$
 
 ### 变量解释

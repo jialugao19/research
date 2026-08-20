@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-count bin_i = number of samples in range_i
+n_j=\sum_{i=1}^{n}\mathbf{1}_{\{b_{j-1}\le x_i<b_j\}},\qquad \hat f_j=\frac{n_j}{n(b_j-b_{j-1})}
 $$
 
 ### 变量解释

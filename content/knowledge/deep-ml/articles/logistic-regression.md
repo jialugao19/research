@@ -102,7 +102,7 @@ Logistic Regression 的表达能力来自模型结构，但泛化能力还取决
 ### 表达方式
 
 $$
-P(y=1\mid x)=\sigma(w^\top x+b),\quad \sigma(z)=\frac{1}{1+e^{-z}}
+\Pr(y=1\mid x)=\sigma(w^{\top}x+b),\qquad \sigma(z)=\frac{1}{1+e^{-z}}
 $$
 
 ### 变量解释
@@ -125,7 +125,7 @@ $$
 推导先假设 log-odds 是线性的，再用 sigmoid 把线性打分变成概率。
 
 $$
-\log\frac{P(y=1\mid x)}{P(y=0\mid x)}=w^\top x+b
+\log\frac{\Pr(y=1\mid x)}{\Pr(y=0\mid x)}=w^{\top}x+b
 $$
 
 log-odds 的线性假设让模型可解释，sigmoid 负责把分数映射为概率。

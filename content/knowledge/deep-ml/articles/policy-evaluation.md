@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-V_pi(s) = E_pi[G_t | S_t=s]
+V_\pi(s)=\sum_a\pi(a\mid s)\sum_{s^{\prime},r}p(s^{\prime},r\mid s,a)\left[r+\gamma V_\pi(s^{\prime})\right]
 $$
 
 ### 变量解释

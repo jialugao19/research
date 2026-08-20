@@ -92,7 +92,7 @@ Lasso 稀疏但可能不稳定。Ridge 稳定但不稀疏。Elastic Net 折中�
 ### 表达方式
 
 $$
-loss = MSE + a ||w||_1 + b ||w||^2
+\hat w=\underset{w}{\operatorname{arg\,min}}\left\{\frac1n\lVert y-Xw\rVert_2^2+\lambda_1\lVert w\rVert_1+\lambda_2\lVert w\rVert_2^2\right\}
 $$
 
 ### 变量解释

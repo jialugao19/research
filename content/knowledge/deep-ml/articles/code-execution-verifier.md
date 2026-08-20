@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-passed = run_tests(generated_code)
+R(c)=\frac1M\sum_{j=1}^{M}\mathbf 1_{\{\operatorname{test}_j(c)=\mathrm{pass}\}}
 $$
 
 ### 变量解释

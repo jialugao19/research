@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-GLU(a,b)=a \cdot  sigmoid(b)
+\operatorname{GLU}(a,b)=a\odot\sigma(b)
 $$
 
 ### 变量解释

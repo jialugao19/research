@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-summary = {mean, median, variance, quantiles}
+\bar x=\frac1n\sum_{i=1}^{n}x_i,\qquad s^2=\frac1{n-1}\sum_{i=1}^{n}(x_i-\bar x)^2
 $$
 
 ### 变量解释

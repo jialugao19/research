@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-layer_i uses attention_type(schedule_i)
+a_\ell=s(\ell)\in\{\mathrm{global},\mathrm{local},\mathrm{linear}\},\qquad h^{(\ell+1)}=\operatorname{Attn}_{a_\ell}\!\left(h^{(\ell)}\right)
 $$
 
 ### 变量解释

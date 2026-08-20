@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-masked_logits = logits + mask_penalty
+\tilde z_a=\begin{cases}z_a,&m_a=1,\\-\infty,&m_a=0,\end{cases}\qquad \pi(a\mid s)=\operatorname{softmax}(\tilde z)_a
 $$
 
 ### 变量解释

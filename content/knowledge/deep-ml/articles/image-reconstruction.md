@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-loss = distance(reconstructed_image, target_image)
+\mathcal L_{\mathrm{recon}}=\frac1{C H W}\lVert\hat X-X\rVert_2^2
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-complexity = weighted_sum(constraints, intents, steps)
+C(x)=\sum_{j=1}^{J}w_jf_j(x)
 $$
 
 ### 变量解释

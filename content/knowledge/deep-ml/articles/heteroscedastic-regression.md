@@ -102,7 +102,7 @@ Heteroscedastic Regression 的表达能力来自模型结构，但泛化能力�
 ### 表达方式
 
 $$
-y ~ Distribution(mu(x), scale(x))
+Y\mid X=x\sim\mathcal N\!\left(\mu_\theta(x),\sigma_\theta^2(x)\right)
 $$
 
 ### 变量解释

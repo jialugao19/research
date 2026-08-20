@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x \leftarrow x - H^{-1} g
+x_{k+1}=x_k-\left[\nabla^2 f(x_k)\right]^{-1}\nabla f(x_k)
 $$
 
 ### 变量解释

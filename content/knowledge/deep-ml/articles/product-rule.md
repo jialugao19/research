@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-(fg)' = f'g + fg'
+\frac{d}{dx}\bigl(f(x)g(x)\bigr)=f^{\prime}(x)g(x)+f(x)g^{\prime}(x)
 $$
 
 ### 变量解释

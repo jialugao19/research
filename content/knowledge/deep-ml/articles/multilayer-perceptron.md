@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-h_{l+1}=activation(W_l h_l + b_l)
+h^{(\ell+1)}=\phi^{(\ell)}\!\left(W^{(\ell)}h^{(\ell)}+b^{(\ell)}\right)
 $$
 
 ### 变量解释

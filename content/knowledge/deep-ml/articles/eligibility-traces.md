@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-e_t = gamma lambda e_{t-1} + grad V(s_t)
+e_t=\gamma\lambda e_{t-1}+\nabla_w V_w(S_t),\qquad w_{t+1}=w_t+\alpha\delta_t e_t
 $$
 
 ### 变量解释

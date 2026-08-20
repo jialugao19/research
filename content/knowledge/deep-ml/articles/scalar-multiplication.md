@@ -90,7 +90,7 @@ references:
 ### 表达方式
 
 $$
-y = c x
+(cx)_i=cx_i,\qquad c\in\mathbb{R},\ x\in\mathbb{R}^{n}
 $$
 
 ### 变量解释

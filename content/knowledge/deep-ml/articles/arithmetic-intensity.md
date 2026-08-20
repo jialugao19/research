@@ -94,7 +94,7 @@ GPU 性能瓶颈可能来自计算，也可能来自内存带宽。算术强度�
 ### 表达方式
 
 $$
-arithmetic_intensity = FLOPs / bytes_moved
+I=\frac{N_{\mathrm{FLOP}}}{N_{\mathrm{bytes}}}\quad\text{FLOP/byte}
 $$
 
 ### 变量解释

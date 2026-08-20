@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-clean_data = validate(transform(raw_data))
+D_{\mathrm{clean}}=V\!\left(T(D_{\mathrm{raw}})\right)
 $$
 
 ### 变量解释

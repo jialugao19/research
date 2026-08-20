@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-option = (initiation_set, policy, termination)
+\omega=(\mathcal I_\omega,\pi_\omega,\beta_\omega),\qquad \beta_\omega(s)=\Pr(\text{terminate}\mid s,\omega)
 $$
 
 ### 变量解释

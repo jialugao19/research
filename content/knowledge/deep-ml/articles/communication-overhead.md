@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-total_time = compute_time + communication_time
+T_{\mathrm{step}}=T_{\mathrm{compute}}+T_{\mathrm{communication}}-T_{\mathrm{overlap}}
 $$
 
 ### 变量解释

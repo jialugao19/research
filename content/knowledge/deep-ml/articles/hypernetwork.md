@@ -102,7 +102,7 @@ Hypernetwork 的表达能力来自模型结构，但泛化能力还取决于数�
 ### 表达方式
 
 $$
-theta_target = H_phi(condition)
+\theta_{\mathrm{target}}=H_\phi(c),\qquad y=f_{\theta_{\mathrm{target}}}(x)
 $$
 
 ### 变量解释

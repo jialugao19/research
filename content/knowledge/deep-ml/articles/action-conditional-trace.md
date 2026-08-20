@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-e(s,a) \leftarrow gamma \cdot  lambda \cdot  e(s,a) + indicator(s,a)
+e_t(s,a)=\gamma\lambda e_{t-1}(s,a)+\mathbf 1_{\{S_t=s,A_t=a\}}
 $$
 
 ### 变量解释

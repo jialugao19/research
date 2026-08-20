@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-effect = output(patched_activation) - output(original_activation)
+\Delta y=y\!\left(h_j\leftarrow h_j^{\mathrm{source}}\right)-y\!\left(h_j^{\mathrm{baseline}}\right)
 $$
 
 ### 变量解释

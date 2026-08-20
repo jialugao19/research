@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-L=max(0,d(a,p)-d(a,n)+margin)
+\mathcal L=\max\!\left(0,d(a,p)-d(a,n)+m\right)
 $$
 
 ### 变量解释

@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-V(s)=w^T phi(s)
+\hat V(s,w)=w^{\top}x(s),\qquad x_i(s)=\mathbf 1_{\{s\in F_i\}}
 $$
 
 ### 变量解释

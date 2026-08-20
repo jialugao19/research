@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-A \rightarrow RREF(A)
+EA=R,\qquad E=E_k\cdots E_2E_1\ \text{is a product of elementary matrices}
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ LLM 需要跨领域评估。MMLU 提供多主题、多选择题形式的基准�
 ### 表达方式
 
 $$
-accuracy = correct_choices / total_questions
+\operatorname{Accuracy}_{\mathrm{MMLU}}=\frac1N\sum_{i=1}^{N}\mathbf 1_{\{\operatorname{arg\,max}_k p_\theta(k\mid x_i)=y_i\}}
 $$
 
 ### 变量解释

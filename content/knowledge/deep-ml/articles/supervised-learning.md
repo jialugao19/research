@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-learn f so that f(x) approximates y
+\hat\theta=\underset{\theta}{\operatorname{arg\,min}}\ \frac1n\sum_{i=1}^{n}\ell\!\left(f_\theta(x_i),y_i\right)
 $$
 
 ### 变量解释

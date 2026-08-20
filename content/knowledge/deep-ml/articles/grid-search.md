@@ -93,7 +93,7 @@ references:
 ### 表达方式
 
 $$
-best = argmax validation_score(config)
+\lambda^{\star}=\underset{\lambda\in\Lambda_{\mathrm{grid}}}{\operatorname{arg\,min}}\ \widehat R_{\mathrm{val}}(\lambda)
 $$
 
 ### 变量解释

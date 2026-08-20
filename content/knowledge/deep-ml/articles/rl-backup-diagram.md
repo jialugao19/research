@@ -94,7 +94,7 @@ TD、MC 和动态规划更新公式抽象，初学者容易混淆。
 ### 表达方式
 
 $$
-backup target follows arrows from current estimate to future terms
+Y_t=R_{t+1}+\gamma\,\mathcal B\!\left(V,Q;S_{t+1}\right)
 $$
 
 ### 变量解释

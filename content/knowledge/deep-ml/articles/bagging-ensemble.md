@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-prediction = aggregate(model_i(x))
+\hat f_{\mathrm{bag}}(x)=\frac1B\sum_{b=1}^{B}\hat f^{*(b)}(x)
 $$
 
 ### 变量解释

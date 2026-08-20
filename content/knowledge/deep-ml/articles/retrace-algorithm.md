@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-c_t = lambda \cdot  min(1, rho_t)
+c_t=\lambda\min\!\left(1,\rho_t\right),\qquad \rho_t=\frac{\pi(A_t\mid S_t)}{\mu(A_t\mid S_t)}
 $$
 
 ### 变量解释

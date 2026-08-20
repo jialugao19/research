@@ -102,7 +102,7 @@ Vision-Language Model 的表达能力来自模型结构，但泛化能力还取�
 ### 表达方式
 
 $$
-answer = LM(text, visual_features)
+p_\theta(y\mid x_{\mathrm{text}},x_{\mathrm{image}})=\prod_{t=1}^{T}p_\theta(y_t\mid y_{<t},x_{\mathrm{text}},f_v(x_{\mathrm{image}}))
 $$
 
 ### 变量解释

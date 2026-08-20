@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-minimize loss(pi(s), expert_action)
+\hat\theta=\underset{\theta}{\operatorname{arg\,min}}\ -\frac1n\sum_{i=1}^{n}\log\pi_\theta(a_i^{E}\mid s_i^{E})
 $$
 
 ### 变量解释

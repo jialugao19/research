@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y_i = f(x_i)
+y_i=f(x_i),\qquad i=1,\ldots,n
 $$
 
 ### 变量解释

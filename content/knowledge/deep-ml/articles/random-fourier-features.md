@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-k(x,y) approx z(x)^T z(y)
+z(x)=\sqrt{\frac{2}{D}}\cos(Wx+b),\qquad z(x)^{\top}z(y)\approx k(x,y)
 $$
 
 ### 变量解释

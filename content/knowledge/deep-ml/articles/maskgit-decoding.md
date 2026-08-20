@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-masked_tokens \rightarrow predict \rightarrow keep_confident \rightarrow repeat
+M_{t+1}=M_t\setminus\operatorname{TopConf}_{k_t}\!\left\{p_\theta(x_i\mid x_{\bar M_t})\right\}_{i\in M_t}
 $$
 
 ### 变量解释

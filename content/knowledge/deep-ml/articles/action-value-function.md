@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-Q_pi(s,a) = E_pi[G_t | S_t=s, A_t=a]
+Q_\pi(s,a)=\mathbb E_\pi\!\left[G_t\mid S_t=s,A_t=a\right]
 $$
 
 ### 变量解释

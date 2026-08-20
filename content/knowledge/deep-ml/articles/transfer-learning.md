@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-pretrain on source, fine-tune on target
+\theta^{\star}=\underset{\theta}{\operatorname{arg\,min}}\ \mathcal L_{\mathrm{target}}(\theta),\qquad \theta_0=\theta_{\mathrm{source}}
 $$
 
 ### 变量解释

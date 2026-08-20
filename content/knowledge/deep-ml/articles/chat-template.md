@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-tokens = tokenizer.apply_chat_template(messages)
+x=T\!\left((r_1,m_1),\ldots,(r_n,m_n)\right)
 $$
 
 ### 变量解释

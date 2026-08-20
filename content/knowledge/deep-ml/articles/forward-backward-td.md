@@ -94,7 +94,7 @@ TD(lambda) 公式有前向目标和在线更新两种等价表达，学习者容
 ### 表达方式
 
 $$
-forward return can be implemented by backward traces
+G_t^{\lambda}-V(S_t)=\sum_{k=t}^{T-1}(\gamma\lambda)^{k-t}\delta_k
 $$
 
 ### 变量解释

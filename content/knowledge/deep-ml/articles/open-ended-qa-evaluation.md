@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-score = f(correctness, completeness, relevance)
+S(y)=w_cS_{\mathrm{correct}}(y)+w_rS_{\mathrm{relevant}}(y)+w_gS_{\mathrm{grounded}}(y)
 $$
 
 ### 变量解释

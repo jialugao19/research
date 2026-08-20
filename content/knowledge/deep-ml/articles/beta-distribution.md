@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-x ~ Beta(alpha, beta)
+f(x;\alpha,\beta)=\frac{x^{\alpha-1}(1-x)^{\beta-1}}{B(\alpha,\beta)},\qquad 0<x<1,\quad \alpha,\beta>0
 $$
 
 ### 变量解释

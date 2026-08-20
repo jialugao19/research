@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-dx/dt = v_theta(x,t)
+\frac{dx_t}{dt}=v_\theta(x_t,t),\qquad x_0\sim p_0,\quad x_1\sim p_1
 $$
 
 ### 变量解释

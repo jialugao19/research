@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-next_token = decode(logits[-1])
+p(x_{T+1}=v\mid x_{1:T})=\operatorname{softmax}(z_T)_v
 $$
 
 ### 变量解释

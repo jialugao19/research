@@ -94,7 +94,7 @@ Q-learning 用 max 操作选择动作，噪声会让高估动作更容易被选�
 ### 表达方式
 
 $$
-E[max_i X_i] \ge max_i E[X_i]
+\mathbb E\!\left[\max_a\hat q(a)\right]\ge\max_a\mathbb E[\hat q(a)]
 $$
 
 ### 变量解释

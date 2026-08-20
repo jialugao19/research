@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-std = sqrt(mean((x - mean)^2))
+\sigma=\sqrt{\operatorname{Var}(X)}=\sqrt{\mathbb{E}\!\left[(X-\mathbb{E}[X])^2\right]}
 $$
 
 ### 变量解释

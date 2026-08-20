@@ -102,7 +102,7 @@ Decentralized Expert Model 的表达能力来自模型结构，但泛化能力�
 ### 表达方式
 
 $$
-output = aggregate(expert_i(x))
+y=\sum_{k=1}^{K}g_k(x)E_k(x),\qquad g_k(x)\ge0,\quad \sum_{k=1}^{K}g_k(x)=1
 $$
 
 ### 变量解释

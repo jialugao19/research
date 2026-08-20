@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-grad = all_reduce(mean(local_grads))
+g=\frac1P\sum_{p=1}^{P}g^{(p)},\qquad g^{(p)}=\frac1{|B_p|}\sum_{i\in B_p}\nabla_\theta\ell_i
 $$
 
 ### 变量解释

@@ -87,7 +87,7 @@ references:
 ### 表达方式
 
 $$
-MAE = mean(|y - y_hat|)
+\operatorname{MAE}(y,\hat y)=\frac1n\sum_{i=1}^{n}|y_i-\hat y_i|
 $$
 
 ### 变量解释

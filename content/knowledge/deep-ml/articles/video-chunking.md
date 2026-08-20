@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-video \rightarrow chunks of fixed frames or seconds
+C_j=(F_{s_j},\ldots,F_{\min(s_j+L-1,T)}),\qquad s_{j+1}=s_j+L-O
 $$
 
 ### 变量解释

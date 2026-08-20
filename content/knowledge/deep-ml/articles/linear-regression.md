@@ -102,7 +102,7 @@ Linear Regression 的表达能力来自模型结构，但泛化能力还取决�
 ### 表达方式
 
 $$
-y_hat = w^T x + b
+\hat y=w^{\top}x+b,\qquad \hat w=\underset{w}{\operatorname{arg\,min}}\ \frac1n\sum_{i=1}^{n}(y_i-w^{\top}x_i)^2
 $$
 
 ### 变量解释

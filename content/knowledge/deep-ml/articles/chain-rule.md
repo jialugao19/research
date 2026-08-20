@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-d f(g(x)) / dx = f'(g(x)) g'(x)
+\frac{d}{dx}f(g(x))=f^{\prime}(g(x))g^{\prime}(x)
 $$
 
 ### 变量解释

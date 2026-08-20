@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-self-play data \rightarrow train policy/value network \rightarrow improved search
+\mathcal L(\theta)=(z-v_\theta(s))^2-\pi^{\top}\log p_\theta(\cdot\mid s)+c\lVert\theta\rVert_2^2
 $$
 
 ### 变量解释

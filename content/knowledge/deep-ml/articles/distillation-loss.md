@@ -102,7 +102,7 @@ references:
 ### 表达方式
 
 $$
-loss = KL(student_probs || teacher_probs)
+\mathcal L_{\mathrm{KD}}=T^2D_{\mathrm{KL}}\!\left(\operatorname{softmax}(z_t/T)\Vert\operatorname{softmax}(z_s/T)\right)
 $$
 
 ### 变量解释

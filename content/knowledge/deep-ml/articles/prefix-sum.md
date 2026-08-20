@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-sum(l,r) = prefix[r] - prefix[l]
+P_0=0,\quad P_j=\sum_{i=0}^{j-1}a_i,\qquad \sum_{i=\ell}^{r-1}a_i=P_r-P_\ell
 $$
 
 ### 变量解释

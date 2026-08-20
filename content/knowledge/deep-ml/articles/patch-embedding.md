@@ -94,7 +94,7 @@ Transformer 处理 token 序列。图像需要先转换成 patch token。
 ### 表达方式
 
 $$
-patches \rightarrow linear projection \rightarrow tokens
+Z_0=\left[x_{\mathrm{cls}};\,X_p^1E;\,\ldots;\,X_p^NE\right]+E_{\mathrm{pos}}
 $$
 
 ### 变量解释

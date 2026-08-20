@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-output_t = f(frame_t, context around t)
+y_t=f_\theta(F_{t-k:t+k})
 $$
 
 ### 变量解释

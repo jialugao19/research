@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-y = activation(w^T x + b)
+y=\phi(w^{\top}x+b)
 $$
 
 ### 变量解释

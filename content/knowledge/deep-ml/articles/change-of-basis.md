@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-x_new = P^{-1} x_old
+[v]_{\mathcal B}=P_{\mathcal B\leftarrow\mathcal C}[v]_{\mathcal C}
 $$
 
 ### 变量解释

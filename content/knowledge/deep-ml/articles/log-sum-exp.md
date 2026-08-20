@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-log sum exp(x) = m + log sum exp(x - m)
+\log\sum_{i=1}^{n}e^{x_i}=m+\log\sum_{i=1}^{n}e^{x_i-m},\qquad m=\max_i x_i
 $$
 
 ### 变量解释

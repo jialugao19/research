@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-low \rightarrow 0, medium \rightarrow 1, high \rightarrow 2
+e:\{c_1\prec c_2\prec\cdots\prec c_K\}\to\{0,1,\ldots,K-1\},\qquad e(c_k)=k-1
 $$
 
 ### 变量解释

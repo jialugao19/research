@@ -158,7 +158,7 @@ Temporal Difference Learning 的子概念分工：
 ### 表达方式
 
 $$
-TD error = r + gamma V(s') - V(s)
+\delta_t=R_{t+1}+\gamma V(S_{t+1})-V(S_t),\qquad V(S_t)\leftarrow V(S_t)+\alpha\delta_t
 $$
 
 ### 变量解释

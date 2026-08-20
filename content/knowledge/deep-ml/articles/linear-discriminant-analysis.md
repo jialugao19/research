@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-decision uses class mean and shared covariance
+\delta_k(x)=x^{\top}\Sigma^{-1}\mu_k-\frac12\mu_k^{\top}\Sigma^{-1}\mu_k+\log\pi_k,\qquad \hat y=\operatorname{arg\,max}_k\delta_k(x)
 $$
 
 ### 变量解释

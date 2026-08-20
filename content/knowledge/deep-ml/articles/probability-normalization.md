@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-p_i = x_i / sum_j x_j
+p_i=\frac{x_i}{\sum_{j=1}^{K}x_j},\qquad x_i\ge0,\quad \sum_{j=1}^{K}x_j>0,\quad \sum_{i=1}^{K}p_i=1
 $$
 
 ### 变量解释

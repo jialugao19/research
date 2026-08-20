@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-distance = ||phi(image_a) - phi(image_b)||
+d_\phi(X,Y)=\sum_{\ell}w_\ell\left\lVert\phi_\ell(X)-\phi_\ell(Y)\right\rVert_2^2
 $$
 
 ### 变量解释

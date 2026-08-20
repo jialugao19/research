@@ -92,7 +92,7 @@ references:
 ### 表达方式
 
 $$
-reward in {0, 1} or {-1, 1}
+R_t\in\{0,1\}\quad\text{or}\quad R_t\in\{-1,1\}
 $$
 
 ### 变量解释

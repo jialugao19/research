@@ -104,7 +104,7 @@ references:
 ### 表达方式
 
 $$
-grad J = E[G_t grad log pi(a_t|s_t)]
+\nabla_\theta J(\theta)=\mathbb E_{\pi_\theta}\!\left[G_t\nabla_\theta\log\pi_\theta(A_t\mid S_t)\right]
 $$
 
 ### 变量解释

@@ -94,7 +94,7 @@ references:
 ### 表达方式
 
 $$
-temperature_t = schedule(step_t)
+\tau_t=\mathcal S(t),\qquad p_t(v)=\frac{\exp(z_v/\tau_t)}{\sum_u\exp(z_u/\tau_t)}
 $$
 
 ### 变量解释
