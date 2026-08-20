@@ -37,6 +37,25 @@ python3 -m http.server 8888 --bind 127.0.0.1 --directory _preview
 `http://localhost:8888/`。本地预览使用根路径 `/`；部署流程使用
 `/research/` 构建 `_site`，以匹配未来 GitHub Pages 的项目仓库路径。
 
+要让预览脱离开发容器常驻运行，先按上面的命令构建并验证 `_preview`，然后在
+宿主机的项目目录启动独立 Nginx 服务：
+
+```bash
+docker compose up -d
+docker compose ps
+```
+
+服务通过 `http://x99.local:8088/` 提供，健康检查地址为
+`http://x99.local:8088/healthz`。Nginx 只读挂载项目目录且只提供其中的
+`_preview`；构建器即使删除并重建 `_preview`，Nginx 也会直接提供新文件，不需要
+重启。其 `restart: unless-stopped` 策略使服务不依赖开发容器或当前终端。查看日志
+和停止服务分别使用：
+
+```bash
+docker compose logs -f web
+docker compose down
+```
+
 主要页面结构为：
 
 ```text
