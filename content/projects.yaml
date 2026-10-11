@@ -16,175 +16,140 @@ categories:
     title: Research Systems
     description: Visualization, knowledge, and operational systems that support the research lifecycle.
 projects:
-  - id: prediction-nn
-    title: Prediction-NN
+  - id: prediction-nn-1min
+    title: Prediction-NN 1min
     category: forecasting-models
     status: active
-    description: Neural forecasting research for minute- and second-level A-share returns, with separate evidence for data, models, validation, and trading evaluation.
-    objective: Build a reproducible and comparable neural research system that clearly separates signal quality from trading feasibility.
+    description: Minute-level A-share return forecasting across data contracts, features, models, validation, and execution gates.
+    objective: Determine whether information available before prediction time consistently forecasts cross-sectional returns over a future holding period under a reproducible and comparable contract.
     review_summary: >-
-      The 1min registry now includes date-pure batching, matched feature-family ablations,
-      and a 10/15/30-minute horizon comparison alongside the established multi-seed
-      architecture results. The 1s line has two incompatible contracts: the legacy fold0
-      signal is strong but test-selected, while the OHLCV-only v2 run has weak pooled IC
-      and a sharply negative 10 bps net backtest. Neither line is execution-ready.
+      The 1min registry includes date-pure batching, matched feature-family ablations,
+      a 10/15/30-minute horizon comparison, a completed 36D feature reference, and two
+      market-context studies. B+VWAP is the signal baseline, GRU192×2 last-hidden is the
+      compact architecture, and learned panel context leads the latest matched signal
+      comparisons; registered cost-aware results remain negative.
     source_refs: [prediction-NN-main, exp-nn]
-    tracks:
-      - id: one-minute
-        title: 1min Forecasting Research
-        description: Research on stock1m labels, architectures, losses, sampling, checkpoint selection, and generalization.
-        objective: The minute-level program asks whether information available before prediction time can consistently forecast cross-sectional returns over a future holding period. It fixes data, labels, temporal splits, and checkpoint policy before testing architectures, losses, sample treatment, and feature extensions. Signal correlation, net portfolio performance, and execution feasibility remain separate evidence layers.
-        objective_details:
-          - 'Comparability: every candidate must use identical sample rows, time splits, training budgets, and selection rules so data-contract changes are not mistaken for model improvements.'
-          - 'Robustness: key conclusions require confirmation across seeds, rolling periods, and neighboring checkpoints. A single test maximum is diagnostic evidence, not a default-selection rule.'
-          - 'Executability: models must first pass pooled IC and Rank IC signal gates, then separately pass turnover, cost, slippage, and out-of-sample stability checks. An offline signal win does not imply deployability.'
-        data_structure:
-          - 'Sample index: base data is keyed by trading day, minute, and security. Train, validation, and test segments are split by day to prevent leakage across neighboring timestamps.'
-          - 'Model input: sequence models consume batch × time-step × feature tensors. Architecture studies use 60 minute steps and 14 market features; experiments that change either dimension declare it separately.'
-          - 'Labels and controls: the current mainline uses future 10-minute VWAP returns, a one-minute entry lag, and the paired_vwap_valid row set, with close-return labels retained on the same rows as a paired control.'
-          - 'Evaluation artifacts: each experiment preserves configuration, checkpoints, split predictions, and aggregate metrics. Feature and label normalization is estimated from train only, validation selects candidates, and test is reserved for final audit.'
-        conclusion: Current evidence supports B+VWAP as the minute-level signal baseline, GRU192×2 last-hidden as the compact architecture, and the robust 20k checkpoint as the conservative selector. New single-seed evidence shows that date-pure batching is feasible, three non-market feature families improve over legacy14, and 15/30-minute labels alter signal ranking under a matched contract. These additions remain ablations rather than execution evidence, the native v2 baseline refactor has not produced a formal prediction run, and net results still do not justify trading execution.
-      - id: one-second
-        title: 1s Forecasting Research
-        description: Second-level stock1s/v2 features, models, fold evaluation, turnover, and cost research.
-        objective: The second-level program tests whether trades, quotes, and order flow add stable forecasting power beyond the minute-level mainline. It uses an independent dataset, feature contract, folds, and cost evaluation. Promotion requires signal quality, selection stability, and net performance to pass together.
-        objective_details:
-          - 'Data validity: verify second-level files, feature coverage, missingness, and label endpoints before comparing models so gaps and market sessions cannot become spurious signals.'
-          - 'Selection discipline: checkpoints, thresholds, and portfolio candidates must be chosen on train/validation. Test is a one-time evaluation set and cannot continue participating in selection.'
-          - 'Trading gate: report turnover, net daily return, and Sharpe alongside pooled IC and Rank IC. A high-frequency signal that cannot cover costs is not promoted.'
-        data_structure:
-          - 'Sample index: stock1s/v2 is keyed by trading day, second, and security, with separate train, validation, and test stores for fold0.'
-          - 'Feature vector: the baseline contains 78 deduplicated features spanning short-window return and volatility, trading intensity, spread and depth, quote quality, and order flow, with explicit missingness semantics.'
-          - 'Models and labels: GRU384 plus a two-layer MLP512×512 head consumes the second-level sequence. Labels and endpoints follow a dedicated 1s protocol and are not mixed with 1min labels.'
-          - 'Evaluation artifacts: sample predictions, grouped signal metrics, key-universe aggregates, turnover, and cost results jointly determine whether an experiment remains comparable.'
-        conclusion: The legacy fold0 result has strong pooled IC and Rank IC, but its portfolio candidate used test during selection and remains net-negative. The independent OHLCV-only v2 contract avoids a direct uplift claim and yields only 0.00925 pooled IC; its fixed 10 bps cohort backtest loses 95.14% cumulatively with Sharpe -92.55. The data and signal chain merit further research, but both contracts remain research-only and the v2 checkpoint is explicitly rejected for deployment.
-    subprojects:
-      - id: reference-baseline
-        title: Reference Baseline
-        track: one-minute
-        group: Baselines & Model Design
-        description: Minute-level reference baselines, label endpoints, and the current comparable signal anchor.
-        objective: Fix a reproducible baseline and identify the remaining gates between signal and execution baselines.
-      - id: optimize-1min-model
-        title: 1min Model Architecture
-        track: one-minute
-        group: Baselines & Model Design
-        description: Capacity, stability, and test comparisons across GRU, pooling, MLP, and TCN architectures.
-        objective: Select a smaller and more stable minute-level architecture using multi-seed evidence.
-      - id: loss-function-1min
-        title: 1min Loss Functions
-        track: one-minute
-        group: Baselines & Model Design
-        description: Compare MSE, correlation, moment, and output-scale constrained losses.
-        objective: Improve signal IC and prediction scale without treating a single-seed result as a final promotion.
-      - id: learning-rate
-        title: Learning Rate & Schedulers
-        track: one-minute
-        group: Baselines & Model Design
-        description: Learning-rate, multi-seed stability, and scheduler screening under a fixed training budget.
-        objective: Fix a stable optimizer rate and scheduler configuration for subsequent experiments.
-      - id: validation
-        title: Validation & Checkpoint Selection
-        track: one-minute
-        group: Validation, Selection & Robustness
-        description: Rolling and purged validation, window selection, and robust checkpoint selectors.
-        objective: Prevent selection bias from validation argmax and repeated inspection of test results.
-      - id: capacity-robust-sampling
-        title: Capacity & Robust Sampling
-        track: one-minute
-        group: Validation, Selection & Robustness
-        description: Effects of capacity, dropout, robust losses, and decorrelated sampling on early overfitting.
-        objective: Identify mechanisms that reduce late-checkpoint degradation and merit multi-period validation.
-      - id: prediction-calibration
-        title: Labels & Prediction Calibration
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Compare close, VWAP, volatility normalization, and impact weights for IC and calibration.
-        objective: Reduce label noise on paired rows and evaluate signal gains separately from calibration gates.
-      - id: generalization
-        title: Generalization & Robustness
-        track: one-minute
-        group: Validation, Selection & Robustness
-        description: Rolling years, endpoint strides, adjacent windows, multiple seeds, and checkpoint-curve diagnostics.
-        objective: Test whether conclusions persist across time and seeds while marking diagnostics exposed to test.
-      - id: limit-pool
-        title: Limit-state Sample Pools
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Compare all, touch, and limit-state sample pools plus full-test diagnostics.
-        objective: Determine whether historical limit-state filtering improves signal quality under the same evaluation contract.
-      - id: near-zero-filter
-        title: Near-zero Filtering
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Effects of exact-zero and near-zero return-feature filtering on IC, hit rate, and sample retention.
-        objective: Find filtering rules that improve prediction quality without materially distorting the valid sample distribution.
-      - id: zero-aware-normalization
-        title: Zero-aware Normalization
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Compare zero indicators, piecewise standardization, hurdle models, and jitter transforms.
-        objective: Evaluate representations of structural zeros against an explicit no-transform control.
-      - id: l2-features
-        title: L2 Features
-        track: one-minute
-        group: Feature Extensions & Integration
-        description: Contribution of L2-derived features such as snapshot fast12 relative to the stock1m baseline.
-        objective: Run attributable L2 feature ablations under a consistent checkpoint-candidate policy.
-      - id: feature-cleaning
-        title: Feature Cleaning
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Historical feature-cleaning bundles and data-quality research.
-        objective: Preserve historical evidence and restore it as a current baseline only when configuration and artifacts are reproducible.
-      - id: integration
-        title: Integrated Improvements
-        track: one-minute
-        group: Feature Extensions & Integration
-        description: Test touch, near-zero, learning-rate, and other isolated changes in one controlled matrix.
-        objective: Determine whether local improvements compose while preserving negative results and rerun requirements.
-      - id: baseline-1s-0720
-        title: 1s Data Baseline
-        track: one-second
-        group: 1s Baseline & Execution Gates
-        description: stock1s/v2 data, feature health, GRU models, fold evaluation, costs, and turnover.
-        objective: Establish an independent second-level baseline and keep it in research status until predeclared selection and net-return gates pass.
-      - id: day-pure-batch-1min
-        title: Date-pure Batch Sampling
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: One-equivalent-epoch training with every batch restricted to a single trading date.
-        objective: Verify date-pure sampler integrity and feasibility before estimating any causal uplift against a matched mixed-date control.
-      - id: multiscale-market-features-1min
-        title: Multiscale Market Features
-        track: one-minute
-        group: Feature Extensions & Integration
-        description: Corrected-label 63-feature training and matched add-one ablations for market, liquidity, volatility, and trend families.
-        objective: Identify which feature families add signal under a frozen row, model, optimizer, and selection contract.
-      - id: baseline-1min-0813
-        title: Native v2 1min Baseline
-        track: one-minute
-        group: Baselines & Model Design
-        description: Production-chain refactor for the native 63-feature v2 contract with maintained leakage diagnostics.
-        objective: Establish an auditable native v2 baseline before making IC or model-quality comparisons.
-      - id: crossday-rolling
-        title: Cross-session Rolling Features
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: A/B/C boundary semantics for carrying, dropping, or shifting rolling history across valid trading sessions.
-        objective: Validate boundary identity, coverage, and distinctness before any matched training comparison.
-      - id: horizon-labels
-        title: Label Horizon Comparison
-        track: one-minute
-        group: Data, Labels & Sampling
-        description: Matched 10-, 15-, and 30-minute forward-return labels on one common 47-feature test universe.
-        objective: Measure how label horizon changes IC, ranking, and spread without changing features, rows, model, seed, or budget.
-      - id: baseline-1s-v2
-        title: OHLCV-only Stock1s v2
-        track: one-second
-        group: 1s Baseline & Execution Gates
-        description: Independent 42-feature OHLCV-only second-level contract with validation-only early stopping and fixed-cost cohort backtest.
-        objective: Test whether the simplified v2 data contract produces a stable and cost-covering signal without reusing the legacy fold0 comparison claim.
+    stages:
+      - id: data
+        state: documented
+        summary: Samples are keyed by trading day, minute, and security; the main architecture contract uses 60-minute sequences over stock1m inputs.
+      - id: data-engineering
+        state: documented
+        summary: Paired labels, train-only normalization, sample filters, cross-session boundaries, and label horizons are explicit research variables.
+      - id: feature-engineering
+        state: documented
+        summary: Stock1m features are compared through attributable L2 and feature-family ablations, a completed 36D reference, explicit cross-sectional ranks, latent context, and learned panel context.
+      - id: model
+        state: documented
+        summary: Linear and neural baselines lead to the current compact GRU192×2 candidate, with batch construction, loss, capacity, learning-rate, and integration studies kept comparable.
+      - id: prediction-evaluation
+        state: documented
+        summary: Pooled IC, Rank IC, rolling periods, seeds, adjacent checkpoints, and validation-only selectors separate signal evidence from selection bias.
+      - id: strategy
+        state: gap
+        summary: Turnover, costs, slippage, and stable out-of-sample portfolio results have not yet passed an execution gate.
+    legacy_topic_redirects:
+      - {id: reference-baseline, taxonomy_path: model/baseline}
+      - {id: optimize-1min-model, taxonomy_path: model/baseline}
+      - {id: loss-function-1min, taxonomy_path: model/loss-function}
+      - {id: learning-rate, taxonomy_path: model/optimization}
+      - {id: validation, taxonomy_path: prediction-evaluation/robustness/checkpoint}
+      - {id: capacity-robust-sampling, taxonomy_path: model/optimization}
+      - {id: prediction-calibration, taxonomy_path: data-engineering/label}
+      - {id: generalization, taxonomy_path: prediction-evaluation/robustness}
+      - {id: limit-pool, taxonomy_path: data-engineering/universe/filters}
+      - {id: near-zero-filter, taxonomy_path: data-engineering/data-clean/outlier}
+      - {id: zero-aware-normalization, taxonomy_path: data-engineering/data-clean/normalization}
+      - {id: l2-features, taxonomy_path: feature-engineering/order-book-l2}
+      - {id: feature-cleaning, taxonomy_path: data-engineering/data-clean}
+      - {id: integration, taxonomy_path: model/integration}
+      - {id: day-pure-batch-1min, taxonomy_path: model/batch}
+      - {id: multiscale-market-features-1min, taxonomy_path: feature-engineering/feature-set-audit}
+      - {id: market-context-1min, taxonomy_path: feature-engineering/market}
+      - {id: feature-audit-1min, taxonomy_path: feature-engineering/feature-set-audit}
+      - {id: baseline-1min-0813, taxonomy_path: model/baseline}
+      - {id: crossday-rolling, taxonomy_path: data-engineering/data-clean/outlier/cross-session-window}
+      - {id: horizon-labels, taxonomy_path: data-engineering/label}
+
+  - id: prediction-nn-1s
+    title: Prediction-NN 1s
+    category: forecasting-models
+    status: active
+    description: Second-level A-share forecasting over independent stock1s contracts, order-flow features, neural models, fold evaluation, turnover, and costs.
+    objective: Test whether trades, quotes, and order flow add stable forecasting power under an independent data, selection, and cost contract.
+    review_summary: >-
+      The legacy fold0 result has strong pooled IC and Rank IC, but its portfolio
+      candidate used test during selection and remains net-negative. The independent
+      OHLCV-only v2 contract yields weak pooled IC and a sharply negative 10 bps
+      backtest. Both contracts remain research-only.
+    source_refs: [prediction-NN-main, exp-nn]
+    stages:
+      - id: data
+        state: documented
+        summary: Stock1s contracts are keyed by trading day, second, and security, with independent train, validation, and test stores.
+      - id: data-engineering
+        state: documented
+        summary: Coverage, missingness, label endpoints, session behavior, and the independent OHLCV-only v2 contract are audited before comparison.
+      - id: feature-engineering
+        state: documented
+        summary: The legacy contract uses 78 deduplicated trade, quote, depth, volatility, intensity, and order-flow features; v2 uses an independent 42-feature OHLCV set.
+      - id: model
+        state: documented
+        summary: The legacy baseline uses GRU384 with a two-layer MLP512×512 head; v2 is evaluated without claiming direct uplift over that contract.
+      - id: prediction-evaluation
+        state: documented
+        summary: Fold metrics, missingness diagnostics, grouped signal quality, selection discipline, and test-use boundaries determine comparability.
+      - id: strategy
+        state: documented
+        summary: Turnover and cost sweeps remain net-negative, and neither contract passes the deployment gate.
+    legacy_topic_redirects:
+      - {id: baseline-1s-0720, taxonomy_path: prediction-evaluation/model-comparison}
+      - {id: baseline-1s-v2, taxonomy_path: prediction-evaluation/model-comparison}
+  - id: ashare-cnn
+    title: A-share Chart CNN
+    category: forecasting-models
+    status: active
+    description: Cross-sectional five-day A-share return forecasting from compact monochrome candlestick, moving-average, and volume images.
+    objective: Test whether a fixed 20-day chart representation contains stable out-of-sample ranking information beyond tabular price-volume baselines.
+    review_summary: The project has fixed its image, cache, split, checkpoint, and managed-experiment contracts. No reviewed full-scale result or publishable report is registered yet.
+    source_refs: [ashare-cnn]
+    stages:
+      - {id: data, state: documented, summary: Daily A-share market data and five-day forward cross-sectional labels define the current sample contract.}
+      - {id: data-engineering, state: documented, summary: Shared float32 image caches are bound to the data and rendering contract rather than training variants.}
+      - {id: feature-engineering, state: documented, summary: Each sample is a fixed 95x60 monochrome chart with 20 candles, a five-day moving average, and volume bars.}
+      - {id: model, state: in-progress, summary: Managed ResNet18 trials and resumable checkpoints are implemented, while the formal model comparison is incomplete.}
+      - {id: prediction-evaluation, state: gap, summary: No reviewed full-scale out-of-sample result is registered.}
+      - {id: strategy, state: gap, summary: Cost, turnover, and execution evidence have not been published.}
+  - id: astock-overnight
+    title: A-stock Overnight
+    category: forecasting-models
+    status: active
+    description: Full-market A-share overnight cross-sectional ranking from a 13:58 signal to a 14:00 entry and next-session exit contract.
+    objective: Determine whether point-in-time minute and daily factors support stable overnight stock ranking under explicit eligibility, delayed-exit, and split rules.
+    review_summary: The formal 2025 one-shot test reports 0.11449 all-market daily mean Rank IC and 23.72% gross Q10 return. Costs, price impact, borrow constraints, and a signal-limit filter review remain outside the current promotion evidence.
+    source_refs: [astock-overnight]
+    stages:
+      - {id: data, state: documented, summary: The 2021-2025 minute market, daily references, index weights, and point-in-time security states are audited and versioned.}
+      - {id: data-engineering, state: documented, summary: Eligibility, delayed exits, split purging, anomaly handling, and immutable artifact lifecycles are explicit.}
+      - {id: feature-engineering, state: documented, summary: Core v1 contains fixed minute-stock, minute-market, daily-stock, and daily-market factor definitions.}
+      - {id: model, state: documented, summary: A dual-GRU late-fusion baseline consumes separate minute and daily sequences under a frozen training contract.}
+      - {id: prediction-evaluation, state: documented, summary: Validation and one-shot test results include daily Rank IC, deciles, concentration, and CSI1800 reranking.}
+      - {id: strategy, state: in-progress, summary: Gross long-only cohorts are reported, but costs, price impact, and execution promotion gates remain open.}
+  - id: m3-cn
+    title: M3-CN Event Model
+    category: forecasting-models
+    status: active
+    description: A planned A-share state-event foundation model for next-event distributions and autoregressive order-book event rollouts.
+    objective: Learn reproducible event dynamics from canonical orders, trades, and L2 state while preserving exchange semantics and replay validity.
+    review_summary: The research and data-gate plan is documented, but implementation has not passed the Phase 0 NAS schema, sequence, replay, and licensing audit. No model result is registered.
+    source_refs: [m3]
+    stages:
+      - {id: data, state: in-progress, summary: Historical order, trade, and snapshot archives are identified; schema continuity, licensing, and source semantics remain gated.}
+      - {id: data-engineering, state: gap, summary: Canonical events, deterministic LOB replay, manifests, and train-only tokenization statistics are planned but not yet validated.}
+      - {id: feature-engineering, state: not-applicable, summary: The intended model learns from normalized events and book state rather than an alpha-factor layer.}
+      - {id: model, state: gap, summary: Markov, timing, factorized Transformer, and VQ autoregressive baselines are specified but not yet implemented.}
+      - {id: prediction-evaluation, state: gap, summary: Event likelihood, calibration, replay validity, and distribution-fidelity gates are not yet available.}
+      - {id: strategy, state: not-applicable, summary: Strategy returns are explicitly outside the first-stage success criteria.}
   - id: index500-predict
     title: Index500 Predict
     category: forecasting-models
@@ -193,6 +158,13 @@ projects:
     objective: Close the loop from constituent signals to tradable ETF mappings and test robustness with rolling validation, costs, and slippage.
     review_summary: ETF forecasts and basket aggregation both show material IC. The piecewise mapping improves on the old direct-short interpretation, but the current report excludes transaction costs and slippage.
     source_refs: [index500-predict, exp-index]
+    stages:
+      - {id: data, state: documented, summary: Constituent, weight, stock-level signal, ETF, and basis inputs are defined for the CSI 500 workflow.}
+      - {id: data-engineering, state: documented, summary: Basket aggregation and time-aligned ETF mapping connect constituent inputs to comparable evaluation rows.}
+      - {id: feature-engineering, state: in-progress, summary: Stock-level alpha aggregation and basis adjustment are documented, while broader feature attribution remains open.}
+      - {id: model, state: documented, summary: Constituent and ETF forecasting variants are compared under the same end-to-end objective.}
+      - {id: prediction-evaluation, state: documented, summary: Six backtests and ETF comparisons show material IC but retain explicit evidence boundaries.}
+      - {id: strategy, state: gap, summary: Transaction costs and slippage are absent from the current report, so the trading map is not execution-ready.}
   - id: limit-0729
     title: Limit / T+1
     category: portfolio-execution
@@ -201,6 +173,28 @@ projects:
     objective: Develop a simulation-ready strategy without temporal leakage, with auditable fills and acceptable stressed costs.
     review_summary: Drawdown and relative gates are acceptable, but the 30bp annual-return gate fails and the frozen test has too few trades. The strategy is not promoted to simulation.
     source_refs: [limit-0729]
+    stages:
+      - {id: data, state: documented, summary: First-limit A-share candidates and their market paths define the strategy research universe.}
+      - {id: data-engineering, state: documented, summary: Rule funnels, temporal controls, fill constraints, and mechanical T+1 exits form the simulation contract.}
+      - {id: feature-engineering, state: not-applicable, summary: The current strategy is rule-driven and does not maintain a separate feature-research layer.}
+      - {id: model, state: not-applicable, summary: Candidate ranking is evaluated as a strategy rule rather than a standalone forecasting model.}
+      - {id: prediction-evaluation, state: documented, summary: Walk-forward ranking and frozen-test evidence expose sample-size and promotion limits.}
+      - {id: strategy, state: documented, summary: Cost, drawdown, annual-return, fill, and trade-count gates are evaluated; the strategy is not promoted.}
+  - id: route
+    title: ETF Route Picker
+    category: portfolio-execution
+    status: active
+    description: A scheduled ETF rotation selector using aligned daily returns, normalized price paths, and a fixed trend-persistence score.
+    objective: Maintain an auditable and freshness-gated ETF selection rule with reproducible data, scoring, scheduling, and result artifacts.
+    review_summary: The production workflow has explicit calendar, cache, freshness, retry, credential, and scheduling contracts. No reviewed out-of-sample strategy report, cost model, or comparative benchmark is registered.
+    source_refs: [route]
+    stages:
+      - {id: data, state: documented, summary: ProMax fund-daily responses and an exchange calendar are validated against an expected trading date before use.}
+      - {id: data-engineering, state: documented, summary: Overlap refresh, persistent cache, cross-ETF date alignment, retries, and freshness gates fail closed.}
+      - {id: feature-engineering, state: documented, summary: Daily percentage changes form normalized price paths over a fixed common trading window.}
+      - {id: model, state: documented, summary: A deterministic OLS slope times cubed R-squared score selects the current best hold.}
+      - {id: prediction-evaluation, state: gap, summary: No reviewed out-of-sample comparison or stability analysis is registered.}
+      - {id: strategy, state: gap, summary: Turnover, costs, execution, drawdown, and benchmark evidence are not publicly evaluated.}
   - id: shouban2
     title: First Board Top-K
     category: portfolio-execution
@@ -209,6 +203,13 @@ projects:
     objective: Test whether rank stability, portfolio constraints, and realistic fills jointly support a first-board strategy.
     review_summary: A historical MHTML candidate exists, but it depends on local Streamlit resources and has not passed ownership or static-publication gates. No quantitative conclusion is published yet.
     source_refs: [shouban2]
+    stages:
+      - {id: data, state: in-progress, summary: First-board and weak-to-strong candidates define the intended universe, but no reviewed coverage snapshot is public.}
+      - {id: data-engineering, state: in-progress, summary: Fill realization and portfolio constraints are part of the intended contract but lack a published audit.}
+      - {id: feature-engineering, state: in-progress, summary: Continuous scoring inputs are registered without decision-ready public attribution.}
+      - {id: model, state: in-progress, summary: Ranking logic exists in historical application material but is not a reviewed model baseline.}
+      - {id: prediction-evaluation, state: gap, summary: The historical report has not passed ownership or static-publication gates.}
+      - {id: strategy, state: gap, summary: No public quantitative conclusion yet supports simulation or promotion.}
   - id: alphas
     title: Crypto Alphas
     category: factor-discovery
@@ -217,6 +218,13 @@ projects:
     objective: Preserve the crypto-alpha research lineage and restore key results only when the evidence contract is auditable.
     review_summary: No reviewed static report or quantitative snapshot is available. The page preserves project intent and archive status only.
     source_refs: [alphas]
+    stages:
+      - {id: data, state: in-progress, summary: The archive identifies minute-level crypto price and volume inputs without a current coverage audit.}
+      - {id: data-engineering, state: gap, summary: A reproducible cleaning and split contract has not been restored from the archive.}
+      - {id: feature-engineering, state: documented, summary: Historical price-volume alpha formulas and their research lineage remain cataloged.}
+      - {id: model, state: not-applicable, summary: The archived program centers on formula factors rather than a separate forecasting architecture.}
+      - {id: prediction-evaluation, state: gap, summary: No reviewed robustness or quantitative snapshot is currently public.}
+      - {id: strategy, state: gap, summary: No audited portfolio or cost result is currently public.}
   - id: genetic-factor-auto-3
     title: Genetic Factor Mining
     category: factor-discovery
@@ -225,6 +233,13 @@ projects:
     objective: Search crypto factors at high throughput and suppress small-sample selection bias through longer-horizon re-evaluation.
     review_summary: Thirty generations achieved high throughput, but the best small-sample IC fell materially in the 250-day review. Cross-sample decay is a primary result.
     source_refs: [genetic-factor-auto-3]
+    stages:
+      - {id: data, state: documented, summary: Crypto market samples support short search windows and a longer 250-day review window.}
+      - {id: data-engineering, state: in-progress, summary: Cross-sample separation is explicit, while broader data-quality evidence remains limited.}
+      - {id: feature-engineering, state: documented, summary: GPU-accelerated genetic search, mutation, and formula re-evaluation define the factor discovery process.}
+      - {id: model, state: not-applicable, summary: The project searches symbolic factors rather than training a standalone predictive model.}
+      - {id: prediction-evaluation, state: documented, summary: Small-sample IC decay in the longer review is retained as a primary negative result.}
+      - {id: strategy, state: gap, summary: No cost-aware portfolio result currently supports promotion.}
   - id: factor-daily
     title: Daily Factor Research
     category: factor-discovery
@@ -233,6 +248,43 @@ projects:
     objective: Standardize coverage, IC, grouped returns, turnover, and net backtest evaluation for daily factors.
     review_summary: All eight factors in the latest Top10 summary have negative net returns. The evidence is retained as a negative result pending a review of portfolio construction and turnover.
     source_refs: [factor-daily]
+    stages:
+      - {id: data, state: documented, summary: Daily price-volume inputs define the current factor research frequency and coverage.}
+      - {id: data-engineering, state: in-progress, summary: Coverage and batch evaluation are standardized, while point-in-time audits remain ongoing.}
+      - {id: feature-engineering, state: documented, summary: Formula factors are generated and retained with explicit expression identities.}
+      - {id: model, state: not-applicable, summary: The current evidence evaluates formula factors without a separate forecasting architecture.}
+      - {id: prediction-evaluation, state: documented, summary: Rank IC and grouped-return evidence is reported for the latest factor set.}
+      - {id: strategy, state: documented, summary: All eight latest Top10 factors have negative net returns after portfolio construction and turnover.}
+  - id: feature-analysis
+    title: Feature Analysis
+    category: factor-discovery
+    status: active
+    description: Reproducible single-factor analysis across intraday IC, grouped returns, daily portfolios, regime buckets, and implementation semantics.
+    objective: Audit each factor from executable formula through out-of-sample behavior before it enters a model or strategy candidate set.
+    review_summary: The Alpha001 reproduction covers 28.25 million valid 2024 out-of-sample stock-time rows with 99.27% joint coverage. Its primary-horizon Rank IC is near zero, grouped returns are not stably monotonic, and regime signs change; the factor is not promoted.
+    source_refs: [feature-analysis-v2]
+    stages:
+      - {id: data, state: documented, summary: The current report separates a 2023 development period from a 2024 out-of-sample period and records joint factor-label coverage.}
+      - {id: data-engineering, state: documented, summary: Point-in-time inputs, warm-up, label alignment, deterministic ties, and missing-return boundaries are explicit.}
+      - {id: feature-engineering, state: documented, summary: Alpha001 is reproduced from the repository's executable operators and audited against conflicting wrapper comments.}
+      - {id: model, state: not-applicable, summary: The current work evaluates a fixed formula factor without fitting a forecasting model.}
+      - {id: prediction-evaluation, state: documented, summary: IC, Rank IC, grouped returns, daily portfolios, and regime buckets show weak and unstable out-of-sample evidence.}
+      - {id: strategy, state: gap, summary: The research portfolios omit costs, trade constraints, and borrow availability and do not establish tradability.}
+  - id: return-distribution
+    title: A-share Return Distribution
+    category: factor-discovery
+    status: maintained
+    description: Point-in-time analysis of A-share return distributions, calendar effects, style spreads, index membership, industries, and frozen mechanism hypotheses.
+    objective: Separate robust cross-sectional and calendar regularities from unstable descriptive patterns under explicit multiple-testing and point-in-time controls.
+    review_summary: A self-contained report through 2026-08-11 includes 12 figures, distribution and robustness tables, Fama-MacBeth controls, bootstrap intervals, and Holm-adjusted hypothesis tests. Its findings have not yet been registered as individual public studies.
+    source_refs: [return-distribution]
+    stages:
+      - {id: data, state: documented, summary: Shanghai and Shenzhen A-share returns are joined to point-in-time index, industry, capitalization, and style states.}
+      - {id: data-engineering, state: documented, summary: Effective dates, historical membership, fixed labels, and report manifests define the reproducibility boundary.}
+      - {id: feature-engineering, state: documented, summary: Calendar, capitalization, volatility, liquidity, and prior-return groupings support mechanism analysis.}
+      - {id: model, state: not-applicable, summary: The project estimates distributions and cross-sectional controls rather than a forecasting model.}
+      - {id: prediction-evaluation, state: documented, summary: Robustness tables, bootstrap intervals, Fama-MacBeth coefficients, and multiplicity corrections are available.}
+      - {id: strategy, state: gap, summary: Descriptive return regularities have not passed a cost-aware portfolio implementation gate.}
   - id: aq2
     title: AQ2 Order Book Reconstruction
     category: market-data
@@ -241,6 +293,13 @@ projects:
     objective: Explain order-book differences without future-truth contamination and maintain a regression-tested exchange-rule state machine.
     review_summary: The v16 three-day full-market sweep completed without processing or book-invariant errors and reduced candidate mismatches. Its candidate boundary uses contemporaneous truth and is not a prediction-accuracy measure.
     source_refs: [AQ2]
+    stages:
+      - {id: data, state: documented, summary: Orders, trades, and exchange depth snapshots are the point-in-time reconstruction inputs.}
+      - {id: data-engineering, state: documented, summary: A deterministic exchange-rule state machine reconstructs the book and checks invariants tick by tick.}
+      - {id: feature-engineering, state: not-applicable, summary: The current objective is order-book truth reconstruction rather than predictive feature construction.}
+      - {id: model, state: not-applicable, summary: The reconstruction is rule-based and does not train a forecasting model.}
+      - {id: prediction-evaluation, state: not-applicable, summary: Candidate mismatches use contemporaneous truth and are not prediction-accuracy evidence.}
+      - {id: strategy, state: not-applicable, summary: Trading decisions are outside the reconstruction project boundary.}
   - id: ashare-1s
     title: A-share 1s
     category: market-data
@@ -249,6 +308,13 @@ projects:
     objective: Produce a reproducible and auditable second-level dataset that 1s models can consume independently.
     review_summary: The catalog contains 960 daily coverage files and 956 audits. Only four files cover 2024, a material gap that must be resolved.
     source_refs: [ashare-1s]
+    stages:
+      - {id: data, state: documented, summary: A-share L2 orders, trades, and snapshots provide the source material for versioned stock1s datasets.}
+      - {id: data-engineering, state: documented, summary: Daily coverage manifests and quality audits expose a material 2024 coverage gap.}
+      - {id: feature-engineering, state: not-applicable, summary: Predictive feature attribution belongs to downstream forecasting projects.}
+      - {id: model, state: not-applicable, summary: Model training is outside the dataset project boundary.}
+      - {id: prediction-evaluation, state: not-applicable, summary: Signal evaluation is owned by downstream projects using the published data contract.}
+      - {id: strategy, state: not-applicable, summary: Portfolio and execution logic are outside the dataset project boundary.}
   - id: get-index-data
     title: Index Data Loader
     category: market-data
@@ -257,6 +323,13 @@ projects:
     objective: Maintain stable constituent, weight, versioning, and storage contracts for index workflows.
     review_summary: No independent quantitative report is registered. The project page records its data responsibility pending coverage and freshness audits.
     source_refs: [get-index-data]
+    stages:
+      - {id: data, state: in-progress, summary: Constituents, weights, versions, and ETF mappings define the project's source-data responsibility.}
+      - {id: data-engineering, state: gap, summary: Independent coverage and freshness audits remain evidence backlog items.}
+      - {id: feature-engineering, state: not-applicable, summary: Feature construction is owned by downstream index research.}
+      - {id: model, state: not-applicable, summary: Forecasting models are outside the loader boundary.}
+      - {id: prediction-evaluation, state: not-applicable, summary: Signal evaluation is outside the loader boundary.}
+      - {id: strategy, state: not-applicable, summary: Trading decisions are outside the loader boundary.}
   - id: get-data
     title: Market Data Pipeline
     category: market-data
@@ -265,6 +338,13 @@ projects:
     objective: Provide stable, inspectable, and incrementally updateable market data infrastructure.
     review_summary: No unified coverage snapshot is registered. Dataset ranges, gaps, and latest successful updates remain evidence backlog items.
     source_refs: [get_data]
+    stages:
+      - {id: data, state: in-progress, summary: Daily, minute, calendar, and market-mirror inputs are acquired and stored incrementally.}
+      - {id: data-engineering, state: gap, summary: A unified public coverage, gap, and freshness snapshot is not yet registered.}
+      - {id: feature-engineering, state: not-applicable, summary: Predictive feature construction is outside the acquisition pipeline boundary.}
+      - {id: model, state: not-applicable, summary: Model training is outside the acquisition pipeline boundary.}
+      - {id: prediction-evaluation, state: not-applicable, summary: Signal evaluation is owned by downstream research projects.}
+      - {id: strategy, state: not-applicable, summary: Portfolio and execution logic are outside the acquisition pipeline boundary.}
   - id: tdx-data-source
     title: TDX Data Source
     category: market-data
@@ -273,9 +353,17 @@ projects:
     objective: Expose explicit capability, connection, reconnection, concurrency, integrity, and consistency controls for TDX equities and index futures.
     review_summary: On 08-05, three independent transaction endpoints completed repeated 1,800-symbol sweeps with 1,800 nonempty responses, zero failures, and 1.289s p95. Direct bars still have one effective endpoint and remain a single failure domain.
     source_refs: [tdx-data-source]
+    stages:
+      - {id: data, state: documented, summary: Direct one-minute bars, live transactions, historical quorum data, and index-futures services expose explicit capabilities.}
+      - {id: data-engineering, state: documented, summary: Connection, reconnection, concurrency, integrity, and multi-endpoint consistency controls are audited.}
+      - {id: feature-engineering, state: not-applicable, summary: Feature derivation belongs to consumers of the source API.}
+      - {id: model, state: not-applicable, summary: Forecasting is outside the data-source service boundary.}
+      - {id: prediction-evaluation, state: not-applicable, summary: Research signal metrics are outside the data-source service boundary.}
+      - {id: strategy, state: not-applicable, summary: Trading decisions are outside the data-source service boundary.}
   - id: snapshot-visualizer2
     title: Snapshot Visualizer
     category: research-systems
+    section: infrastructure
     status: maintained
     description: Interactive order-book snapshots, spreads, depth, imbalance, and time evolution for L2 diagnostics.
     objective: Reduce manual investigation cost for book and snapshot anomalies through reproducible visual inspection.
@@ -284,11 +372,21 @@ projects:
   - id: webpage5
     title: Factor Research Platform
     category: research-systems
+    section: infrastructure
     status: active
     description: Expression-driven factor generation, batch evaluation, backtesting, artifact management, and web presentation.
     objective: Connect factor generation, evaluation, comparison, and presentation through one expression and artifact contract.
     review_summary: Seven factor-evaluation reports exist in the project. Cached batch results require provenance confirmation before entering public statistics.
     source_refs: [webpage5]
+  - id: experiment-infra
+    title: Experiment Infrastructure
+    category: research-systems
+    section: infrastructure
+    status: active
+    description: Local MLflow, Prefect, backup, restore, health-check, and run-reconciliation infrastructure for managed research experiments.
+    objective: Keep experiment execution and tracking reproducible across the x99 host and the isolated m-nas compute environment.
+    review_summary: Canonical endpoints and operator workflows are documented. This is enabling infrastructure, not an independent source of research conclusions.
+    source_refs: [experiment-infra, prefect-experiment-runner]
   - id: live-predictor
     title: Live Predictor
     category: forecasting-models
@@ -297,6 +395,13 @@ projects:
     objective: Build an auditable loop from live data gates and inference through persistence and shadow evaluation, remaining non-actionable until evidence is sufficient.
     review_summary: On the morning of 08-05, all 1,800 securities passed data gates and produced 156 matured predictions. Aggregate direction accuracy was 48.98%, and historical extreme-tail behavior is inconsistent. The system remains research monitoring only.
     source_refs: [live-predictor]
+    stages:
+      - {id: data, state: documented, summary: Live TDX one-minute data and three ETF constituent baskets define the monitored universe.}
+      - {id: data-engineering, state: documented, summary: Causal data gates, persistence, maturity, and realized-return joins are part of the evaluation loop.}
+      - {id: feature-engineering, state: not-applicable, summary: Feature and model construction remain owned by the frozen Prediction-NN artifacts.}
+      - {id: model, state: documented, summary: Frozen Prediction-NN models are consumed without live retraining or selection.}
+      - {id: prediction-evaluation, state: documented, summary: Matured predictions, direction accuracy, extreme-tail behavior, and service quality are evaluated causally.}
+      - {id: strategy, state: gap, summary: The loop remains non-actionable until signal stability and execution evidence are sufficient.}
   - id: deep-ml
     title: Deep-ML Knowledge Base
     category: research-systems
@@ -316,10 +421,11 @@ projects:
     review_summary: The publishable snapshot contains 136 Chinese chapters across eight sections. Deep learning is an independent five-part section; chapters remain distinct from DeepML concepts and learning paths.
     source_refs: [knowledge]
   - id: ipcheck
-    title: IP Check
+    title: IP Reporter
     category: research-systems
+    section: infrastructure
     status: maintained
-    description: Detects internal and external IP changes and sends change-triggered notifications to maintain research-service reachability.
+    description: Detects internal, domestic-public, and overseas-public IPv4 state and sends change- or age-triggered notifications to maintain research-service reachability.
     objective: Reduce address-change outages through one-shot, auditable operational checks.
-    review_summary: No research-performance metric is registered. Future evidence may include the latest check time and notification success rate.
-    source_refs: [ipcheck]
+    review_summary: The current one-shot host tool has explicit probe, secret, state, retry, and cron contracts. No research-performance metric is registered.
+    source_refs: [ip-reporter]

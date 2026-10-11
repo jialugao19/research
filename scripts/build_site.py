@@ -18,12 +18,13 @@ def main() -> int:
     output = args.output.resolve() if args.output else site_root / "_site"
     try:
         catalog = load_catalog(site_root / "content")
-        build_site(catalog, site_root, output, args.base_url)
+        result = build_site(catalog, site_root, output, args.base_url)
     except CatalogError as exc:
         parser.error(str(exc))
     print(
-        f"built {len(catalog.research_projects)} research projects, {len(catalog.studies)} studies, "
-        f"{len(catalog.reports)} reports, and the Knowledge section at {output}"
+        f"built {len(catalog.research_projects)} research projects, "
+        f"{len(catalog.infrastructure_projects)} infrastructure systems, {len(catalog.studies)} studies, "
+        f"{len(catalog.reports)} reports, and the Knowledge section as {result.file_count} files at {output}"
     )
     return 0
 

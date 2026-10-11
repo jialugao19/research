@@ -8,7 +8,24 @@ main{max-width:1240px;margin:auto;padding:44px 26px 80px}h1{font:750 43px/1.12 G
 .eyebrow{text-transform:uppercase;letter-spacing:.12em;color:var(--amber);font-weight:780}.lede{font-size:19px;color:#344152;max-width:1000px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin:24px 0}.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:17px;box-shadow:0 8px 22px #18212f0d}.metric{font-size:26px;font-weight:790;color:var(--blue)}.label{font-size:13px;color:var(--muted)}.callout{border-left:5px solid var(--amber);background:#fff8ec;padding:15px 18px;margin:20px 0}
 table{width:100%;border-collapse:collapse;background:var(--card);font-size:12.5px;margin:12px 0 20px}th,td{border:1px solid var(--line);padding:8px 9px;text-align:right;vertical-align:top}th:first-child,td:first-child{text-align:left}th{background:#e6edf0}td{overflow-wrap:anywhere}img{display:block;width:100%;height:auto;border:1px solid var(--line);border-radius:8px;background:white;margin:14px 0 24px}code{background:#e8e3da;padding:2px 5px;border-radius:4px}.small{font-size:12px;color:var(--muted)}
 @media(max-width:850px){main{padding:24px 13px}h1{font-size:34px}.grid{grid-template-columns:1fr}table{font-size:10.5px}}
-</style></head><body><main>
+</style><style id="research-site-document-layout">
+:root { --research-report-accent: #2e8555; --research-report-muted: #606770; }
+html { font-size: 16px; }
+body { margin: 0 auto; max-width: 960px; padding: 48px 32px 80px; color: #1c1e21; background: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+body :is(h2, h3, h4, h5, h6, p, li, dt, dd, span, small, strong, a, button, input, select, label, time, summary, figcaption, th, td, pre, code) { font-size: 16px !important; line-height: 1.65; }
+body h1 { margin: 0 0 24px; font-size: 3rem !important; line-height: 1.2; letter-spacing: -.025em; }
+body :is(h2, h3, h4, h5, h6) { margin: 32px 0 10px; font-weight: 700; letter-spacing: 0; }
+body a { color: var(--research-report-accent); }
+body hr { display: none !important; }
+body :is(header, footer, article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout, .divider) { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+body :is(article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout) { background: transparent !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) { display: block !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) > * { width: 100% !important; max-width: none !important; margin: 0 0 24px !important; }
+body table { max-width: 100%; border-collapse: collapse; }
+body :is(svg, canvas, img) { max-width: 100%; }
+@media (max-width: 996px) { body { padding: 32px 20px 64px; } body h1 { font-size: 2rem !important; } }
+</style>
+</head><body><main>
 <div class="eyebrow">Seed 7 · 47 shared features · common supervised endpoints</div>
 <h1>10、15、30 分钟标签尺度如何改变 IC 与胜率？</h1>
 <p class="lede">本报告比较三个严格匹配的 GRU384×2 实验：输入均为连续 60 根 1 分钟 bar、同一有序 47 特征、同一训练/验证/测试日期、同一共同样本端点、同一随机种子与单 epoch 训练预算；唯一处理变量是 close-close 标签持有期。</p>

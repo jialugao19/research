@@ -6,6 +6,8 @@ import pytest
 
 from research_site.catalog import Catalog, CatalogError, Report, load_catalog
 from research_site.publication import (
+    PUBLIC_REPORT_STYLE_ID,
+    apply_public_report_style,
     publish_reports,
     sanitize_report,
     validate_public_reports,
@@ -41,6 +43,16 @@ def test_sanitize_report_redacts_local_roots() -> None:
     assert b"/home/" not in public
     assert b"/data-cache/" not in public
     assert public == b"[local-workspace]/project/a [artifact-root]/nn/run [local-service]:5000\n"
+
+
+def test_public_report_style_is_injected_once() -> None:
+    source = b"<html><head><title>Report</title></head><body><h1>Result</h1></body></html>"
+
+    styled = apply_public_report_style(source)
+
+    assert PUBLIC_REPORT_STYLE_ID in styled
+    assert styled.index(PUBLIC_REPORT_STYLE_ID) < styled.index(b"</head>")
+    assert apply_public_report_style(styled) == styled
 
 
 def test_committed_public_reports_are_safe() -> None:

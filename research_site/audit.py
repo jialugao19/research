@@ -95,7 +95,6 @@ def audit_report_ownership(
         manifest_report = manifest_by_file.get(source_path.name)
         if manifest_report is not None:
             project = manifest_report.project
-            subproject = manifest_report.subproject
             match_method = "manual-manifest"
             evidence.append(manifest_report.match_evidence)
         exact = current_by_hash.get(digest, [])

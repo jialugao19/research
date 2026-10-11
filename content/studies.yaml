@@ -1,9 +1,8 @@
 schema_version: 1
 studies:
   - id: reference-baseline
-    project: prediction-nn
-    track: one-minute
-    subproject: reference-baseline
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
     title: Reference Baseline
     status: completed
     maturity: signal-only
@@ -34,9 +33,8 @@ studies:
     featured: false
 
   - id: reference-baseline-v2
-    project: prediction-nn
-    track: one-minute
-    subproject: reference-baseline
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
     title: B+VWAP Signal Baseline
     status: completed
     maturity: signal-only
@@ -81,9 +79,8 @@ studies:
     featured: true
 
   - id: optimize-1min-model
-    project: prediction-nn
-    track: one-minute
-    subproject: optimize-1min-model
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
     title: Final 1min Architecture Evaluation
     status: completed
     maturity: decision-ready
@@ -136,9 +133,8 @@ studies:
     featured: true
 
   - id: loss-function-1min
-    project: prediction-nn
-    track: one-minute
-    subproject: loss-function-1min
+    project: prediction-nn-1min
+    taxonomy_path: model/loss-function
     title: 1min Loss Function Stage B
     status: completed
     maturity: developmental
@@ -170,9 +166,8 @@ studies:
     featured: false
 
   - id: baseline-1s-0720
-    project: prediction-nn
-    track: one-second
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    taxonomy_path: prediction-evaluation/model-comparison
     title: 1s GRU384 Baseline Evaluation
     status: doing
     maturity: developmental
@@ -233,9 +228,8 @@ studies:
     featured: true
 
   - id: baseline-main-20260622
-    project: prediction-nn
-    track: one-minute
-    subproject: reference-baseline
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
     title: Mainline Baseline Placeholder
     status: doing
     maturity: blocked
@@ -254,9 +248,8 @@ studies:
     featured: false
 
   - id: test-all
-    project: prediction-nn
-    track: one-minute
-    subproject: limit-pool
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/universe/filters
     title: Touch Test-All Diagnostic
     status: archived
     maturity: diagnostic
@@ -282,9 +275,8 @@ studies:
     featured: false
 
   - id: limit-pool
-    project: prediction-nn
-    track: one-minute
-    subproject: limit-pool
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/universe/filters
     title: Limit-State Sample Pool Comparison
     status: completed
     maturity: decision-ready
@@ -322,9 +314,8 @@ studies:
     featured: false
 
   - id: near-zero-filter
-    project: prediction-nn
-    track: one-minute
-    subproject: near-zero-filter
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/data-clean/outlier
     title: Near-Zero Filter Comparison
     status: completed
     maturity: decision-ready
@@ -362,9 +353,8 @@ studies:
     featured: false
 
   - id: learning-rate
-    project: prediction-nn
-    track: one-minute
-    subproject: learning-rate
+    project: prediction-nn-1min
+    taxonomy_path: model/optimization
     title: Learning Rate and Scheduler
     status: completed
     maturity: decision-ready
@@ -401,9 +391,8 @@ studies:
     featured: false
 
   - id: rolling-purged-val
-    project: prediction-nn
-    track: one-minute
-    subproject: validation
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/data-clean/validation-split
     title: Rolling/Purged Validation Stability
     status: completed
     maturity: decision-ready
@@ -435,9 +424,8 @@ studies:
     featured: false
 
   - id: val-select
-    project: prediction-nn
-    track: one-minute
-    subproject: validation
+    project: prediction-nn-1min
+    taxonomy_path: prediction-evaluation/robustness/checkpoint
     title: Robust Checkpoint Selection Rule
     status: completed
     maturity: decision-ready
@@ -474,9 +462,8 @@ studies:
     featured: true
 
   - id: capacity-robust-sampling
-    project: prediction-nn
-    track: one-minute
-    subproject: capacity-robust-sampling
+    project: prediction-nn-1min
+    taxonomy_path: model/optimization
     title: Capacity and Robust Sampling
     status: completed
     maturity: developmental
@@ -508,9 +495,8 @@ studies:
     featured: false
 
   - id: prediction-calibration
-    project: prediction-nn
-    track: one-minute
-    subproject: prediction-calibration
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/label
     title: Label Noise and Prediction Calibration
     status: completed
     maturity: developmental
@@ -548,9 +534,8 @@ studies:
     featured: false
 
   - id: generalization-rolling-stride
-    project: prediction-nn
-    track: one-minute
-    subproject: generalization
+    project: prediction-nn-1min
+    taxonomy_path: prediction-evaluation/robustness/monthly
     title: Rolling Year and Endpoint Stride
     status: completed
     maturity: developmental
@@ -569,9 +554,8 @@ studies:
     featured: false
 
   - id: generalization-adjacent-window
-    project: prediction-nn
-    track: one-minute
-    subproject: generalization
+    project: prediction-nn-1min
+    taxonomy_path: prediction-evaluation/robustness
     title: Adjacent-Window Sampling
     status: completed
     maturity: developmental
@@ -590,9 +574,8 @@ studies:
     featured: false
 
   - id: generalization-adjacent-window-multiseed
-    project: prediction-nn
-    track: one-minute
-    subproject: generalization
+    project: prediction-nn-1min
+    taxonomy_path: prediction-evaluation/robustness
     title: Adjacent-Window Multi-Seed Check
     status: completed
     maturity: decision-ready
@@ -630,9 +613,8 @@ studies:
     featured: false
 
   - id: generalization-block70-checkpoint-curve
-    project: prediction-nn
-    track: one-minute
-    subproject: generalization
+    project: prediction-nn-1min
+    taxonomy_path: prediction-evaluation/robustness/checkpoint
     title: Block70 Checkpoint Curve Diagnostic
     status: completed
     maturity: diagnostic
@@ -651,9 +633,8 @@ studies:
     featured: false
 
   - id: main-combo-integration
-    project: prediction-nn
-    track: one-minute
-    subproject: integration
+    project: prediction-nn-1min
+    taxonomy_path: model/integration
     title: Main Combo Integration Matrix
     status: completed
     maturity: blocked
@@ -672,9 +653,8 @@ studies:
     featured: false
 
   - id: zero-aware-normalization
-    project: prediction-nn
-    track: one-minute
-    subproject: zero-aware-normalization
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/data-clean/normalization
     title: Zero-Aware Transform Comparison
     status: completed
     maturity: blocked
@@ -693,9 +673,8 @@ studies:
     featured: false
 
   - id: l2-features
-    project: prediction-nn
-    track: one-minute
-    subproject: l2-features
+    project: prediction-nn-1min
+    taxonomy_path: feature-engineering/order-book-l2
     title: L2 Feature Attribution
     status: archived
     maturity: blocked
@@ -721,9 +700,8 @@ studies:
     featured: false
 
   - id: feature-cleaning-bundle-0609
-    project: prediction-nn
-    track: one-minute
-    subproject: feature-cleaning
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/data-clean
     title: Historical Feature Cleaning Bundle
     status: archived
     maturity: archived
@@ -755,9 +733,8 @@ studies:
     featured: false
 
   - id: combo-touch-nz-lr
-    project: prediction-nn
-    track: one-minute
-    subproject: integration
+    project: prediction-nn-1min
+    taxonomy_path: model/integration
     title: Touch + Near-Zero + LR Combo
     status: archived
     maturity: archived
@@ -784,6 +761,7 @@ studies:
 
   - id: index500-clean-benchmark
     project: index500-predict
+    taxonomy_path: prediction-evaluation/summary/ic
     title: Index500 Clean Benchmark
     status: completed
     maturity: developmental
@@ -829,6 +807,7 @@ studies:
 
   - id: limit-t1-strategy
     project: limit-0729
+    taxonomy_path: strategy/execution
     title: T+1 Strategy Gate Review
     status: completed
     maturity: developmental
@@ -873,6 +852,7 @@ studies:
 
   - id: shouban-report-gate
     project: shouban2
+    taxonomy_path: strategy/execution
     title: Historical Report Publication Gate
     status: doing
     maturity: blocked
@@ -892,6 +872,7 @@ studies:
 
   - id: crypto-alpha-archive
     project: alphas
+    taxonomy_path: feature-engineering/factor-discovery
     title: Historical Evidence Inventory
     status: archived
     maturity: archived
@@ -911,6 +892,7 @@ studies:
 
   - id: genetic-factor-0327
     project: genetic-factor-auto-3
+    taxonomy_path: feature-engineering/factor-discovery
     title: Genetic Factor Search and Re-evaluation
     status: completed
     maturity: developmental
@@ -955,6 +937,7 @@ studies:
 
   - id: factor-daily-topk-0407
     project: factor-daily
+    taxonomy_path: prediction-evaluation/robustness/top-k-percent
     title: Daily Factor Top10 Backtest
     status: completed
     maturity: developmental
@@ -998,6 +981,7 @@ studies:
 
   - id: aq2-v16
     project: aq2
+    taxonomy_path: data-engineering/data-clean
     title: Cross-Day Full-Market Reconstruction v16
     status: completed
     maturity: diagnostic
@@ -1046,6 +1030,7 @@ studies:
 
   - id: ashare-1s-coverage
     project: ashare-1s
+    taxonomy_path: data/tick
     title: Stock1s/v2 Coverage Snapshot
     status: doing
     maturity: developmental
@@ -1086,6 +1071,7 @@ studies:
 
   - id: index-data-evidence
     project: get-index-data
+    taxonomy_path: data/index-weight
     title: Data Coverage Evidence Backlog
     status: doing
     maturity: blocked
@@ -1105,6 +1091,7 @@ studies:
 
   - id: market-data-evidence
     project: get-data
+    taxonomy_path: data
     title: Pipeline Coverage Evidence Backlog
     status: doing
     maturity: blocked
@@ -1124,6 +1111,7 @@ studies:
 
   - id: tdx-data-source-v1
     project: tdx-data-source
+    taxonomy_path: data/minute-bar
     title: TDX Data Source Capability and Load Review
     status: doing
     maturity: diagnostic
@@ -1215,6 +1203,7 @@ studies:
 
   - id: live-predictor-live-quality
     project: live-predictor
+    taxonomy_path: prediction-evaluation/summary/ic
     title: 2026-08-05 Live Prediction Quality
     status: completed
     maturity: diagnostic
@@ -1278,9 +1267,8 @@ studies:
     featured: true
 
   - id: day-pure-batch-1min
-    project: prediction-nn
-    track: one-minute
-    subproject: day-pure-batch-1min
+    project: prediction-nn-1min
+    taxonomy_path: model/batch
     title: Date-pure Batch Sampling Feasibility
     status: completed
     maturity: developmental
@@ -1324,9 +1312,16 @@ studies:
     featured: true
 
   - id: multiscale-market-features-1min
-    project: prediction-nn
-    track: one-minute
-    subproject: multiscale-market-features-1min
+    project: prediction-nn-1min
+    taxonomy_path: feature-engineering/feature-set-audit
+    related_taxonomy_paths:
+      - feature-engineering/ohlcva
+      - feature-engineering/realized-volatility
+      - feature-engineering/high-low-range
+      - feature-engineering/ols-total-trend
+      - feature-engineering/endpoint-return
+      - feature-engineering/liquidity
+      - feature-engineering/market
     title: Multiscale Feature-family Ablation
     status: completed
     maturity: developmental
@@ -1377,9 +1372,8 @@ studies:
     featured: true
 
   - id: baseline-1min-0813
-    project: prediction-nn
-    track: one-minute
-    subproject: baseline-1min-0813
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
     title: Native v2 Baseline Engineering Gate
     status: doing
     maturity: diagnostic
@@ -1418,9 +1412,8 @@ studies:
     featured: false
 
   - id: baseline-1s-v2
-    project: prediction-nn
-    track: one-second
-    subproject: baseline-1s-v2
+    project: prediction-nn-1s
+    taxonomy_path: prediction-evaluation/model-comparison
     title: OHLCV-only Stock1s v2 Full Evaluation
     status: completed
     maturity: decision-ready
@@ -1471,9 +1464,8 @@ studies:
     featured: true
 
   - id: crossday-rolling
-    project: prediction-nn
-    track: one-minute
-    subproject: crossday-rolling
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/data-clean/outlier/cross-session-window
     title: Cross-session Rolling Boundary Diagnostics
     status: doing
     maturity: diagnostic
@@ -1516,9 +1508,8 @@ studies:
     featured: false
 
   - id: horizon-labels
-    project: prediction-nn
-    track: one-minute
-    subproject: horizon-labels
+    project: prediction-nn-1min
+    taxonomy_path: data-engineering/label
     title: Matched 10/15/30-minute Label Ablation
     status: completed
     maturity: developmental
@@ -1565,4 +1556,91 @@ studies:
         context: 205 days · 28,905 timestamps
     report_ids: [0815-horizon-label-comparison]
     evidence_ref: exp-nn/0-select&report/experiments/horizon-labels/results.yaml
+    featured: true
+
+  - id: market-sample
+    project: prediction-nn-1min
+    taxonomy_path: feature-engineering/market
+    title: Matched Market-context Sampling
+    status: completed
+    maturity: developmental
+    updated_at: 2026-08-25
+    method: Matched three-arm seed7 market-context comparison
+    dataset: stock1m · 176,134,322 shared test rows per arm
+    decision_state: iterate
+    primary_metric: panel-test-ic
+    objective: Compare a single-stock zero-context control, leave-one-out full-market panel mean/std, and timestamp-aligned 16D market features under one frozen data, model, seed, budget, selector, and backtest contract.
+    summary: Panel mean/std reaches 0.12598 pooled IC and 0.10279 Rank IC, ahead of the 0.08793/0.07807 baseline. Market16 reaches 0.07222/0.06016 and underperforms the baseline. All three 10-minute cost-aware backtests have negative Sharpe.
+    decision: Retain panel mean/std as the market-context signal candidate for multi-seed and rolling-split confirmation; reject market16 in this formulation and do not promote any arm to execution.
+    caveats:
+      - The comparison uses one seed and one temporal split.
+      - Signal gains do not establish executable net profitability.
+    metrics:
+      - {id: panel-test-ic, label: Panel test IC, value: 0.1259793871, format: decimal, decimals: 5, context: leave-one-out panel mean/std}
+      - {id: panel-rank-ic, label: Panel Rank IC, value: 0.1027934634, format: decimal, decimals: 5, context: shared full-test universe}
+      - {id: baseline-test-ic, label: Baseline test IC, value: 0.0879275915, format: decimal, decimals: 5, context: single-stock zero-context control}
+      - {id: market16-test-ic, label: Market16 test IC, value: 0.0722195610, format: decimal, decimals: 5, context: timestamp-level explicit market features}
+      - {id: panel-net-sharpe, label: Panel 10m net Sharpe, value: -39.5000121, format: number, decimals: 2, context: 10M CNY AUM cost model}
+      - {id: test-rows-per-arm, label: Test rows per arm, value: 176134322, format: integer, context: matched test universe}
+    report_ids: [0822-market-context-comparison, 0825-market-context-baseline, 0825-market-context-panel, 0825-market-context-market16]
+    evidence_ref: exp-nn/0-select&report/experiments/market-sample/results.yaml
+    featured: true
+
+  - id: 0825-feature-audit
+    project: prediction-nn-1min
+    taxonomy_path: feature-engineering/feature-set-audit
+    related_taxonomy_paths:
+      - feature-engineering/ohlcva
+      - feature-engineering/liquidity
+      - feature-engineering/market
+    title: 36D Feature-set Audit
+    status: completed
+    maturity: signal-only
+    updated_at: 2026-09-01
+    method: Seed7 exact-epoch 36D reference run
+    dataset: stock1m · 176,134,322 full-test rows
+    decision_state: retain
+    primary_metric: net-sharpe
+    objective: Complete the frozen 36D data, training, validation-only selection, full-test inference, and execution-aware backtest chain to establish a reusable feature reference.
+    summary: The run selected checkpoint 6,762 and completed full-test inference. Gross cumulative return is 2.6018, while the 10M net cumulative return is -0.9658 and net Sharpe is -60.14.
+    decision: Retain the artifact-backed 36D run as a future matched-ablation reference; do not claim feature uplift or execution readiness from this single arm.
+    caveats:
+      - No matched prior-feature control is part of the experiment.
+      - The two report files are not yet present in the immutable publication archive.
+    metrics:
+      - {id: net-sharpe, label: 10m net Sharpe, value: -60.1351751, format: number, decimals: 2, context: 10M CNY AUM cost model}
+      - {id: net-cumulative-return, label: Net cumulative return, value: -0.9657667390, format: number, decimals: 4, context: execution-aware backtest}
+      - {id: gross-cumulative-return, label: Gross cumulative return, value: 2.6018106988, format: number, decimals: 4, context: before costs}
+      - {id: selected-checkpoint, label: Selected checkpoint, value: 6762, format: integer, context: validation-only selection}
+      - {id: test-rows, label: Test rows, value: 176134322, format: integer, context: full-test inference}
+    report_ids: []
+    evidence_ref: exp-nn/0-select&report/experiments/0825-feature-audit/results.yaml
+    featured: true
+
+  - id: 0827-market-cs
+    project: prediction-nn-1min
+    taxonomy_path: feature-engineering/market
+    title: Market Cross-section Context
+    status: completed
+    maturity: developmental
+    updated_at: 2026-09-01
+    method: Matched seed7 five-arm market-panel comparison
+    dataset: stock1m · 176,134,322 shared test rows per completed arm
+    decision_state: iterate
+    primary_metric: latent-z-test-ic
+    objective: Compare no context, seven explicit cross-sectional ranks, standardized latent context, Deep Sets context, and induced attention under a fixed panel artifact, backbone, seed, selector, and backtest contract.
+    summary: Latent-z leads completed arms at 0.12734 test IC and 0.10245 Rank IC; CS rank reaches 0.12329/0.09283 and Deep Sets R2 reaches 0.12103/0.09098 versus the 0.08646/0.06417 control. Induced attention failed before test, and all completed arms have net Sharpe near -39 to -42.
+    decision: Retain latent-z, CS rank, and Deep Sets R2 as signal candidates for multi-seed and rolling comparisons; treat induced attention as a failed diagnostic and do not promote any arm to execution.
+    caveats:
+      - The comparison uses one seed and one temporal split.
+      - The attention smoke is diagnostic only and has no formal OOS result.
+    metrics:
+      - {id: latent-z-test-ic, label: Latent-z test IC, value: 0.1273446585, format: decimal, decimals: 5, context: completed-arm signal leader}
+      - {id: latent-z-rank-ic, label: Latent-z Rank IC, value: 0.1024517610, format: decimal, decimals: 5, context: shared full-test universe}
+      - {id: cs-rank-test-ic, label: CS rank test IC, value: 0.1232932522, format: decimal, decimals: 5, context: seven explicit ranks}
+      - {id: deep-sets-test-ic, label: Deep Sets R2 test IC, value: 0.1210304848, format: decimal, decimals: 5, context: eligible exact recovery}
+      - {id: control-test-ic, label: Control test IC, value: 0.0864617601, format: decimal, decimals: 5, context: no-context control}
+      - {id: latent-z-net-sharpe, label: Latent-z 10m net Sharpe, value: -39.2139249, format: number, decimals: 2, context: 10M CNY AUM cost model}
+    report_ids: [0831-market-cs-comparison, 0831-market-cs-control, 0831-market-cs-rank, 0831-market-cs-latent-z, 0831-market-cs-deep-sets, 0831-market-cs-induced-attention, 0830-market-cs-attention-smoke-r2]
+    evidence_ref: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     featured: true

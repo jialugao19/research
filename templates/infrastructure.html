@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% from "_study.html" import primary_evidence, study_timeline %}
+{% block title %}{{ project.title }} · Research Infrastructure{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page infrastructure-page{% endblock %}
+{% block content %}
+<header class="catalog-hero knowledge-domain-hero infrastructure-hero">
+  <nav class="knowledge-breadcrumb" aria-label="Research hierarchy"><a href="{{ base_url }}#research-infrastructure">Research Infrastructure</a><span>/</span><strong>System</strong></nav>
+  <p class="eyebrow">RESEARCH INFRASTRUCTURE <span>{{ project.status|replace('-', ' ')|upper }}</span></p>
+  <h1>{{ project.title }}</h1>
+  <p>{{ project.description }}</p>
+</header>
+<section id="overview" class="knowledge-section review-overview single-overview"><article><p class="eyebrow">System mandate</p><h2>How this supports research</h2><p>{{ project.objective }}</p></article></section>
+{{ primary_evidence(featured_studies, catalog, base_url, "primary-result", project.review_summary) }}
+<section id="evidence-log" class="knowledge-section"><div class="section-heading"><p class="eyebrow">Evidence log</p><h2>Operational and review records</h2></div>{% if studies %}{{ study_timeline(studies, catalog, base_url) }}{% endif %}</section>
+{% if reports %}<section id="infrastructure-reports" class="knowledge-section"><div class="section-heading"><p class="eyebrow">Publications</p><h2>Published system reports</h2></div><div class="report-list">{% for report in reports %}<article class="report-row"><time>{{ report.display_date }}</time><div><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div></article>{% endfor %}</div></section>{% endif %}
+{% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>ON THIS PAGE</strong><nav><a href="#overview">Mandate</a><a href="#primary-result">Primary result</a><a href="#evidence-log">Evidence log</a>{% if reports %}<a href="#infrastructure-reports">Reports</a>{% endif %}</nav>{% endblock %}

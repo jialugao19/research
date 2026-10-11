@@ -33,6 +33,8 @@ ALLOWED_DECISION_STATES = {
 ALLOWED_HIGHLIGHT_STATES = {"positive", "warning", "negative"}
 ALLOWED_HOMEPAGE_METRIC_CATEGORIES = {"quality", "method", "scale", "coverage"}
 ALLOWED_HOMEPAGE_VALUE_FORMATS = {"raw", "compact-1", "compact-2"}
+ALLOWED_PROJECT_SECTIONS = {"research", "infrastructure", "knowledge"}
+ALLOWED_STAGE_STATES = {"documented", "in-progress", "gap", "not-applicable"}
 
 
 class CatalogError(ValueError):
@@ -47,24 +49,45 @@ class Category:
 
 
 @dataclass(frozen=True)
-class Track:
+class ResearchStageDefinition:
     id: str
     title: str
+    short_title: str
     description: str
-    objective: str
-    objective_details: tuple[str, ...]
-    data_structure: tuple[str, ...]
-    conclusion: str
 
 
 @dataclass(frozen=True)
-class Subproject:
+class ProjectStage:
+    id: str
+    state: str
+    summary: str
+
+
+@dataclass(frozen=True)
+class ResearchTaxonomyNode:
     id: str
     title: str
-    track: str
-    group: str
-    description: str
-    objective: str
+    children: tuple[ResearchTaxonomyNode, ...] = field(default_factory=tuple)
+
+
+@dataclass(frozen=True)
+class ResearchTaxonomyStage:
+    id: str
+    nodes: tuple[ResearchTaxonomyNode, ...]
+
+
+@dataclass(frozen=True)
+class LegacyTopicRedirect:
+    id: str
+    taxonomy_path: tuple[str, ...]
+
+    @property
+    def stage(self) -> str:
+        return self.taxonomy_path[0]
+
+    @property
+    def anchor(self) -> str:
+        return "topic-" + "--".join(self.taxonomy_path)
 
 
 @dataclass(frozen=True)
@@ -78,17 +101,14 @@ class Project:
     review_summary: str
     source_refs: tuple[str, ...]
     section: str = "research"
-    tracks: tuple[Track, ...] = field(default_factory=tuple)
-    subprojects: tuple[Subproject, ...] = field(default_factory=tuple)
+    stages: tuple[ProjectStage, ...] = field(default_factory=tuple)
+    legacy_topic_redirects: tuple[LegacyTopicRedirect, ...] = field(default_factory=tuple)
 
-    def track(self, track_id: str) -> Track | None:
-        return next((item for item in self.tracks if item.id == track_id), None)
+    def stage(self, stage_id: str) -> ProjectStage | None:
+        return next((item for item in self.stages if item.id == stage_id), None)
 
-    def subproject(self, subproject_id: str) -> Subproject | None:
-        return next((item for item in self.subprojects if item.id == subproject_id), None)
-
-    def subprojects_for_track(self, track_id: str) -> tuple[Subproject, ...]:
-        return tuple(item for item in self.subprojects if item.track == track_id)
+    def legacy_topic_redirect(self, topic_id: str) -> LegacyTopicRedirect | None:
+        return next((item for item in self.legacy_topic_redirects if item.id == topic_id), None)
 
 
 @dataclass(frozen=True)
@@ -137,8 +157,16 @@ class Study:
     report_ids: tuple[str, ...]
     evidence_ref: str
     featured: bool
-    track: str | None = None
-    subproject: str | None = None
+    taxonomy_path: tuple[str, ...] = field(default_factory=tuple)
+    related_taxonomy_paths: tuple[tuple[str, ...], ...] = field(default_factory=tuple)
+
+    @property
+    def stage(self) -> str | None:
+        return self.taxonomy_path[0] if self.taxonomy_path else None
+
+    @property
+    def taxonomy_path_string(self) -> str | None:
+        return "/".join(self.taxonomy_path) if self.taxonomy_path else None
 
     @property
     def display_date(self) -> str:
@@ -162,7 +190,6 @@ class Report:
     featured: bool
     match_method: str
     match_evidence: str
-    subproject: str | None = None
     format: str = "legacy-html"
     source_file: str | None = None
     source_sha256: str | None = None
@@ -170,6 +197,8 @@ class Report:
     bundle_sha256: str | None = None
     hero_image: str | None = None
     revision_of: str | None = None
+    stage: str | None = None
+    route_project: str | None = None
 
     @property
     def display_date(self) -> str:
@@ -177,7 +206,8 @@ class Report:
 
     @property
     def route(self) -> str:
-        return f"reports/{self.project}/{self.id}/"
+        route_project = self.route_project or self.project
+        return f"reports/{route_project}/{self.id}/"
 
     @property
     def is_markdown(self) -> bool:
@@ -251,6 +281,8 @@ class Catalog:
     categories: tuple[Category, ...]
     projects: tuple[Project, ...]
     reports: tuple[Report, ...]
+    research_stages: tuple[ResearchStageDefinition, ...] = field(default_factory=tuple)
+    research_taxonomy: tuple[ResearchTaxonomyStage, ...] = field(default_factory=tuple)
     studies: tuple[Study, ...] = field(default_factory=tuple)
     featured_report_id: str | None = None
     homepage: HomepageHighlights | None = None
@@ -263,6 +295,18 @@ class Catalog:
     @property
     def knowledge_projects(self) -> tuple[Project, ...]:
         return tuple(project for project in self.projects if project.section == "knowledge")
+
+    @property
+    def infrastructure_projects(self) -> tuple[Project, ...]:
+        return tuple(project for project in self.projects if project.section == "infrastructure")
+
+    @property
+    def stage_by_id(self) -> dict[str, ResearchStageDefinition]:
+        return {stage.id: stage for stage in self.research_stages}
+
+    @property
+    def taxonomy_by_stage(self) -> dict[str, ResearchTaxonomyStage]:
+        return {stage.id: stage for stage in self.research_taxonomy}
 
     @property
     def project_by_id(self) -> dict[str, Project]:
@@ -312,11 +356,30 @@ class Catalog:
             reverse=True,
         )
 
-    def studies_for_track(self, project_id: str, track_id: str) -> list[Study]:
-        return [study for study in self.studies_for_project(project_id) if study.track == track_id]
+    def studies_for_stage(self, project_id: str, stage_id: str) -> list[Study]:
+        return [study for study in self.studies_for_project(project_id) if study.stage == stage_id]
 
-    def studies_for_subproject(self, project_id: str, subproject_id: str) -> list[Study]:
-        return [study for study in self.studies_for_project(project_id) if study.subproject == subproject_id]
+    def studies_for_taxonomy_path(
+        self,
+        project_id: str,
+        taxonomy_path: tuple[str, ...],
+    ) -> list[Study]:
+        return [
+            study
+            for study in self.studies_for_project(project_id)
+            if study.taxonomy_path == taxonomy_path
+        ]
+
+    def taxonomy_titles(self, taxonomy_path: tuple[str, ...]) -> tuple[str, ...]:
+        if not taxonomy_path:
+            return ()
+        titles = [self.stage_by_id[taxonomy_path[0]].title]
+        for length in range(2, len(taxonomy_path) + 1):
+            node = taxonomy_node_for_path(self.research_taxonomy, taxonomy_path[:length])
+            if node is None:
+                break
+            titles.append(node.title)
+        return tuple(titles)
 
 
 def _load_yaml(path: Path, supported_versions: tuple[int, ...] = (1,)) -> dict[str, Any]:
@@ -380,7 +443,121 @@ def _require_number(value: Any, field_name: str) -> int | float:
     return value
 
 
-def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...]]:
+def _require_taxonomy_path(value: Any, field_name: str) -> tuple[str, ...]:
+    text = _require_text(value, field_name)
+    parts = tuple(text.split("/"))
+    if any(not SLUG_RE.fullmatch(part) for part in parts):
+        raise CatalogError(f"{field_name} must be a slash-separated slug path: {value!r}")
+    return parts
+
+
+def taxonomy_anchor(taxonomy_path: tuple[str, ...]) -> str:
+    return "topic-" + "--".join(taxonomy_path)
+
+
+def taxonomy_node_for_path(
+    taxonomy: tuple[ResearchTaxonomyStage, ...],
+    taxonomy_path: tuple[str, ...],
+) -> ResearchTaxonomyNode | None:
+    if len(taxonomy_path) < 2:
+        return None
+    stage = next((item for item in taxonomy if item.id == taxonomy_path[0]), None)
+    if stage is None:
+        return None
+    nodes = stage.nodes
+    node: ResearchTaxonomyNode | None = None
+    for part in taxonomy_path[1:]:
+        node = next((item for item in nodes if item.id == part), None)
+        if node is None:
+            return None
+        nodes = node.children
+    return node
+
+
+def taxonomy_path_exists(
+    taxonomy: tuple[ResearchTaxonomyStage, ...],
+    taxonomy_path: tuple[str, ...],
+) -> bool:
+    stage_ids = {stage.id for stage in taxonomy}
+    return bool(taxonomy_path) and (
+        (len(taxonomy_path) == 1 and taxonomy_path[0] in stage_ids)
+        or taxonomy_node_for_path(taxonomy, taxonomy_path) is not None
+    )
+
+
+def _load_research_flow(path: Path) -> tuple[ResearchStageDefinition, ...]:
+    raw = _load_yaml(path)
+    raw_stages = raw.get("stages")
+    if not isinstance(raw_stages, list) or not raw_stages:
+        raise CatalogError(f"{path} must define a non-empty stages list")
+    stages: list[ResearchStageDefinition] = []
+    for index, item in enumerate(raw_stages):
+        if not isinstance(item, dict):
+            raise CatalogError(f"stages[{index}] must be a mapping")
+        stages.append(
+            ResearchStageDefinition(
+                id=_require_slug(item.get("id"), f"stages[{index}].id"),
+                title=_require_text(item.get("title"), f"stages[{index}].title"),
+                short_title=_require_text(item.get("short_title"), f"stages[{index}].short_title"),
+                description=_require_text(item.get("description"), f"stages[{index}].description"),
+            )
+        )
+    _unique([stage.id for stage in stages], "research stage ids")
+    return tuple(stages)
+
+
+def _load_research_taxonomy(
+    path: Path,
+    research_stages: tuple[ResearchStageDefinition, ...],
+) -> tuple[ResearchTaxonomyStage, ...]:
+    raw = _load_yaml(path)
+    _require_relative_reference(raw.get("source"), "research taxonomy source")
+    raw_stages = raw.get("stages")
+    if not isinstance(raw_stages, list) or not raw_stages:
+        raise CatalogError(f"{path} must define a non-empty stages list")
+
+    def load_nodes(raw_nodes: Any, field_name: str) -> tuple[ResearchTaxonomyNode, ...]:
+        if not isinstance(raw_nodes, list):
+            raise CatalogError(f"{field_name} must be a list")
+        nodes: list[ResearchTaxonomyNode] = []
+        for index, item in enumerate(raw_nodes):
+            if not isinstance(item, dict):
+                raise CatalogError(f"{field_name}[{index}] must be a mapping")
+            node_id = _require_slug(item.get("id"), f"{field_name}[{index}].id")
+            children = load_nodes(item.get("children", []), f"{field_name}[{index}].children")
+            nodes.append(
+                ResearchTaxonomyNode(
+                    id=node_id,
+                    title=_require_text(item.get("title"), f"{field_name}[{index}].title"),
+                    children=children,
+                )
+            )
+        _unique([node.id for node in nodes], f"{field_name} ids")
+        return tuple(nodes)
+
+    taxonomy: list[ResearchTaxonomyStage] = []
+    for index, item in enumerate(raw_stages):
+        if not isinstance(item, dict):
+            raise CatalogError(f"taxonomy stages[{index}] must be a mapping")
+        stage_id = _require_slug(item.get("id"), f"taxonomy stages[{index}].id")
+        taxonomy.append(
+            ResearchTaxonomyStage(
+                id=stage_id,
+                nodes=load_nodes(item.get("nodes"), f"taxonomy stage {stage_id}.nodes"),
+            )
+        )
+    expected = [stage.id for stage in research_stages]
+    actual = [stage.id for stage in taxonomy]
+    if actual != expected:
+        raise CatalogError("research taxonomy must declare all research stages in canonical order")
+    return tuple(taxonomy)
+
+
+def _load_projects(
+    path: Path,
+    research_stages: tuple[ResearchStageDefinition, ...],
+    research_taxonomy: tuple[ResearchTaxonomyStage, ...],
+) -> tuple[tuple[Category, ...], tuple[Project, ...]]:
     raw = _load_yaml(path)
     raw_categories = raw.get("categories")
     raw_projects = raw.get("projects")
@@ -407,65 +584,77 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
             raise CatalogError(f"projects[{index}] must be a mapping")
         project_id = _require_slug(item.get("id"), f"projects[{index}].id")
         section = _require_slug(item.get("section", "research"), f"projects[{index}].section")
-        if section not in {"research", "knowledge"}:
+        if section not in ALLOWED_PROJECT_SECTIONS:
             raise CatalogError(f"project {project_id} has unsupported section {section}")
         category = _require_slug(item.get("category"), f"projects[{index}].category")
         if category not in category_ids:
             raise CatalogError(f"project {project_id} references unknown category {category}")
         raw_refs = item.get("source_refs", [])
-        raw_tracks = item.get("tracks", [])
-        raw_subprojects = item.get("subprojects", [])
+        raw_stages = item.get("stages", [])
+        raw_legacy_redirects = item.get("legacy_topic_redirects", [])
         if not isinstance(raw_refs, list):
             raise CatalogError(f"project {project_id} source_refs must be a list of names")
         source_refs = tuple(
             _require_relative_reference(ref, f"project {project_id} source_refs[{ref_index}]")
             for ref_index, ref in enumerate(raw_refs)
         )
-        if not isinstance(raw_tracks, list):
-            raise CatalogError(f"project {project_id} tracks must be a list")
-        tracks: list[Track] = []
-        for track_index, track in enumerate(raw_tracks):
-            if not isinstance(track, dict):
-                raise CatalogError(f"project {project_id} tracks[{track_index}] must be a mapping")
-            tracks.append(
-                Track(
-                    id=_require_slug(track.get("id"), f"project {project_id} track id"),
-                    title=_require_text(track.get("title"), f"project {project_id} track title"),
-                    description=_require_text(track.get("description"), f"project {project_id} track description"),
-                    objective=_require_text(track.get("objective"), f"project {project_id} track objective"),
-                    objective_details=_require_text_list(
-                        track.get("objective_details"), f"project {project_id} track objective_details"
-                    ),
-                    data_structure=_require_text_list(
-                        track.get("data_structure"), f"project {project_id} track data_structure"
-                    ),
-                    conclusion=_require_text(
-                        track.get("conclusion"), f"project {project_id} track conclusion"
-                    ),
+        if not isinstance(raw_stages, list):
+            raise CatalogError(f"project {project_id} stages must be a list")
+        stage_ids = {stage.id for stage in research_stages}
+        stages: list[ProjectStage] = []
+        for stage_index, stage in enumerate(raw_stages):
+            if not isinstance(stage, dict):
+                raise CatalogError(f"project {project_id} stages[{stage_index}] must be a mapping")
+            stage_id = _require_slug(stage.get("id"), f"project {project_id} stage id")
+            if stage_id not in stage_ids:
+                raise CatalogError(f"project {project_id} references unknown stage {stage_id}")
+            state = _require_slug(stage.get("state"), f"project {project_id} stage {stage_id}.state")
+            if state not in ALLOWED_STAGE_STATES:
+                raise CatalogError(f"project {project_id} stage {stage_id} has unsupported state {state}")
+            stages.append(
+                ProjectStage(
+                    id=stage_id,
+                    state=state,
+                    summary=_require_text(stage.get("summary"), f"project {project_id} stage {stage_id}.summary"),
                 )
             )
-        _unique([track.id for track in tracks], f"track ids in {project_id}")
-        track_ids = {track.id for track in tracks}
-        if not isinstance(raw_subprojects, list):
-            raise CatalogError(f"project {project_id} subprojects must be a list")
-        subprojects: list[Subproject] = []
-        for sub_index, sub in enumerate(raw_subprojects):
-            if not isinstance(sub, dict):
-                raise CatalogError(f"project {project_id} subprojects[{sub_index}] must be a mapping")
-            track = _require_slug(sub.get("track"), f"project {project_id} subproject track")
-            if track not in track_ids:
-                raise CatalogError(f"project {project_id} subproject references unknown track {track}")
-            subprojects.append(
-                Subproject(
-                    id=_require_slug(sub.get("id"), f"project {project_id} subproject id"),
-                    title=_require_text(sub.get("title"), f"project {project_id} subproject title"),
-                    track=track,
-                    group=_require_text(sub.get("group"), f"project {project_id} subproject group"),
-                    description=_require_text(sub.get("description"), f"project {project_id} subproject description"),
-                    objective=_require_text(sub.get("objective"), f"project {project_id} subproject objective"),
+        _unique([stage.id for stage in stages], f"stage ids in {project_id}")
+        declared_stage_ids = [stage.id for stage in stages]
+        expected_stage_ids = [stage.id for stage in research_stages]
+        if section == "research" and declared_stage_ids != expected_stage_ids:
+            raise CatalogError(
+                f"project {project_id} must declare all research stages in canonical order"
+            )
+        if section != "research" and stages:
+            raise CatalogError(f"project {project_id} outside research must not declare stages")
+        if not isinstance(raw_legacy_redirects, list):
+            raise CatalogError(f"project {project_id} legacy_topic_redirects must be a list")
+        if section != "research" and raw_legacy_redirects:
+            raise CatalogError(
+                f"project {project_id} outside research must not declare legacy topic redirects"
+            )
+        legacy_redirects: list[LegacyTopicRedirect] = []
+        for redirect_index, redirect in enumerate(raw_legacy_redirects):
+            if not isinstance(redirect, dict):
+                raise CatalogError(
+                    f"project {project_id} legacy_topic_redirects[{redirect_index}] must be a mapping"
+                )
+            taxonomy_path = _require_taxonomy_path(
+                redirect.get("taxonomy_path"),
+                f"project {project_id} legacy topic taxonomy_path",
+            )
+            if not taxonomy_path_exists(research_taxonomy, taxonomy_path):
+                raise CatalogError(
+                    f"project {project_id} legacy topic references unknown taxonomy path "
+                    f"{'/'.join(taxonomy_path)}"
+                )
+            legacy_redirects.append(
+                LegacyTopicRedirect(
+                    id=_require_slug(redirect.get("id"), f"project {project_id} legacy topic id"),
+                    taxonomy_path=taxonomy_path,
                 )
             )
-        _unique([sub.id for sub in subprojects], f"subproject ids in {project_id}")
+        _unique([redirect.id for redirect in legacy_redirects], f"legacy topic ids in {project_id}")
         projects.append(
             Project(
                 id=project_id,
@@ -477,21 +666,26 @@ def _load_projects(path: Path) -> tuple[tuple[Category, ...], tuple[Project, ...
                 review_summary=_require_text(item.get("review_summary"), f"projects[{index}].review_summary"),
                 source_refs=source_refs,
                 section=section,
-                tracks=tuple(tracks),
-                subprojects=tuple(subprojects),
+                stages=tuple(stages),
+                legacy_topic_redirects=tuple(legacy_redirects),
             )
         )
     _unique([item.id for item in projects], "project ids")
     return tuple(categories), tuple(projects)
 
 
-def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Report, ...], str]:
+def _load_reports(
+    path: Path,
+    projects: tuple[Project, ...],
+    research_stages: tuple[ResearchStageDefinition, ...],
+) -> tuple[tuple[Report, ...], str]:
     raw = _load_yaml(path, supported_versions=(2,))
     featured_report_id = _require_slug(raw.get("featured_report"), "featured_report")
     raw_reports = raw.get("reports")
     if not isinstance(raw_reports, list):
         raise CatalogError(f"{path} must define a reports list")
     project_by_id = {project.id: project for project in projects}
+    stage_ids = {stage.id for stage in research_stages}
     reports: list[Report] = []
     for index, item in enumerate(raw_reports):
         if not isinstance(item, dict):
@@ -501,10 +695,16 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Repo
         project = project_by_id.get(project_id)
         if project is None:
             raise CatalogError(f"report {report_id} references unknown project {project_id}")
-        subproject_value = item.get("subproject")
-        subproject = None if subproject_value is None else _require_slug(subproject_value, f"report {report_id}.subproject")
-        if subproject and project.subproject(subproject) is None:
-            raise CatalogError(f"report {report_id} references unknown subproject {project_id}/{subproject}")
+        stage_value = item.get("stage")
+        stage = None if stage_value is None else _require_slug(stage_value, f"report {report_id}.stage")
+        if project.section == "research" and stage not in stage_ids:
+            raise CatalogError(f"report {report_id} must reference a research stage")
+        if project.section != "research" and stage is not None:
+            raise CatalogError(f"report {report_id} outside research must not reference a stage")
+        route_project_value = item.get("route_project")
+        route_project = None if route_project_value is None else _require_slug(
+            route_project_value, f"report {report_id}.route_project"
+        )
         report_format = _require_slug(item.get("format", "legacy-html"), f"report {report_id}.format")
         if report_format not in {"legacy-html", "markdown"}:
             raise CatalogError(f"report {report_id} has unsupported format {report_format}")
@@ -518,7 +718,8 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Repo
         common = {
             "id": report_id,
             "project": project_id,
-            "subproject": subproject,
+            "stage": stage,
+            "route_project": route_project,
             "format": report_format,
             "match_method": match_method,
             "match_evidence": _require_relative_reference(
@@ -527,9 +728,11 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Repo
             "revision_of": revision_of,
         }
         if report_format == "legacy-html":
-            source_file = _require_text(item.get("source_file"), f"report {report_id}.source_file")
-            if PurePath(source_file).name != source_file or Path(source_file).suffix.lower() != ".html":
-                raise CatalogError(f"report {report_id} source_file must be a basename ending in .html")
+            source_file = _require_relative_reference(
+                item.get("source_file"), f"report {report_id}.source_file"
+            )
+            if Path(source_file).suffix.lower() != ".html":
+                raise CatalogError(f"report {report_id} source_file must be a relative HTML path")
             tags = item.get("tags", [])
             if not isinstance(tags, list) or not all(isinstance(tag, str) and tag.strip() for tag in tags):
                 raise CatalogError(f"report {report_id} tags must be a list of text")
@@ -550,7 +753,8 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Repo
             content_file = _require_relative_reference(
                 item.get("content_file"), f"report {report_id}.content_file"
             )
-            expected = PurePath("report-docs") / project_id / report_id / "report.md"
+            content_project = route_project or project_id
+            expected = PurePath("report-docs") / content_project / report_id / "report.md"
             if PurePath(content_file) != expected:
                 raise CatalogError(f"report {report_id} content_file must be {expected.as_posix()}")
             bundle_sha256 = _require_text(item.get("bundle_sha256"), f"report {report_id}.bundle_sha256")
@@ -604,8 +808,13 @@ def _load_reports(path: Path, projects: tuple[Project, ...]) -> tuple[tuple[Repo
         predecessor = report_by_id.get(report.revision_of)
         if predecessor is None:
             raise CatalogError(f"report {report.id} revision_of references unknown report {report.revision_of}")
-        if predecessor.project != report.project or predecessor.subproject != report.subproject:
-            raise CatalogError(f"report {report.id} revision_of must keep project and subproject ownership")
+        if (
+            predecessor.project != report.project
+            or predecessor.stage != report.stage
+        ):
+            raise CatalogError(
+                f"report {report.id} revision_of must keep project ownership and stage"
+            )
         if predecessor.id in successors:
             raise CatalogError(f"report {predecessor.id} has multiple current successors")
         successors[predecessor.id] = report.id
@@ -630,6 +839,7 @@ def _load_studies(
     path: Path,
     projects: tuple[Project, ...],
     reports: tuple[Report, ...],
+    research_taxonomy: tuple[ResearchTaxonomyStage, ...],
 ) -> tuple[Study, ...]:
     raw = _load_yaml(path)
     raw_studies = raw.get("studies")
@@ -647,20 +857,40 @@ def _load_studies(
         project = project_by_id.get(project_id)
         if project is None:
             raise CatalogError(f"study {study_id} references unknown project {project_id}")
-        track_value = item.get("track")
-        track = None if track_value is None else _require_slug(track_value, f"study {study_id}.track")
-        if track and project.track(track) is None:
-            raise CatalogError(f"study {study_id} references unknown track {project_id}/{track}")
-        subproject_value = item.get("subproject")
-        subproject = None if subproject_value is None else _require_slug(
-            subproject_value, f"study {study_id}.subproject"
+        taxonomy_value = item.get("taxonomy_path")
+        taxonomy_path = (
+            ()
+            if taxonomy_value is None
+            else _require_taxonomy_path(taxonomy_value, f"study {study_id}.taxonomy_path")
         )
-        if subproject:
-            topic = project.subproject(subproject)
-            if topic is None:
-                raise CatalogError(f"study {study_id} references unknown subproject {project_id}/{subproject}")
-            if track != topic.track:
-                raise CatalogError(f"study {study_id} track must match subproject {subproject}")
+        raw_related_paths = item.get("related_taxonomy_paths", [])
+        if not isinstance(raw_related_paths, list):
+            raise CatalogError(f"study {study_id}.related_taxonomy_paths must be a list")
+        related_taxonomy_paths = tuple(
+            _require_taxonomy_path(value, f"study {study_id}.related_taxonomy_paths[{path_index}]")
+            for path_index, value in enumerate(raw_related_paths)
+        )
+        if project.section == "research":
+            if not taxonomy_path_exists(research_taxonomy, taxonomy_path):
+                raise CatalogError(f"study {study_id} must reference a valid research taxonomy path")
+            unknown_related = [
+                value
+                for value in related_taxonomy_paths
+                if not taxonomy_path_exists(research_taxonomy, value)
+            ]
+            if unknown_related:
+                raise CatalogError(
+                    f"study {study_id} references unknown related taxonomy path "
+                    f"{'/'.join(unknown_related[0])}"
+                )
+            if taxonomy_path in related_taxonomy_paths:
+                raise CatalogError(f"study {study_id} repeats its primary taxonomy path as related")
+            _unique(
+                ["/".join(value) for value in related_taxonomy_paths],
+                f"related taxonomy paths in study {study_id}",
+            )
+        elif taxonomy_path or related_taxonomy_paths:
+            raise CatalogError(f"study {study_id} outside research must not reference taxonomy")
         status = _require_slug(item.get("status"), f"study {study_id}.status")
         if status not in ALLOWED_STUDY_STATUSES:
             raise CatalogError(f"study {study_id} has unsupported status {status}")
@@ -728,15 +958,13 @@ def _load_studies(
                 raise CatalogError(f"study {study_id} references unknown report {report_id}")
             if report.project != project_id:
                 raise CatalogError(f"study {study_id} report {report_id} belongs to another project")
-            if subproject and report.subproject and report.subproject != subproject:
-                raise CatalogError(f"study {study_id} report {report_id} belongs to another subproject")
         linked_report_ids.extend(report_ids)
         studies.append(
             Study(
                 id=study_id,
                 project=project_id,
-                track=track,
-                subproject=subproject,
+                taxonomy_path=taxonomy_path,
+                related_taxonomy_paths=related_taxonomy_paths,
                 title=_require_text(item.get("title"), f"study {study_id}.title"),
                 status=status,
                 maturity=maturity,
@@ -976,11 +1204,23 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
 
 def load_catalog(content_root: Path) -> Catalog:
     """Load and validate public project, study, and report metadata."""
-    categories, projects = _load_projects(content_root / "projects.yaml")
-    reports, featured_report_id = _load_reports(content_root / "reports.yaml", projects)
-    studies = _load_studies(content_root / "studies.yaml", projects, reports)
+    research_stages = _load_research_flow(content_root / "research-flow.yaml")
+    research_taxonomy = _load_research_taxonomy(
+        content_root / "research-taxonomy.yaml", research_stages
+    )
+    categories, projects = _load_projects(
+        content_root / "projects.yaml", research_stages, research_taxonomy
+    )
+    reports, featured_report_id = _load_reports(
+        content_root / "reports.yaml", projects, research_stages
+    )
+    studies = _load_studies(
+        content_root / "studies.yaml", projects, reports, research_taxonomy
+    )
     catalog = Catalog(
         categories=categories,
+        research_stages=research_stages,
+        research_taxonomy=research_taxonomy,
         projects=projects,
         reports=reports,
         studies=studies,
@@ -999,6 +1239,8 @@ def load_catalog(content_root: Path) -> Catalog:
         raise CatalogError(str(exc)) from exc
     return Catalog(
         categories=catalog.categories,
+        research_stages=catalog.research_stages,
+        research_taxonomy=catalog.research_taxonomy,
         projects=catalog.projects,
         reports=catalog.reports,
         studies=catalog.studies,

@@ -1,0 +1,246 @@
+schema_version: 1
+source: mindmap-data/research.md
+stages:
+  - id: data
+    nodes:
+      - id: minute-bar
+        title: minute_bar
+        children:
+          - id: stock1m-local
+            title: /data/ashare/market/stock1m
+          - id: stock1m-nas
+            title: /data-nas/ashare/stock1m/
+      - id: tick
+        title: tick
+        children:
+          - id: stockl2-raw
+            title: /data/ashare/raw/stockl2
+          - id: stock1s-nas
+            title: /data-nas/ashare/stock1s
+          - id: raw-nas
+            title: /data-nas/ashare/raw/
+      - id: index-weight
+        title: index_weight
+
+  - id: data-engineering
+    nodes:
+      - id: data-clean
+        title: Data Clean
+        children:
+          - id: hypothesis
+            title: Hypothesis
+            children:
+              - id: distribution-model-fit
+                title: 数据分布与模型的匹配
+              - id: distribution-time-shift
+                title: 数据分布随时间的变化
+          - id: outlier
+            title: Outlier
+            children:
+              - id: ohlc-integrity
+                title: OHLC 合法关系、价格有限且为正、成交量额非负、session 内时间单调
+              - id: missing-suspension-limit-zero
+                title: 缺失值、停牌、涨跌停、零成交
+              - id: cross-session-window
+                title: 跨日窗口处理
+              - id: selection-bias
+                title: Selection bias
+          - id: normalization
+            title: Normalization
+            children:
+              - id: train-only-normalization
+                title: 只用 train 拟合 feature 和 label normalization
+              - id: zscore
+                title: zscore
+              - id: no-winsorization
+                title: 不进行截尾
+          - id: validation-split
+            title: Validation Split
+            children:
+              - id: period-effect
+                title: 时间段对模型训练和评估的影响
+      - id: universe
+        title: Universe
+        children:
+          - id: pool-selection
+            title: 股票池选择：如 300/500/1000
+          - id: filters
+            title: 过滤条件：上市、退市、停牌、ST、涨跌停和可交易性
+          - id: other-processing
+            title: 其他处理：如低流动性
+          - id: point-in-time
+            title: Point-in-time 原则 (Selection Bias)
+            children:
+              - id: missing-data
+                title: 数据缺失
+              - id: future-label-validity
+                title: 未来 label 有效性
+              - id: index-weight
+                title: 指数权重
+              - id: security-status
+                title: 证券上市、退市、停牌、ST、涨跌停和可交易性
+              - id: universe-filter-inference
+                title: 区分 universe、filter 和 inference universe
+          - id: sequence-length
+            title: Sequence Length
+          - id: sample-frequency
+            title: Sample Frequency
+      - id: label
+        title: Label
+
+  - id: feature-engineering
+    nodes:
+      - id: ohlcva
+        title: OHLCVA
+        children:
+          - id: signed-log-return
+            title: signed log return
+            children:
+              - id: return-windows
+                title: 1m, 5m, 2m, 3m, 10m
+              - id: tanh-log-range
+                title: tanh log hl, tanh log oc
+          - id: volume
+            title: volume
+            children:
+              - id: log-volume-amount
+                title: log vol, log_amount
+              - id: log-volume-amount-mean
+                title: log_vol_5m_mean, log_amount_5m_mean
+          - id: minute-normalization
+            title: minute_norm, session_minute_norm
+      - id: realized-volatility
+        title: Realized volatility
+        children:
+          - id: volatility-windows
+            title: 5m, 60m, 120m, 240m, 480m
+          - id: tanh-var-10m
+            title: tanh var_10m
+      - id: high-low-range
+        title: High-low range
+        children:
+          - id: range-windows
+            title: 5m, 20m, 60m, 120m, 240m, 480m
+      - id: ols-total-trend
+        title: OLS total trend
+        children:
+          - id: trend-windows
+            title: 5m, 20m, 60m, 120m, 240m, 480m,
+      - id: endpoint-return
+        title: Endpoint return
+        children:
+          - id: endpoint-windows
+            title: 5m, 20m, 60m, 120m, 240m, 480m
+      - id: liquidity
+        title: Liquidity
+        children:
+          - id: cs-rank
+            title: cs_rank
+            children:
+              - id: stock-ret-60m
+                title: stock_ret_60m
+          - id: same-minute-60d-pct
+            title: same_minute_60d_pct
+            children:
+              - id: volume-amount
+                title: vol, amount
+          - id: vol-trailing-percentile
+            title: vol_trailing_percentile
+            children:
+              - id: vol-percentile-windows
+                title: 5m, 20m, 60m
+          - id: amount-trailing-percentile
+            title: amount_trailing_percentile
+            children:
+              - id: amount-percentile-windows
+                title: 5m, 20m, 60m
+      - id: market
+        title: Market
+        children:
+          - id: major-csi-indexes
+            title: csi300/csi500/csi1000
+            children:
+              - id: log-return
+                title: log return
+                children:
+                  - id: market-return-windows
+                    title: 10m, 60m, 120m, 240m
+              - id: realized-volatility-60m
+                title: realized volatility 60m
+          - id: market-cs-return-dispersion
+            title: market_cs_ret_60m_dispersion
+      - id: order-book-l2
+        title: Order Book / L2
+      - id: feature-set-audit
+        title: Feature Set Audit
+      - id: factor-discovery
+        title: Factor Discovery
+
+  - id: model
+    nodes:
+      - id: baseline
+        title: Baseline
+        children:
+          - id: linear
+            title: Linear
+          - id: xgboost-lightgbm
+            title: XGBoost/LightGBM
+          - id: gru
+            title: GRU
+          - id: mlp
+            title: MLP
+          - id: cnn
+            title: CNN
+          - id: tranformer
+            title: Tranformer
+      - id: loss-function
+        title: Loss Function
+      - id: batch
+        title: Batch
+      - id: optimization
+        title: Optimization
+      - id: integration
+        title: Integration
+
+  - id: prediction-evaluation
+    nodes:
+      - id: summary
+        title: Summary
+        children:
+          - id: ic
+            title: IC
+          - id: direction-accuracy
+            title: direction accuracy
+      - id: feature-ic
+        title: Feature IC
+      - id: robustness
+        title: robustness
+        children:
+          - id: monthly
+            title: monthly
+          - id: intra-day
+            title: intra-day
+          - id: top-k-percent
+            title: Top-k %
+          - id: decile
+            title: price/volatility/ADV decile
+          - id: checkpoint
+            title: checkpoint
+      - id: train-metrics
+        title: train metrics
+        children:
+          - id: train-loss-curve
+            title: train loss curve
+          - id: rankic-gap-gate
+            title: RankIC gap gate
+      - id: model-comparison
+        title: model comparison
+
+  - id: strategy
+    nodes:
+      - id: execution
+        title: execution
+      - id: position
+        title: position
+      - id: signal
+        title: signal

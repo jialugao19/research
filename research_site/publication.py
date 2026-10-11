@@ -51,6 +51,24 @@ RESOURCE_ATTRIBUTES = {
     "video": ("src", "poster"),
 }
 RENDERING_LINK_RELS = {"icon", "manifest", "modulepreload", "prefetch", "preload", "stylesheet"}
+PUBLIC_REPORT_STYLE_ID = b"research-site-document-layout"
+PUBLIC_REPORT_STYLE = b"""<style id="research-site-document-layout">
+:root { --research-report-accent: #2e8555; --research-report-muted: #606770; }
+html { font-size: 16px; }
+body { margin: 0 auto; max-width: 960px; padding: 48px 32px 80px; color: #1c1e21; background: #fff; font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, Ubuntu, Cantarell, \"Noto Sans\", \"Helvetica Neue\", Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+body :is(h2, h3, h4, h5, h6, p, li, dt, dd, span, small, strong, a, button, input, select, label, time, summary, figcaption, th, td, pre, code) { font-size: 16px !important; line-height: 1.65; }
+body h1 { margin: 0 0 24px; font-size: 3rem !important; line-height: 1.2; letter-spacing: -.025em; }
+body :is(h2, h3, h4, h5, h6) { margin: 32px 0 10px; font-weight: 700; letter-spacing: 0; }
+body a { color: var(--research-report-accent); }
+body hr { display: none !important; }
+body :is(header, footer, article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout, .divider) { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+body :is(article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout) { background: transparent !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) { display: block !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) > * { width: 100% !important; max-width: none !important; margin: 0 0 24px !important; }
+body table { max-width: 100%; border-collapse: collapse; }
+body :is(svg, canvas, img) { max-width: 100%; }
+@media (max-width: 996px) { body { padding: 32px 20px 64px; } body h1 { font-size: 2rem !important; } }
+</style>"""
 
 
 class _RenderingResourceScanner(HTMLParser):
@@ -125,6 +143,20 @@ def sanitize_report(data: bytes) -> bytes:
     return b"\n".join(line.rstrip(b" \t") for line in data.split(b"\n"))
 
 
+def apply_public_report_style(data: bytes) -> bytes:
+    """Inject the shared Research typography without changing the immutable archive source."""
+    if PUBLIC_REPORT_STYLE_ID in data:
+        return data
+    lower = data.lower()
+    head_end = lower.find(b"</head>")
+    if head_end >= 0:
+        return data[:head_end] + PUBLIC_REPORT_STYLE + b"\n" + data[head_end:]
+    body_start = lower.find(b"<body")
+    if body_start >= 0:
+        return data[:body_start] + PUBLIC_REPORT_STYLE + b"\n" + data[body_start:]
+    return PUBLIC_REPORT_STYLE + b"\n" + data
+
+
 def _validate_source(report: Report, source_path: Path, data: bytes) -> None:
     if not source_path.is_file():
         raise CatalogError(f"missing source report: {source_path}")
@@ -176,9 +208,9 @@ def publish_reports(catalog: Catalog, archive_root: Path, public_root: Path) -> 
         except OSError as exc:
             raise CatalogError(f"cannot read source report {source_path}: {exc}") from exc
         _validate_source(report, source_path, source_data)
-        published_data = sanitize_report(source_data)
+        published_data = apply_public_report_style(sanitize_report(source_data))
         _validate_public_copy(report, published_data)
-        destination_path = public_root / report.project / report.id / "index.html"
+        destination_path = public_root / (report.route_project or report.project) / report.id / "index.html"
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         destination_path.write_bytes(published_data)
         results.append(
@@ -201,12 +233,14 @@ def validate_public_reports(catalog: Catalog, public_root: Path) -> list[Publica
         if report.is_markdown:
             continue
         assert report.source_file is not None and report.source_sha256 is not None
-        destination_path = public_root / report.project / report.id / "index.html"
+        destination_path = public_root / (report.route_project or report.project) / report.id / "index.html"
         try:
             data = destination_path.read_bytes()
         except OSError as exc:
             raise CatalogError(f"missing public report {destination_path}: {exc}") from exc
         _validate_public_copy(report, data)
+        if PUBLIC_REPORT_STYLE_ID not in data:
+            raise CatalogError(f"report {report.id} public copy is missing the Research layout style")
         results.append(
             PublicationResult(
                 report_id=report.id,

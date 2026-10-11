@@ -55,18 +55,28 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
         output_root / "knowledge.json",
         output_root / "knowledge" / "index.html",
     ]
-    expected.extend(output_root / "projects" / project.id / "index.html" for project in catalog.research_projects)
     expected.extend(
-        output_root / "projects" / project.id / track.id / "index.html"
-        for project in catalog.research_projects
-        for track in project.tracks
+        output_root / "projects" / project.id / "index.html"
+        for project in (*catalog.research_projects, *catalog.infrastructure_projects)
     )
     expected.extend(
-        output_root / "projects" / project.id / subproject.id / "index.html"
+        output_root / "projects" / project.id / stage.id / "index.html"
         for project in catalog.research_projects
-        for subproject in project.subprojects
+        for stage in catalog.research_stages
+    )
+    expected.extend(
+        output_root / "projects" / project.id / redirect.id / "index.html"
+        for project in catalog.research_projects
+        for redirect in project.legacy_topic_redirects
     )
     expected.extend(output_root / report.route / "index.html" for report in catalog.reports)
+    expected.extend(
+        (
+            output_root / "projects" / "prediction-nn" / "index.html",
+            output_root / "projects" / "prediction-nn" / "one-minute" / "index.html",
+            output_root / "projects" / "prediction-nn" / "one-second" / "index.html",
+        )
+    )
     if catalog.knowledge is None:
         raise CatalogError("catalog is missing knowledge data")
     expected.extend(output_root / domain.route / "index.html" for domain in catalog.knowledge.ontology_domains)

@@ -1,45 +1,36 @@
 {% extends "base.html" %}
-{% from "_study.html" import study_card, study_timeline %}
+{% from "_study.html" import primary_evidence %}
+{% from "_research_flow.html" import research_spine %}
 {% block title %}{{ project.title }} · JG Research Lab{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page research-project-page{% endblock %}
 {% block content %}
-<section class="page-hero shell">
-  <p class="breadcrumb"><a href="{{ base_url }}">Research</a> / {{ catalog.category_by_id[project.category].title }}</p>
+<header class="catalog-hero knowledge-domain-hero">
+  <nav class="knowledge-breadcrumb" aria-label="Research hierarchy"><a href="{{ base_url }}">Research</a><span>/</span><strong>Project</strong></nav>
   <p class="eyebrow">PROJECT DOSSIER <span>{{ project.status|replace('-', ' ')|upper }}</span></p>
   <h1>{{ project.title }}</h1>
-  <p class="lead">{{ project.description }}</p>
-  <dl class="page-stats"><div><dt>{{ studies|length }}</dt><dd>Experiments</dd></div><div><dt>{{ reports|length }}</dt><dd>Reports</dd></div><div><dt>{{ project.tracks|length }}</dt><dd>Research tracks</dd></div></dl>
+  <p>{{ project.description }}</p>
+</header>
+
+<section id="overview" class="knowledge-section review-overview single-overview">
+  <article><p class="eyebrow">Research mandate</p><h2>Question before implementation</h2><p>{{ project.objective }}</p></article>
 </section>
 
-<section id="overview" class="shell section compact review-overview">
-  <article><p class="eyebrow">01 / MANDATE</p><h2>Research objective</h2><p>{{ project.objective }}</p></article>
-  <article><p class="eyebrow">02 / ASSESSMENT</p><h2>Current assessment</h2><p>{{ project.review_summary }}</p></article>
-</section>
-
-{% if project.tracks %}
-<section id="tracks" class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">RESEARCH TRACKS</p><h2>Independent evidence paths</h2></div><p>Each track maintains its own experiment timeline and evaluation context.</p></div>
-  <div class="track-grid">
-    {% for track in project.tracks %}{% set track_studies = catalog.studies_for_track(project.id, track.id) %}
-    <a class="track-card" href="{{ base_url }}projects/{{ project.id }}/{{ track.id }}/"><span>{{ "%02d"|format(loop.index) }} / {{ track_studies|length }} EXPERIMENTS</span><h3>{{ track.title }}</h3><p>{{ track.description }}</p><strong>OPEN TRACK ↗</strong></a>
+<section id="research-flow" class="knowledge-section project-flow-section">
+  <div class="section-heading"><p class="eyebrow">Research chain</p><h2>From source data to execution gates</h2><p>The same ordered spine is used across every project. Open a stage for its research questions, experiment record, and publications.</p></div>
+  {{ research_spine(project, catalog, base_url) }}
+  <div class="stage-summary-list">
+    {% for view in stage_views %}
+    <article class="stage-summary-row stage-state-{{ view.assessment.state }}">
+      <header><span>{{ "%02d"|format(loop.index) }}</span></header>
+      <h3><a href="{{ view.url }}">{{ view.definition.title }}</a></h3>
+      <p>{{ view.definition.description }}</p>
+      <footer><span>{{ view.occupied_topics }} mapped topics</span><span>{{ view.studies|length }} experiments</span><span>{{ view.reports|length }} reports</span><a href="{{ view.url }}">Open stage →</a></footer>
+    </article>
     {% endfor %}
   </div>
 </section>
-{% endif %}
 
-<section id="evidence" class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">PRIMARY EVIDENCE</p><h2>Current findings &amp; metrics</h2></div><p>Read every metric with its sample, seed, cost assumptions, and evidence maturity.</p></div>
-  <div class="study-grid">{% for study in featured_studies %}{{ study_card(study, catalog, base_url) }}{% endfor %}</div>
-</section>
-
-<section id="process" class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">EXPERIMENT LOG</p><h2>Research process</h2></div><p>Open an entry to inspect historical, diagnostic, blocked, and archived work.</p></div>
-  {{ study_timeline(studies, catalog, base_url) }}
-</section>
-
-<section id="project-reports" class="shell section compact">
-  <div class="section-heading"><div><p class="eyebrow">PUBLICATIONS</p><h2>Published research</h2></div></div>
-  {% if reports %}<div class="report-list">{% for report in reports %}<article class="report-row"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><div><p class="meta">{% if report.subproject %}{{ report.subproject }}{% else %}PROJECT REPORT{% endif %}</p><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}" aria-label="Read {{ report.title }}">OPEN ↗</a></article>{% endfor %}</div>{% else %}<div class="empty-state"><strong>No public report yet</strong><p>Verified objectives, findings, and metric snapshots remain visible; only reports that pass the publication gate appear here.</p></div>{% endif %}
-</section>
+{{ primary_evidence(featured_studies, catalog, base_url, "primary-result", project.review_summary) }}
 {% endblock %}
 {% block toc_class %}{% endblock %}
-{% block toc %}<strong>ON THIS PAGE</strong><nav><a href="#overview">Mandate</a>{% if project.tracks %}<a href="#tracks">Research tracks</a>{% endif %}<a href="#evidence">Primary evidence</a><a href="#process">Experiment log</a><a href="#project-reports">Publications</a></nav>{% endblock %}
+{% block toc %}<strong>ON THIS PAGE</strong><nav><a href="#overview">Mandate</a><a href="#research-flow">Research chain</a><a href="#primary-result">Primary result</a></nav>{% endblock %}

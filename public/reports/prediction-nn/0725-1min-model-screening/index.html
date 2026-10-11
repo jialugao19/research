@@ -12,7 +12,24 @@ section{background:white;border:1px solid #d8dee9;border-radius:8px;margin:18px 
 table{border-collapse:collapse;width:100%;font-size:12px;margin:12px 0} th,td{border:1px solid #e5e7eb;padding:6px 8px;text-align:left;vertical-align:top} th{background:#f1f5f9}
 .figure-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(450px,1fr));gap:16px} figure{margin:0;background:#fbfcfe;border:1px solid #e5e7eb;border-radius:8px;padding:10px} figure img{max-width:100%;height:auto;display:block;margin:0 auto} figcaption{font-size:12px;color:#475467;margin-top:8px}
 .note{background:#fff7ed;border:1px solid #fed7aa;border-radius:8px;padding:12px} code{background:#eef2f7;padding:1px 4px;border-radius:4px} a{color:#1f77b4}
-</style><!-- self-contained: embedded PNG images; generated 2026-07-24 11:27:32 Asia/Shanghai --></head><body><header><h1>1min Model Structure Screening Detailed Report</h1><p>Seed 7 validation screening · generated 2026-07-24 02:52:10 Asia/Shanghai</p></header><main>
+</style><!-- self-contained: embedded PNG images; generated 2026-07-24 11:27:32 Asia/Shanghai --><style id="research-site-document-layout">
+:root { --research-report-accent: #2e8555; --research-report-muted: #606770; }
+html { font-size: 16px; }
+body { margin: 0 auto; max-width: 960px; padding: 48px 32px 80px; color: #1c1e21; background: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+body :is(h2, h3, h4, h5, h6, p, li, dt, dd, span, small, strong, a, button, input, select, label, time, summary, figcaption, th, td, pre, code) { font-size: 16px !important; line-height: 1.65; }
+body h1 { margin: 0 0 24px; font-size: 3rem !important; line-height: 1.2; letter-spacing: -.025em; }
+body :is(h2, h3, h4, h5, h6) { margin: 32px 0 10px; font-weight: 700; letter-spacing: 0; }
+body a { color: var(--research-report-accent); }
+body hr { display: none !important; }
+body :is(header, footer, article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout, .divider) { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+body :is(article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout) { background: transparent !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) { display: block !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) > * { width: 100% !important; max-width: none !important; margin: 0 0 24px !important; }
+body table { max-width: 100%; border-collapse: collapse; }
+body :is(svg, canvas, img) { max-width: 100%; }
+@media (max-width: 996px) { body { padding: 32px 20px 64px; } body h1 { font-size: 2rem !important; } }
+</style>
+</head><body><header><h1>1min Model Structure Screening Detailed Report</h1><p>Seed 7 validation screening · generated 2026-07-24 02:52:10 Asia/Shanghai</p></header><main>
 <section id="executive-summary"><h2>1. Executive Summary</h2><div class="card-grid"><div class="card"><span>arms</span><strong>19</strong><em>18 candidates + baseline_current</em></div><div class="card"><span>best arm</span><strong>gru128_l1_mlpnone</strong><em>score 0.053298</em></div><div class="card"><span>baseline score</span><strong>0.041201</strong><em>same-protocol control</em></div><div class="card"><span>best delta</span><strong>+0.012096</strong><em>vs baseline_current</em></div><div class="card"><span>best params</span><strong>55,425</strong><em>trainable parameters</em></div><div class="card"><span>baseline params</span><strong>1,808,129</strong><em>trainable parameters</em></div></div>
 <p>本报告比较 GRU hidden_size {128,192,256} × layers {1,2} × MLP hidden_dims {[], [128], [256]} 的 18 个小容量候选，并加入同协议 <code>baseline_current</code> 控制组。排序指标为 validation checkpoint-selection score，不是 test/full evaluation。</p>
 <p>最优 arm 是 <code>gru128_l1_mlpnone</code>，score=0.053298，相对 baseline_current 的同协议 delta=+0.012096。第二名 <code>gru192_l2_mlpnone</code> 与第一名差距很小，且两者都没有 MLP hidden layer。</p>

@@ -1,0 +1,26 @@
+schema_version: 1
+stages:
+  - id: data
+    title: Data
+    short_title: Data
+    description: Source datasets, market coverage, universe definitions, sampling frequency, and sequence scope.
+  - id: data-engineering
+    title: Data Engineering
+    short_title: Data Eng.
+    description: Cleaning, point-in-time controls, labels, normalization, sampling, and validation splits.
+  - id: feature-engineering
+    title: Feature Engineering
+    short_title: Features
+    description: Price, volume, volatility, trend, liquidity, market, and order-book representations.
+  - id: model
+    title: Model
+    short_title: Model
+    description: Baselines, architectures, objectives, optimization, capacity, and integration choices.
+  - id: prediction-evaluation
+    title: Prediction Evaluation
+    short_title: Evaluation
+    description: Signal quality, robustness, checkpoint selection, subgroup behavior, and model comparison.
+  - id: strategy
+    title: Strategy
+    short_title: Strategy
+    description: Signal conversion, portfolio rules, execution, turnover, costs, and deployment gates.

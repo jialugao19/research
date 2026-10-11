@@ -17,6 +17,7 @@ def main() -> int:
         parser.error(str(exc))
     print(
         f"catalog valid: {len(catalog.research_projects)} research projects, "
+        f"{len(catalog.infrastructure_projects)} infrastructure systems, "
         f"{len(catalog.studies)} studies, {len(catalog.reports)} reports, Knowledge loaded"
     )
     return 0

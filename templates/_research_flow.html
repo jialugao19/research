@@ -1,0 +1,13 @@
+{% macro research_spine(project, catalog, base_url, compact=false) %}
+<ol class="research-spine{% if compact %} research-spine-compact{% endif %}" aria-label="{{ project.title }} research flow">
+  {% for definition in catalog.research_stages %}
+  {% set assessment = project.stage(definition.id) %}
+  <li class="stage-state-{{ assessment.state }}">
+    <a href="{{ base_url }}projects/{{ project.id }}/{{ definition.id }}/">
+      <span class="stage-sequence">{{ "%02d"|format(loop.index) }}</span>
+      <strong>{% if compact %}{{ definition.short_title }}{% else %}{{ definition.title }}{% endif %}</strong>
+    </a>
+  </li>
+  {% endfor %}
+</ol>
+{% endmacro %}

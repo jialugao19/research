@@ -21,25 +21,25 @@
   </header>
   <details class="mobile-navigation">
     <summary>Research index</summary>
-    {{ sidebar(catalog, knowledge, root_url, report.project, report.id, "reports") }}
+    {{ sidebar(catalog, knowledge, root_url, report.project, report.id, "reports", none, none, none, report.stage, "report-mobile") }}
   </details>
   <details class="mobile-toc-navigation">
     <summary>Report sections</summary>
     <nav>{% for item in toc %}<a class="toc-level-{{ item.level }}" href="#{{ item.anchor }}">{{ item.title }}</a>{% endfor %}</nav>
   </details>
   <div class="doc-layout">
-    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, root_url, report.project, report.id, "reports") }}</aside>
+    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, root_url, report.project, report.id, "reports", none, none, none, report.stage, "report-desktop") }}</aside>
     <main id="main-content" class="doc-main">
       <article class="report-document">
-        <p class="breadcrumb"><a href="{{ root_url }}reports/">Publications</a> / <a href="{{ root_url }}projects/{{ project.id }}/">{{ project.title }}</a></p>
+        <p class="breadcrumb"><a href="{{ root_url }}reports/">Publications</a> / <a href="{{ root_url }}projects/{{ project.id }}/">{{ project.title }}</a> / <a href="{{ root_url }}projects/{{ project.id }}/{{ report.stage }}/">{{ catalog.stage_by_id[report.stage].title }}</a></p>
         <header class="report-header">
-          <p class="eyebrow">RESEARCH REPORT <span>CURRENT REVISION</span></p>
+          <p class="eyebrow">RESEARCH REPORT</p>
           <h1>{{ report.title }}</h1>
           <p class="lead">{{ report.summary }}</p>
           <div class="report-meta">
             <time datetime="{{ report.display_date }}">{{ report.display_date }}</time>
             <span>{{ project.title }}</span>
-            {% if report.subproject %}<span>{{ report.subproject }}</span>{% endif %}
+            <span>{{ catalog.stage_by_id[report.stage].title }}</span>
             {% for tag in report.tags %}<span class="report-tag">#{{ tag }}</span>{% endfor %}
           </div>
           {% if predecessor %}<a class="history-link" href="{{ root_url }}{{ predecessor.route }}">View original revision ↗</a>{% endif %}

@@ -6,8 +6,10 @@
 
 内容分为以下几部分：
 
-- `content/projects.yaml`：项目、研究线和子项目的公开说明；
-- `content/studies.yaml`：带研究背景、方法、证据边界和指标快照的实验结论；
+- `content/research-flow.yaml`：Research 区统一的六环节顺序、名称与公开说明；
+- `content/research-taxonomy.yaml`：从 `mindmap-data/research.md` 固化的完整研究分类树；
+- `content/projects.yaml`：独立项目、六环节状态、旧专题重定向和 Infrastructure 的公开说明；
+- `content/studies.yaml`：通过 `taxonomy_path` 稀疏挂载到研究树的实验结论；
 - `content/highlights.yaml`：首页指标、精选研究门槛、审计图表和淘汰结论；
 - `content/reports.yaml`：明确批准发布的报告清单，兼容历史 HTML 与新版
   Markdown 内容包；
@@ -47,8 +49,9 @@ docker compose ps
 
 服务通过 `http://x99.local:8088/` 提供，健康检查地址为
 `http://x99.local:8088/healthz`。Nginx 只读挂载项目目录且只提供其中的
-`_preview`；构建器即使删除并重建 `_preview`，Nginx 也会直接提供新文件，不需要
-重启。其 `restart: unless-stopped` 策略使服务不依赖开发容器或当前终端。查看日志
+`_preview`。构建器先在同级 staging 目录完成全量渲染和校验，再原子替换 `_preview`；
+构建失败时 Nginx 继续提供上一份成功结果，不需要重启。其 `restart: unless-stopped`
+策略使服务不依赖开发容器或当前终端。查看日志
 和停止服务分别使用：
 
 ```bash
@@ -61,8 +64,8 @@ docker compose down
 ```text
 /
 ├── projects/<project>/
-│   ├── <track>/
-│   └── topics/<subproject>/
+│   ├── <research-stage>/
+│   └── <legacy-topic>/  # 重定向到阶段页中的 taxonomy 锚点
 ├── knowledge/
 │   ├── <domain>/
 │   └── <domain>/<topic>/<node>/
@@ -80,6 +83,24 @@ DeepML / Quant Knowledge 源项目完成校验，再显式执行 `sync_knowledge
 更新项目说明或实验结果时，先修改 YAML 并保留指标的口径、样本和限制，
 然后重新运行目录校验、测试、构建和站点校验。只有需要公开新报告时才运行
 报告发布脚本；不要把源项目目录、训练产物或整个报告归档复制进本站。
+
+## Research 逻辑链
+
+Research 区以独立项目为入口，每个项目固定按以下顺序组织公开研究事实：
+
+```text
+Data → Data Engineering → Feature Engineering → Model
+     → Prediction Evaluation → Strategy
+```
+
+每个项目必须为六个环节声明 `documented`、`in-progress`、`gap` 或
+`not-applicable` 状态。每个阶段页按统一 taxonomy 完整显示所有标题，实验通过一个
+主要 `taxonomy_path` 稀疏挂载；没有实验的节点只显示标题。跨主题关系使用可选的
+`related_taxonomy_paths`，不会复制实验。报告同时保留在按时间排列的 Publications
+总索引中。Prediction-NN 的 1min 与 1s 合同是两个独立项目，旧项目和专题入口提供
+重定向，既有 `/reports/prediction-nn/...` URL 保持不变。
+Snapshot Visualizer、Factor Research Platform 和 IP Check 属于独立的 Research
+Infrastructure，不强行映射到六环节。
 
 ## 新版 Markdown 报告
 
@@ -111,8 +132,9 @@ DeepML / Quant Knowledge 源项目完成校验，再显式执行 `sync_knowledge
 study、metric 和该精选报告。首页图表数据必须来自公开报告中的明确数值，并在
 `source_note` 中标注口径；不会根据日期或报告 front matter 自动选择或推断指标。
 
-研究线需要分别登记展开后的目标、数据结构和当前结论；实验专题使用 `group`
-按研究问题组织。实验快照中的指标以紧凑文本呈现，不再为少量重复指标生成
+项目需要分别登记六环节状态；Research 实验使用完整 `taxonomy_path` 归入主要研究
+问题，stage 从路径首段派生。Infrastructure 实验不声明 taxonomy。
+实验快照中的指标以紧凑文本呈现，不再为少量重复指标生成
 摘要图。首页可把正式报告中已经公开、口径明确的少量数值重绘为统一的内联 SVG，
 但正式图形证据仍须在研究报告中保留完整口径、图注和上下文。
 

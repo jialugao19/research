@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% from "_study.html" import study_timeline %}
+{% from "_research_taxonomy.html" import taxonomy_tree %}
+{% block title %}{{ stage.title }} · {{ project.title }}{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page research-stage-page{% endblock %}
+{% block content %}
+<header class="catalog-hero knowledge-domain-hero stage-hero stage-state-{{ assessment.state }}">
+  <nav class="knowledge-breadcrumb" aria-label="Research hierarchy"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a><span>/</span><strong>Research stage</strong></nav>
+  <p class="eyebrow">STAGE {{ "%02d"|format(stage_number) }} / 06</p>
+  <h1>{{ stage.title }}</h1>
+  <p>{{ stage.description }}</p>
+</header>
+
+<section id="research-tree" class="knowledge-section research-taxonomy-tree">
+  {% if stage_root_studies %}{{ study_timeline(stage_root_studies, catalog, base_url) }}{% endif %}
+  {{ taxonomy_tree(taxonomy_views, catalog, base_url) }}
+</section>
+
+{% if reports %}
+<section id="stage-reports" class="knowledge-section">
+  <div class="section-heading"><p class="eyebrow">Publications</p><h2>Additional publications</h2></div>
+  <div class="report-list">{% for report in reports %}<article class="report-row"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><div><p class="meta">{{ project.title }} / {{ stage.title }}</p><h3><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h3><p>{{ report.summary }}</p></div><a class="open-report" href="{{ base_url }}{{ report.route }}" aria-label="Read {{ report.title }}">OPEN ↗</a></article>{% endfor %}</div>
+</section>
+{% endif %}
+
+<nav class="stage-neighbors" aria-label="Adjacent research stages">
+  {% if previous_stage %}<a href="{{ base_url }}projects/{{ project.id }}/{{ previous_stage.id }}/"><span>Previous stage</span><strong>← {{ previous_stage.title }}</strong></a>{% endif %}
+  {% if next_stage %}<a href="{{ base_url }}projects/{{ project.id }}/{{ next_stage.id }}/"><span>Next stage</span><strong>{{ next_stage.title }} →</strong></a>{% endif %}
+</nav>
+{% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>ON THIS STAGE</strong><nav>{% for view in taxonomy_views %}<a href="#{{ view.anchor }}">{{ view.node.title }}</a>{% endfor %}{% if reports %}<a href="#stage-reports">Publications</a>{% endif %}</nav>{% endblock %}

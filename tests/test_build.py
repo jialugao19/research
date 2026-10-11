@@ -1,7 +1,12 @@
 import json
+import os
 from pathlib import Path
 
+import pytest
+from bs4 import BeautifulSoup
+
 from research_site.build import _featured_chart_view, build_site
+from research_site.build_output import build_atomically
 from research_site.catalog import load_catalog
 from research_site.validation import validate_built_site
 
@@ -15,6 +20,17 @@ def test_sidebar_groups_do_not_use_exclusive_accordion_behavior() -> None:
     assert "sibling.open = false" not in javascript
 
 
+def test_research_taxonomy_navigation_behaviors_are_bundled() -> None:
+    javascript = (SITE_ROOT / "assets" / "site.js").read_text(encoding="utf-8")
+
+    assert 'querySelectorAll("[data-taxonomy-toggle]")' in javascript
+    assert 'button.setAttribute("aria-expanded", String(expanded))' in javascript
+    assert "branch.hidden = !expanded" in javascript
+    assert 'hash.startsWith("#topic-")' in javascript
+    assert "openTaxonomyAncestors(window.location.hash)" in javascript
+    assert "sibling" not in javascript
+
+
 def test_subtopic_filter_and_anchor_behaviors_are_bundled() -> None:
     javascript = (SITE_ROOT / "assets" / "site.js").read_text(encoding="utf-8")
 
@@ -25,26 +41,128 @@ def test_subtopic_filter_and_anchor_behaviors_are_bundled() -> None:
     assert "target.open = true" in javascript
 
 
-def test_x99_documentation_layout_and_article_spacing() -> None:
+def test_publication_filter_includes_research_stage() -> None:
+    javascript = (SITE_ROOT / "assets" / "site.js").read_text(encoding="utf-8")
+    template = (SITE_ROOT / "templates" / "reports.html").read_text(encoding="utf-8")
+
+    assert 'querySelector("#stage-filter")' in javascript
+    assert "card.dataset.stage === stageId" in javascript
+    assert 'querySelectorAll("#report-catalog .publication-row")' in javascript
+    assert 'data-stage="{{ report.stage }}"' in template
+
+
+def test_responsive_documentation_layout_and_article_spacing() -> None:
     stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
     template = (SITE_ROOT / "templates" / "base.html").read_text(encoding="utf-8")
 
     assert "--header-height: 60px;" in stylesheet
-    assert "--sidebar-width: 300px;" in stylesheet
-    assert "--toc-width: 252px;" in stylesheet
-    assert "--accent: #2e8555;" in stylesheet
+    assert "--sidebar-width: clamp(232px, 17vw, 288px);" in stylesheet
+    assert "--toc-width: clamp(184px, 13vw, 224px);" in stylesheet
+    assert "--content-max: 1440px;" in stylesheet
+    assert "--prose-measure: 82ch;" in stylesheet
+    assert "--action: #2e8555;" in stylesheet
+    assert "--positive: #2e8555;" in stylesheet
     assert '--sans: system-ui, -apple-system, "Segoe UI"' in stylesheet
-    assert ".article-header { max-width: 820px; padding: 36px 0 12px; }" in stylesheet
-    assert ".article-source-note { max-width: 820px; padding: 2px 0;" in stylesheet
-    assert ".knowledge-prose { max-width: 820px; padding: 12px 0 44px;" in stylesheet
+    assert ".doc-main { padding-inline: var(--main-gutter);" in stylesheet
+    assert ".article-header { max-width: var(--prose-measure); padding: 36px 0 12px; }" in stylesheet
+    assert ".article-source-note { max-width: var(--prose-measure); padding: 2px 0;" in stylesheet
+    assert ".knowledge-prose { max-width: none; padding: 12px 0 44px;" in stylesheet
     assert ".knowledge-prose h2 { margin: 32px 0 12px; padding-top: 0; border-top: 0;" in stylesheet
     assert ".knowledge-prose h3 { margin: 24px 0 8px;" in stylesheet
     assert ".knowledge-prose p { margin: 0 0 12px; }" in stylesheet
     assert ".knowledge-prose pre { margin: 14px 0; padding: 16px; border: 0; border-radius: 6px;" in stylesheet
     assert ".knowledge-next-page { position: fixed;" in stylesheet
     assert ".related-concept-rows { gap: 8px; }" in stylesheet
+    assert "@media (max-width: 1279px)" in stylesheet
+    assert "@media (max-width: 899px)" in stylesheet
+    assert ".brand-mark { background: #303846; }" in stylesheet
     assert 'class="site-header"' in template
     assert "data-auto-hide" not in template
+
+
+def test_research_detail_pages_reuse_the_knowledge_catalog_shell() -> None:
+    for template_name in ("project.html", "stage.html", "infrastructure.html"):
+        template = (SITE_ROOT / "templates" / template_name).read_text(encoding="utf-8")
+
+        assert "{% block body_class %}knowledge-page knowledge-catalog-page" in template
+        assert "catalog-hero knowledge-domain-hero" in template
+        assert 'class="knowledge-breadcrumb"' in template
+        assert 'class="knowledge-section' in template
+        assert 'class="page-hero shell"' not in template
+        assert 'class="shell section compact' not in template
+        assert 'class="page-stats"' not in template
+        assert "knowledge-next-page" not in template
+        assert "article-badges" not in template
+        assert "article-source-note" not in template
+
+
+def test_research_overview_and_assessments_use_the_shared_document_template() -> None:
+    overview = (SITE_ROOT / "templates" / "index.html").read_text(encoding="utf-8")
+    study = (SITE_ROOT / "templates" / "_study.html").read_text(encoding="utf-8")
+    project = (SITE_ROOT / "templates" / "project.html").read_text(encoding="utf-8")
+    stage = (SITE_ROOT / "templates" / "stage.html").read_text(encoding="utf-8")
+
+    assert "knowledge-page knowledge-ontology-page research-overview-page" in overview
+    assert "knowledge-hero knowledge-ontology-hero research-flow-hero" in overview
+    assert 'class="research-project-list"' in overview
+    assert "research_spine(project, catalog, base_url, true)" in overview
+    assert "lab-hero" not in overview
+    assert "metric-band" not in overview
+    assert "featured-research" not in overview
+    assert "quant-chart" not in overview
+    assert "research-principles" not in overview
+    assert "rejection-ledger" not in overview
+    assert "project-ledger" not in overview
+    assert "{% macro primary_evidence(" in study
+    assert 'class="knowledge-section primary-evidence"' in study
+    assert "<h2>Primary result</h2>" in study
+    assert "primary_evidence(" in overview
+    assert "primary_evidence(" in project
+    assert "taxonomy_tree(" in stage
+    assert "Additional publications" in stage
+    assert "Current findings &amp; metrics" not in project
+
+
+def test_research_templates_are_single_column_without_defensive_blocks() -> None:
+    templates = "\n".join(
+        (SITE_ROOT / "templates" / name).read_text(encoding="utf-8")
+        for name in (
+            "index.html",
+            "project.html",
+            "stage.html",
+            "infrastructure.html",
+            "prediction_split.html",
+            "reports.html",
+            "report.html",
+            "_study.html",
+            "_research_flow.html",
+            "_research_taxonomy.html",
+        )
+    )
+    stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+
+    for forbidden in (
+        "research-project-card",
+        "stage-summary-grid",
+        "subproject-grid",
+        "study-card",
+        "catalog-card",
+        "infrastructure-grid",
+        "split-project-grid",
+        "Current boundary",
+        "Current assessment",
+        "Current decision",
+        "Evidence boundary",
+        "Evidence gap",
+        "Not applicable",
+        "experiment-toggle",
+        '<details class="experiment-record',
+    ):
+        assert forbidden not in templates
+    assert "--research-body-size: 16px;" in stylesheet
+    assert "font-size: 3rem !important;" in stylesheet
+    assert "font-size: 2rem !important;" in stylesheet
+    assert ".research-project-list,\n.stage-summary-list,\n.study-list" in stylesheet
 
 
 def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
@@ -68,6 +186,13 @@ def test_build_produces_project_and_report_routes(tmp_path: Path) -> None:
     assert (output / "projects" / "prediction-nn" / "one-minute" / "index.html").is_file()
     assert (output / "projects" / "prediction-nn" / "one-second" / "index.html").is_file()
     assert (output / "projects" / "prediction-nn" / "l2-features" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1min" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1min" / "model" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1min" / "l2-features" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1min" / "market-context-1min" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1min" / "feature-audit-1min" / "index.html").is_file()
+    assert (output / "projects" / "prediction-nn-1s" / "strategy" / "index.html").is_file()
+    assert (output / "projects" / "snapshot-visualizer2" / "index.html").is_file()
     assert (output / "knowledge" / "index.html").is_file()
     assert (output / "knowledge" / "foundations" / "index.html").is_file()
     assert (output / "knowledge" / "machine-intelligence" / "index.html").is_file()
@@ -105,8 +230,36 @@ def test_build_produces_project_and_report_routes(tmp_path: Path) -> None:
     assert (output / "projects" / "live-predictor" / "index.html").is_file()
     assert (output / "reports" / "prediction-nn" / "0702-l2-ablation" / "index.html").is_file()
     assert (output / "reports" / "prediction-nn" / "0702-l2-ablation-v2" / "index.html").is_file()
+    assert (output / "reports" / "prediction-nn" / "0831-market-cs-comparison" / "index.html").is_file()
     assert (output / "reports" / "live-predictor" / "0805-live-predictor-quality" / "index.html").is_file()
     assert not (output / "assets" / "report-heroes").exists()
+    legacy_topic = (
+        output / "projects" / "prediction-nn-1min" / "day-pure-batch-1min" / "index.html"
+    ).read_text(encoding="utf-8")
+    assert "/projects/prediction-nn-1min/model/#topic-model--batch" in legacy_topic
+    stage_page = BeautifulSoup(
+        (output / "projects" / "prediction-nn-1min" / "data-engineering" / "index.html").read_text(
+            encoding="utf-8"
+        ),
+        "html.parser",
+    )
+    desktop_navigation = stage_page.select_one(".doc-sidebar .sidebar-nav")
+    mobile_navigation = stage_page.select_one(".mobile-navigation .sidebar-nav")
+    assert desktop_navigation is not None
+    assert mobile_navigation is not None
+    assert len(desktop_navigation.select(".sidebar-stage-item")) == len(catalog.research_stages)
+    assert len(mobile_navigation.select(".sidebar-stage-item")) == len(catalog.research_stages)
+    assert desktop_navigation.find("a", string="Outlier")["href"].endswith(
+        "/data-engineering/#topic-data-engineering--data-clean--outlier"
+    )
+    toggles = stage_page.select("[data-taxonomy-toggle]")
+    assert toggles
+    assert all(toggle["aria-expanded"] == "false" for toggle in toggles)
+    branches = stage_page.select(".sidebar-taxonomy-branch")
+    assert branches
+    assert all(branch.has_attr("hidden") for branch in branches)
+    control_ids = [toggle["aria-controls"] for toggle in toggles]
+    assert len(control_ids) == len(set(control_ids))
     validate_built_site(catalog, SITE_ROOT, output, "/research/")
 
 
@@ -118,46 +271,33 @@ def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
     index = (output / "index.html").read_text(encoding="utf-8")
     reports = (output / "reports" / "index.html").read_text(encoding="utf-8")
 
-    assert "JG RESEARCH LAB" in index
-    assert "Systematic Alpha<br>Research Infrastructure" in index
-    assert "Building reproducible evidence pipelines<br>for machine learning alpha research." in index
-    assert "EVIDENCE CHAIN" in index
-    assert "FEATURED RESEARCH" in index
+    assert '<body class="knowledge-page knowledge-ontology-page research-overview-page">' in index
+    assert "Research overview" in index
+    assert "Follow the evidence<br>from data to strategy." in index
+    assert "One project, one complete logic chain" in index
+    assert index.count('class="research-project-row"') == 20
+    assert "Prediction-NN 1min" in index
+    assert "Prediction-NN 1s" in index
+    assert "Research infrastructure" in index
+    assert 'id="primary-result" class="knowledge-section primary-evidence"' in index
+    assert "<h2>Primary result</h2>" in index
+    assert "1s GRU384 Baseline Evaluation" in index
     assert "Stock1s Fold0 Corrected Full Evaluation" in index
     assert 'href="/reports/prediction-nn/0807-stock1s-fold0-full-evaluation/"' in index
     assert "assets/report-heroes/0802-stock1s-gru384-v2.png" not in index
-    assert '<svg viewBox="0 0 820 420"' in index
-    assert "Q01" in index
-    assert "Q20" in index
-    assert "-8.054 bps" in index
-    assert "7.072 bps" in index
-    assert "16</dt><dd>Research projects" in index
-    assert "44</dt><dd>Experiments" in index
-    assert "13</dt><dd>Published evaluations" in index
-    assert "0.10765</dt><dd>Best reported test IC" in index
-    assert "0.07895</dt><dd>Multi-seed test IC" in index
-    assert "-18.27</dt><dd>Featured net Sharpe" in index
-    assert "18</dt><dd>Architectures screened" in index
-    assert "54.2M</dt><dd>Order-book ticks" in index
-    assert "7.95M</dt><dd>1s evaluation rows" in index
-    assert "2021–2026</dt><dd>Evidence windows" in index
-    assert "A-share / ETF / Crypto</dt><dd>Research universe" in index
-    assert "MODEL STATUS" in index
-    assert "Fold0 validated" in index
-    assert "Requires clean rerun" in index
-    assert "Not promoted" in index
-    assert "KEEP IN RESEARCH" in index
-    assert "RESEARCH PHILOSOPHY" in index
-    assert "REJECTED IDEAS" in index
+    assert "quant-chart" not in index
+    assert "research-metrics" not in index
+    assert "0.09842" in index
+    assert "0.09469" in index
+    assert "7,947,567" in index
+    assert "-18.27" in index
+    assert "Rejected ideas" in index
     assert "Attention representation" in index
     assert "TCN architecture" in index
     assert "Large GRU / MLP capacity" in index
-    assert "Primary metrics" in index
-    assert "Forecasting Models" in index
-    assert "Factor Discovery" in index
-    assert "Portfolio &amp; Execution" in index
-    assert "Market Data" in index
-    assert "Research Systems" in index
+    assert "Data Engineering" in index
+    assert "Feature Engineering" in index
+    assert "Prediction Evaluation" in index
     assert "T+1 打板策略研究报告" in index
     assert "Index500 Predict 研究报告" in index
     assert "Live Predictor 实时预测质量报告" in index
@@ -308,23 +448,21 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert '"/knowledge/chapters/' not in payload
 
 
-def test_project_pages_show_contextual_metrics_and_caveats(tmp_path: Path) -> None:
+def test_project_pages_show_contextual_metrics_without_defensive_blocks(tmp_path: Path) -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     output = tmp_path / "site"
     build_site(catalog, SITE_ROOT, output, "/")
 
-    one_minute = (output / "projects" / "prediction-nn" / "one-minute" / "index.html").read_text(encoding="utf-8")
-    one_second = (output / "projects" / "prediction-nn" / "one-second" / "index.html").read_text(encoding="utf-8")
+    one_minute = (output / "projects" / "prediction-nn-1min" / "model" / "index.html").read_text(encoding="utf-8")
+    one_second = (output / "projects" / "prediction-nn-1s" / "prediction-evaluation" / "index.html").read_text(encoding="utf-8")
     genetic = (output / "projects" / "genetic-factor-auto-3" / "index.html").read_text(encoding="utf-8")
     aq2 = (output / "projects" / "aq2" / "index.html").read_text(encoding="utf-8")
 
     assert "0.07895" in one_minute
     assert "seeds 7/11/13" in one_minute
-    assert "Experiment ID" in one_minute
-    assert "Hypothesis" in one_minute
     assert "Method" in one_minute
     assert "Dataset" in one_minute
-    assert "Primary metric" in one_minute
+    assert "Read result" not in one_minute
     assert "GRU / MLP architecture screen" in one_minute
     assert "stock1m · seeds 7/11/13" in one_minute
     assert 'id="study-optimize-1min-model"' in one_minute
@@ -332,34 +470,68 @@ def test_project_pages_show_contextual_metrics_and_caveats(tmp_path: Path) -> No
     assert "used test during selection" in one_second
     assert "21,217.9 factors/s" in genetic
     assert "54,176,260" in aq2
+    combined = one_minute + one_second + genetic + aq2
+    assert "Current boundary" not in combined
+    assert "Current decision" not in combined
+    assert "Evidence boundary" not in combined
 
 
-def test_track_pages_use_explanatory_structure_without_summary_charts(tmp_path: Path) -> None:
+def test_stage_pages_follow_the_canonical_research_chain(tmp_path: Path) -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     output = tmp_path / "site"
     build_site(catalog, SITE_ROOT, output, "/")
 
-    one_minute = (output / "projects" / "prediction-nn" / "one-minute" / "index.html").read_text(
+    one_minute = (output / "projects" / "prediction-nn-1min" / "data-engineering" / "index.html").read_text(
         encoding="utf-8"
     )
-    one_second = (output / "projects" / "prediction-nn" / "one-second" / "index.html").read_text(
+    one_second = (output / "projects" / "prediction-nn-1s" / "strategy" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    model = (output / "projects" / "prediction-nn-1min" / "model" / "index.html").read_text(
         encoding="utf-8"
     )
 
     assert '<figure class="result-chart' not in one_minute
     assert '<figure class="result-chart' not in one_second
-    assert '<p class="eyebrow">one-minute</p>' not in one_minute
-    assert "Data structure" in one_minute
-    assert "batch × time-step × feature" in one_minute
-    assert "Research question &amp; method" in one_minute
-    assert "Observed result" in one_minute
-    assert "Final 1min Architecture Evaluation" in one_minute
-    assert "old model" in one_minute
-    assert "Baselines &amp; Model Design" in one_minute
-    assert "Data, Labels &amp; Sampling" in one_minute
-    assert "Validation, Selection &amp; Robustness" in one_minute
-    assert "Feature Extensions &amp; Integration" in one_minute
-    assert "data and signal chain merit further research" in one_second
+    assert "STAGE 02 / 06" in one_minute
+    assert "Label Noise and Prediction Calibration" in one_minute
+    assert "Date-pure Batch Sampling" not in one_minute
+    assert 'id="topic-data-engineering--label"' in one_minute
+    assert "Result" in one_minute
+    assert "Date-pure Batch 1min Full Evaluation" not in one_minute
+    assert 'id="topic-model--batch"' in model
+    assert "Date-pure Batch Sampling" in model
+    assert "Date-pure Batch 1min Full Evaluation" in model
+    assert "STAGE 06 / 06" in one_second
+    assert "Stock1s Fold0 Cost and Turnover Sweep" in one_second
+    assert "Signal conversion, portfolio rules, execution, turnover, costs" in one_second
+
+    def node_count(nodes) -> int:
+        return sum(1 + node_count(node.children) for node in nodes)
+
+    for project in catalog.research_projects:
+        rendered_stages = {
+            stage.id: (
+                output / "projects" / project.id / stage.id / "index.html"
+            ).read_text(encoding="utf-8")
+            for stage in catalog.research_stages
+        }
+        for stage in catalog.research_taxonomy:
+            assert rendered_stages[stage.id].count('class="research-taxonomy-node ') == node_count(
+                stage.nodes
+            )
+        combined_project = "\n".join(rendered_stages.values())
+        for study in catalog.studies_for_project(project.id):
+            assert combined_project.count(f'id="study-{study.id}"') == 1
+
+    empty_strategy = (
+        output / "projects" / "get-data" / "strategy" / "index.html"
+    ).read_text(encoding="utf-8")
+    assert "<h2>execution</h2>" in empty_strategy
+    assert "<h2>position</h2>" in empty_strategy
+    assert "<h2>signal</h2>" in empty_strategy
+    assert 'id="study-' not in empty_strategy
+    assert "No experiments" not in empty_strategy
 
 
 def test_catalog_json_keeps_internal_presentation_fields_private(tmp_path: Path) -> None:
@@ -368,14 +540,88 @@ def test_catalog_json_keeps_internal_presentation_fields_private(tmp_path: Path)
     build_site(catalog, SITE_ROOT, output, "/")
     payload = (output / "catalog.json").read_text(encoding="utf-8")
     assert '"charts"' not in payload
-    assert '"schema_version": 2' in payload
+    assert '"schema_version": 4' in payload
     assert '"category": "forecasting-models"' in payload
     assert '"revision_of": "0702-l2-ablation"' in payload
     assert '"method": "GRU / MLP architecture screen"' in payload
     assert '"dataset": "stock1m · seeds 7/11/13"' in payload
     assert '"decision_state": "retain"' in payload
     assert '"primary_metric": "test-pooled-ic"' in payload
-    assert payload.count('"is_current": true') == 13
+    assert '"stage": "feature-engineering"' in payload
+    assert '"taxonomy_path": "feature-engineering/market"' in payload
+    assert '"research_taxonomy"' in payload
+    assert '"subproject"' not in payload
+    assert '"tracks"' not in payload
+    assert payload.count('"is_current": true') == 24
+
+
+def test_atomic_build_preserves_previous_output_when_validation_fails(tmp_path: Path) -> None:
+    output = tmp_path / "site"
+    output.mkdir()
+    (output / "marker.txt").write_text("old", encoding="utf-8")
+
+    def render(staging: Path) -> None:
+        (staging / "marker.txt").write_text("new", encoding="utf-8")
+
+    def reject(_: Path) -> None:
+        raise ValueError("invalid staging build")
+
+    with pytest.raises(ValueError, match="invalid staging build"):
+        build_atomically(output, render, reject)
+
+    assert (output / "marker.txt").read_text(encoding="utf-8") == "old"
+    assert not list(tmp_path.glob(".site.build-*"))
+    assert not list(tmp_path.glob(".site.previous-*"))
+
+
+def test_atomic_build_replaces_complete_output_without_stale_files(tmp_path: Path) -> None:
+    output = tmp_path / "site"
+    output.mkdir()
+    (output / "stale.html").write_text("old", encoding="utf-8")
+
+    def render(staging: Path) -> None:
+        (staging / "index.html").write_text("new", encoding="utf-8")
+
+    result = build_atomically(output, render, lambda _: None)
+
+    assert result.output_root == output.resolve()
+    assert result.file_count == 1
+    assert result.output_root.stat().st_mode & 0o777 == 0o755
+    assert (output / "index.html").read_text(encoding="utf-8") == "new"
+    assert not (output / "stale.html").exists()
+    assert not list(tmp_path.glob(".site.build-*"))
+    assert not list(tmp_path.glob(".site.previous-*"))
+
+
+def test_atomic_build_rolls_back_when_publish_rename_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    output = tmp_path / "site"
+    output.mkdir()
+    (output / "marker.txt").write_text("old", encoding="utf-8")
+    real_replace = os.replace
+    calls = 0
+
+    def fail_second_replace(source: Path, destination: Path) -> None:
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            raise OSError("publish rename failed")
+        real_replace(source, destination)
+
+    monkeypatch.setattr("research_site.build_output.os.replace", fail_second_replace)
+
+    with pytest.raises(OSError, match="publish rename failed"):
+        build_atomically(
+            output,
+            lambda staging: (staging / "marker.txt").write_text("new", encoding="utf-8"),
+            lambda _: None,
+        )
+
+    assert (output / "marker.txt").read_text(encoding="utf-8") == "old"
+    assert not list(tmp_path.glob(".site.build-*"))
+    assert not list(tmp_path.glob(".site.previous-*"))
 
 
 def test_catalog_json_excludes_private_evidence_paths(tmp_path: Path) -> None:

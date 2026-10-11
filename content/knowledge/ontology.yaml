@@ -594,7 +594,7 @@ research_links:
     summary: Spread, queue, impact, and execution constraints define live prediction interpretation.
   - domain: quantitative-research
     topic: time-series
-    project: prediction-nn
+    project: prediction-nn-1min
     label: Short-horizon return forecasting
     summary: Time-series leakage, regime, and window design constrain model evaluation.
   - domain: quantitative-research

@@ -25,10 +25,10 @@
   </header>
   <details class="mobile-navigation">
     <summary><span aria-hidden="true">☰</span> Documentation menu</summary>
-    {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}
+    {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none), active_stage|default(none), "mobile") }}
   </details>
   <div class="doc-layout">
-    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none)) }}</aside>
+    <aside class="doc-sidebar">{{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none), active_stage|default(none), "desktop") }}</aside>
     <main id="main-content" class="doc-main">
       {% block content %}{% endblock %}
     </main>

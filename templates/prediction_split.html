@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% from "_research_flow.html" import research_spine %}
+{% block title %}Prediction-NN project split · JG Research Lab{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page prediction-split-page{% endblock %}
+{% block content %}
+<header class="catalog-hero knowledge-domain-hero"><nav class="knowledge-breadcrumb"><a href="{{ base_url }}">Research</a><span>/</span><strong>Project migration</strong></nav><p class="eyebrow">PROJECT SPLIT</p><h1>Prediction-NN now has two independent projects.</h1><p>Minute- and second-level forecasting use different data, feature, model, selection, and cost contracts. They are no longer presented as tracks of one project.</p></header>
+<section class="knowledge-section split-project-list">
+  {% for project in (minute_project, second_project) %}<article><span>{{ "%02d"|format(loop.index) }}</span><h2><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a></h2><p>{{ project.description }}</p>{{ research_spine(project, catalog, base_url, true) }}<a class="project-open" href="{{ base_url }}projects/{{ project.id }}/">Open project →</a></article>{% endfor %}
+</section>
+{% endblock %}

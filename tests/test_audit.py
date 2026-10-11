@@ -17,5 +17,5 @@ def test_audit_uses_manifest_for_selected_report() -> None:
     )
     by_name = {match.source_file: match for match in matches}
     assert by_name["0502-index-6backtest.html"].project == "index500-predict"
-    assert by_name["0702-13_l2_ablation_vs_baseline_comparison_report.html"].subproject == "l2-features"
+    assert by_name["0702-13_l2_ablation_vs_baseline_comparison_report.html"].subproject is None
     assert by_name["0731-limit-report.html"].project == "limit-0729"

@@ -3,6 +3,7 @@ featured_report: 0807-stock1s-fold0-full-evaluation
 reports:
   - id: 0502-index-6backtest
     project: index500-predict
+    stage: prediction-evaluation
     title: Index500 Predict 研究报告
     source_file: 0502-index-6backtest.html
     date: 2026-05-02
@@ -13,8 +14,9 @@ reports:
     match_evidence: index500-predict/report/0502/index.html
     source_sha256: 222757be5cc148b9cf105492d01b977417de897f09b1fc0e87cd1ac68b9eab10
   - id: 0702-l2-ablation
-    project: prediction-nn
-    subproject: l2-features
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
     title: L2 Features Ablation vs Stock1m Baseline
     source_file: 0702-13_l2_ablation_vs_baseline_comparison_report.html
     date: 2026-07-02
@@ -25,8 +27,9 @@ reports:
     match_evidence: exp-nn/l2-features/report/070213_l2_ablation_vs_baseline_comparison_report.html
     source_sha256: c49ed23759a2718de8e278149aa47d083ec574868d1dfbb1226ff2a3bad69b78
   - id: 0725-1min-model-screening
-    project: prediction-nn
-    subproject: optimize-1min-model
+    project: prediction-nn-1min
+    stage: model
+    route_project: prediction-nn
     title: 1min Model Structure Screening
     source_file: 0725-1min-compare-model.html
     date: 2026-07-25
@@ -37,8 +40,9 @@ reports:
     match_evidence: exp-nn/optimize-1min-model
     source_sha256: 8a59f9bc5a7fdabcec33d3973ca9502e82c43cb8e4e2df77a917e69d62ee8b70
   - id: 0730-stock1s-feature-health
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: data-engineering
+    route_project: prediction-nn
     title: Stock1s Feature Health Research
     source_file: 0730-nn-1s-features-2.html
     date: 2026-07-30
@@ -50,6 +54,7 @@ reports:
     source_sha256: 3c1821070768e817e879521e6143fc741e2c83da7146e202db3af7e523d44b1e
   - id: 0731-limit-t1-strategy
     project: limit-0729
+    stage: strategy
     title: T+1 打板策略研究报告
     source_file: 0731-limit-report.html
     date: 2026-07-31
@@ -60,8 +65,9 @@ reports:
     match_evidence: limit-0729/artifacts/strategy/report/report.html
     source_sha256: 9c406af6bef9f4d5be22743e5e90733c0e9c09788d96ec40d11eac3590f7ce67
   - id: 0802-stock1s-gru384
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: prediction-evaluation
+    route_project: prediction-nn
     title: Stock1s GRU384 / MLP512×512 Evaluation
     source_file: 0802-nn1s-fold0_67_gru384_mlp512x512.html
     date: 2026-08-02
@@ -73,6 +79,7 @@ reports:
     source_sha256: c9bfe87a9ca6165b86bacdecff42886b288fa5ec6919be8b32db165623ef7350
   - id: 0502-index-6backtest-v2
     project: index500-predict
+    stage: prediction-evaluation
     format: markdown
     content_file: report-docs/index500-predict/0502-index-6backtest-v2/report.md
     bundle_sha256: b41ae66089300c7ca607d913172913486fdce9e10498b283f0f726e9646ae128
@@ -80,8 +87,9 @@ reports:
     match_method: manual
     match_evidence: research-site/report-migration/0502-index-6backtest
   - id: 0702-l2-ablation-v2
-    project: prediction-nn
-    subproject: l2-features
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
     format: markdown
     content_file: report-docs/prediction-nn/0702-l2-ablation-v2/report.md
     bundle_sha256: 65e79f3fd811603e2b8434ec25deaa49c43f18b22bb96c0315ac8cea130bbd24
@@ -89,8 +97,9 @@ reports:
     match_method: manual
     match_evidence: research-site/report-migration/0702-l2-ablation
   - id: 0725-1min-model-screening-v2
-    project: prediction-nn
-    subproject: optimize-1min-model
+    project: prediction-nn-1min
+    stage: model
+    route_project: prediction-nn
     format: markdown
     content_file: report-docs/prediction-nn/0725-1min-model-screening-v2/report.md
     bundle_sha256: 4fc6c887adf55df702a9e1ad90f22e3719ba6f90beaef0ad54e4dd53c191ef1b
@@ -98,8 +107,9 @@ reports:
     match_method: manual
     match_evidence: research-site/report-migration/0725-1min-model-screening
   - id: 0730-stock1s-feature-health-v2
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: data-engineering
+    route_project: prediction-nn
     format: markdown
     content_file: report-docs/prediction-nn/0730-stock1s-feature-health-v2/report.md
     bundle_sha256: c8c5ea23093894182f08932582287b4b1f5c20cc6ad2a2d64f4b87b73addb448
@@ -108,6 +118,7 @@ reports:
     match_evidence: research-site/report-migration/0730-stock1s-feature-health
   - id: 0731-limit-t1-strategy-v2
     project: limit-0729
+    stage: strategy
     format: markdown
     content_file: report-docs/limit-0729/0731-limit-t1-strategy-v2/report.md
     bundle_sha256: 99a1563334b10ae10cb6e2e7e6f33606217c3405db72101a7b69be26680b1faa
@@ -115,8 +126,9 @@ reports:
     match_method: manual
     match_evidence: research-site/report-migration/0731-limit-t1-strategy
   - id: 0802-stock1s-gru384-v2
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: prediction-evaluation
+    route_project: prediction-nn
     format: markdown
     content_file: report-docs/prediction-nn/0802-stock1s-gru384-v2/report.md
     bundle_sha256: 2377703d6b068bd3df47c29658677cbd9a38388656912f4fb253bb296c4ad4f2
@@ -125,6 +137,7 @@ reports:
     match_evidence: research-site/report-migration/0802-stock1s-gru384
   - id: 0805-live-predictor-quality
     project: live-predictor
+    stage: prediction-evaluation
     format: markdown
     content_file: report-docs/live-predictor/0805-live-predictor-quality/report.md
     hero_image: images/extreme-tail-performance.png
@@ -132,8 +145,9 @@ reports:
     match_method: path-evidence
     match_evidence: live-predictor/reports/20260805T140155+0800_report.html
   - id: 0807-stock1s-fold0-full-evaluation
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: prediction-evaluation
+    route_project: prediction-nn
     title: Stock1s Fold0 Corrected Full Evaluation
     source_file: 0807-nn1s-fold0-67d-gru384-full-evaluation.html
     date: 2026-08-07
@@ -145,8 +159,9 @@ reports:
     match_evidence: exp-nn/baseline-1s-0720/report/fold0_dedup67_gru384_mlp512x512_postprocess_af944d6_full_evaluation_report.html
     source_sha256: ff16907e0c5bf7fe962eed4c587daab72c55faf178f106cd4aceca55234b23c1
   - id: 0807-stock1s-cost-turnover-sweep
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: strategy
+    route_project: prediction-nn
     title: Stock1s Fold0 Cost and Turnover Sweep
     source_file: 0807-nn1s-fold0-cost-turnover-sweep.html
     date: 2026-08-07
@@ -157,8 +172,9 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/baseline-1s-0720/results.yaml
     source_sha256: 62882dcd1e06228f40610071eee2a335f7354ae41ef49dd1e267d11fe0eff45c
   - id: 0808-stock1s-p0-p4-research
-    project: prediction-nn
-    subproject: baseline-1s-0720
+    project: prediction-nn-1s
+    stage: prediction-evaluation
+    route_project: prediction-nn
     title: Stock1s P0–P4 Research Review
     source_file: 0808-p0_p4_full_research_report.html
     date: 2026-08-08
@@ -169,8 +185,9 @@ reports:
     match_evidence: exp-nn/baseline-1s-0720/report/20260808_p0_p4_full_research_report.html
     source_sha256: 37d5f4979e129629b007dc26568fe3bfa0b11c4786c0f7f9912e30f7f29bad5b
   - id: 0811-day-pure-batch-1min
-    project: prediction-nn
-    subproject: day-pure-batch-1min
+    project: prediction-nn-1min
+    stage: model
+    route_project: prediction-nn
     title: Date-pure Batch 1min Full Evaluation
     source_file: 0811-nn1min-batch-full_evaluation_report.html
     date: 2026-08-11
@@ -181,8 +198,9 @@ reports:
     match_evidence: exp-nn/day-pure-batch-1min/report/081111_full_evaluation_report.html
     source_sha256: 479ae3fe35e5eda67468b6c4650d142b3571b198466d1400e996db9ebd587119
   - id: 0812-multiscale-63feature-evaluation
-    project: prediction-nn
-    subproject: multiscale-market-features-1min
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
     title: Multiscale 63-feature 1min Evaluation
     source_file: 0812-nn1min-69features_full_evaluation_report.html
     date: 2026-08-12
@@ -193,8 +211,9 @@ reports:
     match_evidence: exp-nn/multiscale-market-features-1min/report/081223_full_evaluation_report.html
     source_sha256: 592bee29a427f57ebb84511b25ddf8d1159bce15ca2d1e712a77be02b2d6c2d5
   - id: 0814-feature-family-ablation
-    project: prediction-nn
-    subproject: multiscale-market-features-1min
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
     title: Matched 1min Feature-family Ablation
     source_file: 0814-nn1min-feature_ablation_comparison_report.html
     date: 2026-08-14
@@ -205,8 +224,9 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
     source_sha256: 1eaeada3fa6436d200eebc9361463ec4e9dc14eab86224d43cac1b71f1f467f4
   - id: 0815-horizon-label-comparison
-    project: prediction-nn
-    subproject: horizon-labels
+    project: prediction-nn-1min
+    stage: data-engineering
+    route_project: prediction-nn
     title: 10/15/30-minute Label Horizon Comparison
     source_file: 0815-nn1min-horizon_label_comparison_report.html
     date: 2026-08-15
@@ -216,3 +236,146 @@ reports:
     match_method: sha256
     match_evidence: exp-nn/horizon-labels/report/horizon_label_comparison_report.html
     source_sha256: 644da0d036c9bcc816f60b49dc02ee9b72d4f5335d690a1e264d7ebfc531a0c0
+  - id: 0822-market-context-comparison
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Matched Market-context Comparison
+    source_file: 0822-market_context_comparison_report.html
+    date: 2026-08-22
+    summary: 单股票基线、全市场 panel mean/std 与 timestamp market16 的匹配三臂比较。
+    tags: [prediction-nn, stock1m, market-context, comparison]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
+    source_sha256: 0017cf42c03aa4353e09c526736837a5ea46f57c1a8118f5bdf35fae19ba3da7
+  - id: 0825-market-context-baseline
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-context Baseline Full Evaluation
+    source_file: 0825-market_context_baseline_report.html
+    date: 2026-08-25
+    summary: 单股票零上下文控制臂的完整模型、信号与成本评估。
+    tags: [prediction-nn, stock1m, market-context, baseline]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
+    source_sha256: f0ab0f671ab36ba7cd974cb21963c902f05977580c5c8acf79f6727b1f89b970
+  - id: 0825-market-context-panel
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Panel Mean/Std Full Evaluation
+    source_file: 0825-market_context_panel_mean_std_report.html
+    date: 2026-08-25
+    summary: 全市场 leave-one-out panel mean/std 上下文臂的完整评估。
+    tags: [prediction-nn, stock1m, market-context, panel]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
+    source_sha256: dca28d125efdd68daba31b89d1c80a4e9e709b5e8d58650d80879725f03e2ba9
+  - id: 0825-market-context-market16
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market16 Context Full Evaluation
+    source_file: 0825-market_context_market_environment_16_report.html
+    date: 2026-08-25
+    summary: Timestamp 对齐的显式 16D 市场环境上下文臂完整评估。
+    tags: [prediction-nn, stock1m, market-context, market16]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
+    source_sha256: 479a1b3758f009d6f3166b5516cb7381f3a511c499d425bb142a0f06dea65bc2
+  - id: 0831-market-cs-comparison
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market Cross-section Context Comparison
+    source_file: 0831-market-cs-research/index.html
+    date: 2026-08-31
+    summary: 匹配五臂市场横截面上下文研究；四臂完成 OOS，一个 induced-attention 臂在测试前失败。
+    tags: [prediction-nn, stock1m, cross-section, comparison]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: ab95a5c81d059c561120fc0ae86bd93389d063b9420bd0453365884230dca648
+  - id: 0831-market-cs-control
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Control 34D
+    source_file: 0831-market-cs-research/01-control-34d.html
+    date: 2026-08-31
+    summary: 无上下文 34D 控制臂的完整 OOS 与成本评估。
+    tags: [prediction-nn, stock1m, cross-section, control]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: 3913c7700991054cb050c4296e91cb22c25ccd7bb0fe8d7c1be5d2143136f066
+  - id: 0831-market-cs-rank
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Rank 41D
+    source_file: 0831-market-cs-research/02-cs-rank-41d.html
+    date: 2026-08-31
+    summary: 增加七个显式横截面 rank 特征的完整 OOS 与成本评估。
+    tags: [prediction-nn, stock1m, cross-section, rank]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: a605f3184e17e08c6b20cec9f6e71d01b1035e6215b3c6adc6f3cdd97dc9bebe
+  - id: 0831-market-cs-latent-z
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Latent-Z 34D
+    source_file: 0831-market-cs-research/03-latent-z-34d.html
+    date: 2026-08-31
+    summary: 标准化 latent panel 上下文臂的完整 OOS 与成本评估。
+    tags: [prediction-nn, stock1m, cross-section, latent]
+    featured: true
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: 708e7f8b11cc414877a3624cb73a5de829ccea4ed9475df2dfa15024331c7731
+  - id: 0831-market-cs-deep-sets
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Deep Sets R2 34D
+    source_file: 0831-market-cs-research/04-deep-sets-34d-r2.html
+    date: 2026-08-31
+    summary: Deep Sets 精确恢复臂的完整 OOS 与成本评估。
+    tags: [prediction-nn, stock1m, cross-section, deep-sets]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: 2e7c1eb49e42045ddbc3f26e8bb6a866bc0b87d28557f2a22eb52ff788b6e57f
+  - id: 0831-market-cs-induced-attention
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Induced Attention Failure
+    source_file: 0831-market-cs-research/05-induced-attention-34d-failed.html
+    date: 2026-08-31
+    summary: Induced-attention 臂因验证预测坍缩在 OOS 测试前终止的诊断报告。
+    tags: [prediction-nn, stock1m, cross-section, diagnostic]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: b1c3ae71dd98da5242bc626fc2564225c447338da626c19ab1c11636056e91a3
+  - id: 0830-market-cs-attention-smoke-r2
+    project: prediction-nn-1min
+    stage: feature-engineering
+    route_project: prediction-nn
+    title: Market-CS Attention Smoke R2
+    source_file: 0830-1min-cs-market-report/08-attention-smoke-r2.html
+    date: 2026-08-30
+    summary: Attention 上下文 1,000-step 稳定性诊断，不作为正式 OOS 比较臂。
+    tags: [prediction-nn, stock1m, cross-section, diagnostic]
+    featured: false
+    match_method: sha256
+    match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
+    source_sha256: ff88e071b4f535bc9e14b42c3605e654f0daa8a7feaf8b70a944715b706de6d4

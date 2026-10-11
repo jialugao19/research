@@ -69,6 +69,76 @@
     updateToc();
   }
 
+  const taxonomyToggles = [...document.querySelectorAll("[data-taxonomy-toggle]")];
+  const taxonomyLinks = [...document.querySelectorAll("[data-taxonomy-link]")];
+  const normalizedPath = (path) => path.replace(/\/index\.html$/, "/");
+  const currentPath = normalizedPath(window.location.pathname);
+  const taxonomyTarget = (link) => {
+    const url = new URL(link.href, window.location.href);
+    return normalizedPath(url.pathname) === currentPath ? decodeURIComponent(url.hash.slice(1)) : "";
+  };
+  const setTaxonomyBranch = (button, expanded) => {
+    const branch = document.getElementById(button.getAttribute("aria-controls") || "");
+    if (!branch) return;
+    button.setAttribute("aria-expanded", String(expanded));
+    branch.hidden = !expanded;
+  };
+  for (const button of taxonomyToggles) {
+    button.addEventListener("click", () => {
+      setTaxonomyBranch(button, button.getAttribute("aria-expanded") !== "true");
+    });
+  }
+  const openTaxonomyAncestors = (hash) => {
+    if (!hash.startsWith("#topic-")) return false;
+    const targetId = decodeURIComponent(hash.slice(1));
+    const matchingLinks = taxonomyLinks.filter((link) => taxonomyTarget(link) === targetId);
+    for (const link of matchingLinks) {
+      let branch = link.closest(".sidebar-taxonomy-branch");
+      while (branch) {
+        const button = branch.previousElementSibling?.querySelector("[data-taxonomy-toggle]");
+        if (button) setTaxonomyBranch(button, true);
+        branch = branch.parentElement?.closest(".sidebar-taxonomy-branch") || null;
+      }
+    }
+    return matchingLinks.length > 0;
+  };
+  if (window.location.hash) openTaxonomyAncestors(window.location.hash);
+  window.addEventListener("hashchange", () => openTaxonomyAncestors(window.location.hash));
+  for (const link of taxonomyLinks) {
+    link.addEventListener("click", () => {
+      const url = new URL(link.href, window.location.href);
+      if (normalizedPath(url.pathname) === currentPath) openTaxonomyAncestors(url.hash);
+    });
+  }
+
+  const taxonomyTargets = [...document.querySelectorAll(".research-taxonomy-node[id]")];
+  if (taxonomyLinks.length && taxonomyTargets.length) {
+    let taxonomyTicking = false;
+    const updateTaxonomyCurrent = () => {
+      const activationY = window.scrollY + Math.min(window.innerHeight * 0.24, 180);
+      let current = taxonomyTargets[0];
+      for (const target of taxonomyTargets) {
+        if (target.getBoundingClientRect().top + window.scrollY <= activationY) current = target;
+      }
+      for (const link of taxonomyLinks) {
+        const active = taxonomyTarget(link) === current.id;
+        link.classList.toggle("is-current", active);
+        if (active) link.setAttribute("aria-current", "location");
+        else link.removeAttribute("aria-current");
+      }
+      taxonomyTicking = false;
+    };
+    const requestTaxonomyUpdate = () => {
+      if (!taxonomyTicking) {
+        window.requestAnimationFrame(updateTaxonomyCurrent);
+        taxonomyTicking = true;
+      }
+    };
+    window.addEventListener("scroll", requestTaxonomyUpdate, { passive: true });
+    window.addEventListener("resize", requestTaxonomyUpdate);
+    updateTaxonomyCurrent();
+  }
+
   for (const heading of document.querySelectorAll("main h2, main h3")) {
     if (heading.querySelector(".heading-anchor")) continue;
     const anchorTarget = heading.id ? heading : heading.closest("section[id]");
@@ -126,17 +196,20 @@
 
   const search = document.querySelector("#report-search");
   const project = document.querySelector("#project-filter");
-  const cards = [...document.querySelectorAll("#report-catalog .catalog-card")];
+  const stage = document.querySelector("#stage-filter");
+  const cards = [...document.querySelectorAll("#report-catalog .publication-row")];
   const empty = document.querySelector("#no-results");
-  if (search && project && cards.length && empty) {
+  if (search && project && stage && cards.length && empty) {
     const filter = () => {
       const query = search.value.trim().toLowerCase();
       const projectId = project.value;
+      const stageId = stage.value;
       let visible = 0;
       for (const card of cards) {
         const matchesText = !query || (card.dataset.search || "").includes(query);
         const matchesProject = !projectId || card.dataset.project === projectId;
-        const show = matchesText && matchesProject;
+        const matchesStage = !stageId || card.dataset.stage === stageId;
+        const show = matchesText && matchesProject && matchesStage;
         card.hidden = !show;
         if (show) visible += 1;
       }
@@ -144,6 +217,7 @@
     };
     search.addEventListener("input", filter);
     project.addEventListener("change", filter);
+    stage.addEventListener("change", filter);
   }
 
   const knowledgeSearch = document.querySelector("[data-knowledge-search]");

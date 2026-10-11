@@ -39,6 +39,23 @@ li { margin:5px 0; }
 @media (max-width: 900px) { .meta-grid { grid-template-columns: 1fr 1fr; } section { padding:22px 18px; } h1 { font-size:28px; } table { font-size:12px; } }
 @media print { body { background:white; } main { max-width: none; padding:0; } section { box-shadow:none; break-inside:avoid; } }
 </style>
+<style id="research-site-document-layout">
+:root { --research-report-accent: #2e8555; --research-report-muted: #606770; }
+html { font-size: 16px; }
+body { margin: 0 auto; max-width: 960px; padding: 48px 32px 80px; color: #1c1e21; background: #fff; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, sans-serif; font-size: 16px; line-height: 1.65; }
+body :is(h2, h3, h4, h5, h6, p, li, dt, dd, span, small, strong, a, button, input, select, label, time, summary, figcaption, th, td, pre, code) { font-size: 16px !important; line-height: 1.65; }
+body h1 { margin: 0 0 24px; font-size: 3rem !important; line-height: 1.2; letter-spacing: -.025em; }
+body :is(h2, h3, h4, h5, h6) { margin: 32px 0 10px; font-weight: 700; letter-spacing: 0; }
+body a { color: var(--research-report-accent); }
+body hr { display: none !important; }
+body :is(header, footer, article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout, .divider) { border: 0 !important; border-radius: 0 !important; box-shadow: none !important; }
+body :is(article, section, .card, .panel, .metric-card, .summary-card, .report-card, .callout) { background: transparent !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) { display: block !important; }
+body :is(.grid, .cards, .metric-grid, .summary-grid, .report-grid, .two-column, .two-columns) > * { width: 100% !important; max-width: none !important; margin: 0 0 24px !important; }
+body table { max-width: 100%; border-collapse: collapse; }
+body :is(svg, canvas, img) { max-width: 100%; }
+@media (max-width: 996px) { body { padding: 32px 20px 64px; } body h1 { font-size: 2rem !important; } }
+</style>
 </head>
 <body>
 <main>

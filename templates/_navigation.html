@@ -1,4 +1,19 @@
-{% macro sidebar(catalog, knowledge, root_url, active_project=None, active_report=None, active_section="projects", active_domain=None, active_topic=None, active_subtopic=None) %}
+{% macro research_taxonomy_branch(nodes, stage_url, path, navigation_id) %}
+  {% for node in nodes %}
+  {% set node_path = path + (node.id,) %}
+  {% set node_anchor = taxonomy_anchor(node_path) %}
+  {% set branch_id = navigation_id ~ '-taxonomy-' ~ (node_path|join('-')) %}
+  <li class="sidebar-taxonomy-item">
+    <div class="sidebar-taxonomy-row">
+      <a class="sidebar-taxonomy-link" data-taxonomy-link href="{{ stage_url }}#{{ node_anchor }}">{{ node.title }}</a>
+      {% if node.children %}<button class="sidebar-taxonomy-toggle" type="button" data-taxonomy-toggle aria-expanded="false" aria-controls="{{ branch_id }}" aria-label="Toggle {{ node.title }} subheadings"><span aria-hidden="true">›</span></button>{% endif %}
+    </div>
+    {% if node.children %}<ul id="{{ branch_id }}" class="sidebar-taxonomy-branch" hidden>{{ research_taxonomy_branch(node.children, stage_url, node_path, navigation_id) }}</ul>{% endif %}
+  </li>
+  {% endfor %}
+{% endmacro %}
+
+{% macro sidebar(catalog, knowledge, root_url, active_project=None, active_report=None, active_section="projects", active_domain=None, active_topic=None, active_subtopic=None, active_stage=None, navigation_id="primary") %}
 <nav class="sidebar-nav" aria-label="Research index">
   {% if active_section == "knowledge" %}
   <a class="sidebar-root is-active" href="{{ root_url }}knowledge/"><span class="nav-code">K0</span><span>Knowledge index</span></a>
@@ -21,22 +36,33 @@
   {% endfor %}
   {% else %}
   <a class="sidebar-root{% if active_section == 'projects' and not active_project and not active_report %} is-active{% endif %}" href="{{ root_url }}"><span class="nav-code">00</span><span>Research overview</span></a>
-  {% for category in catalog.categories %}
-  {% set category_index = loop.index %}
-  <details class="sidebar-group"{% if (active_project and catalog.project_by_id[active_project].category == category.id) or (active_section == 'projects' and not active_project and not active_report and loop.first) %} open{% endif %}>
-    <summary><span class="nav-code">{{ "%02d"|format(category_index) }}</span><span>{{ category.title }}</span></summary>
+  <div class="sidebar-project-index">
+  {% for project in catalog.research_projects %}
+    <a class="sidebar-project{% if active_project == project.id and not active_stage and not active_report %} is-active{% elif active_project == project.id %} is-parent{% endif %}"{% if active_project == project.id and not active_stage and not active_report %} aria-current="page"{% endif %} href="{{ root_url }}projects/{{ project.id }}/"><span class="nav-code">{{ "%02d"|format(loop.index) }}</span><span>{{ project.title }}</span></a>
+    {% if active_project == project.id %}
+      <ul class="sidebar-stage-list">
+      {% for stage in catalog.research_stages %}
+      {% set stage_url = root_url ~ 'projects/' ~ project.id ~ '/' ~ stage.id ~ '/' %}
+      {% set stage_branch_id = navigation_id ~ '-taxonomy-' ~ stage.id %}
+      {% set taxonomy_stage = catalog.taxonomy_by_stage[stage.id] %}
+      <li class="sidebar-stage-item">
+        <div class="sidebar-stage-row">
+          <a class="sidebar-child sidebar-stage-link{% if active_stage == stage.id %} is-active{% endif %}"{% if active_stage == stage.id %} aria-current="page"{% endif %} href="{{ stage_url }}"><span>{{ stage.short_title }}</span></a>
+          {% if taxonomy_stage.nodes %}<button class="sidebar-taxonomy-toggle" type="button" data-taxonomy-toggle aria-expanded="false" aria-controls="{{ stage_branch_id }}" aria-label="Toggle {{ stage.title }} topics"><span aria-hidden="true">›</span></button>{% endif %}
+        </div>
+        {% if taxonomy_stage.nodes %}<ul id="{{ stage_branch_id }}" class="sidebar-taxonomy-branch sidebar-stage-branch" hidden>{{ research_taxonomy_branch(taxonomy_stage.nodes, stage_url, (stage.id,), navigation_id) }}</ul>{% endif %}
+      </li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endfor %}
+  </div>
+  <details class="sidebar-group sidebar-infrastructure"{% if active_project and catalog.project_by_id[active_project].section == 'infrastructure' %} open{% endif %}>
+    <summary><span class="nav-code">I</span><span>Research infrastructure</span></summary>
     <div>
-      {% set project_index = namespace(value=0) %}
-      {% for project in catalog.research_projects %}{% if project.category == category.id %}
-      {% set project_index.value = project_index.value + 1 %}
-      <a class="sidebar-project{% if active_project == project.id %} is-active{% endif %}" href="{{ root_url }}projects/{{ project.id }}/"><span class="nav-code">{{ "%02d.%02d"|format(category_index, project_index.value) }}</span><span>{{ project.title }}</span></a>
-      {% if active_project == project.id and project.tracks %}
-        {% for track in project.tracks %}<a class="sidebar-child" href="{{ root_url }}projects/{{ project.id }}/{{ track.id }}/"><span class="nav-code">—</span><span>{{ track.title }}</span></a>{% endfor %}
-      {% endif %}
-      {% endif %}{% endfor %}
+      {% for project in catalog.infrastructure_projects %}<a class="sidebar-project{% if active_project == project.id %} is-active{% endif %}" href="{{ root_url }}projects/{{ project.id }}/"><span class="nav-code">I.{{ loop.index }}</span><span>{{ project.title }}</span></a>{% endfor %}
     </div>
   </details>
-  {% endfor %}
   <div class="sidebar-report-group">
     <a class="sidebar-root{% if active_report or active_section == 'reports' %} is-active{% endif %}" href="{{ root_url }}reports/"><span class="nav-code">P</span><span>Publications</span></a>
     {% if active_report %}

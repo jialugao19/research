@@ -1,21 +1,23 @@
 {% extends "base.html" %}
 {% set nav_section = "reports" %}
 {% block title %}Publications · JG Research Lab{% endblock %}
+{% block body_class %}research-publications-page{% endblock %}
 {% block content %}
 <section class="page-hero shell">
-  <p class="eyebrow">PUBLICATION INDEX <span>{{ reports|length }} CURRENT REVISIONS</span></p>
+  <p class="eyebrow">PUBLICATION INDEX <span>{{ reports|length }} REPORTS</span></p>
   <h1>Research publications</h1>
   <p class="lead">Validated, sanitized static snapshots of research evidence. Historical report URLs remain stable.</p>
 </section>
 <section class="shell section compact">
-  <div class="filter-bar">
+  <div class="filter-bar report-filter-bar">
     <label><span>SEARCH PUBLICATIONS</span><input id="report-search" type="search" placeholder="Title, project, or tag" autocomplete="off"></label>
-    <label><span>FILTER BY PROJECT</span><select id="project-filter"><option value="">All projects</option>{% for project in catalog.projects %}{% if catalog.reports_for_project(project.id) %}<option value="{{ project.id }}">{{ project.title }}</option>{% endif %}{% endfor %}</select></label>
+    <label><span>FILTER BY PROJECT</span><select id="project-filter"><option value="">All projects</option>{% for project in catalog.research_projects %}{% if catalog.reports_for_project(project.id) %}<option value="{{ project.id }}">{{ project.title }}</option>{% endif %}{% endfor %}</select></label>
+    <label><span>FILTER BY STAGE</span><select id="stage-filter"><option value="">All stages</option>{% for stage in catalog.research_stages %}<option value="{{ stage.id }}">{{ stage.title }}</option>{% endfor %}</select></label>
   </div>
-  <div id="report-catalog" class="catalog-grid report-list">
+  <div id="report-catalog" class="publication-list report-list">
     {% for report in reports %}
-    <article class="catalog-card" data-project="{{ report.project }}" data-search="{{ report.title|lower }} {{ report.project }} {{ report.tags|join(' ') }}">
-      <div class="project-card-top"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><span>{{ projects[report.project].title }}</span></div>
+    <article class="publication-row" data-project="{{ report.project }}" data-stage="{{ report.stage }}" data-search="{{ report.title|lower }} {{ report.project }} {{ report.stage }} {{ report.tags|join(' ') }}">
+      <div class="project-card-top"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><span>{{ projects[report.project].title }}</span><small>{{ catalog.stage_by_id[report.stage].title }}</small></div>
       <h2><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h2>
       <p>{{ report.summary }}</p>
       <div class="tags">{% for tag in report.tags %}<span>#{{ tag }}</span>{% endfor %}</div>

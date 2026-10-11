@@ -1,48 +1,42 @@
-{% macro study_card(study, catalog, base_url) %}
-<article class="study-card maturity-{{ study.maturity }}" id="study-{{ study.id }}">
-  <p class="study-kicker"><time datetime="{{ study.display_date }}">{{ study.display_date }}</time><span>{{ study.status|replace('-', ' ')|upper }}</span><span>{{ study.maturity|replace('-', ' ')|upper }}</span><span>{{ study.decision_state|upper }}</span></p>
+{% macro study_record(study, catalog, base_url) %}
+<article class="study-record maturity-{{ study.maturity }}" id="study-{{ study.id }}">
+  <p class="study-record-meta"><time datetime="{{ study.display_date }}">{{ study.display_date }}</time><span>{{ study.status|replace('-', ' ') }}</span><span>{{ study.maturity|replace('-', ' ') }}</span><span>{{ study.decision_state }}</span></p>
   <h3>{{ study.title }}</h3>
-  <dl class="study-context"><div><dt>Method</dt><dd>{{ study.method }}</dd></div><div><dt>Dataset</dt><dd>{{ study.dataset }}</dd></div></dl>
-  <div class="study-narrative">
-    <section><h4>Research question &amp; method</h4><p>{{ study.objective }}</p></section>
-    <section><h4>Observed result</h4><p>{{ study.summary }}</p></section>
-  </div>
+  <dl class="study-context-list">
+    <div><dt>Method</dt><dd>{{ study.method }}</dd></div>
+    <div><dt>Dataset</dt><dd>{{ study.dataset }}</dd></div>
+  </dl>
+  {% if study.related_taxonomy_paths %}
+  <nav class="study-related-topics" aria-label="Related research topics">
+    <span>Related topics</span>
+    {% for path in study.related_taxonomy_paths %}<a href="{{ base_url }}projects/{{ study.project }}/{{ path[0] }}/#topic-{{ path|join('--') }}">{{ catalog.taxonomy_titles(path)|join(' / ') }}</a>{% endfor %}
+  </nav>
+  {% endif %}
+  <section class="study-section"><h4>Research question and method</h4><p>{{ study.objective }}</p></section>
+  <section class="study-section"><h4>Result</h4><p>{{ study.summary }}</p></section>
   {% if study.metrics %}
-  <dl class="metric-grid">
+  <dl class="metric-list">
     {% for metric in study.metrics %}<div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>{% endfor %}
   </dl>
   {% endif %}
-  <div class="decision-box"><h4>Current decision</h4><p>{{ study.decision }}</p></div>
-  {% if study.caveats %}<div class="caveat-box"><h4>Evidence boundary</h4><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>{% endif %}
+  <section class="study-section study-conclusion"><h4>Conclusion</h4><p>{{ study.decision }}</p></section>
   {% if study.report_ids %}
-  <div class="study-reports"><h4>Linked publications</h4><div class="study-report-links">
+  <nav class="study-report-links" aria-label="Linked publications">
     {% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}
-  </div></div>
+  </nav>
   {% endif %}
 </article>
 {% endmacro %}
 
+{% macro primary_evidence(studies, catalog, base_url, section_id, intro) %}
+<section id="{{ section_id }}" class="knowledge-section primary-evidence">
+  <div class="section-heading"><p class="eyebrow">Primary evidence</p><h2>Primary result</h2>{% if intro %}<p>{{ intro }}</p>{% endif %}</div>
+  <div class="study-list">{% for study in studies %}{{ study_record(study, catalog, base_url) }}{% endfor %}</div>
+</section>
+{% endmacro %}
+
 {% macro study_timeline(studies, catalog, base_url) %}
-<div class="evidence-ledger">
-  <div class="evidence-ledger-header" aria-hidden="true"><span>Experiment ID</span><span>Hypothesis</span><span>Method</span><span>Dataset</span><span>Primary metric</span><span>Decision</span><span></span></div>
-  {% for study in studies %}
-  <details class="evidence-row maturity-{{ study.maturity }}" id="study-{{ study.id }}">
-    <summary>
-      <span class="evidence-id"><strong>{{ study.id }}</strong><small>{{ study.display_date }}</small></span>
-      <span class="evidence-hypothesis"><strong>{{ study.title }}</strong><small>{{ study.objective }}</small></span>
-      <span class="evidence-method" data-label="Method">{{ study.method }}</span>
-      <span class="evidence-dataset" data-label="Dataset">{{ study.dataset }}</span>
-      <span class="evidence-primary" data-label="Primary metric">{% if study.primary_metric %}<small>{{ study.primary_metric.label }}</small><strong>{{ study.primary_metric.display_value }}</strong>{% else %}<small>EVIDENCE</small><strong>Pending</strong>{% endif %}</span>
-      <span class="decision-state decision-{{ study.decision_state }}" data-label="Decision">{{ study.decision_state }}</span>
-      <span class="evidence-toggle" aria-hidden="true">＋</span>
-    </summary>
-    <div class="evidence-detail">
-      <div class="evidence-narrative"><p><strong>Observed result</strong>{{ study.summary }}</p><p><strong>Current decision</strong>{{ study.decision }}</p></div>
-      {% if study.metrics %}<dl class="metric-grid compact-metrics">{% for metric in study.metrics %}<div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>{% endfor %}</dl>{% endif %}
-      {% if study.caveats %}<div class="evidence-boundary"><strong>Evidence boundary</strong><ul>{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></div>{% endif %}
-      {% if study.report_ids %}<p class="evidence-reports">{% for report_id in study.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}</p>{% endif %}
-    </div>
-  </details>
-  {% endfor %}
+<div class="experiment-list">
+  {% for study in studies %}{{ study_record(study, catalog, base_url) }}{% endfor %}
 </div>
 {% endmacro %}
