@@ -1644,3 +1644,35 @@ studies:
     report_ids: [0831-market-cs-comparison, 0831-market-cs-control, 0831-market-cs-rank, 0831-market-cs-latent-z, 0831-market-cs-deep-sets, 0831-market-cs-induced-attention, 0830-market-cs-attention-smoke-r2]
     evidence_ref: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     featured: true
+
+  - id: signal-cutoff-1350
+    project: astock-overnight
+    taxonomy_path: strategy/signal
+    related_taxonomy_paths:
+      - prediction-evaluation/robustness
+    title: 13:50 Signal Cutoff Evaluation
+    status: completed
+    maturity: signal-only
+    updated_at: 2026-10-22
+    method: Dual-GRU late fusion with corrected available-cash portfolio replay
+    dataset: A-share stock-day 2021-2025; 2024 excludes Sep-Oct; 2025 one-shot Test
+    decision_state: iterate
+    primary_metric: test-rank-ic
+    objective: Evaluate whether an independently trained 13:50 signal supports stable cross-sectional ranking and gross Q10 portfolio performance under the fixed 14:00 entry, next-session 10:00 planned exit, and delayed-exit contract.
+    summary: Validation/Test daily mean RankIC is 0.1332/0.1039. The corrected event-driven Q10 gross total return is 10.711%/37.723%, while Test Sharpe is 2.497, MDD is -5.913%, and terminal break-even is 6.63 bps.
+    decision: Retain 13:50 as a signal candidate for further execution research; do not promote it to live trading before transaction cost, price impact, borrow, and execution gates are complete.
+    caveats:
+      - Test 2025 is one-shot, while Validation 2024 selected the checkpoint and excludes Sep-Oct.
+      - Portfolio results are gross and do not include transaction cost or price impact.
+      - The corrected replay starts from frozen predictions rather than raw-factor retraining and inference.
+      - Train 2021-2023 and the combined-period path are not pure OOS evidence.
+    metrics:
+      - {id: test-rank-ic, label: Test daily mean RankIC, value: 0.1039, format: decimal, decimals: 4, context: 2025 one-shot Test · 243 valid days}
+      - {id: validation-rank-ic, label: Validation daily mean RankIC, value: 0.1332, format: decimal, decimals: 4, context: 2024 excluding Sep-Oct · checkpoint-selected}
+      - {id: test-q10-gross-return, label: Test Q10 gross total return, value: 37.723, format: percent, decimals: 3, context: corrected available-cash ledger}
+      - {id: test-q10-sharpe, label: Test Q10 annualized Sharpe, value: 2.497, format: number, decimals: 3, context: corrected available-cash ledger}
+      - {id: test-q10-mdd, label: Test Q10 max drawdown, value: -5.913, format: percent, decimals: 3, context: corrected available-cash ledger}
+      - {id: test-break-even, label: Test terminal break-even, value: 6.63, format: bps, decimals: 2, context: gross profit per cumulative one-way traded notional}
+    report_ids: [1022-signal-cutoff-1350]
+    evidence_ref: public-report/1022-signal-cutoff-1350
+    featured: false

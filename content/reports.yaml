@@ -379,3 +379,11 @@ reports:
     match_method: sha256
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: ff88e071b4f535bc9e14b42c3605e654f0daa8a7feaf8b70a944715b706de6d4
+  - id: 1022-signal-cutoff-1350
+    project: astock-overnight
+    stage: strategy
+    format: markdown
+    content_file: report-docs/astock-overnight/1022-signal-cutoff-1350/report.md
+    bundle_sha256: 87dcf49e45b7e9617a0a5251d8d241642c1f0da326b64697ad11b98f5b16c23d
+    match_method: sha256
+    match_evidence: astock-overnight/reports/signal-cutoff-1350-research.html
