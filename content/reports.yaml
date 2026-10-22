@@ -379,3 +379,11 @@ reports:
     match_method: sha256
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: ff88e071b4f535bc9e14b42c3605e654f0daa8a7feaf8b70a944715b706de6d4
+  - id: 1022-us-route-top3-backtest
+    project: route
+    stage: strategy
+    format: markdown
+    content_file: report-docs/route/1022-us-route-top3-backtest/report.md
+    bundle_sha256: 18adf67a3819d1d49bf47608f39d88141870b8f024a3c2c945137b3d64ff671b
+    match_method: path-evidence
+    match_evidence: route/report/us-route-2026-10-21-20261022T070410106228Z-185d062d016f.html

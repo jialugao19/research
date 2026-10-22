@@ -1,5 +1,38 @@
 schema_version: 1
 studies:
+  - id: us-route-top3-backtest-20261022
+    project: route
+    taxonomy_path: strategy/execution
+    related_taxonomy_paths: [strategy/position, strategy/signal]
+    title: US Route Top 3 Gross Backtest
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-10-22
+    method: 30-session trend score, next-open execution, and rank-ordered notional inheritance
+    dataset: Alpaca SIP adjusted daily OHLC, 52 current symbols, 2016-02-17 through 2026-10-21 held sessions
+    decision_state: observe
+    primary_metric: gross-cagr
+    objective: Evaluate the existing Route trend score as a dynamically eligible US Core Top 3 portfolio against aligned SPY and QQQ buy-and-hold benchmarks.
+    summary: Gross CAGR is 40.99% versus 15.74% for SPY and 21.17% for QQQ. Max drawdown is -52.10%, and the peak single-stock weight is 77.34%. The result remains a current-universe historical research simulation.
+    decision: Preserve as diagnostic Gross evidence; the source does not establish net performance, unbiased out-of-sample behavior, or deployment readiness.
+    caveats:
+      - Current symbol selection projected into history creates survivorship and selection bias.
+      - Gross ignores commission, spread, slippage, taxes, and capacity; adjusted daily open is an execution proxy.
+      - Unchanged Top 3 sets never rebalance, so retained positions drift; MSFT ends at 69.78% weight.
+      - Corporate-action-adjusted units are a return proxy, not historical actual share counts or a dividend cash ledger.
+    metrics:
+      - {id: gross-cagr, label: Gross CAGR, value: 40.99, format: percent, decimals: 2, context: 2016-02-17 open to 2026-10-21 close; calendar-day annualization}
+      - {id: max-drawdown, label: Max drawdown, value: -52.10, format: percent, decimals: 2, context: close NAV with initial entry-open peak}
+      - {id: sharpe, label: Sharpe, value: 1.08, format: decimal, decimals: 2, context: rf=0; 252 sessions/year; sample standard deviation}
+      - {id: spy-cagr, label: SPY CAGR, value: 15.74, format: percent, decimals: 2, context: identical entry open and close valuation dates}
+      - {id: qqq-cagr, label: QQQ CAGR, value: 21.17, format: percent, decimals: 2, context: identical entry open and close valuation dates}
+      - {id: peak-weight, label: Peak single-name weight, value: 77.34, format: percent, decimals: 2, context: AAPL; 2026-07-28 close}
+      - {id: replacements, label: Position replacements, value: 942, format: integer, context: 1887 buy/sell orders; 901 trading days including initial entry}
+      - {id: held-sessions, label: Held sessions, value: 2686, format: integer, context: excludes 30-session score warmup}
+    report_ids: [1022-us-route-top3-backtest]
+    evidence_ref: route/report/us-route-2026-10-21-20261022T070410106228Z-185d062d016f.html
+    featured: false
+
   - id: reference-baseline
     project: prediction-nn-1min
     taxonomy_path: model/baseline
