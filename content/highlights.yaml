@@ -4,38 +4,38 @@ metrics:
   - id: best-reported-test-ic
     label: Best reported test IC
     category: quality
-    study: index500-clean-benchmark
+    experiment: index500-clean-benchmark
     metric: etf-test-ic
     scope: ETF forecast · 2024-02–2025-12 · pre-cost
   - id: multi-seed-test-ic
     label: Multi-seed test IC
     category: quality
-    study: optimize-1min-model
+    experiment: optimize-1min-model
     metric: test-pooled-ic
     scope: GRU192×2 · seeds 7/11/13
   - id: featured-net-sharpe
     label: Featured net Sharpe
     category: quality
-    study: baseline-1s-0720
+    experiment: baseline-1s-0720
     metric: net-sharpe
     scope: 10m net · test-selected · not promoted
   - id: architectures-screened
     label: Architectures screened
     category: method
-    study: optimize-1min-model
+    experiment: optimize-1min-model
     metric: architecture-candidates
     scope: fixed-budget 1min screen
   - id: order-book-ticks
     label: Order-book ticks
     category: scale
-    study: aq2-v16
+    experiment: aq2-v16
     metric: snapshot-ticks
     display_format: compact-1
     scope: AQ2 v16 full rerun
   - id: evaluation-rows
     label: 1s evaluation rows
     category: scale
-    study: baseline-1s-0720
+    experiment: baseline-1s-0720
     metric: evaluation-rows
     display_format: compact-2
     scope: Stock1s fold0 test
@@ -43,7 +43,7 @@ metrics:
     label: Evidence windows
     category: coverage
     display_value: 2021–2026
-    scope: non-continuous across studies
+    scope: non-continuous across experiments
   - id: research-universe
     label: Research universe
     category: coverage
@@ -52,7 +52,7 @@ metrics:
 
 featured:
   report: 0807-stock1s-fold0-full-evaluation
-  study: baseline-1s-0720
+  experiment: baseline-1s-0720
   decision_label: Keep in research
   decision_summary: Strong fold0 signal evidence does not pass the current selection and trading gates.
   gates:
@@ -87,16 +87,16 @@ featured:
 rejected_ideas:
   - title: Attention representation
     state: Not promoted
-    study: optimize-1min-model
+    experiment: optimize-1min-model
     metric_ids: [test-pooled-ic, attention-test-ic]
     reason: Three-seed test IC reached 0.07066 versus 0.07895 for the retained GRU192×2 last-hidden model.
   - title: TCN architecture
     state: Not promoted
-    study: optimize-1min-model
+    experiment: optimize-1min-model
     metric_ids: []
     reason: The fixed-budget architecture screen did not produce evidence strong enough to displace the compact GRU baseline.
   - title: Large GRU / MLP capacity
     state: Not promoted
-    study: optimize-1min-model
+    experiment: optimize-1min-model
     metric_ids: [baseline-parameters, parameters]
     reason: Roughly 1.81M parameters did not improve out-of-sample stability; the retained model uses 342,337 parameters.

@@ -1,0 +1,46 @@
+{% macro experiment_table(experiments, catalog, base_url, filters=false) %}
+{% if experiments %}
+{% if filters %}
+<form class="research-filters" data-experiment-filters role="search" aria-label="Filter experiments">
+  <label>Search<input type="search" name="search" placeholder="Experiment, method, dataset" autocomplete="off"></label>
+  <label>Research question<select name="study"><option value="">All questions</option>{% for study in catalog.studies %}{% if study.experiment_ids|select('in', experiments|map(attribute='id')|list)|list %}<option value="{{ study.id }}">{{ study.title }}</option>{% endif %}{% endfor %}</select></label>
+  <label>Experiment type<select name="type"><option value="">All types</option>{% for kind in experiments|map(attribute='experiment_type')|unique|sort %}<option value="{{ kind }}">{{ kind|replace('-', ' ') }}</option>{% endfor %}</select></label>
+  <label>Model<select name="model"><option value="">All models</option>{% for model in experiments|map(attribute='model')|unique|sort %}<option value="{{ model }}">{{ model }}</option>{% endfor %}</select></label>
+  <label>Status<select name="status"><option value="">All statuses</option>{% for status in experiments|map(attribute='status')|unique|sort %}<option value="{{ status }}">{{ status }}</option>{% endfor %}</select></label>
+  <button type="reset">Reset</button>
+</form>
+<p class="research-count" data-experiment-count role="status" aria-live="polite">{{ experiments|length }} experiments</p>
+{% endif %}
+<div class="research-table-scroll" tabindex="0" aria-label="Experiment evidence table">
+<table class="research-table"{% if filters %} data-experiment-table{% endif %}>
+  <caption>Recorded experiment results. Each metric retains its own scope; rows are not a common-universe ranking.</caption>
+  <thead><tr><th scope="col">Experiment</th><th scope="col">Method / Dataset</th><th scope="col">Key metric</th><th scope="col">Current conclusion</th><th scope="col">Evidence</th></tr></thead>
+  <tbody>
+  {% for experiment in experiments %}
+  <tr data-experiment-row data-id="{{ experiment.id }}" data-studies="{{ catalog.studies_for_experiment(experiment.id)|map(attribute='id')|join(' ') }}" data-type="{{ experiment.experiment_type }}" data-model="{{ experiment.model }}" data-status="{{ experiment.status }}" data-search="{{ (experiment.title ~ ' ' ~ experiment.method ~ ' ' ~ experiment.dataset ~ ' ' ~ experiment.id)|lower }}">
+    <th scope="row"><a href="{{ base_url }}{{ experiment.route }}">{{ experiment.title }}</a><small>{{ experiment.status }} · {{ experiment.maturity }}</small></th>
+    <td>{{ experiment.method }}<small>{{ experiment.dataset }}</small></td>
+    <td>{% if experiment.primary_metric %}<span class="numeric">{{ experiment.primary_metric.display_value }}</span><small>{{ experiment.primary_metric.label }} · {{ experiment.primary_metric.context }}</small>{% if experiment.metrics|length > 1 %}<details><summary>All recorded metrics</summary><dl>{% for metric in experiment.metrics %}{% if metric.id != experiment.primary_metric_id %}<dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}<small>{{ metric.context }}</small></dd>{% endif %}{% endfor %}</dl></details>{% endif %}{% else %}Not recorded{% endif %}</td>
+    <td>{{ experiment.decision }}<small>{{ experiment.decision_state }}</small>{% if experiment.caveats %}<details><summary>Scope and limitations</summary><ul>{% for caveat in experiment.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></details>{% endif %}</td>
+    <td>{% for report_id in experiment.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a>{% if not loop.last %}<br>{% endif %}{% endfor %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div>
+{% if filters %}<p data-experiment-empty hidden>No experiment matches these filters.</p>{% endif %}
+{% endif %}
+{% endmacro %}
+
+{% macro research_figure(figure, catalog, base_url) %}
+<figure class="research-figure">
+  <a href="{{ base_url }}{{ figure.original }}" data-original-image aria-label="Open original: {{ figure.title }}">
+    <img src="{{ base_url }}{{ figure.renditions[-1].path }}" srcset="{% for rendition in figure.renditions %}{{ base_url }}{{ rendition.path }} {{ rendition.width }}w{% if not loop.last %}, {% endif %}{% endfor %}" sizes="(max-width: 996px) calc(100vw - 32px), 800px" width="{{ figure.width }}" height="{{ figure.height }}" alt="{{ figure.title }}" loading="lazy" decoding="async">
+  </a>
+  <figcaption>{{ figure.title }} · <a href="{{ base_url }}{{ catalog.report_by_id[figure.report_id].route }}">Source report</a> · <a href="{{ base_url }}{{ figure.original }}">Original image</a></figcaption>
+</figure>
+{% endmacro %}
+
+{% macro study_links(studies, base_url) %}
+<nav class="entity-links" aria-label="Research questions">{% for study in studies %}<a href="{{ base_url }}{{ study.route }}">{{ study.title }} →</a>{% endfor %}</nav>
+{% endmacro %}

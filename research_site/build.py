@@ -5,22 +5,22 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, StrictUndefined, select_autoescape
 
-from .build_knowledge import render_knowledge_pages
-from .build_output import BuildResult, build_atomically, write_text
-from .build_reports import render_report_pages
-from .build_research import featured_chart_view as _featured_chart_view
-from .build_research import render_research_pages
-from .catalog import (
+from research_site.build_knowledge import render_knowledge_pages
+from research_site.build_output import BuildResult, build_atomically, write_text
+from research_site.build_reports import render_report_pages
+from research_site.build_entities import render_entity_pages
+from research_site.build_research import render_research_pages
+from research_site.catalog import (
     Catalog,
     Project,
     Report,
     ResearchTaxonomyNode,
-    Study,
+    Experiment,
     taxonomy_anchor,
 )
-from .knowledge import knowledge_payload
+from research_site.knowledge import knowledge_payload
 
-__all__ = ["_featured_chart_view", "build_site"]
+__all__ = ["build_site"]
 
 
 def normalize_base_url(value: str) -> str:
@@ -32,6 +32,7 @@ def _report_payload(report: Report, base_url: str) -> dict[str, object]:
     return {
         "id": report.id,
         "project": report.project,
+        "project_ids": list(report.project_ids),
         "stage": report.stage,
         "title": report.title,
         "date": report.display_date,
@@ -50,23 +51,27 @@ def _project_url(project: Project, base_url: str) -> str:
     return f"{base_url}projects/{project.id}/"
 
 
-def _study_payload(study: Study) -> dict[str, object]:
+def _experiment_payload(experiment: Experiment) -> dict[str, object]:
     return {
-        "id": study.id,
-        "project": study.project,
-        "stage": study.stage,
-        "taxonomy_path": study.taxonomy_path_string,
-        "related_taxonomy_paths": ["/".join(path) for path in study.related_taxonomy_paths],
-        "title": study.title,
-        "status": study.status,
-        "maturity": study.maturity,
-        "updated_at": study.display_date,
-        "method": study.method,
-        "dataset": study.dataset,
-        "decision_state": study.decision_state,
-        "primary_metric": study.primary_metric_id,
-        "summary": study.summary,
-        "decision": study.decision,
+        "id": experiment.id,
+        "project": experiment.project,
+        "project_ids": list(experiment.project_ids),
+        "type": experiment.experiment_type,
+        "model": experiment.model,
+        "url": f"experiments/{experiment.id}/",
+        "stage": experiment.stage,
+        "taxonomy_path": experiment.taxonomy_path_string,
+        "related_taxonomy_paths": ["/".join(path) for path in experiment.related_taxonomy_paths],
+        "title": experiment.title,
+        "status": experiment.status,
+        "maturity": experiment.maturity,
+        "updated_at": experiment.display_date,
+        "method": experiment.method,
+        "dataset": experiment.dataset,
+        "decision_state": experiment.decision_state,
+        "primary_metric": experiment.primary_metric_id,
+        "summary": experiment.summary,
+        "decision": experiment.decision,
         "metrics": [
             {
                 "id": metric.id,
@@ -75,9 +80,9 @@ def _study_payload(study: Study) -> dict[str, object]:
                 "display_value": metric.display_value,
                 "context": metric.context,
             }
-            for metric in study.metrics
+            for metric in experiment.metrics
         ],
-        "report_ids": list(study.report_ids),
+        "report_ids": list(experiment.report_ids),
     }
 
 
@@ -112,20 +117,22 @@ def _render_site(
     reports_by_project = {
         project.id: catalog.reports_for_project(project.id) for project in catalog.projects
     }
-    studies_by_project = {
-        project.id: catalog.studies_for_project(project.id) for project in catalog.projects
+    experiments_by_project = {
+        project.id: catalog.experiments_for_project(project.id) for project in catalog.projects
     }
     dated_items = [report.date for report in catalog.current_reports]
-    dated_items.extend(study.updated_at for study in catalog.studies)
+    dated_items.extend(experiment.updated_at for experiment in catalog.experiments)
     common = {
         "base_url": base_url,
         "catalog": catalog,
         "knowledge": catalog.knowledge,
         "report_count": len(catalog.current_reports),
         "project_count": len(catalog.research_projects),
+        "experiment_count": len(catalog.experiments),
         "study_count": len(catalog.studies),
         "site_updated": max(dated_items).isoformat() if dated_items else "",
     }
+    figures = render_entity_pages(catalog, environment, site_root, output_root, base_url, common)
     render_research_pages(
         catalog,
         environment,
@@ -133,13 +140,13 @@ def _render_site(
         base_url,
         common,
         reports_by_project,
-        studies_by_project,
+        experiments_by_project,
     )
     knowledge = render_knowledge_pages(catalog, environment, output_root, base_url, common)
     render_report_pages(catalog, environment, site_root, output_root, common)
     write_text(output_root / ".nojekyll", "")
     catalog_data = {
-        "schema_version": 4,
+        "schema_version": 5,
         "base_url": base_url,
         "research_taxonomy": [
             {
@@ -160,7 +167,7 @@ def _render_site(
                 "status": project.status,
                 "url": _project_url(project, base_url),
                 "report_count": len(reports_by_project[project.id]),
-                "study_count": len(studies_by_project[project.id]),
+                "experiment_count": len(experiments_by_project[project.id]),
                 "stages": [
                     {
                         "id": stage.id,
@@ -174,12 +181,21 @@ def _render_site(
             }
             for project in catalog.projects
         ],
-        "studies": [_study_payload(study) for study in catalog.studies],
+        "studies": [{
+            "id": study.id, "title": study.title, "question": study.question,
+            "conclusion": study.conclusion, "project_ids": list(study.project_ids),
+            "experiment_ids": list(study.experiment_ids), "report_ids": list(study.report_ids),
+            "taxonomy_path": "/".join(study.taxonomy_path), "url": base_url + study.route,
+        } for study in catalog.studies],
+        "experiments": [{**_experiment_payload(experiment), "url": base_url + experiment.route,
+                         "study_ids": [s.id for s in catalog.studies_for_experiment(experiment.id)]}
+                        for experiment in catalog.experiments],
         "reports": [
             {**_report_payload(report, base_url), "is_current": report in catalog.current_reports}
             for report in catalog.reports
         ],
     }
+    write_text(output_root / "research-images.json", json.dumps(figures, ensure_ascii=False, indent=2) + "\n")
     write_text(
         output_root / "catalog.json",
         json.dumps(catalog_data, ensure_ascii=False, indent=2) + "\n",
@@ -205,7 +221,7 @@ def build_site(
         _render_site(catalog, site_root, staging, normalized_base_url)
 
     def validate(staging: Path) -> None:
-        from .validation import validate_built_site
+        from research_site.validation import validate_built_site
 
         validate_built_site(catalog, site_root, staging, normalized_base_url)
 

@@ -2,6 +2,7 @@ schema_version: 2
 featured_report: 0807-stock1s-fold0-full-evaluation
 reports:
   - id: 0502-index-6backtest
+    published_sha256: cfb42f2cca5192df331b85eba5f001df84e24b091fe2845f0130b6811e5ee86e
     project: index500-predict
     stage: prediction-evaluation
     title: Index500 Predict 研究报告
@@ -14,6 +15,7 @@ reports:
     match_evidence: index500-predict/report/0502/index.html
     source_sha256: 222757be5cc148b9cf105492d01b977417de897f09b1fc0e87cd1ac68b9eab10
   - id: 0702-l2-ablation
+    published_sha256: f8ffc17ef62131a01bd807b090b293f40f7b27a3418d3ddb0cf3d72ed2d63834
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -27,6 +29,7 @@ reports:
     match_evidence: exp-nn/l2-features/report/070213_l2_ablation_vs_baseline_comparison_report.html
     source_sha256: c49ed23759a2718de8e278149aa47d083ec574868d1dfbb1226ff2a3bad69b78
   - id: 0725-1min-model-screening
+    published_sha256: 36f94949a0e69d091d34a375cb363a9e27a081fb77dcb01e11cc77c489eb3e37
     project: prediction-nn-1min
     stage: model
     route_project: prediction-nn
@@ -40,6 +43,7 @@ reports:
     match_evidence: exp-nn/optimize-1min-model
     source_sha256: 8a59f9bc5a7fdabcec33d3973ca9502e82c43cb8e4e2df77a917e69d62ee8b70
   - id: 0730-stock1s-feature-health
+    published_sha256: e8b933c7a15203cd7b5dc4496c1e179bf3d3f84352990ebd915f101ea7d671f1
     project: prediction-nn-1s
     stage: data-engineering
     route_project: prediction-nn
@@ -53,6 +57,7 @@ reports:
     match_evidence: exp-nn/baseline-1s-0720/report/feature_superset_v1_health_research_20260730
     source_sha256: 3c1821070768e817e879521e6143fc741e2c83da7146e202db3af7e523d44b1e
   - id: 0731-limit-t1-strategy
+    published_sha256: 193dfa5cfdda1a450754ea5056574ba636465766eabdf42d6f1376c63edc9ac6
     project: limit-0729
     stage: strategy
     title: T+1 打板策略研究报告
@@ -65,6 +70,7 @@ reports:
     match_evidence: limit-0729/artifacts/strategy/report/report.html
     source_sha256: 9c406af6bef9f4d5be22743e5e90733c0e9c09788d96ec40d11eac3590f7ce67
   - id: 0802-stock1s-gru384
+    published_sha256: f13c754dc348019adc9192bdc7eb0318c848d0c2b30b27a994b60afa7be68c08
     project: prediction-nn-1s
     stage: prediction-evaluation
     route_project: prediction-nn
@@ -145,6 +151,7 @@ reports:
     match_method: path-evidence
     match_evidence: live-predictor/reports/20260805T140155+0800_report.html
   - id: 0807-stock1s-fold0-full-evaluation
+    published_sha256: cc09189bb528abb301b6e7f0c0765b16cce50b6ad918e590470fae733e6dc7f7
     project: prediction-nn-1s
     stage: prediction-evaluation
     route_project: prediction-nn
@@ -159,6 +166,7 @@ reports:
     match_evidence: exp-nn/baseline-1s-0720/report/fold0_dedup67_gru384_mlp512x512_postprocess_af944d6_full_evaluation_report.html
     source_sha256: ff16907e0c5bf7fe962eed4c587daab72c55faf178f106cd4aceca55234b23c1
   - id: 0807-stock1s-cost-turnover-sweep
+    published_sha256: fb65e8770a296cc0d34aeeadb8709343344d0be208e736a334d55a139fcdefe2
     project: prediction-nn-1s
     stage: strategy
     route_project: prediction-nn
@@ -172,6 +180,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/baseline-1s-0720/results.yaml
     source_sha256: 62882dcd1e06228f40610071eee2a335f7354ae41ef49dd1e267d11fe0eff45c
   - id: 0808-stock1s-p0-p4-research
+    published_sha256: 95d45b8eb44281334ddf8a78e1ea03e29e3bdd34c246df3a2505a3116d3d79c9
     project: prediction-nn-1s
     stage: prediction-evaluation
     route_project: prediction-nn
@@ -185,6 +194,7 @@ reports:
     match_evidence: exp-nn/baseline-1s-0720/report/20260808_p0_p4_full_research_report.html
     source_sha256: 37d5f4979e129629b007dc26568fe3bfa0b11c4786c0f7f9912e30f7f29bad5b
   - id: 0811-day-pure-batch-1min
+    published_sha256: ff1aed74daaa61d60d1e8b729c076f948eb16ecd451ded2ad5159345adcc0e1e
     project: prediction-nn-1min
     stage: model
     route_project: prediction-nn
@@ -198,6 +208,7 @@ reports:
     match_evidence: exp-nn/day-pure-batch-1min/report/081111_full_evaluation_report.html
     source_sha256: 479ae3fe35e5eda67468b6c4650d142b3571b198466d1400e996db9ebd587119
   - id: 0812-multiscale-63feature-evaluation
+    published_sha256: 74df25763d61a07d53eab4fa1c4186f47bb4586fbeb55a480f20fc29a4b3835c
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -211,6 +222,7 @@ reports:
     match_evidence: exp-nn/multiscale-market-features-1min/report/081223_full_evaluation_report.html
     source_sha256: 592bee29a427f57ebb84511b25ddf8d1159bce15ca2d1e712a77be02b2d6c2d5
   - id: 0814-feature-family-ablation
+    published_sha256: 9c6fdff629c549815308e813102c7d3a5a57806211b3470c980a37edc5880890
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -224,6 +236,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
     source_sha256: 1eaeada3fa6436d200eebc9361463ec4e9dc14eab86224d43cac1b71f1f467f4
   - id: 0815-horizon-label-comparison
+    published_sha256: 5530f250ec45db1fd89ad5f8c70073698f113ae74cd723c922062facb7c4903d
     project: prediction-nn-1min
     stage: data-engineering
     route_project: prediction-nn
@@ -237,6 +250,7 @@ reports:
     match_evidence: exp-nn/horizon-labels/report/horizon_label_comparison_report.html
     source_sha256: 644da0d036c9bcc816f60b49dc02ee9b72d4f5335d690a1e264d7ebfc531a0c0
   - id: 0822-market-context-comparison
+    published_sha256: 8cf419f37d0c5d152dda0b23cc9ea2e6c0c1a0fd924edcc9553dbd171fa70f1e
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -250,6 +264,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
     source_sha256: 0017cf42c03aa4353e09c526736837a5ea46f57c1a8118f5bdf35fae19ba3da7
   - id: 0825-market-context-baseline
+    published_sha256: 49bd2f2f4b1327223b4f9289b2ce67788ce775eacfbdf815ccfb98a4c8273d81
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -263,6 +278,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
     source_sha256: f0ab0f671ab36ba7cd974cb21963c902f05977580c5c8acf79f6727b1f89b970
   - id: 0825-market-context-panel
+    published_sha256: 01bd5ae02c6fec5c0cc006b3b933eab4aa23620034006034b388589c57402f33
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -276,6 +292,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
     source_sha256: dca28d125efdd68daba31b89d1c80a4e9e709b5e8d58650d80879725f03e2ba9
   - id: 0825-market-context-market16
+    published_sha256: 07db2d2af0a8d6e9b14db8ca2510c6abde9d3273a39a4e8cd5c51c3534393284
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -289,6 +306,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/market-sample/results.yaml
     source_sha256: 479a1b3758f009d6f3166b5516cb7381f3a511c499d425bb142a0f06dea65bc2
   - id: 0831-market-cs-comparison
+    published_sha256: ee7e0fb16f2c7252ec6909b9dfac756d18257c21b2ef2ea5066bfe071532f04f
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -302,6 +320,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: ab95a5c81d059c561120fc0ae86bd93389d063b9420bd0453365884230dca648
   - id: 0831-market-cs-control
+    published_sha256: 49d8b42676cff5f1aafe0523cfa4759a5eb9577f10a2b73c80a7c3376cab9903
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -315,6 +334,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: 3913c7700991054cb050c4296e91cb22c25ccd7bb0fe8d7c1be5d2143136f066
   - id: 0831-market-cs-rank
+    published_sha256: b72906bda72cc089e82197f8dc39c680e93db28be5025f0689669c85159c66ba
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -328,6 +348,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: a605f3184e17e08c6b20cec9f6e71d01b1035e6215b3c6adc6f3cdd97dc9bebe
   - id: 0831-market-cs-latent-z
+    published_sha256: afffca9eb270004829d25570632444b5562e4265f1fcc626bf32b08a3591f99e
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -341,6 +362,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: 708e7f8b11cc414877a3624cb73a5de829ccea4ed9475df2dfa15024331c7731
   - id: 0831-market-cs-deep-sets
+    published_sha256: fd909434750dcffc16cdac84800f9308659cf78648324d138ef897b0b23cf904
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -354,6 +376,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: 2e7c1eb49e42045ddbc3f26e8bb6a866bc0b87d28557f2a22eb52ff788b6e57f
   - id: 0831-market-cs-induced-attention
+    published_sha256: d48e839fe7b74319ca663183829c8df663c04b996839ea27a1dcc501eff90c08
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -367,6 +390,7 @@ reports:
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: b1c3ae71dd98da5242bc626fc2564225c447338da626c19ab1c11636056e91a3
   - id: 0830-market-cs-attention-smoke-r2
+    published_sha256: a57a80ce5f4d3cfa12c8cd52453fb491f29e76cab74b303b7e532a9854a9e3f2
     project: prediction-nn-1min
     stage: feature-engineering
     route_project: prediction-nn
@@ -379,3 +403,19 @@ reports:
     match_method: sha256
     match_evidence: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     source_sha256: ff88e071b4f535bc9e14b42c3605e654f0daa8a7feaf8b70a944715b706de6d4
+  - id: 1022-us-route-top3-backtest
+    project: route
+    stage: strategy
+    format: markdown
+    content_file: report-docs/route/1022-us-route-top3-backtest/report.md
+    bundle_sha256: 18adf67a3819d1d49bf47608f39d88141870b8f024a3c2c945137b3d64ff671b
+    match_method: path-evidence
+    match_evidence: route/report/us-route-2026-10-21-20261022T070410106228Z-185d062d016f.html
+  - id: 1101-top1-membership-cost
+    project: prediction-nn-1min
+    stage: strategy
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1101-top1-membership-cost/report.md
+    bundle_sha256: 9aba80be3948d4bc2563079a563a74c193b6b6bc8ae93c7764bd3aa5481bbb31
+    match_method: path-evidence
+    match_evidence: exp-repo/exps/top1-membership-cost/runs/top1-membership-cost-20261101-r3/result.yaml

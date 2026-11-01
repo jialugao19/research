@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_study.html" import study_timeline %}
+{% from "_experiment.html" import experiment_timeline %}
 {% from "_research_taxonomy.html" import taxonomy_tree %}
 {% block title %}{{ stage.title }} · {{ project.title }}{% endblock %}
 {% block body_class %}knowledge-page knowledge-catalog-page research-stage-page{% endblock %}
@@ -8,12 +8,12 @@
   <nav class="knowledge-breadcrumb" aria-label="Research hierarchy"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a><span>/</span><strong>Research stage</strong></nav>
   <p class="eyebrow">STAGE {{ "%02d"|format(stage_number) }} / 06</p>
   <h1>{{ stage.title }}</h1>
-  <p>{{ stage.description }}</p>
+  <p>{{ stage.description }}</p><p class="research-count">{{ assessment.state }} · {{ assessment.summary }}</p>
 </header>
 
 <section id="research-tree" class="knowledge-section research-taxonomy-tree">
-  {% if stage_root_studies %}{{ study_timeline(stage_root_studies, catalog, base_url) }}{% endif %}
-  {{ taxonomy_tree(taxonomy_views, catalog, base_url) }}
+  {% if stage_root_experiments %}{{ experiment_timeline(stage_root_experiments, catalog, base_url) }}{% endif %}
+  {{ taxonomy_tree(taxonomy_views, catalog, base_url, project.id) }}
 </section>
 
 {% if reports %}

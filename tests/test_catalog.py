@@ -15,6 +15,7 @@ def _copy_catalog(tmp_path: Path) -> None:
         "research-flow.yaml",
         "research-taxonomy.yaml",
         "projects.yaml",
+        "experiments.yaml",
         "studies.yaml",
         "reports.yaml",
         "highlights.yaml",
@@ -30,9 +31,9 @@ def test_repository_catalog_is_valid() -> None:
     assert len(catalog.research_projects) == 20
     assert len(catalog.infrastructure_projects) == 4
     assert len(catalog.knowledge_projects) == 2
-    assert len(catalog.studies) == 47
-    assert len(catalog.reports) == 31
-    assert len(catalog.current_reports) == 24
+    assert len(catalog.experiments) == 49
+    assert len(catalog.reports) == 33
+    assert len(catalog.current_reports) == 26
     assert catalog.featured_report_id == "0807-stock1s-fold0-full-evaluation"
     assert catalog.featured_report is catalog.report_by_id["0807-stock1s-fold0-full-evaluation"]
     assert catalog.report_by_id["0802-stock1s-gru384-v2"].revision_of == "0802-stock1s-gru384"
@@ -44,7 +45,7 @@ def test_repository_catalog_is_valid() -> None:
         "images/extreme-tail-performance.png"
     )
     assert "tqo-data-source" not in catalog.project_by_id
-    assert "tqo-reference-backend" not in catalog.study_by_id
+    assert "tqo-reference-backend" not in catalog.experiment_by_id
     assert [stage.id for stage in catalog.research_stages] == [
         "data",
         "data-engineering",
@@ -70,7 +71,7 @@ def test_repository_catalog_is_valid() -> None:
     ]
     one_minute = catalog.project_by_id["prediction-nn-1min"]
     one_second = catalog.project_by_id["prediction-nn-1s"]
-    assert one_minute.stage("strategy").state == "gap"
+    assert one_minute.stage("strategy").state == "in-progress"
     assert one_second.stage("strategy").state == "documented"
     assert one_minute.legacy_topic_redirect("l2-features").taxonomy_path == (
         "feature-engineering",
@@ -93,51 +94,51 @@ def test_repository_catalog_is_valid() -> None:
         "multiscale-market-features-1min",
     }
     assert all(
-        one_minute.legacy_topic_redirect(study_id) is not None
-        for study_id in latest_prediction_nn_ids - {"baseline-1s-v2"}
+        one_minute.legacy_topic_redirect(experiment_id) is not None
+        for experiment_id in latest_prediction_nn_ids - {"baseline-1s-v2"}
     )
     assert one_second.legacy_topic_redirect("baseline-1s-v2") is not None
-    assert latest_prediction_nn_ids <= catalog.study_by_id.keys()
-    assert catalog.study_by_id["baseline-1s-v2"].decision_state == "reject"
-    assert catalog.study_by_id["baseline-1s-v2"].project == "prediction-nn-1s"
+    assert latest_prediction_nn_ids <= catalog.experiment_by_id.keys()
+    assert catalog.experiment_by_id["baseline-1s-v2"].decision_state == "reject"
+    assert catalog.experiment_by_id["baseline-1s-v2"].project == "prediction-nn-1s"
     assert catalog.report_by_id["0807-stock1s-fold0-full-evaluation"].route == (
         "reports/prediction-nn/0807-stock1s-fold0-full-evaluation/"
     )
-    assert catalog.study_by_id["horizon-labels"].report_ids == ("0815-horizon-label-comparison",)
-    assert catalog.study_by_id["market-sample"].primary_metric_id == "panel-test-ic"
-    assert catalog.study_by_id["0825-feature-audit"].report_ids == ()
-    assert catalog.study_by_id["day-pure-batch-1min"].taxonomy_path == ("model", "batch")
-    assert catalog.study_by_id["day-pure-batch-1min"].stage == "model"
-    assert catalog.study_by_id["rolling-purged-val"].stage == "data-engineering"
-    assert catalog.study_by_id["ashare-1s-coverage"].stage == "data"
-    assert sum(bool(study.taxonomy_path) for study in catalog.studies) == 44
+    assert catalog.experiment_by_id["horizon-labels"].report_ids == ("0815-horizon-label-comparison",)
+    assert catalog.experiment_by_id["market-sample"].primary_metric_id == "panel-test-ic"
+    assert catalog.experiment_by_id["0825-feature-audit"].report_ids == ()
+    assert catalog.experiment_by_id["day-pure-batch-1min"].taxonomy_path == ("model", "batch")
+    assert catalog.experiment_by_id["day-pure-batch-1min"].stage == "model"
+    assert catalog.experiment_by_id["rolling-purged-val"].stage == "data-engineering"
+    assert catalog.experiment_by_id["ashare-1s-coverage"].stage == "data"
+    assert sum(bool(experiment.taxonomy_path) for experiment in catalog.experiments) == 46
     assert all(
-        not study.taxonomy_path
-        for study in catalog.studies
-        if catalog.project_by_id[study.project].section == "infrastructure"
+        not experiment.taxonomy_path
+        for experiment in catalog.experiments
+        if catalog.project_by_id[experiment.project].section == "infrastructure"
     )
-    assert len(catalog.study_by_id["0827-market-cs"].report_ids) == 7
+    assert len(catalog.experiment_by_id["0827-market-cs"].report_ids) == 7
     assert catalog.report_by_id["0831-market-cs-comparison"].source_file == (
         "0831-market-cs-research/index.html"
     )
-    assert catalog.study_by_id["baseline-1s-0720"].metrics[0].display_value == "0.09842"
+    assert catalog.experiment_by_id["baseline-1s-0720"].metrics[0].display_value == "0.09842"
     evaluation_rows = next(
         metric
-        for metric in catalog.study_by_id["baseline-1s-0720"].metrics
+        for metric in catalog.experiment_by_id["baseline-1s-0720"].metrics
         if metric.id == "evaluation-rows"
     )
     assert evaluation_rows.display_value == "7,947,567"
-    assert all(study.method and study.dataset and study.decision_state for study in catalog.studies)
-    assert all(not study.metrics or study.primary_metric is not None for study in catalog.studies)
-    assert catalog.study_by_id["optimize-1min-model"].primary_metric_id == "test-pooled-ic"
+    assert all(experiment.method and experiment.dataset and experiment.decision_state for experiment in catalog.experiments)
+    assert all(not experiment.metrics or experiment.primary_metric is not None for experiment in catalog.experiments)
+    assert catalog.experiment_by_id["optimize-1min-model"].primary_metric_id == "test-pooled-ic"
     architecture_count = next(
         metric
-        for metric in catalog.study_by_id["optimize-1min-model"].metrics
+        for metric in catalog.experiment_by_id["optimize-1min-model"].metrics
         if metric.id == "architecture-candidates"
     )
     assert architecture_count.display_value == "18"
     assert catalog.homepage is not None
-    assert catalog.homepage.featured.study == "baseline-1s-0720"
+    assert catalog.homepage.featured.experiment == "baseline-1s-0720"
     assert catalog.homepage.featured.chart.bins == (1, 2, 3, 18, 19, 20)
     assert len(catalog.homepage.metrics) == 8
     assert len(catalog.homepage.rejected_ideas) == 3
@@ -362,11 +363,11 @@ def test_revision_must_keep_ownership(tmp_path: Path) -> None:
         load_catalog(tmp_path)
 
 
-def test_research_study_must_reference_existing_taxonomy_path(tmp_path: Path) -> None:
+def test_research_experiment_must_reference_existing_taxonomy_path(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
-    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
-    studies = studies.replace("taxonomy_path: model/baseline", "taxonomy_path: model/missing", 1)
-    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    experiments = (tmp_path / "experiments.yaml").read_text(encoding="utf-8")
+    experiments = experiments.replace("taxonomy_path: model/baseline", "taxonomy_path: model/missing", 1)
+    (tmp_path / "experiments.yaml").write_text(experiments, encoding="utf-8")
     with pytest.raises(CatalogError, match="valid research taxonomy path"):
         load_catalog(tmp_path)
 
@@ -382,9 +383,23 @@ def test_source_file_cannot_escape_archive(tmp_path: Path) -> None:
 def test_source_ref_cannot_escape_workspace(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
     projects = (SITE_ROOT / "content" / "projects.yaml").read_text(encoding="utf-8")
-    projects = projects.replace("source_refs: [prediction-NN-main, exp-nn]", "source_refs: [../prediction-NN-main]", 1)
+    projects = projects.replace("source_refs: []", "source_refs: [../exp-nn]", 1)
     (tmp_path / "projects.yaml").write_text(projects, encoding="utf-8")
     with pytest.raises(CatalogError, match="relative without parent traversal"):
+        load_catalog(tmp_path)
+
+
+def test_registry_experiment_cannot_belong_to_two_projects(tmp_path: Path) -> None:
+    # Duplicate an experiment across the minute and second project declarations.
+    _copy_catalog(tmp_path)
+    projects = (tmp_path / "projects.yaml").read_text(encoding="utf-8")
+    projects = projects.replace(
+        "      - baseline-1s-0720", "      - reference-baseline\n      - baseline-1s-0720", 1,
+    )
+    (tmp_path / "projects.yaml").write_text(projects, encoding="utf-8")
+
+    # Reject ambiguous ownership before running any report discovery.
+    with pytest.raises(CatalogError, match="registry experiment ownership"):
         load_catalog(tmp_path)
 
 
@@ -401,11 +416,11 @@ def test_match_evidence_must_be_relative(tmp_path: Path) -> None:
         load_catalog(tmp_path)
 
 
-def test_research_study_must_reference_a_taxonomy_path(tmp_path: Path) -> None:
+def test_research_experiment_must_reference_a_taxonomy_path(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
-    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
-    studies = studies.replace("    taxonomy_path: model/baseline\n", "", 1)
-    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    experiments = (tmp_path / "experiments.yaml").read_text(encoding="utf-8")
+    experiments = experiments.replace("    taxonomy_path: model/baseline\n", "", 1)
+    (tmp_path / "experiments.yaml").write_text(experiments, encoding="utf-8")
     with pytest.raises(CatalogError, match="valid research taxonomy path"):
         load_catalog(tmp_path)
 
@@ -420,33 +435,33 @@ def test_project_stage_state_must_be_supported(tmp_path: Path) -> None:
         load_catalog(tmp_path)
 
 
-def test_study_report_must_belong_to_same_project(tmp_path: Path) -> None:
+def test_experiment_report_must_belong_to_same_project(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
-    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
-    studies = studies.replace(
+    experiments = (tmp_path / "experiments.yaml").read_text(encoding="utf-8")
+    experiments = experiments.replace(
         "report_ids: [0502-index-6backtest-v2]",
         "report_ids: [0731-limit-t1-strategy-v2]",
         1,
     )
-    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    (tmp_path / "experiments.yaml").write_text(experiments, encoding="utf-8")
     with pytest.raises(CatalogError, match="belongs to another project"):
         load_catalog(tmp_path)
 
 
-def test_study_decision_state_must_be_supported(tmp_path: Path) -> None:
+def test_experiment_decision_state_must_be_supported(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
-    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
-    studies = studies.replace("decision_state: retain", "decision_state: uncertain", 1)
-    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    experiments = (tmp_path / "experiments.yaml").read_text(encoding="utf-8")
+    experiments = experiments.replace("decision_state: retain", "decision_state: uncertain", 1)
+    (tmp_path / "experiments.yaml").write_text(experiments, encoding="utf-8")
     with pytest.raises(CatalogError, match="unsupported decision_state uncertain"):
         load_catalog(tmp_path)
 
 
-def test_metric_bearing_study_requires_valid_primary_metric(tmp_path: Path) -> None:
+def test_metric_bearing_experiment_requires_valid_primary_metric(tmp_path: Path) -> None:
     _copy_catalog(tmp_path)
-    studies = (tmp_path / "studies.yaml").read_text(encoding="utf-8")
-    studies = studies.replace("primary_metric: test-pooled-ic", "primary_metric: missing-metric", 1)
-    (tmp_path / "studies.yaml").write_text(studies, encoding="utf-8")
+    experiments = (tmp_path / "experiments.yaml").read_text(encoding="utf-8")
+    experiments = experiments.replace("primary_metric: test-pooled-ic", "primary_metric: missing-metric", 1)
+    (tmp_path / "experiments.yaml").write_text(experiments, encoding="utf-8")
     with pytest.raises(CatalogError, match="primary_metric references unknown metric missing-metric"):
         load_catalog(tmp_path)
 

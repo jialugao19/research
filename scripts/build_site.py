@@ -23,7 +23,7 @@ def main() -> int:
         parser.error(str(exc))
     print(
         f"built {len(catalog.research_projects)} research projects, "
-        f"{len(catalog.infrastructure_projects)} infrastructure systems, {len(catalog.studies)} studies, "
+        f"{len(catalog.infrastructure_projects)} infrastructure systems, {len(catalog.experiments)} experiments, "
         f"{len(catalog.reports)} reports, and the Knowledge section as {result.file_count} files at {output}"
     )
     return 0

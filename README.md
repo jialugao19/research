@@ -1,3 +1,7 @@
+---
+intention: 说明研究网站的内容来源、报告发布边界与本地验证方式.
+---
+
 # JG Research Lab
 
 面向同事、同行与研究管理者的静态研究项目主页。网站把项目目标、研究线、
@@ -9,7 +13,8 @@
 - `content/research-flow.yaml`：Research 区统一的六环节顺序、名称与公开说明；
 - `content/research-taxonomy.yaml`：从 `mindmap-data/research.md` 固化的完整研究分类树；
 - `content/projects.yaml`：独立项目、六环节状态、旧专题重定向和 Infrastructure 的公开说明；
-- `content/studies.yaml`：通过 `taxonomy_path` 稀疏挂载到研究树的实验结论；
+- `content/studies.yaml`: 研究问题、当前结论和跨项目的证据关联.
+- `content/experiments.yaml`: 方法、模型、数据范围、测量结果、比较合同和报告引用.
 - `content/highlights.yaml`：首页指标、精选研究门槛、审计图表和淘汰结论；
 - `content/reports.yaml`：明确批准发布的报告清单，兼容历史 HTML 与新版
   Markdown 内容包；
@@ -23,6 +28,25 @@
   research bridge。DeepML 与 Quant Knowledge 是 source metadata，不作为一级导航。
 
 报告文件不会因为出现在工作区或 `0-report-html` 中就被自动发布。
+
+## 报告来源审计
+
+`scripts/audit_projects.py` 只识别归档报告的归属, 不发布或重生成报告.
+普通项目从 `content/projects.yaml` 的 `source_refs` 扫描 workspace 内的 HTML.
+NN 项目用 `registry_experiments` 明确声明 experiment ID, 再从中央 registry 的
+`report-index.yaml` 读取 `path` 与 `repo_mirror_path`. 两种位置分别核验,
+允许报告位于实验 repo 或 `/data-cache` 中; 不遍历整个 cache.
+
+本地 registry 入口由 `$RESEARCH_NN_REGISTRY_ROOT` 指定
+(默认 `$RESEARCH_WORKSPACE_ROOT/exp-nn/0-select&report`, workspace 默认 home).
+迁移 registry 后修改该入口, 并更新登记的现存报告位置. registry 文件缺失会报错;
+登记的报告文件可以缺失, `status` 不替代实际文件检查. 默认只匹配不超过 25 MiB
+的 HTML/MHTML 来源文件.
+
+报告通过文件 SHA-256 匹配. 已批准的 `reports.yaml` 归属优先; 同一 hash 命中多个
+项目时不会自动选项目. NN evidence 使用 `nn-registry/<experiment-id>/<report-id>`,
+不包含本机 artifact 路径. 已发布报告仍由 `reports.yaml` 与独立报告归档决定,
+网站构建不需要访问 registry、实验 checkout 或训练产物.
 
 ```bash
 python3 -m pip install -e '.[test]'
@@ -59,6 +83,8 @@ docker compose logs -f web
 docker compose down
 ```
 
+研究问题、实验关联及共享视觉的维护规则见 [研究组织说明](docs/research-organization.md).
+
 主要页面结构为：
 
 ```text
@@ -66,6 +92,8 @@ docker compose down
 ├── projects/<project>/
 │   ├── <research-stage>/
 │   └── <legacy-topic>/  # 重定向到阶段页中的 taxonomy 锚点
+├── studies/<study>/
+├── experiments/<experiment>/
 ├── knowledge/
 │   ├── <domain>/
 │   └── <domain>/<topic>/<node>/
@@ -94,7 +122,7 @@ Data → Data Engineering → Feature Engineering → Model
 ```
 
 每个项目必须为六个环节声明 `documented`、`in-progress`、`gap` 或
-`not-applicable` 状态。每个阶段页按统一 taxonomy 完整显示所有标题，实验通过一个
+`not-applicable` 状态。每个阶段页按统一 taxonomy 完整显示所有标题，Study 表达研究问题, Experiment 通过一个
 主要 `taxonomy_path` 稀疏挂载；没有实验的节点只显示标题。跨主题关系使用可选的
 `related_taxonomy_paths`，不会复制实验。报告同时保留在按时间排列的 Publications
 总索引中。Prediction-NN 的 1min 与 1s 合同是两个独立项目，旧项目和专题入口提供
@@ -109,7 +137,8 @@ Infrastructure，不强行映射到六环节。
 `限制与适用边界`、`结论`；需要时可在末尾增加 `附录`。三级标题用于扩展
 “主要结果”和“附录”，不要嵌入原始 HTML。
 
-图片只能放在同一报告目录的 `images/` 下，并使用有意义的替代文本：
+每份报告至少包含一张图片或一张 Markdown 表格. 图片只能放在同一报告目录的
+`images/` 下, 并使用有意义的替代文本:
 
 ```markdown
 ![验证集 IC 变化](images/validation-ic.png "验证集 IC 变化")
@@ -129,7 +158,7 @@ Infrastructure，不强行映射到六环节。
 
 首页精选研究由 `content/reports.yaml` 顶层的 `featured_report` 手工指定，
 必须引用当前修订链中的公开报告；`content/highlights.yaml` 只能引用目录中已登记的
-study、metric 和该精选报告。首页图表数据必须来自公开报告中的明确数值，并在
+experiment、metric 和该精选报告。首页图表数据必须来自公开报告中的明确数值，并在
 `source_note` 中标注口径；不会根据日期或报告 front matter 自动选择或推断指标。
 
 项目需要分别登记六环节状态；Research 实验使用完整 `taxonomy_path` 归入主要研究
@@ -138,6 +167,14 @@ study、metric 和该精选报告。首页图表数据必须来自公开报告�
 摘要图。首页可把正式报告中已经公开、口径明确的少量数值重绘为统一的内联 SVG，
 但正式图形证据仍须在研究报告中保留完整口径、图注和上下文。
 
-Publishing is event-driven. Project directories are never watched or published
-automatically. Use the `publish-research-site` Codex skill for audits and report
-publication.
+发布由用户请求触发, 不自动监控或发布项目目录. 使用 `$publish-research-site 同步这份报告`
+或 `$publish-research-site 同步刚才的结论`. Skill 将内容整理为 Markdown 报告并关联
+Study 和 Experiment, 对照源内容检查全部图片和表格, 在独立预览通过浏览器验收后更新本机网站,
+并创建远端 PR 供审查. 同步不自动合并 PR; 本机网站访问与远端审查状态分别报告.
+
+## 共享视觉和报告字节
+
+页面继承 x99.local 的 Docusaurus 文档站风格. `assets/styles/` 保存 tokens、shared shell
+和 Research 扩展, 构建器统一生成 `assets/site.css`; Markdown 报告内联同一份样式.
+新增页面不重复定义全局视觉变量. legacy HTML 的公开 hash 记录在 `published_sha256`,
+既有报告内容和永久 URL 保留.

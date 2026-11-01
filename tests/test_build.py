@@ -5,12 +5,33 @@ from pathlib import Path
 import pytest
 from bs4 import BeautifulSoup
 
-from research_site.build import _featured_chart_view, build_site
+from research_site.build import build_site
+from research_site.build_research import featured_chart_view
 from research_site.build_output import build_atomically
 from research_site.catalog import load_catalog
 from research_site.validation import validate_built_site
+from research_site.styles import site_stylesheet
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
+
+
+
+@pytest.fixture(scope="module")
+def root_build(tmp_path_factory):
+    # Reuse one verified root-path build for independent read-only assertions.
+    catalog = load_catalog(SITE_ROOT / "content")
+    output = tmp_path_factory.mktemp("root-build") / "site"
+    build_site(catalog, SITE_ROOT, output, "/")
+    return catalog, output
+
+
+@pytest.fixture(scope="module")
+def production_build(tmp_path_factory):
+    # Keep production-prefix coverage separate from the root-path fixture.
+    catalog = load_catalog(SITE_ROOT / "content")
+    output = tmp_path_factory.mktemp("production-build") / "site"
+    build_site(catalog, SITE_ROOT, output, "/research/")
+    return catalog, output
 
 
 def test_sidebar_groups_do_not_use_exclusive_accordion_behavior() -> None:
@@ -51,33 +72,18 @@ def test_publication_filter_includes_research_stage() -> None:
     assert 'data-stage="{{ report.stage }}"' in template
 
 
-def test_responsive_documentation_layout_and_article_spacing() -> None:
-    stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
-    template = (SITE_ROOT / "templates" / "base.html").read_text(encoding="utf-8")
-
+def test_inherited_documentation_tokens_and_typography() -> None:
+    # Protect the x99/Docusaurus contract rather than later visual overrides.
+    stylesheet = site_stylesheet(SITE_ROOT)
     assert "--header-height: 60px;" in stylesheet
-    assert "--sidebar-width: clamp(232px, 17vw, 288px);" in stylesheet
-    assert "--toc-width: clamp(184px, 13vw, 224px);" in stylesheet
-    assert "--content-max: 1440px;" in stylesheet
-    assert "--prose-measure: 82ch;" in stylesheet
+    assert "--sidebar-width: 300px;" in stylesheet
+    assert "--toc-width: 252px;" in stylesheet
+    assert "--accent: var(--action);" in stylesheet
     assert "--action: #2e8555;" in stylesheet
-    assert "--positive: #2e8555;" in stylesheet
     assert '--sans: system-ui, -apple-system, "Segoe UI"' in stylesheet
-    assert ".doc-main { padding-inline: var(--main-gutter);" in stylesheet
-    assert ".article-header { max-width: var(--prose-measure); padding: 36px 0 12px; }" in stylesheet
-    assert ".article-source-note { max-width: var(--prose-measure); padding: 2px 0;" in stylesheet
-    assert ".knowledge-prose { max-width: none; padding: 12px 0 44px;" in stylesheet
-    assert ".knowledge-prose h2 { margin: 32px 0 12px; padding-top: 0; border-top: 0;" in stylesheet
-    assert ".knowledge-prose h3 { margin: 24px 0 8px;" in stylesheet
-    assert ".knowledge-prose p { margin: 0 0 12px; }" in stylesheet
-    assert ".knowledge-prose pre { margin: 14px 0; padding: 16px; border: 0; border-radius: 6px;" in stylesheet
-    assert ".knowledge-next-page { position: fixed;" in stylesheet
-    assert ".related-concept-rows { gap: 8px; }" in stylesheet
-    assert "@media (max-width: 1279px)" in stylesheet
-    assert "@media (max-width: 899px)" in stylesheet
-    assert ".brand-mark { background: #303846; }" in stylesheet
-    assert 'class="site-header"' in template
-    assert "data-auto-hide" not in template
+    assert "--research-body-size" not in stylesheet
+    assert "font-size: 3rem !important" not in stylesheet
+    assert "data-auto-hide" not in (SITE_ROOT / "templates/base.html").read_text()
 
 
 def test_research_detail_pages_reuse_the_knowledge_catalog_shell() -> None:
@@ -98,7 +104,7 @@ def test_research_detail_pages_reuse_the_knowledge_catalog_shell() -> None:
 
 def test_research_overview_and_assessments_use_the_shared_document_template() -> None:
     overview = (SITE_ROOT / "templates" / "index.html").read_text(encoding="utf-8")
-    study = (SITE_ROOT / "templates" / "_study.html").read_text(encoding="utf-8")
+    experiment = (SITE_ROOT / "templates" / "_experiment.html").read_text(encoding="utf-8")
     project = (SITE_ROOT / "templates" / "project.html").read_text(encoding="utf-8")
     stage = (SITE_ROOT / "templates" / "stage.html").read_text(encoding="utf-8")
 
@@ -113,11 +119,12 @@ def test_research_overview_and_assessments_use_the_shared_document_template() ->
     assert "research-principles" not in overview
     assert "rejection-ledger" not in overview
     assert "project-ledger" not in overview
-    assert "{% macro primary_evidence(" in study
-    assert 'class="knowledge-section primary-evidence"' in study
-    assert "<h2>Primary result</h2>" in study
+    assert "{% macro primary_evidence(" in experiment
+    assert 'class="knowledge-section primary-evidence"' in experiment
+    assert "<h2>Primary result</h2>" in experiment
     assert "primary_evidence(" in overview
-    assert "primary_evidence(" in project
+    assert "experiment_table(experiments" in project
+    assert "research-questions" in project
     assert "taxonomy_tree(" in stage
     assert "Additional publications" in stage
     assert "Current findings &amp; metrics" not in project
@@ -134,18 +141,18 @@ def test_research_templates_are_single_column_without_defensive_blocks() -> None
             "prediction_split.html",
             "reports.html",
             "report.html",
-            "_study.html",
+            "_experiment.html",
             "_research_flow.html",
             "_research_taxonomy.html",
         )
     )
-    stylesheet = (SITE_ROOT / "assets" / "site.css").read_text(encoding="utf-8")
+    stylesheet = site_stylesheet(SITE_ROOT)
 
     for forbidden in (
         "research-project-card",
         "stage-summary-grid",
         "subproject-grid",
-        "study-card",
+        "experiment-card",
         "catalog-card",
         "infrastructure-grid",
         "split-project-grid",
@@ -159,16 +166,14 @@ def test_research_templates_are_single_column_without_defensive_blocks() -> None
         '<details class="experiment-record',
     ):
         assert forbidden not in templates
-    assert "--research-body-size: 16px;" in stylesheet
-    assert "font-size: 3rem !important;" in stylesheet
-    assert "font-size: 2rem !important;" in stylesheet
-    assert ".research-project-list,\n.stage-summary-list,\n.study-list" in stylesheet
+    assert "--research-body-size" not in stylesheet
+    assert ".research-project-list, .stage-summary-list" in stylesheet
 
 
 def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
     catalog = load_catalog(SITE_ROOT / "content")
     assert catalog.homepage is not None
-    view = _featured_chart_view(catalog.homepage.featured.chart)
+    view = featured_chart_view(catalog.homepage.featured.chart)
 
     assert view["axis_break_x"] is not None
     assert [tick["bin"] for tick in view["x_ticks"]] == [1, 2, 3, 18, 19, 20]
@@ -177,10 +182,9 @@ def test_featured_chart_geometry_preserves_the_omitted_bin_gap() -> None:
     assert view["series"][0]["points"][-1]["value"] == 7.072
 
 
-def test_build_produces_project_and_report_routes(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/research/")
+def test_build_produces_project_and_report_routes(production_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = production_build
     assert (output / "index.html").is_file()
     assert (output / "projects" / "prediction-nn" / "index.html").is_file()
     assert (output / "projects" / "prediction-nn" / "one-minute" / "index.html").is_file()
@@ -263,10 +267,9 @@ def test_build_produces_project_and_report_routes(tmp_path: Path) -> None:
     validate_built_site(catalog, SITE_ROOT, output, "/research/")
 
 
-def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_homepage_shows_latest_report_once_per_project(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
 
     index = (output / "index.html").read_text(encoding="utf-8")
     reports = (output / "reports" / "index.html").read_text(encoding="utf-8")
@@ -307,10 +310,9 @@ def test_homepage_shows_latest_report_once_per_project(tmp_path: Path) -> None:
     assert "reports/prediction-nn/0702-l2-ablation/" not in reports
 
 
-def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_knowledge_pages_publish_the_validated_deepml_snapshot(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
 
     index = (output / "knowledge" / "index.html").read_text(encoding="utf-8")
     domain = (output / "knowledge" / "machine-intelligence" / "index.html").read_text(encoding="utf-8")
@@ -448,10 +450,9 @@ def test_knowledge_pages_publish_the_validated_deepml_snapshot(tmp_path: Path) -
     assert '"/knowledge/chapters/' not in payload
 
 
-def test_project_pages_show_contextual_metrics_without_defensive_blocks(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_project_pages_show_contextual_metrics_without_defensive_blocks(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
 
     one_minute = (output / "projects" / "prediction-nn-1min" / "model" / "index.html").read_text(encoding="utf-8")
     one_second = (output / "projects" / "prediction-nn-1s" / "prediction-evaluation" / "index.html").read_text(encoding="utf-8")
@@ -465,7 +466,7 @@ def test_project_pages_show_contextual_metrics_without_defensive_blocks(tmp_path
     assert "Read result" not in one_minute
     assert "GRU / MLP architecture screen" in one_minute
     assert "stock1m · seeds 7/11/13" in one_minute
-    assert 'id="study-optimize-1min-model"' in one_minute
+    assert 'id="experiment-optimize-1min-model"' in one_minute
     assert "0.09842" in one_second
     assert "used test during selection" in one_second
     assert "21,217.9 factors/s" in genetic
@@ -476,10 +477,9 @@ def test_project_pages_show_contextual_metrics_without_defensive_blocks(tmp_path
     assert "Evidence boundary" not in combined
 
 
-def test_stage_pages_follow_the_canonical_research_chain(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_stage_pages_follow_the_canonical_research_chain(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
 
     one_minute = (output / "projects" / "prediction-nn-1min" / "data-engineering" / "index.html").read_text(
         encoding="utf-8"
@@ -497,7 +497,7 @@ def test_stage_pages_follow_the_canonical_research_chain(tmp_path: Path) -> None
     assert "Label Noise and Prediction Calibration" in one_minute
     assert "Date-pure Batch Sampling" not in one_minute
     assert 'id="topic-data-engineering--label"' in one_minute
-    assert "Result" in one_minute
+    assert "Key metric" in one_minute
     assert "Date-pure Batch 1min Full Evaluation" not in one_minute
     assert 'id="topic-model--batch"' in model
     assert "Date-pure Batch Sampling" in model
@@ -521,8 +521,8 @@ def test_stage_pages_follow_the_canonical_research_chain(tmp_path: Path) -> None
                 stage.nodes
             )
         combined_project = "\n".join(rendered_stages.values())
-        for study in catalog.studies_for_project(project.id):
-            assert combined_project.count(f'id="study-{study.id}"') == 1
+        for experiment in catalog.experiments_for_project(project.id):
+            assert combined_project.count(f'id="experiment-{experiment.id}"') == 1
 
     empty_strategy = (
         output / "projects" / "get-data" / "strategy" / "index.html"
@@ -530,17 +530,16 @@ def test_stage_pages_follow_the_canonical_research_chain(tmp_path: Path) -> None
     assert "<h2>execution</h2>" in empty_strategy
     assert "<h2>position</h2>" in empty_strategy
     assert "<h2>signal</h2>" in empty_strategy
-    assert 'id="study-' not in empty_strategy
+    assert 'id="experiment-' not in empty_strategy
     assert "No experiments" not in empty_strategy
 
 
-def test_catalog_json_keeps_internal_presentation_fields_private(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_catalog_json_keeps_internal_presentation_fields_private(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
     payload = (output / "catalog.json").read_text(encoding="utf-8")
     assert '"charts"' not in payload
-    assert '"schema_version": 4' in payload
+    assert '"schema_version": 5' in payload
     assert '"category": "forecasting-models"' in payload
     assert '"revision_of": "0702-l2-ablation"' in payload
     assert '"method": "GRU / MLP architecture screen"' in payload
@@ -552,7 +551,7 @@ def test_catalog_json_keeps_internal_presentation_fields_private(tmp_path: Path)
     assert '"research_taxonomy"' in payload
     assert '"subproject"' not in payload
     assert '"tracks"' not in payload
-    assert payload.count('"is_current": true') == 24
+    assert payload.count('"is_current": true') == 26
 
 
 def test_atomic_build_preserves_previous_output_when_validation_fails(tmp_path: Path) -> None:
@@ -624,10 +623,9 @@ def test_atomic_build_rolls_back_when_publish_rename_fails(
     assert not list(tmp_path.glob(".site.previous-*"))
 
 
-def test_catalog_json_excludes_private_evidence_paths(tmp_path: Path) -> None:
-    catalog = load_catalog(SITE_ROOT / "content")
-    output = tmp_path / "site"
-    build_site(catalog, SITE_ROOT, output, "/")
+def test_catalog_json_excludes_private_evidence_paths(root_build) -> None:
+    # Read the shared build without mutating its contents.
+    catalog, output = root_build
     payload = (output / "catalog.json").read_text(encoding="utf-8")
     assert "/home/" not in payload
     assert "/data-cache/" not in payload

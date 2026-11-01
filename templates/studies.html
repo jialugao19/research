@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Research questions · JG Research Lab{% endblock %}
+{% block body_class %}knowledge-page knowledge-catalog-page research-studies-page{% endblock %}
+{% block content %}
+<header class="catalog-hero"><nav class="knowledge-breadcrumb"><a href="{{ base_url }}">Research</a><span>/</span><strong>Studies</strong></nav><h1>Research questions</h1><p>Questions and current conclusions, linked to experiments and publications without copying their records.</p></header>
+<section class="knowledge-section" id="questions">
+{% for study in studies %}<article class="study-record"><h2><a href="{{ base_url }}{{ study.route }}">{{ study.title }}</a></h2><p>{{ study.question }}</p><p>{{ study.conclusion }}</p><p class="research-count">{{ study.experiment_ids|length }} experiments · {% for pid in study.project_ids %}<a href="{{ base_url }}projects/{{ pid }}/">{{ catalog.project_by_id[pid].title }}</a>{% if not loop.last %}, {% endif %}{% endfor %}</p></article>{% endfor %}
+</section>
+{% endblock %}

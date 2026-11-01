@@ -6,7 +6,7 @@ from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
 
-from .catalog import Catalog, CatalogError, Report
+from research_site.catalog import Catalog, CatalogError, Report
 
 MAX_REPORT_BYTES = 25 * 1024 * 1024
 FORBIDDEN_PUBLIC_BYTES = (
@@ -191,8 +191,11 @@ def validate_rendered_markdown_report(report: Report, data: bytes) -> None:
     scanner.feed(data.decode("utf-8", errors="ignore"))
     if scanner.errors:
         raise CatalogError(f"report {report.id}: {scanner.errors[0]}")
-    if b"<img " not in data or b"data:image/" not in data:
-        raise CatalogError(f"report {report.id} generated page has no embedded raster report images")
+    # Apply the same image-or-table contract to generated reports.
+    has_image = b"<img " in data and b"data:image/" in data
+    has_table = b"<table>" in data
+    if not has_image and not has_table:
+        raise CatalogError(f"report {report.id} generated page has no embedded raster report images or tables")
 
 
 def publish_reports(catalog: Catalog, archive_root: Path, public_root: Path) -> list[PublicationResult]:
@@ -211,6 +214,8 @@ def publish_reports(catalog: Catalog, archive_root: Path, public_root: Path) -> 
         published_data = apply_public_report_style(sanitize_report(source_data))
         _validate_public_copy(report, published_data)
         destination_path = public_root / (report.route_project or report.project) / report.id / "index.html"
+        if report.published_sha256 is not None and sha256(published_data).hexdigest() != report.published_sha256:
+            raise CatalogError(f"report {report.id} immutable public checksum changed; create a revision")
         destination_path.parent.mkdir(parents=True, exist_ok=True)
         destination_path.write_bytes(published_data)
         results.append(
@@ -239,6 +244,8 @@ def validate_public_reports(catalog: Catalog, public_root: Path) -> list[Publica
         except OSError as exc:
             raise CatalogError(f"missing public report {destination_path}: {exc}") from exc
         _validate_public_copy(report, data)
+        if report.published_sha256 is not None and sha256(data).hexdigest() != report.published_sha256:
+            raise CatalogError(f"report {report.id} immutable public checksum changed")
         if PUBLIC_REPORT_STYLE_ID not in data:
             raise CatalogError(f"report {report.id} public copy is missing the Research layout style")
         results.append(

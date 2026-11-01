@@ -1,3 +1,4 @@
+{% from "_shell.html" import site_header %}
 {% from "_navigation.html" import sidebar %}
 <!doctype html>
 <html lang="zh-CN">
@@ -11,14 +12,7 @@
 </head>
 <body class="report-page">
   <a class="skip-link" href="#main-content">Skip to report</a>
-  <header class="site-header" data-auto-hide>
-    <a class="brand" href="{{ root_url }}"><span class="brand-mark">JG</span><span class="brand-copy"><strong>JG Research Lab</strong><small>Systematic alpha</small></span></a>
-    <nav class="top-nav" aria-label="Primary navigation">
-      <a href="{{ root_url }}">Research</a>
-      <a class="is-active" aria-current="page" href="{{ root_url }}reports/">Publications</a>
-      <a href="https://github.com/jialugao19">GitHub <span aria-hidden="true">↗</span></a>
-    </nav>
-  </header>
+  {{ site_header(root_url, "reports") }}
   <details class="mobile-navigation">
     <summary>Research index</summary>
     {{ sidebar(catalog, knowledge, root_url, report.project, report.id, "reports", none, none, none, report.stage, "report-mobile") }}
@@ -55,6 +49,10 @@
       </nav>
     </aside>
   </div>
+  <nav class="entity-links" aria-label="Related research evidence">
+    {% for study in catalog.studies_for_report(report.id) %}<a href="{{ root_url }}{{ study.route }}">{{ study.title }}</a>{% endfor %}
+    {% for experiment in catalog.experiments_for_report(report.id) %}<a href="{{ root_url }}{{ experiment.route }}">{{ experiment.title }}</a>{% endfor %}
+  </nav>
   <script>{{ inline_js }}</script>
 </body>
 </html>

@@ -1,5 +1,5 @@
-{% from "_study.html" import study_timeline %}
-{% macro taxonomy_tree(views, catalog, base_url) %}
+{% from "_research_records.html" import experiment_table %}
+{% macro taxonomy_tree(views, catalog, base_url, active_project) %}
   {% for view in views %}
   <section id="{{ view.anchor }}" class="research-taxonomy-node taxonomy-depth-{{ view.depth }}" data-taxonomy-path="{{ view.path_string }}">
     {% if view.heading_level == 2 %}<h2>{{ view.node.title }}</h2>
@@ -7,8 +7,10 @@
     {% elif view.heading_level == 4 %}<h4>{{ view.node.title }}</h4>
     {% elif view.heading_level == 5 %}<h5>{{ view.node.title }}</h5>
     {% else %}<h6>{{ view.node.title }}</h6>{% endif %}
-    {% if view.studies %}{{ study_timeline(view.studies, catalog, base_url) }}{% endif %}
-    {% if view.children %}{{ taxonomy_tree(view.children, catalog, base_url) }}{% endif %}
+    {% for study in catalog.studies_for_project(active_project) %}{% if study.taxonomy_path == view.path %}<p><a href="{{ base_url }}{{ study.route }}">{{ study.question }}</a></p>{% endif %}{% endfor %}
+    {% for experiment in view.experiments %}<span id="study-{{ experiment.id }}"></span><span id="experiment-{{ experiment.id }}"></span>{% endfor %}
+    {{ experiment_table(view.experiments, catalog, base_url) }}
+    {% if view.children %}{{ taxonomy_tree(view.children, catalog, base_url, active_project) }}{% endif %}
   </section>
   {% endfor %}
 {% endmacro %}

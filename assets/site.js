@@ -151,7 +151,7 @@
     heading.append(anchor);
   }
 
-  const reportImages = [...document.querySelectorAll(".report-figure img")];
+  const reportImages = [...document.querySelectorAll(".report-figure img, .research-figure img")];
   if (reportImages.length && typeof HTMLDialogElement !== "undefined") {
     const lightbox = document.createElement("dialog");
     lightbox.className = "image-lightbox";
@@ -165,7 +165,7 @@
     const close = () => lightbox.close();
     const open = (image) => {
       trigger = image;
-      enlarged.src = image.currentSrc || image.src;
+      enlarged.src = image.closest("[data-original-image]") ? image.closest("[data-original-image]").href : image.src;
       enlarged.alt = image.alt;
       caption.textContent = image.closest("figure")?.querySelector("figcaption")?.textContent || image.alt;
       lightbox.showModal();
@@ -184,7 +184,10 @@
       image.tabIndex = 0;
       image.setAttribute("role", "button");
       image.setAttribute("aria-label", `${image.alt}; open enlarged image`);
-      image.addEventListener("click", () => open(image));
+      image.addEventListener("click", (event) => {
+        event.preventDefault();
+        open(image);
+      });
       image.addEventListener("keydown", (event) => {
         if (event.key === "Enter" || event.key === " ") {
           event.preventDefault();
@@ -192,6 +195,46 @@
         }
       });
     }
+  }
+
+  // Apply combinable experiment filters without changing the recorded result order.
+  const experimentForm = document.querySelector("[data-experiment-filters]");
+  if (experimentForm) {
+    const rows = [...document.querySelectorAll("[data-experiment-row]")];
+    const count = document.querySelector("[data-experiment-count]");
+    const empty = document.querySelector("[data-experiment-empty]");
+    const names = ["search", "study", "type", "model", "status"];
+    const initial = new URLSearchParams(window.location.search);
+    for (const name of names) {
+      if (initial.has(name)) experimentForm.elements.namedItem(name).value = initial.get(name);
+    }
+    const filterExperiments = () => {
+      const values = Object.fromEntries(names.map((name) => [name, experimentForm.elements.namedItem(name).value]));
+      const query = values.search.trim().toLocaleLowerCase();
+      let visible = 0;
+      for (const row of rows) {
+        const show = (!query || row.dataset.search.toLocaleLowerCase().includes(query)) &&
+          (!values.study || row.dataset.studies.split(" ").includes(values.study)) &&
+          (!values.type || row.dataset.type === values.type) &&
+          (!values.model || row.dataset.model === values.model) &&
+          (!values.status || row.dataset.status === values.status);
+        row.hidden = !show;
+        if (show) visible += 1;
+      }
+      count.textContent = `${visible} / ${rows.length} experiments`;
+      empty.hidden = visible !== 0;
+      const url = new URL(window.location.href);
+      for (const name of names) {
+        if (values[name]) url.searchParams.set(name, values[name]);
+        else url.searchParams.delete(name);
+      }
+      window.history.replaceState(null, "", url);
+    };
+    experimentForm.addEventListener("input", filterExperiments);
+    experimentForm.addEventListener("change", filterExperiments);
+    experimentForm.addEventListener("submit", (event) => event.preventDefault());
+    experimentForm.addEventListener("reset", () => window.setTimeout(filterExperiments, 0));
+    filterExperiments();
   }
 
   const search = document.querySelector("#report-search");

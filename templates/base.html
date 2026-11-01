@@ -1,3 +1,4 @@
+{% from "_shell.html" import site_header %}
 {% from "_navigation.html" import sidebar %}
 <!doctype html>
 <html lang="{% block html_lang %}en{% endblock %}">
@@ -11,18 +12,7 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
   <a class="skip-link" href="#main-content">Skip to content</a>
-  <header class="site-header">
-    <a class="brand" href="{{ base_url }}">
-      <span class="brand-mark">JG</span>
-      <span class="brand-copy"><strong>JG Research Lab</strong><small>Research documentation</small></span>
-    </a>
-    <nav class="top-nav" aria-label="Primary navigation">
-      <a{% if nav_section|default('projects') == 'projects' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}">Research</a>
-      <a{% if nav_section|default('projects') == 'knowledge' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}knowledge/">Knowledge</a>
-      <a{% if nav_section|default('projects') == 'reports' %} class="is-active" aria-current="page"{% endif %} href="{{ base_url }}reports/">Publications</a>
-      <a href="https://github.com/jialugao19">GitHub <span aria-hidden="true">↗</span></a>
-    </nav>
-  </header>
+  {{ site_header(base_url, nav_section|default("projects")) }}
   <details class="mobile-navigation">
     <summary><span aria-hidden="true">☰</span> Documentation menu</summary>
     {{ sidebar(catalog, knowledge, base_url, active_project|default(none), active_report|default(none), nav_section|default('projects'), active_domain|default(none), active_topic|default(none), active_subtopic|default(none), active_stage|default(none), "mobile") }}

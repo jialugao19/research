@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% from "_research_records.html" import experiment_table, research_figure %}
+{% block title %}{{ study.title }} · Research question{% endblock %}
+{% block body_class %}knowledge-page knowledge-article-page research-study-page{% endblock %}
+{% block content %}
+<header class="article-header"><nav class="knowledge-breadcrumb"><a href="{{ base_url }}studies/">Research questions</a><span>/</span><strong>Study</strong></nav><h1>{{ study.title }}</h1><p class="article-deck">{{ study.question }}</p></header>
+<nav class="entity-links" aria-label="Associated projects">{% for pid in study.project_ids %}<a href="{{ base_url }}projects/{{ pid }}/">{{ catalog.project_by_id[pid].title }}</a>{% endfor %}</nav>
+<section class="knowledge-section" id="conclusion"><h2>Current conclusion</h2><p>{{ study.conclusion }}</p>{% if study.caveats %}<ul class="research-limitations">{% for caveat in study.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul>{% endif %}</section>
+<section class="knowledge-section" id="comparison"><h2>Experiment evidence</h2>{{ experiment_table(experiments, catalog, base_url, true) }}</section>
+{% if study.report_ids %}<section id="publications" class="knowledge-section"><h2>Study publications</h2>{% for rid in study.report_ids %}<p><a href="{{ base_url }}{{ catalog.report_by_id[rid].route }}">{{ catalog.report_by_id[rid].title }}</a></p>{% endfor %}</section>{% endif %}
+<section class="knowledge-section" id="figures"><h2>Research figures</h2>{% for experiment in experiments %}{% if figures[experiment.id] %}<h3><a href="{{ base_url }}{{ experiment.route }}">{{ experiment.title }}</a></h3>{% for figure in figures[experiment.id] %}{{ research_figure(figure, catalog, base_url) }}{% endfor %}{% endif %}{% endfor %}</section>
+{% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>On this page</strong><nav><a href="#conclusion">Conclusion</a><a href="#comparison">Experiments</a><a href="#figures">Figures</a></nav>{% endblock %}

@@ -1,0 +1,23 @@
+/* x99/Docusaurus design contract, inherited in 93c2501. */
+:root {
+  --paper: #ffffff;
+  --panel: #f5f6f7;
+  --ink: #1c1e21;
+  --muted: #606770;
+  --rule: #dadde1;
+  --rule-strong: #bec3c9;
+  --action: #2e8555;
+  --positive: #2e8555;
+  --accent: var(--action);
+  --accent-dark: #205d3b;
+  --accent-soft: rgb(46 133 85 / 10%);
+  --warning: #9c5a11;
+  --danger: #9a3939;
+  --header-height: 60px;
+  --sidebar-width: 300px;
+  --toc-width: 252px;
+  --page-gutter: 16px;
+  --content-max: 1140px;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}

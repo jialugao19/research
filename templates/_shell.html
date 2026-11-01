@@ -1,0 +1,11 @@
+{% macro site_header(root_url, active_section) %}
+<header class="site-header">
+  <a class="brand" href="{{ root_url }}"><span class="brand-mark">JG</span><span class="brand-copy"><strong>JG Research Lab</strong><small>Research documentation</small></span></a>
+  <nav class="top-nav" aria-label="Primary navigation">
+    <a{% if active_section == 'projects' %} class="is-active" aria-current="page"{% endif %} href="{{ root_url }}">Research</a>
+    <a{% if active_section == 'knowledge' %} class="is-active" aria-current="page"{% endif %} href="{{ root_url }}knowledge/">Knowledge</a>
+    <a{% if active_section == 'reports' %} class="is-active" aria-current="page"{% endif %} href="{{ root_url }}reports/">Publications</a>
+    <a href="https://github.com/jialugao19"><span>GitHub ↗</span></a>
+  </nav>
+</header>
+{% endmacro %}

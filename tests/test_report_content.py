@@ -15,11 +15,15 @@ PNG_1X1 = b64decode(
 )
 
 
-def _write_report(tmp_path: Path, body: str) -> Path:
+def _write_report(
+    tmp_path: Path, body: str, image_names: tuple[str, ...] = ("one.png", "two.png"),
+) -> Path:
+    # Create only the image assets required by this fixture.
     images = tmp_path / "images"
     images.mkdir()
-    (images / "one.png").write_bytes(PNG_1X1)
-    (images / "two.png").write_bytes(PNG_1X1)
+    for name in image_names:
+        (images / name).write_bytes(PNG_1X1)
+    # Write the report with the normal authoring metadata.
     report = tmp_path / "report.md"
     report.write_text(
         "---\n"
@@ -122,4 +126,41 @@ def test_report_requires_exact_front_matter_fields(tmp_path: Path) -> None:
 def test_report_rejects_unreferenced_assets(tmp_path: Path) -> None:
     path = _write_report(tmp_path, _body('![one](images/one.png "One")'))
     with pytest.raises(ReportContentError, match="unreferenced image assets"):
+        load_report_source(path)
+
+
+def test_table_only_report_preserves_cells_and_hash(tmp_path: Path) -> None:
+    # Create a valid report containing a table and no images.
+    table = "| Metric | Value |\n| --- | ---: |\n| IC | -0.0123 |\n| Return | 2.50% |"
+    path = _write_report(tmp_path, _body(table), image_names=())
+    source = load_report_source(path)
+    rendered = render_report_source(source)
+
+    # Verify table content survives rendering and participates in the bundle hash.
+    assert source.referenced_assets == ()
+    assert rendered.figure_count == 0
+    assert '<div class="table-caption">表 1</div>' in rendered.body_html
+    assert "<td>IC</td>" in rendered.body_html
+    assert "-0.0123" in rendered.body_html
+    assert "2.50%" in rendered.body_html
+    path.write_text(path.read_text().replace("-0.0123", "-0.0124"), encoding="utf-8")
+    assert load_report_source(path).bundle_sha256 != source.bundle_sha256
+
+
+@pytest.mark.parametrize("result", ["Text only.", "| Metric | Value |\n| IC | 0.1 |"])
+def test_report_requires_a_real_image_or_table(tmp_path: Path, result: str) -> None:
+    # Reject plain text and pipe text that does not parse as a Markdown table.
+    path = _write_report(tmp_path, _body(result), image_names=())
+    with pytest.raises(ReportContentError, match="at least one raster report image or Markdown table"):
+        load_report_source(path)
+
+
+def test_table_does_not_hide_corrupt_images(tmp_path: Path) -> None:
+    # Combine a valid table with a corrupt referenced image.
+    result = "| Metric | Value |\n| --- | --- |\n| IC | 0.1 |\n\n![one](images/one.png)"
+    path = _write_report(tmp_path, _body(result), image_names=("one.png",))
+    (tmp_path / "images" / "one.png").write_bytes(b"invalid PNG")
+
+    # Require image validation even though the report already has a table.
+    with pytest.raises(ReportContentError, match="image cannot be decoded"):
         load_report_source(path)
