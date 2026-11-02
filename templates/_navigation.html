@@ -36,6 +36,8 @@
   {% endfor %}
   {% else %}
   <a class="sidebar-root{% if active_section == 'projects' and not active_project and not active_report %} is-active{% endif %}" href="{{ root_url }}"><span class="nav-code">00</span><span>Research overview</span></a>
+  <a class="sidebar-root" href="{{ root_url }}studies/">Research questions</a>
+  <a class="sidebar-root" href="{{ root_url }}experiments/">Experiments</a>
   <div class="sidebar-project-index">
   {% for project in catalog.research_projects %}
     <a class="sidebar-project{% if active_project == project.id and not active_stage and not active_report %} is-active{% elif active_project == project.id %} is-parent{% endif %}"{% if active_project == project.id and not active_stage and not active_report %} aria-current="page"{% endif %} href="{{ root_url }}projects/{{ project.id }}/"><span class="nav-code">{{ "%02d"|format(loop.index) }}</span><span>{{ project.title }}</span></a>

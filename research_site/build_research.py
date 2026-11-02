@@ -6,8 +6,8 @@ from typing import Any
 
 from jinja2 import Environment
 
-from .build_output import write_text
-from .catalog import (
+from research_site.build_output import write_text
+from research_site.catalog import (
     Catalog,
     CatalogError,
     FeaturedChart,
@@ -15,7 +15,7 @@ from .catalog import (
     Project,
     Report,
     ResearchTaxonomyNode,
-    Study,
+    Experiment,
     taxonomy_anchor,
 )
 
@@ -23,7 +23,7 @@ from .catalog import (
 def _taxonomy_node_views(
     nodes: tuple[ResearchTaxonomyNode, ...],
     stage_id: str,
-    studies_by_path: dict[tuple[str, ...], list[Study]],
+    experiments_by_path: dict[tuple[str, ...], list[Experiment]],
     parent_path: tuple[str, ...] = (),
     depth: int = 1,
 ) -> list[dict[str, object]]:
@@ -39,11 +39,11 @@ def _taxonomy_node_views(
                 "anchor": taxonomy_anchor(taxonomy_path),
                 "depth": depth,
                 "heading_level": min(depth + 1, 6),
-                "studies": studies_by_path.get(taxonomy_path, []),
+                "experiments": experiments_by_path.get(taxonomy_path, []),
                 "children": _taxonomy_node_views(
                     node.children,
                     stage_id,
-                    studies_by_path,
+                    experiments_by_path,
                     relative_path,
                     depth + 1,
                 ),
@@ -56,15 +56,15 @@ def _stage_taxonomy_views(
     catalog: Catalog,
     project: Project,
     stage_id: str,
-) -> tuple[list[dict[str, object]], list[Study]]:
-    studies = catalog.studies_for_stage(project.id, stage_id)
-    studies_by_path: dict[tuple[str, ...], list[Study]] = {}
-    for study in studies:
-        studies_by_path.setdefault(study.taxonomy_path, []).append(study)
+) -> tuple[list[dict[str, object]], list[Experiment]]:
+    experiments = catalog.experiments_for_stage(project.id, stage_id)
+    experiments_by_path: dict[tuple[str, ...], list[Experiment]] = {}
+    for experiment in experiments:
+        experiments_by_path.setdefault(experiment.taxonomy_path, []).append(experiment)
     taxonomy_stage = catalog.taxonomy_by_stage[stage_id]
     return (
-        _taxonomy_node_views(taxonomy_stage.nodes, stage_id, studies_by_path),
-        studies_by_path.get((stage_id,), []),
+        _taxonomy_node_views(taxonomy_stage.nodes, stage_id, experiments_by_path),
+        experiments_by_path.get((stage_id,), []),
     )
 
 
@@ -72,11 +72,11 @@ def _stage_views(
     catalog: Catalog,
     project: Project,
     base_url: str,
-    studies: list[Study],
+    experiments: list[Experiment],
     reports: list[Report],
 ) -> list[dict[str, object]]:
-    studies_by_stage = {
-        stage.id: [study for study in studies if study.stage == stage.id]
+    experiments_by_stage = {
+        stage.id: [experiment for experiment in experiments if experiment.stage == stage.id]
         for stage in catalog.research_stages
     }
     reports_by_stage = {
@@ -88,9 +88,9 @@ def _stage_views(
             "definition": definition,
             "assessment": project.stage(definition.id),
             "occupied_topics": len(
-                {study.taxonomy_path for study in studies_by_stage[definition.id] if len(study.taxonomy_path) > 1}
+                {experiment.taxonomy_path for experiment in experiments_by_stage[definition.id] if len(experiment.taxonomy_path) > 1}
             ),
-            "studies": studies_by_stage[definition.id],
+            "experiments": experiments_by_stage[definition.id],
             "reports": reports_by_stage[definition.id],
             "url": f"{base_url}projects/{project.id}/{definition.id}/",
         }
@@ -98,23 +98,23 @@ def _stage_views(
     ]
 
 
-def _select_project_evidence(studies: list[Study]) -> Study | None:
-    metric_studies = [study for study in studies if study.metrics]
-    featured = [study for study in metric_studies if study.featured]
+def _select_project_evidence(experiments: list[Experiment]) -> Experiment | None:
+    metric_experiments = [experiment for experiment in experiments if experiment.metrics]
+    featured = [experiment for experiment in metric_experiments if experiment.featured]
     if featured:
         return featured[0]
-    if metric_studies:
-        return metric_studies[0]
-    return studies[0] if studies else None
+    if metric_experiments:
+        return metric_experiments[0]
+    return experiments[0] if experiments else None
 
 
-def _required_metric(catalog: Catalog, study_id: str, metric_id: str) -> Metric:
-    study = catalog.study_by_id.get(study_id)
-    if study is None:
-        raise CatalogError(f"homepage references unknown study {study_id}")
-    metric = next((item for item in study.metrics if item.id == metric_id), None)
+def _required_metric(catalog: Catalog, experiment_id: str, metric_id: str) -> Metric:
+    experiment = catalog.experiment_by_id.get(experiment_id)
+    if experiment is None:
+        raise CatalogError(f"homepage references unknown experiment {experiment_id}")
+    metric = next((item for item in experiment.metrics if item.id == metric_id), None)
     if metric is None:
-        raise CatalogError(f"homepage references unknown metric {study_id}/{metric_id}")
+        raise CatalogError(f"homepage references unknown metric {experiment_id}/{metric_id}")
     return metric
 
 
@@ -134,9 +134,9 @@ def _homepage_metrics(catalog: Catalog) -> list[dict[str, str]]:
         if spec.display_value is not None:
             value = spec.display_value
         else:
-            if spec.study is None or spec.metric is None:
+            if spec.experiment is None or spec.metric is None:
                 raise CatalogError(f"homepage metric {spec.id} is missing its metric reference")
-            metric = _required_metric(catalog, spec.study, spec.metric)
+            metric = _required_metric(catalog, spec.experiment, spec.metric)
             if spec.display_format == "compact-1":
                 value = _compact_number(metric.value, 1)
             elif spec.display_format == "compact-2":
@@ -238,30 +238,30 @@ def _rejected_idea_views(catalog: Catalog) -> list[dict[str, object]]:
         raise CatalogError("catalog is missing homepage highlights")
     views: list[dict[str, object]] = []
     for idea in catalog.homepage.rejected_ideas:
-        study = catalog.study_by_id[idea.study]
-        metric_by_id = {metric.id: metric for metric in study.metrics}
+        experiment = catalog.experiment_by_id[idea.experiment]
+        metric_by_id = {metric.id: metric for metric in experiment.metrics}
         views.append(
             {
                 "title": idea.title,
                 "state": idea.state,
                 "reason": idea.reason,
-                "study": study,
+                "experiment": experiment,
                 "metrics": tuple(metric_by_id[metric_id] for metric_id in idea.metric_ids),
             }
         )
     return views
 
 
-def _featured_metrics(report: Report | None, study: Study | None) -> tuple[Metric, ...]:
-    if study is None:
+def _featured_metrics(report: Report | None, experiment: Experiment | None) -> tuple[Metric, ...]:
+    if experiment is None:
         return ()
     preferred_by_report = {
         "0802-stock1s-gru384-v2": ("test-pooled-ic", "test-rank-ic", "evaluation-rows", "net-sharpe")
     }
     preferred = preferred_by_report.get(report.id if report else "", ())
-    by_id = {metric.id: metric for metric in study.metrics}
+    by_id = {metric.id: metric for metric in experiment.metrics}
     selected = tuple(by_id[metric_id] for metric_id in preferred if metric_id in by_id)
-    return selected or study.metrics[:4]
+    return selected or experiment.metrics[:4]
 
 
 def render_research_pages(
@@ -271,10 +271,10 @@ def render_research_pages(
     base_url: str,
     common: dict[str, Any],
     reports_by_project: dict[str, list[Report]],
-    studies_by_project: dict[str, list[Study]],
+    experiments_by_project: dict[str, list[Experiment]],
 ) -> None:
     project_evidence = {
-        project.id: _select_project_evidence(studies_by_project[project.id])
+        project.id: _select_project_evidence(experiments_by_project[project.id])
         for project in catalog.research_projects
     }
     latest_project_reports = [
@@ -285,9 +285,9 @@ def render_research_pages(
     featured_report = catalog.featured_report
     if catalog.homepage is None:
         raise CatalogError("catalog is missing homepage highlights")
-    featured_study = catalog.study_by_id[catalog.homepage.featured.study]
+    featured_experiment = catalog.experiment_by_id[catalog.homepage.featured.experiment]
     project_latest = {
-        project.id: (studies_by_project[project.id][0] if studies_by_project[project.id] else None)
+        project.id: (experiments_by_project[project.id][0] if experiments_by_project[project.id] else None)
         for project in catalog.projects
     }
     index = environment.get_template("index.html").render(
@@ -298,15 +298,15 @@ def render_research_pages(
         infrastructure_projects=catalog.infrastructure_projects,
         latest_project_reports=latest_project_reports,
         reports_by_project=reports_by_project,
-        studies_by_project=studies_by_project,
+        experiments_by_project=experiments_by_project,
         project_evidence=project_evidence,
         project_latest=project_latest,
         homepage_metrics=_homepage_metrics(catalog),
         homepage=catalog.homepage,
         featured_report=featured_report,
         featured_project=catalog.project_by_id[featured_report.project] if featured_report else None,
-        featured_study=featured_study,
-        featured_metrics=_featured_metrics(featured_report, featured_study),
+        featured_experiment=featured_experiment,
+        featured_metrics=_featured_metrics(featured_report, featured_experiment),
         featured_chart=featured_chart_view(catalog.homepage.featured.chart),
         rejected_ideas=_rejected_idea_views(catalog),
     )
@@ -324,14 +324,14 @@ def render_research_pages(
     stage_template = environment.get_template("stage.html")
     redirect_template = environment.get_template("redirect.html")
     linked_reports_by_stage = {
-        (study.stage, report_id)
-        for study in catalog.studies
-        for report_id in study.report_ids
+        (experiment.stage, report_id)
+        for experiment in catalog.experiments
+        for report_id in experiment.report_ids
     }
     for project in catalog.research_projects:
         reports = reports_by_project[project.id]
-        studies = studies_by_project[project.id]
-        featured_studies = [study for study in studies if study.featured] or studies[:1]
+        experiments = experiments_by_project[project.id]
+        featured_experiments = [experiment for experiment in experiments if experiment.featured] or experiments[:1]
         write_text(
             output_root / "projects" / project.id / "index.html",
             project_template.render(
@@ -340,14 +340,15 @@ def render_research_pages(
                 active_report=None,
                 project=project,
                 reports=reports,
-                studies=studies,
-                featured_studies=featured_studies,
-                stage_views=_stage_views(catalog, project, base_url, studies, reports),
+                experiments=experiments,
+                featured_experiments=featured_experiments,
+                research_studies=catalog.studies_for_project(project.id),
+                stage_views=_stage_views(catalog, project, base_url, experiments, reports),
             ),
         )
         for stage_index, definition in enumerate(catalog.research_stages):
-            stage_studies = catalog.studies_for_stage(project.id, definition.id)
-            taxonomy_views, stage_root_studies = _stage_taxonomy_views(
+            stage_experiments = catalog.experiments_for_stage(project.id, definition.id)
+            taxonomy_views, stage_root_experiments = _stage_taxonomy_views(
                 catalog, project, definition.id
             )
             stage_reports = [
@@ -369,9 +370,9 @@ def render_research_pages(
                     assessment=project.stage(definition.id),
                     taxonomy_views=taxonomy_views,
                     taxonomy_stage=catalog.taxonomy_by_stage[definition.id],
-                    stage_root_studies=stage_root_studies,
+                    stage_root_experiments=stage_root_experiments,
                     reports=stage_reports,
-                    studies=stage_studies,
+                    experiments=stage_experiments,
                     previous_stage=catalog.research_stages[stage_index - 1] if stage_index > 0 else None,
                     next_stage=(catalog.research_stages[stage_index + 1] if stage_index + 1 < len(catalog.research_stages) else None),
                 ),
@@ -387,7 +388,7 @@ def render_research_pages(
 
     infrastructure_template = environment.get_template("infrastructure.html")
     for project in catalog.infrastructure_projects:
-        studies = studies_by_project[project.id]
+        experiments = experiments_by_project[project.id]
         reports = reports_by_project[project.id]
         write_text(
             output_root / "projects" / project.id / "index.html",
@@ -396,9 +397,9 @@ def render_research_pages(
                 active_project=project.id,
                 active_report=None,
                 project=project,
-                studies=studies,
+                experiments=experiments,
                 reports=reports,
-                featured_studies=[study for study in studies if study.featured] or studies[:1],
+                featured_experiments=[experiment for experiment in experiments if experiment.featured] or experiments[:1],
             ),
         )
 

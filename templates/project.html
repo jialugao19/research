@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% from "_study.html" import primary_evidence %}
+{% from "_research_records.html" import experiment_table, study_links %}
 {% from "_research_flow.html" import research_spine %}
 {% block title %}{{ project.title }} · JG Research Lab{% endblock %}
 {% block body_class %}knowledge-page knowledge-catalog-page research-project-page{% endblock %}
@@ -24,13 +24,16 @@
       <header><span>{{ "%02d"|format(loop.index) }}</span></header>
       <h3><a href="{{ view.url }}">{{ view.definition.title }}</a></h3>
       <p>{{ view.definition.description }}</p>
-      <footer><span>{{ view.occupied_topics }} mapped topics</span><span>{{ view.studies|length }} experiments</span><span>{{ view.reports|length }} reports</span><a href="{{ view.url }}">Open stage →</a></footer>
+      <footer><span>{{ view.occupied_topics }} mapped topics</span><span>{{ view.experiments|length }} experiments</span><span>{{ view.reports|length }} reports</span><a href="{{ view.url }}">Open stage →</a></footer>
     </article>
     {% endfor %}
   </div>
 </section>
 
-{{ primary_evidence(featured_studies, catalog, base_url, "primary-result", project.review_summary) }}
+<section id="primary-result" class="knowledge-section"><h2>Current conclusion</h2><p>{{ project.review_summary }}</p></section>
+<section id="research-questions" class="knowledge-section"><h2>Research questions</h2>
+{% for study in research_studies %}<article class="study-record"><h3><a href="{{ base_url }}{{ study.route }}">{{ study.title }}</a></h3><p>{{ study.question }}</p></article>{% endfor %}</section>
+<section id="experiments" class="knowledge-section"><h2>Experiment results</h2>{{ experiment_table(experiments, catalog, base_url, true) }}</section>
 {% endblock %}
 {% block toc_class %}{% endblock %}
-{% block toc %}<strong>ON THIS PAGE</strong><nav><a href="#overview">Mandate</a><a href="#research-flow">Research chain</a><a href="#primary-result">Primary result</a></nav>{% endblock %}
+{% block toc %}<strong>ON THIS PAGE</strong><nav><a href="#overview">Mandate</a><a href="#research-flow">Research chain</a><a href="#primary-result">Conclusion</a><a href="#research-questions">Research questions</a><a href="#experiments">Experiments</a></nav>{% endblock %}

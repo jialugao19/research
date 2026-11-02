@@ -20,6 +20,7 @@
       <div class="project-card-top"><time datetime="{{ report.display_date }}">{{ report.display_date }}</time><span>{{ projects[report.project].title }}</span><small>{{ catalog.stage_by_id[report.stage].title }}</small></div>
       <h2><a href="{{ base_url }}{{ report.route }}">{{ report.title }}</a></h2>
       <p>{{ report.summary }}</p>
+      <nav class="entity-links" aria-label="Related research evidence">{% for experiment in catalog.experiments_for_report(report.id) %}<a href="{{ base_url }}{{ experiment.route }}">{{ experiment.title }}</a>{% endfor %}{% for study in catalog.studies_for_report(report.id) %}<a href="{{ base_url }}{{ study.route }}">{{ study.title }}</a>{% endfor %}</nav>
       <div class="tags">{% for tag in report.tags %}<span>#{{ tag }}</span>{% endfor %}</div>
     </article>
     {% endfor %}

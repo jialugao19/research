@@ -18,7 +18,7 @@ def main() -> int:
     print(
         f"catalog valid: {len(catalog.research_projects)} research projects, "
         f"{len(catalog.infrastructure_projects)} infrastructure systems, "
-        f"{len(catalog.studies)} studies, {len(catalog.reports)} reports, Knowledge loaded"
+        f"{len(catalog.experiments)} experiments, {len(catalog.reports)} reports, Knowledge loaded"
     )
     return 0
 

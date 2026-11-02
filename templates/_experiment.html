@@ -1,0 +1,43 @@
+{% macro experiment_record(experiment, catalog, base_url) %}
+<article class="experiment-record maturity-{{ experiment.maturity }}" id="experiment-{{ experiment.id }}">
+  <p class="experiment-record-meta"><time datetime="{{ experiment.display_date }}">{{ experiment.display_date }}</time><span>{{ experiment.status|replace('-', ' ') }}</span><span>{{ experiment.maturity|replace('-', ' ') }}</span><span>{{ experiment.decision_state }}</span></p>
+  <span id="study-{{ experiment.id }}"></span><h3><a href="{{ base_url }}{{ experiment.route }}">{{ experiment.title }}</a></h3>
+  <dl class="experiment-context-list">
+    <div><dt>Method</dt><dd>{{ experiment.method }}</dd></div>
+    <div><dt>Dataset</dt><dd>{{ experiment.dataset }}</dd></div>
+  </dl>
+  {% if experiment.related_taxonomy_paths %}
+  <nav class="experiment-related-topics" aria-label="Related research topics">
+    <span>Related topics</span>
+    {% for path in experiment.related_taxonomy_paths %}<a href="{{ base_url }}projects/{{ experiment.project }}/{{ path[0] }}/#topic-{{ path|join('--') }}">{{ catalog.taxonomy_titles(path)|join(' / ') }}</a>{% endfor %}
+  </nav>
+  {% endif %}
+  <section class="experiment-section"><h4>Research question and method</h4><p>{{ experiment.objective }}</p></section>
+  <section class="experiment-section"><h4>Result</h4><p>{{ experiment.summary }}</p></section>
+  {% if experiment.metrics %}
+  <dl class="metric-list">
+    {% for metric in experiment.metrics %}<div><dt>{{ metric.label }}</dt><dd>{{ metric.display_value }}</dd><small>{{ metric.context }}</small></div>{% endfor %}
+  </dl>
+  {% endif %}
+  <section class="experiment-section experiment-conclusion"><h4>Conclusion</h4><p>{{ experiment.decision }}</p></section>
+  {% if experiment.caveats %}<section class="experiment-section"><h4>Limitations</h4><ul>{% for caveat in experiment.caveats %}<li>{{ caveat }}</li>{% endfor %}</ul></section>{% endif %}
+  {% if experiment.report_ids %}
+  <nav class="experiment-report-links" aria-label="Linked publications">
+    {% for report_id in experiment.report_ids %}{% set report = catalog.report_by_id[report_id] %}<a href="{{ base_url }}{{ report.route }}">{{ report.title }} ↗</a>{% endfor %}
+  </nav>
+  {% endif %}
+</article>
+{% endmacro %}
+
+{% macro primary_evidence(experiments, catalog, base_url, section_id, intro) %}
+<section id="{{ section_id }}" class="knowledge-section primary-evidence">
+  <div class="section-heading"><p class="eyebrow">Primary evidence</p><h2>Primary result</h2>{% if intro %}<p>{{ intro }}</p>{% endif %}</div>
+  <div class="experiment-list">{% for experiment in experiments %}{{ experiment_record(experiment, catalog, base_url) }}{% endfor %}</div>
+</section>
+{% endmacro %}
+
+{% macro experiment_timeline(experiments, catalog, base_url) %}
+<div class="experiment-list">
+  {% for experiment in experiments %}{{ experiment_record(experiment, catalog, base_url) }}{% endfor %}
+</div>
+{% endmacro %}

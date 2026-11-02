@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% from "_experiment.html" import experiment_record %}
+{% from "_research_records.html" import research_figure, study_links %}
+{% block title %}{{ experiment.title }} · Experiment{% endblock %}
+{% block body_class %}knowledge-page knowledge-article-page research-experiment-page{% endblock %}
+{% block content %}
+<header class="article-header"><nav class="knowledge-breadcrumb"><a href="{{ base_url }}projects/{{ project.id }}/">{{ project.title }}</a><span>/</span><a href="{{ base_url }}experiments/">Experiments</a></nav><h1>{{ experiment.title }}</h1><p class="article-deck">{{ experiment.objective }}</p></header>
+{{ study_links(studies, base_url) }}
+<nav class="entity-links" aria-label="Associated projects">{% for pid in experiment.project_ids %}<a href="{{ base_url }}projects/{{ pid }}/">{{ catalog.project_by_id[pid].title }}</a>{% endfor %}</nav>
+{{ experiment_record(experiment, catalog, base_url) }}
+{% if comparison.rows %}
+<section class="knowledge-section" id="matched-comparison"><h2>Matched experiment comparison</h2><p>{{ experiment.comparison_scope }}</p>
+<div class="research-table-scroll" tabindex="0" aria-label="Matched arm results"><table class="research-table"><caption>Only completed arms have OOS comparison values. Failed or gated arms remain visible.</caption><thead><tr><th scope="col">Arm</th><th scope="col">Status</th>{% for mid, label in comparison.columns %}<th scope="col">{{ label }}</th>{% endfor %}</tr></thead><tbody>
+{% for row in comparison.rows %}<tr><th scope="row">{{ row.arm.label }}</th><td>{{ row.arm.status }}</td>{% for mid, label in comparison.columns %}<td class="numeric">{% if mid in row.metrics %}{{ row.metrics[mid].display_value }}<small>{{ row.metrics[mid].context }}</small>{% else %}—{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></section>
+{% endif %}
+{% if figures %}<section class="knowledge-section" id="figures"><h2>Figures and original evidence</h2>{% for figure in figures %}{{ research_figure(figure, catalog, base_url) }}{% endfor %}</section>{% endif %}
+{% endblock %}
+{% block toc_class %}{% endblock %}
+{% block toc %}<strong>On this page</strong><nav><a href="#experiment-{{ experiment.id }}">Experiment record</a>{% if comparison.rows %}<a href="#matched-comparison">Matched comparison</a>{% endif %}{% if figures %}<a href="#figures">Figures</a>{% endif %}</nav>{% endblock %}

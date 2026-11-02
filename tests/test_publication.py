@@ -11,6 +11,7 @@ from research_site.publication import (
     publish_reports,
     sanitize_report,
     validate_public_reports,
+    validate_rendered_markdown_report,
 )
 
 SITE_ROOT = Path(__file__).resolve().parents[1]
@@ -99,3 +100,29 @@ def test_external_rendering_resources_are_rejected(tmp_path: Path, resource: byt
 def test_credential_like_values_are_rejected(tmp_path: Path, credential: bytes) -> None:
     with pytest.raises(CatalogError, match="credential-like"):
         _publish_test_report(tmp_path, b"<html>" + credential + b"</html>")
+
+
+def test_rendered_table_only_report_is_valid() -> None:
+    # Check the publication boundary independently of source loading.
+    report = load_catalog(SITE_ROOT / "content").report_by_id["0502-index-6backtest-v2"]
+    data = b"<html><body><table><tr><th>IC</th></tr><tr><td>0.1</td></tr></table></body></html>"
+    validate_rendered_markdown_report(report, data)
+
+
+def test_rendered_text_only_report_is_rejected() -> None:
+    # Reject generated output that has lost all images and tables.
+    report = load_catalog(SITE_ROOT / "content").report_by_id["0502-index-6backtest-v2"]
+    with pytest.raises(CatalogError, match="no embedded raster report images or tables"):
+        validate_rendered_markdown_report(report, b"<html><body>Text only.</body></html>")
+
+
+def test_safe_but_changed_legacy_bytes_are_rejected(tmp_path: Path) -> None:
+    # A harmless-looking byte edit must still require a new publication revision.
+    catalog = load_catalog(SITE_ROOT / "content")
+    report = next(r for r in catalog.reports if not r.is_markdown)
+    destination = tmp_path / report.route.removeprefix("reports/") / "index.html"
+    destination.parent.mkdir(parents=True)
+    data = (SITE_ROOT / "public" / report.route / "index.html").read_bytes()
+    destination.write_bytes(data + b"\n")
+    with pytest.raises(CatalogError, match="immutable public checksum changed"):
+        validate_public_reports(catalog, tmp_path)

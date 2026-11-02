@@ -27,8 +27,41 @@ projects:
       a 10/15/30-minute horizon comparison, a completed 36D feature reference, and two
       market-context studies. B+VWAP is the signal baseline, GRU192×2 last-hidden is the
       compact architecture, and learned panel context leads the latest matched signal
-      comparisons; registered cost-aware results remain negative.
-    source_refs: [prediction-NN-main, exp-nn]
+      comparisons; the new Top 1% cost diagnostic is sensitive to slippage and does
+      not pass an execution gate.
+    source_refs: []
+    registry_experiments:
+      - 0825-feature-audit
+      - 0827-market-cs
+      - 0903-model
+      - baseline-1min-0813
+      - baseline-main-20260622
+      - capacity-robust-sampling
+      - combo-touch-nz-lr
+      - crossday-rolling
+      - day-pure-batch-1min
+      - feature-cleaning-bundle-0609
+      - generalization-adjacent-window
+      - generalization-adjacent-window-multiseed
+      - generalization-block70-checkpoint-curve
+      - generalization-rolling-stride
+      - horizon-labels
+      - l2-features
+      - learning-rate
+      - limit-pool
+      - loss-function-1min
+      - main-combo-integration
+      - market-sample
+      - multiscale-market-features-1min
+      - near-zero-filter
+      - optimize-1min-model
+      - prediction-calibration
+      - reference-baseline
+      - reference-baseline-v2
+      - rolling-purged-val
+      - test-all
+      - val-select
+      - zero-aware-normalization
     stages:
       - id: data
         state: documented
@@ -46,8 +79,8 @@ projects:
         state: documented
         summary: Pooled IC, Rank IC, rolling periods, seeds, adjacent checkpoints, and validation-only selectors separate signal evidence from selection bias.
       - id: strategy
-        state: gap
-        summary: Turnover, costs, slippage, and stable out-of-sample portfolio results have not yet passed an execution gate.
+        state: in-progress
+        summary: A fixed-baseline Top 1% cost diagnostic now measures fees, slippage, and no-trade holdings; T+1 and executable fills remain unverified.
     legacy_topic_redirects:
       - {id: reference-baseline, taxonomy_path: model/baseline}
       - {id: optimize-1min-model, taxonomy_path: model/baseline}
@@ -82,7 +115,10 @@ projects:
       candidate used test during selection and remains net-negative. The independent
       OHLCV-only v2 contract yields weak pooled IC and a sharply negative 10 bps
       backtest. Both contracts remain research-only.
-    source_refs: [prediction-NN-main, exp-nn]
+    source_refs: []
+    registry_experiments:
+      - baseline-1s-0720
+      - baseline-1s-v2
     stages:
       - id: data
         state: documented
@@ -186,15 +222,15 @@ projects:
     status: active
     description: A scheduled ETF rotation selector using aligned daily returns, normalized price paths, and a fixed trend-persistence score.
     objective: Maintain an auditable and freshness-gated ETF selection rule with reproducible data, scoring, scheduling, and result artifacts.
-    review_summary: The production workflow has explicit calendar, cache, freshness, retry, credential, and scheduling contracts. No reviewed out-of-sample strategy report, cost model, or comparative benchmark is registered.
+    review_summary: The ETF production workflow has explicit calendar, cache, freshness, retry, credential, and scheduling contracts. Its US Core Top 3 research extension reports a 40.99% Gross CAGR and -52.10% max drawdown against SPY and QQQ; current-universe selection bias, concentration, and missing costs prevent an out-of-sample or deployment claim.
     source_refs: [route]
     stages:
-      - {id: data, state: documented, summary: ProMax fund-daily responses and an exchange calendar are validated against an expected trading date before use.}
+      - {id: data, state: documented, summary: ETF ProMax fund-daily inputs use an expected-date calendar gate; the independent US research snapshot contains Alpaca SIP adjusted daily OHLC for 52 symbols.}
       - {id: data-engineering, state: documented, summary: Overlap refresh, persistent cache, cross-ETF date alignment, retries, and freshness gates fail closed.}
       - {id: feature-engineering, state: documented, summary: Daily percentage changes form normalized price paths over a fixed common trading window.}
       - {id: model, state: documented, summary: A deterministic OLS slope times cubed R-squared score selects the current best hold.}
       - {id: prediction-evaluation, state: gap, summary: No reviewed out-of-sample comparison or stability analysis is registered.}
-      - {id: strategy, state: gap, summary: Turnover, costs, execution, drawdown, and benchmark evidence are not publicly evaluated.}
+      - {id: strategy, state: in-progress, summary: The US Core Top 3 Gross simulation documents next-open execution, rank-ordered position replacement, drawdown, turnover, and SPY/QQQ comparisons; costs and an unbiased point-in-time universe remain untested.}
   - id: shouban2
     title: First Board Top-K
     category: portfolio-execution

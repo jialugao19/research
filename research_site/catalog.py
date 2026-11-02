@@ -9,15 +9,15 @@ from typing import TYPE_CHECKING, Any
 
 import yaml
 
-from .report_content import ReportContentError, load_report_source
+from research_site.report_content import ReportContentError, load_report_source
 
 if TYPE_CHECKING:
-    from .knowledge import KnowledgeCatalog
+    from research_site.knowledge import KnowledgeCatalog
 
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 ALLOWED_MATCH_METHODS = {"sha256", "central-catalog", "path-evidence", "title-and-project-intent", "manual"}
-ALLOWED_STUDY_STATUSES = {"doing", "completed", "archived"}
+ALLOWED_EXPERIMENT_STATUSES = {"doing", "completed", "archived"}
 ALLOWED_MATURITIES = {"decision-ready", "signal-only", "developmental", "diagnostic", "blocked", "archived"}
 ALLOWED_METRIC_FORMATS = {"decimal", "percent", "integer", "number", "bps"}
 ALLOWED_DECISION_STATES = {
@@ -103,6 +103,7 @@ class Project:
     section: str = "research"
     stages: tuple[ProjectStage, ...] = field(default_factory=tuple)
     legacy_topic_redirects: tuple[LegacyTopicRedirect, ...] = field(default_factory=tuple)
+    registry_experiments: tuple[str, ...] = field(default_factory=tuple)
 
     def stage(self, stage_id: str) -> ProjectStage | None:
         return next((item for item in self.stages if item.id == stage_id), None)
@@ -138,7 +139,24 @@ class Metric:
 
 
 @dataclass(frozen=True)
-class Study:
+class ResearchFigure:
+    report_id: str
+    title: str
+    asset: str | None
+    image_index: int | None
+
+
+@dataclass(frozen=True)
+class ExperimentArm:
+    id: str
+    label: str
+    status: str
+    model: str
+    metrics: tuple[Metric, ...]
+
+
+@dataclass(frozen=True)
+class Experiment:
     id: str
     project: str
     title: str
@@ -159,6 +177,22 @@ class Study:
     featured: bool
     taxonomy_path: tuple[str, ...] = field(default_factory=tuple)
     related_taxonomy_paths: tuple[tuple[str, ...], ...] = field(default_factory=tuple)
+    related_project_ids: tuple[str, ...] = field(default_factory=tuple)
+    experiment_type: str = "not-recorded"
+    model: str = "not-recorded"
+    comparison_scope: str | None = None
+    arms: tuple[ExperimentArm, ...] = field(default_factory=tuple)
+    figures: tuple[ResearchFigure, ...] = field(default_factory=tuple)
+
+    @property
+    def project_ids(self) -> tuple[str, ...]:
+        # Keep one canonical home while permitting shared evidence.
+        return (self.project, *self.related_project_ids)
+
+    @property
+    def route(self) -> str:
+        # Give each experiment one stable detail route.
+        return f"experiments/{self.id}/"
 
     @property
     def stage(self) -> str | None:
@@ -193,12 +227,19 @@ class Report:
     format: str = "legacy-html"
     source_file: str | None = None
     source_sha256: str | None = None
+    published_sha256: str | None = None
     content_file: str | None = None
     bundle_sha256: str | None = None
     hero_image: str | None = None
     revision_of: str | None = None
     stage: str | None = None
     route_project: str | None = None
+    related_project_ids: tuple[str, ...] = field(default_factory=tuple)
+
+    @property
+    def project_ids(self) -> tuple[str, ...]:
+        # Preserve published ownership and URLs when evidence is shared.
+        return (self.project, *self.related_project_ids)
 
     @property
     def display_date(self) -> str:
@@ -215,13 +256,36 @@ class Report:
 
 
 @dataclass(frozen=True)
+class Study:
+    id: str
+    title: str
+    question: str
+    conclusion: str
+    caveats: tuple[str, ...]
+    project_ids: tuple[str, ...]
+    experiment_ids: tuple[str, ...]
+    report_ids: tuple[str, ...]
+    taxonomy_path: tuple[str, ...]
+
+    @property
+    def route(self) -> str:
+        # Keep one public route for each research question.
+        return f"studies/{self.id}/"
+
+    @property
+    def stage(self) -> str | None:
+        # Infrastructure questions have no prediction-stage contract.
+        return self.taxonomy_path[0] if self.taxonomy_path else None
+
+
+@dataclass(frozen=True)
 class HomepageMetricSpec:
     id: str
     label: str
     category: str
     scope: str
     display_format: str
-    study: str | None = None
+    experiment: str | None = None
     metric: str | None = None
     display_value: str | None = None
 
@@ -253,7 +317,7 @@ class FeaturedChart:
 @dataclass(frozen=True)
 class FeaturedHighlight:
     report: str
-    study: str
+    experiment: str
     decision_label: str
     decision_summary: str
     gates: tuple[HighlightGate, ...]
@@ -265,7 +329,7 @@ class RejectedIdea:
     title: str
     state: str
     reason: str
-    study: str
+    experiment: str
     metric_ids: tuple[str, ...]
 
 
@@ -283,6 +347,7 @@ class Catalog:
     reports: tuple[Report, ...]
     research_stages: tuple[ResearchStageDefinition, ...] = field(default_factory=tuple)
     research_taxonomy: tuple[ResearchTaxonomyStage, ...] = field(default_factory=tuple)
+    experiments: tuple[Experiment, ...] = field(default_factory=tuple)
     studies: tuple[Study, ...] = field(default_factory=tuple)
     featured_report_id: str | None = None
     homepage: HomepageHighlights | None = None
@@ -321,8 +386,34 @@ class Catalog:
         return {report.id: report for report in self.reports}
 
     @property
+    def experiment_by_id(self) -> dict[str, Experiment]:
+        return {experiment.id: experiment for experiment in self.experiments}
+
+    @property
     def study_by_id(self) -> dict[str, Study]:
+        # Resolve research questions independently of experiment identities.
         return {study.id: study for study in self.studies}
+
+    def studies_for_project(self, project_id: str) -> list[Study]:
+        # Share a question across projects without duplicating its record.
+        return [study for study in self.studies if project_id in study.project_ids]
+
+    def studies_for_experiment(self, experiment_id: str) -> list[Study]:
+        # Resolve the reverse side of the question/evidence relation.
+        return [study for study in self.studies if experiment_id in study.experiment_ids]
+
+    def experiments_for_study(self, study_id: str) -> list[Experiment]:
+        # Retain the curated evidence order within each question.
+        return [self.experiment_by_id[eid] for eid in self.study_by_id[study_id].experiment_ids]
+
+    def studies_for_report(self, report_id: str) -> list[Study]:
+        # Include direct publications and experiment-backed evidence.
+        experiment_ids = {e.id for e in self.experiments if report_id in e.report_ids}
+        return [s for s in self.studies if report_id in s.report_ids or experiment_ids.intersection(s.experiment_ids)]
+
+    def experiments_for_report(self, report_id: str) -> list[Experiment]:
+        # One publication may document several experiments.
+        return [e for e in self.experiments if report_id in e.report_ids]
 
     @property
     def featured_report(self) -> Report | None:
@@ -337,7 +428,7 @@ class Catalog:
 
     def reports_for_project(self, project_id: str) -> list[Report]:
         return sorted(
-            (report for report in self.current_reports if report.project == project_id),
+            (report for report in self.current_reports if project_id in report.project_ids),
             key=lambda report: (report.date, report.id),
             reverse=True,
         )
@@ -349,25 +440,25 @@ class Catalog:
             reverse=True,
         )
 
-    def studies_for_project(self, project_id: str) -> list[Study]:
+    def experiments_for_project(self, project_id: str) -> list[Experiment]:
         return sorted(
-            (study for study in self.studies if study.project == project_id),
-            key=lambda study: (study.updated_at, study.id),
+            (experiment for experiment in self.experiments if project_id in experiment.project_ids),
+            key=lambda experiment: (experiment.updated_at, experiment.id),
             reverse=True,
         )
 
-    def studies_for_stage(self, project_id: str, stage_id: str) -> list[Study]:
-        return [study for study in self.studies_for_project(project_id) if study.stage == stage_id]
+    def experiments_for_stage(self, project_id: str, stage_id: str) -> list[Experiment]:
+        return [experiment for experiment in self.experiments_for_project(project_id) if experiment.stage == stage_id]
 
-    def studies_for_taxonomy_path(
+    def experiments_for_taxonomy_path(
         self,
         project_id: str,
         taxonomy_path: tuple[str, ...],
-    ) -> list[Study]:
+    ) -> list[Experiment]:
         return [
-            study
-            for study in self.studies_for_project(project_id)
-            if study.taxonomy_path == taxonomy_path
+            experiment
+            for experiment in self.experiments_for_project(project_id)
+            if experiment.taxonomy_path == taxonomy_path
         ]
 
     def taxonomy_titles(self, taxonomy_path: tuple[str, ...]) -> tuple[str, ...]:
@@ -598,6 +689,14 @@ def _load_projects(
             _require_relative_reference(ref, f"project {project_id} source_refs[{ref_index}]")
             for ref_index, ref in enumerate(raw_refs)
         )
+        # Keep registry ownership independent of local checkout paths.
+        raw_experiments = item.get("registry_experiments", [])
+        if not isinstance(raw_experiments, list):
+            raise CatalogError(f"project {project_id} registry_experiments must be a list")
+        registry_experiments = tuple(
+            _require_slug(experiment_id, f"project {project_id} registry experiment id")
+            for experiment_id in raw_experiments
+        )
         if not isinstance(raw_stages, list):
             raise CatalogError(f"project {project_id} stages must be a list")
         stage_ids = {stage.id for stage in research_stages}
@@ -668,9 +767,15 @@ def _load_projects(
                 section=section,
                 stages=tuple(stages),
                 legacy_topic_redirects=tuple(legacy_redirects),
+                registry_experiments=registry_experiments,
             )
         )
     _unique([item.id for item in projects], "project ids")
+    # Each registered experiment belongs to exactly one site project.
+    _unique(
+        [experiment_id for project in projects for experiment_id in project.registry_experiments],
+        "registry experiment ownership",
+    )
     return tuple(categories), tuple(projects)
 
 
@@ -726,6 +831,7 @@ def _load_reports(
                 item.get("match_evidence"), f"report {report_id}.match_evidence"
             ),
             "revision_of": revision_of,
+            "related_project_ids": related_project_ids(item, project_id, project_by_id),
         }
         if report_format == "legacy-html":
             source_file = _require_relative_reference(
@@ -739,11 +845,15 @@ def _load_reports(
             source_sha256 = _require_text(item.get("source_sha256"), f"report {report_id}.source_sha256")
             if not SHA256_RE.fullmatch(source_sha256):
                 raise CatalogError(f"report {report_id} source_sha256 must be lowercase SHA-256")
+            published_hash = _require_text(item["published_sha256"], f"report {report_id}.published_sha256")
+            if not SHA256_RE.fullmatch(published_hash):
+                raise CatalogError(f"report {report_id} published_sha256 must be lowercase SHA-256")
             report = Report(
                 **common,
                 title=_require_text(item.get("title"), f"report {report_id}.title"),
                 source_file=source_file,
                 source_sha256=source_sha256,
+                published_sha256=published_hash,
                 date=_parse_date(item.get("date"), f"report {report_id}.date"),
                 summary=_require_text(item.get("summary"), f"report {report_id}.summary"),
                 tags=tuple(tag.strip() for tag in tags),
@@ -835,44 +945,76 @@ def _load_reports(
     return tuple(reports), featured_report_id
 
 
-def _load_studies(
+def parse_metrics(values: Any, context: str) -> tuple[Metric, ...]:
+    # Validate numeric values and retain their evaluation scope.
+    raw_metrics = values
+    if not isinstance(raw_metrics, list):
+        raise CatalogError(f"experiment {context}.metrics must be a list")
+    metrics: list[Metric] = []
+    for metric_index, metric in enumerate(raw_metrics):
+        if not isinstance(metric, dict):
+            raise CatalogError(f"experiment {context}.metrics[{metric_index}] must be a mapping")
+        metric_id = _require_slug(metric.get("id"), f"experiment {context} metric id")
+        metric_format = _require_slug(metric.get("format"), f"experiment {context} metric {metric_id}.format")
+        if metric_format not in ALLOWED_METRIC_FORMATS:
+            raise CatalogError(f"experiment {context} metric {metric_id} has unsupported format {metric_format}")
+        decimals = metric.get("decimals", 0)
+        if isinstance(decimals, bool) or not isinstance(decimals, int) or not 0 <= decimals <= 6:
+            raise CatalogError(f"experiment {context} metric {metric_id}.decimals must be between 0 and 6")
+        unit_value = metric.get("unit")
+        unit = None if unit_value is None else _require_text(unit_value, f"experiment {context} metric {metric_id}.unit")
+        metrics.append(
+            Metric(
+                id=metric_id,
+                label=_require_text(metric.get("label"), f"experiment {context} metric {metric_id}.label"),
+                value=_require_number(metric.get("value"), f"experiment {context} metric {metric_id}.value"),
+                format=metric_format,
+                decimals=decimals,
+                context=_require_text(metric.get("context"), f"experiment {context} metric {metric_id}.context"),
+                unit=unit,
+            )
+        )
+    _unique([metric.id for metric in metrics], f"metric ids in experiment {context}")
+    return tuple(metrics)
+
+
+def _load_experiments(
     path: Path,
     projects: tuple[Project, ...],
     reports: tuple[Report, ...],
     research_taxonomy: tuple[ResearchTaxonomyStage, ...],
-) -> tuple[Study, ...]:
+) -> tuple[Experiment, ...]:
     raw = _load_yaml(path)
-    raw_studies = raw.get("studies")
-    if not isinstance(raw_studies, list):
-        raise CatalogError(f"{path} must define a studies list")
+    raw_experiments = raw.get("experiments")
+    if not isinstance(raw_experiments, list):
+        raise CatalogError(f"{path} must define a experiments list")
     project_by_id = {project.id: project for project in projects}
     report_by_id = {report.id: report for report in reports}
-    studies: list[Study] = []
-    linked_report_ids: list[str] = []
-    for index, item in enumerate(raw_studies):
+    experiments: list[Experiment] = []
+    for index, item in enumerate(raw_experiments):
         if not isinstance(item, dict):
-            raise CatalogError(f"studies[{index}] must be a mapping")
-        study_id = _require_slug(item.get("id"), f"studies[{index}].id")
-        project_id = _require_slug(item.get("project"), f"study {study_id}.project")
+            raise CatalogError(f"experiments[{index}] must be a mapping")
+        experiment_id = _require_slug(item.get("id"), f"experiments[{index}].id")
+        project_id = _require_slug(item.get("project"), f"experiment {experiment_id}.project")
         project = project_by_id.get(project_id)
         if project is None:
-            raise CatalogError(f"study {study_id} references unknown project {project_id}")
+            raise CatalogError(f"experiment {experiment_id} references unknown project {project_id}")
         taxonomy_value = item.get("taxonomy_path")
         taxonomy_path = (
             ()
             if taxonomy_value is None
-            else _require_taxonomy_path(taxonomy_value, f"study {study_id}.taxonomy_path")
+            else _require_taxonomy_path(taxonomy_value, f"experiment {experiment_id}.taxonomy_path")
         )
         raw_related_paths = item.get("related_taxonomy_paths", [])
         if not isinstance(raw_related_paths, list):
-            raise CatalogError(f"study {study_id}.related_taxonomy_paths must be a list")
+            raise CatalogError(f"experiment {experiment_id}.related_taxonomy_paths must be a list")
         related_taxonomy_paths = tuple(
-            _require_taxonomy_path(value, f"study {study_id}.related_taxonomy_paths[{path_index}]")
+            _require_taxonomy_path(value, f"experiment {experiment_id}.related_taxonomy_paths[{path_index}]")
             for path_index, value in enumerate(raw_related_paths)
         )
         if project.section == "research":
             if not taxonomy_path_exists(research_taxonomy, taxonomy_path):
-                raise CatalogError(f"study {study_id} must reference a valid research taxonomy path")
+                raise CatalogError(f"experiment {experiment_id} must reference a valid research taxonomy path")
             unknown_related = [
                 value
                 for value in related_taxonomy_paths
@@ -880,118 +1022,96 @@ def _load_studies(
             ]
             if unknown_related:
                 raise CatalogError(
-                    f"study {study_id} references unknown related taxonomy path "
+                    f"experiment {experiment_id} references unknown related taxonomy path "
                     f"{'/'.join(unknown_related[0])}"
                 )
             if taxonomy_path in related_taxonomy_paths:
-                raise CatalogError(f"study {study_id} repeats its primary taxonomy path as related")
+                raise CatalogError(f"experiment {experiment_id} repeats its primary taxonomy path as related")
             _unique(
                 ["/".join(value) for value in related_taxonomy_paths],
-                f"related taxonomy paths in study {study_id}",
+                f"related taxonomy paths in experiment {experiment_id}",
             )
         elif taxonomy_path or related_taxonomy_paths:
-            raise CatalogError(f"study {study_id} outside research must not reference taxonomy")
-        status = _require_slug(item.get("status"), f"study {study_id}.status")
-        if status not in ALLOWED_STUDY_STATUSES:
-            raise CatalogError(f"study {study_id} has unsupported status {status}")
-        maturity = _require_slug(item.get("maturity"), f"study {study_id}.maturity")
+            raise CatalogError(f"experiment {experiment_id} outside research must not reference taxonomy")
+        status = _require_slug(item.get("status"), f"experiment {experiment_id}.status")
+        if status not in ALLOWED_EXPERIMENT_STATUSES:
+            raise CatalogError(f"experiment {experiment_id} has unsupported status {status}")
+        maturity = _require_slug(item.get("maturity"), f"experiment {experiment_id}.maturity")
         if maturity not in ALLOWED_MATURITIES:
-            raise CatalogError(f"study {study_id} has unsupported maturity {maturity}")
+            raise CatalogError(f"experiment {experiment_id} has unsupported maturity {maturity}")
         decision_state = _require_slug(
-            item.get("decision_state"), f"study {study_id}.decision_state"
+            item.get("decision_state"), f"experiment {experiment_id}.decision_state"
         )
         if decision_state not in ALLOWED_DECISION_STATES:
             raise CatalogError(
-                f"study {study_id} has unsupported decision_state {decision_state}"
+                f"experiment {experiment_id} has unsupported decision_state {decision_state}"
             )
-        raw_metrics = item.get("metrics", [])
-        if not isinstance(raw_metrics, list):
-            raise CatalogError(f"study {study_id}.metrics must be a list")
-        metrics: list[Metric] = []
-        for metric_index, metric in enumerate(raw_metrics):
-            if not isinstance(metric, dict):
-                raise CatalogError(f"study {study_id}.metrics[{metric_index}] must be a mapping")
-            metric_id = _require_slug(metric.get("id"), f"study {study_id} metric id")
-            metric_format = _require_slug(metric.get("format"), f"study {study_id} metric {metric_id}.format")
-            if metric_format not in ALLOWED_METRIC_FORMATS:
-                raise CatalogError(f"study {study_id} metric {metric_id} has unsupported format {metric_format}")
-            decimals = metric.get("decimals", 0)
-            if isinstance(decimals, bool) or not isinstance(decimals, int) or not 0 <= decimals <= 6:
-                raise CatalogError(f"study {study_id} metric {metric_id}.decimals must be between 0 and 6")
-            unit_value = metric.get("unit")
-            unit = None if unit_value is None else _require_text(unit_value, f"study {study_id} metric {metric_id}.unit")
-            metrics.append(
-                Metric(
-                    id=metric_id,
-                    label=_require_text(metric.get("label"), f"study {study_id} metric {metric_id}.label"),
-                    value=_require_number(metric.get("value"), f"study {study_id} metric {metric_id}.value"),
-                    format=metric_format,
-                    decimals=decimals,
-                    context=_require_text(metric.get("context"), f"study {study_id} metric {metric_id}.context"),
-                    unit=unit,
-                )
-            )
-        _unique([metric.id for metric in metrics], f"metric ids in study {study_id}")
+        metrics = parse_metrics(item.get("metrics", []), experiment_id)
         primary_metric_value = item.get("primary_metric")
         primary_metric_id = None
         if primary_metric_value is not None:
             primary_metric_id = _require_slug(
-                primary_metric_value, f"study {study_id}.primary_metric"
+                primary_metric_value, f"experiment {experiment_id}.primary_metric"
             )
             if primary_metric_id not in {metric.id for metric in metrics}:
                 raise CatalogError(
-                    f"study {study_id}.primary_metric references unknown metric {primary_metric_id}"
+                    f"experiment {experiment_id}.primary_metric references unknown metric {primary_metric_id}"
                 )
         if metrics and primary_metric_id is None:
-            raise CatalogError(f"study {study_id} with metrics must define primary_metric")
+            raise CatalogError(f"experiment {experiment_id} with metrics must define primary_metric")
         raw_report_ids = item.get("report_ids", [])
         if not isinstance(raw_report_ids, list):
-            raise CatalogError(f"study {study_id}.report_ids must be a list")
+            raise CatalogError(f"experiment {experiment_id}.report_ids must be a list")
         report_ids = tuple(
-            _require_slug(report_id, f"study {study_id}.report_ids[{report_index}]")
+            _require_slug(report_id, f"experiment {experiment_id}.report_ids[{report_index}]")
             for report_index, report_id in enumerate(raw_report_ids)
         )
-        _unique(list(report_ids), f"report ids in study {study_id}")
+        _unique(list(report_ids), f"report ids in experiment {experiment_id}")
+        related_projects = related_project_ids(item, project_id, project_by_id)
         for report_id in report_ids:
             report = report_by_id.get(report_id)
             if report is None:
-                raise CatalogError(f"study {study_id} references unknown report {report_id}")
-            if report.project != project_id:
-                raise CatalogError(f"study {study_id} report {report_id} belongs to another project")
-        linked_report_ids.extend(report_ids)
-        studies.append(
-            Study(
-                id=study_id,
+                raise CatalogError(f"experiment {experiment_id} references unknown report {report_id}")
+            if not set(report.project_ids).intersection((project_id, *related_projects)):
+                raise CatalogError(f"experiment {experiment_id} report {report_id} belongs to another project")
+        experiments.append(
+            Experiment(
+                id=experiment_id,
                 project=project_id,
                 taxonomy_path=taxonomy_path,
                 related_taxonomy_paths=related_taxonomy_paths,
-                title=_require_text(item.get("title"), f"study {study_id}.title"),
+                title=_require_text(item.get("title"), f"experiment {experiment_id}.title"),
                 status=status,
                 maturity=maturity,
-                updated_at=_parse_date(item.get("updated_at"), f"study {study_id}.updated_at"),
-                method=_require_text(item.get("method"), f"study {study_id}.method"),
-                dataset=_require_text(item.get("dataset"), f"study {study_id}.dataset"),
+                updated_at=_parse_date(item.get("updated_at"), f"experiment {experiment_id}.updated_at"),
+                method=_require_text(item.get("method"), f"experiment {experiment_id}.method"),
+                dataset=_require_text(item.get("dataset"), f"experiment {experiment_id}.dataset"),
                 decision_state=decision_state,
                 primary_metric_id=primary_metric_id,
-                objective=_require_text(item.get("objective"), f"study {study_id}.objective"),
-                summary=_require_text(item.get("summary"), f"study {study_id}.summary"),
-                decision=_require_text(item.get("decision"), f"study {study_id}.decision"),
-                caveats=_require_text_list(item.get("caveats", []), f"study {study_id}.caveats"),
+                objective=_require_text(item.get("objective"), f"experiment {experiment_id}.objective"),
+                summary=_require_text(item.get("summary"), f"experiment {experiment_id}.summary"),
+                decision=_require_text(item.get("decision"), f"experiment {experiment_id}.decision"),
+                caveats=_require_text_list(item.get("caveats", []), f"experiment {experiment_id}.caveats"),
                 metrics=tuple(metrics),
                 report_ids=report_ids,
-                evidence_ref=_require_relative_reference(item.get("evidence_ref"), f"study {study_id}.evidence_ref"),
+                evidence_ref=_require_relative_reference(item.get("evidence_ref"), f"experiment {experiment_id}.evidence_ref"),
                 featured=bool(item.get("featured", False)),
+                related_project_ids=related_projects,
+                experiment_type=_require_slug(item["experiment_type"], f"experiment {experiment_id}.experiment_type"),
+                model=_require_text(item["model"], f"experiment {experiment_id}.model"),
+                comparison_scope=item.get("comparison_scope"),
+                arms=parse_arms(item, experiment_id),
+                figures=parse_figures(item, report_ids, report_by_id),
             )
         )
-    _unique([study.id for study in studies], "study ids")
-    _unique(linked_report_ids, "report links across studies")
-    return tuple(studies)
+    _unique([experiment.id for experiment in experiments], "experiment ids")
+    return tuple(experiments)
 
 
 def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
     """Load curated homepage evidence and validate every catalog reference."""
     raw = _load_yaml(path)
-    study_by_id = catalog.study_by_id
+    experiment_by_id = catalog.experiment_by_id
     report_by_id = catalog.report_by_id
 
     raw_metrics = raw.get("metrics")
@@ -1012,30 +1132,30 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
             raise CatalogError(
                 f"homepage metric {metric_id} has unsupported display_format {display_format}"
             )
-        study_value = item.get("study")
+        experiment_value = item.get("experiment")
         metric_value = item.get("metric")
         display_value_raw = item.get("display_value")
-        has_reference = study_value is not None or metric_value is not None
+        has_reference = experiment_value is not None or metric_value is not None
         has_literal = display_value_raw is not None
         if has_reference == has_literal:
             raise CatalogError(
-                f"homepage metric {metric_id} must define either a study/metric reference or display_value"
+                f"homepage metric {metric_id} must define either a experiment/metric reference or display_value"
             )
-        study_id = None
+        experiment_id = None
         referenced_metric_id = None
         display_value = None
         if has_reference:
-            study_id = _require_slug(study_value, f"homepage metric {metric_id}.study")
+            experiment_id = _require_slug(experiment_value, f"homepage metric {metric_id}.experiment")
             referenced_metric_id = _require_slug(
                 metric_value, f"homepage metric {metric_id}.metric"
             )
-            study = study_by_id.get(study_id)
-            if study is None:
-                raise CatalogError(f"homepage metric {metric_id} references unknown study {study_id}")
-            if referenced_metric_id not in {metric.id for metric in study.metrics}:
+            experiment = experiment_by_id.get(experiment_id)
+            if experiment is None:
+                raise CatalogError(f"homepage metric {metric_id} references unknown experiment {experiment_id}")
+            if referenced_metric_id not in {metric.id for metric in experiment.metrics}:
                 raise CatalogError(
                     f"homepage metric {metric_id} references unknown metric "
-                    f"{study_id}/{referenced_metric_id}"
+                    f"{experiment_id}/{referenced_metric_id}"
                 )
         else:
             display_value = _require_text(
@@ -1052,7 +1172,7 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
                 category=category,
                 scope=_require_text(item.get("scope"), f"homepage metric {metric_id}.scope"),
                 display_format=display_format,
-                study=study_id,
+                experiment=experiment_id,
                 metric=referenced_metric_id,
                 display_value=display_value,
             )
@@ -1068,12 +1188,12 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
     featured_report = report_by_id.get(featured_report_id)
     if featured_report is None:
         raise CatalogError(f"homepage featured references unknown report {featured_report_id}")
-    featured_study_id = _require_slug(raw_featured.get("study"), "homepage featured.study")
-    featured_study = study_by_id.get(featured_study_id)
-    if featured_study is None:
-        raise CatalogError(f"homepage featured references unknown study {featured_study_id}")
-    if featured_report_id not in featured_study.report_ids:
-        raise CatalogError("homepage featured study must link the featured report")
+    featured_experiment_id = _require_slug(raw_featured.get("experiment"), "homepage featured.experiment")
+    featured_experiment = experiment_by_id.get(featured_experiment_id)
+    if featured_experiment is None:
+        raise CatalogError(f"homepage featured references unknown experiment {featured_experiment_id}")
+    if featured_report_id not in featured_experiment.report_ids:
+        raise CatalogError("homepage featured experiment must link the featured report")
 
     raw_gates = raw_featured.get("gates")
     if not isinstance(raw_gates, list) or not raw_gates:
@@ -1147,7 +1267,7 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
     )
     featured = FeaturedHighlight(
         report=featured_report_id,
-        study=featured_study_id,
+        experiment=featured_experiment_id,
         decision_label=_require_text(
             raw_featured.get("decision_label"), "homepage featured.decision_label"
         ),
@@ -1166,10 +1286,10 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
         if not isinstance(item, dict):
             raise CatalogError(f"homepage rejected_ideas[{index}] must be a mapping")
         title = _require_text(item.get("title"), f"homepage rejected_ideas[{index}].title")
-        study_id = _require_slug(item.get("study"), f"rejected idea {title}.study")
-        study = study_by_id.get(study_id)
-        if study is None:
-            raise CatalogError(f"rejected idea {title} references unknown study {study_id}")
+        experiment_id = _require_slug(item.get("experiment"), f"rejected idea {title}.experiment")
+        experiment = experiment_by_id.get(experiment_id)
+        if experiment is None:
+            raise CatalogError(f"rejected idea {title} references unknown experiment {experiment_id}")
         raw_metric_ids = item.get("metric_ids", [])
         if not isinstance(raw_metric_ids, list):
             raise CatalogError(f"rejected idea {title}.metric_ids must be a list")
@@ -1177,11 +1297,11 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
             _require_slug(value, f"rejected idea {title}.metric_ids[{metric_index}]")
             for metric_index, value in enumerate(raw_metric_ids)
         )
-        available_metric_ids = {metric.id for metric in study.metrics}
+        available_metric_ids = {metric.id for metric in experiment.metrics}
         unknown_metric_ids = [value for value in metric_ids if value not in available_metric_ids]
         if unknown_metric_ids:
             raise CatalogError(
-                f"rejected idea {title} references unknown metrics in {study_id}: "
+                f"rejected idea {title} references unknown metrics in {experiment_id}: "
                 + ", ".join(unknown_metric_ids)
             )
         rejected_ideas.append(
@@ -1189,7 +1309,7 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
                 title=title,
                 state=_require_text(item.get("state"), f"rejected idea {title}.state"),
                 reason=_require_text(item.get("reason"), f"rejected idea {title}.reason"),
-                study=study_id,
+                experiment=experiment_id,
                 metric_ids=metric_ids,
             )
         )
@@ -1202,8 +1322,123 @@ def _load_homepage(path: Path, catalog: Catalog) -> HomepageHighlights:
     )
 
 
+def related_project_ids(
+    item: dict[str, Any], primary: str, projects: dict[str, Project],
+) -> tuple[str, ...]:
+    # Validate shared ownership without changing the canonical URL owner.
+    values = _require_text_list(item.get("related_project_ids", []), "related_project_ids")
+    _unique([primary, *values], "project associations")
+    for project_id in values:
+        if project_id not in projects or projects[project_id].section == "knowledge":
+            raise CatalogError(f"unknown research/infrastructure project association {project_id}")
+    return values
+
+
+def parse_arms(item: dict[str, Any], experiment_id: str) -> tuple[ExperimentArm, ...]:
+    # Keep matched comparisons local to their explicit evaluation contract.
+    arms = tuple(
+        ExperimentArm(
+            id=_require_slug(arm["id"], "comparison arm id"),
+            label=_require_text(arm["label"], "comparison arm label"),
+            status=_require_slug(arm["status"], "comparison arm status"),
+            model=_require_text(arm["model"], "comparison arm model"),
+            metrics=parse_metrics(arm["metrics"], f"{experiment_id}/{arm['id']}"),
+        )
+        for arm in item.get("arms", [])
+    )
+    _unique([arm.id for arm in arms], f"arms in {experiment_id}")
+    if arms and not item.get("comparison_scope"):
+        raise CatalogError(f"experiment {experiment_id} requires comparison_scope for arms")
+    for arm in arms:
+        if arm.status not in {"completed", "failed-before-test", "gated"}:
+            raise CatalogError(f"unknown arm status {arm.status}")
+        if arm.status != "completed" and arm.metrics:
+            raise CatalogError(f"non-completed arm {arm.id} must not contain comparison metrics")
+    return arms
+
+
+def parse_figures(
+    item: dict[str, Any], report_ids: tuple[str, ...], reports: dict[str, Report],
+) -> tuple[ResearchFigure, ...]:
+    # Resolve figure references only within explicitly linked publications.
+    figures: list[ResearchFigure] = []
+    for value in item.get("figures", []):
+        report_id = value["report_id"]
+        if report_id not in report_ids:
+            raise CatalogError(f"figure source {report_id} is not linked to its experiment")
+        asset, image_index = value.get("asset"), value.get("image_index")
+        if reports[report_id].is_markdown:
+            if image_index is not None or asset is None:
+                raise CatalogError("Markdown figure requires an asset path")
+            asset = _require_relative_reference(asset, "figure asset")
+            if not asset.startswith("images/"):
+                raise CatalogError("figure asset must be inside its report images directory")
+        elif asset is not None or type(image_index) is not int or image_index < 0:
+            raise CatalogError("legacy figure requires a nonnegative image_index")
+        figures.append(ResearchFigure(report_id, _require_text(value["title"], "figure title"), asset, image_index))
+    _unique([(f.report_id, f.asset, f.image_index) for f in figures], "figure references")
+    return tuple(figures)
+
+
+def load_studies(
+    path: Path, projects: tuple[Project, ...], experiments: tuple[Experiment, ...],
+    reports: tuple[Report, ...], taxonomy: tuple[ResearchTaxonomyStage, ...],
+) -> tuple[Study, ...]:
+    # Validate one record per research question and all many-to-many links.
+    values = _load_yaml(path, supported_versions=(2,))["studies"]
+    project_by_id = {p.id: p for p in projects if p.section != "knowledge"}
+    experiment_by_id = {e.id: e for e in experiments}
+    report_by_id = {r.id: r for r in reports}
+    studies: list[Study] = []
+    for value in values:
+        study_id = _require_slug(value["id"], "study id")
+        project_ids = _require_text_list(value["project_ids"], f"study {study_id} projects")
+        experiment_ids = _require_text_list(value["experiment_ids"], f"study {study_id} experiments")
+        report_ids = _require_text_list(value["report_ids"], f"study {study_id} reports")
+        for label, ids, registry in (
+            ("projects", project_ids, project_by_id),
+            ("experiments", experiment_ids, experiment_by_id),
+            ("reports", report_ids, report_by_id),
+        ):
+            _unique(list(ids), f"{label} in study {study_id}")
+            for identity in ids:
+                if identity not in registry:
+                    raise CatalogError(f"study {study_id} references unknown {label} {identity}")
+        if not project_ids or not (experiment_ids or report_ids):
+            raise CatalogError(f"study {study_id} needs projects and experiment/report evidence")
+        evidence_records = [experiment_by_id[eid] for eid in experiment_ids]
+        evidence_records.extend(report_by_id[rid] for rid in report_ids)
+        for evidence in evidence_records:
+            if not set(evidence.project_ids).intersection(project_ids):
+                raise CatalogError(f"study {study_id} evidence {evidence.id} has no associated project")
+
+        # Research uses problem taxonomy; infrastructure keeps its own organization.
+        path_value = value.get("taxonomy_path")
+        taxonomy_path = () if path_value is None else _require_taxonomy_path(path_value, "study taxonomy_path")
+        research = any(project_by_id[pid].section == "research" for pid in project_ids)
+        if research and not taxonomy_path_exists(taxonomy, taxonomy_path):
+            raise CatalogError(f"study {study_id} requires a valid research taxonomy path")
+        if not research and taxonomy_path:
+            raise CatalogError(f"infrastructure study {study_id} must not declare prediction taxonomy")
+        studies.append(Study(
+            id=study_id, title=_require_text(value["title"], "study title"),
+            question=_require_text(value["question"], "study question"),
+            conclusion=_require_text(value["conclusion"], "study conclusion"),
+            caveats=_require_text_list(value["caveats"], "study caveats"),
+            project_ids=project_ids, experiment_ids=experiment_ids,
+            report_ids=report_ids, taxonomy_path=taxonomy_path,
+        ))
+    _unique([s.id for s in studies], "study ids")
+    linked = {eid for s in studies for eid in s.experiment_ids}
+    missing = set(experiment_by_id) - linked
+    if missing:
+        raise CatalogError(f"experiments without a research question: {sorted(missing)}")
+    return tuple(studies)
+
+
 def load_catalog(content_root: Path) -> Catalog:
-    """Load and validate public project, study, and report metadata."""
+    """Load the canonical project, question, experiment, and publication graph."""
+    # Validate independent content registries before joining their identities.
     research_stages = _load_research_flow(content_root / "research-flow.yaml")
     research_taxonomy = _load_research_taxonomy(
         content_root / "research-taxonomy.yaml", research_stages
@@ -1214,20 +1449,22 @@ def load_catalog(content_root: Path) -> Catalog:
     reports, featured_report_id = _load_reports(
         content_root / "reports.yaml", projects, research_stages
     )
-    studies = _load_studies(
-        content_root / "studies.yaml", projects, reports, research_taxonomy
+    experiments = _load_experiments(
+        content_root / "experiments.yaml", projects, reports, research_taxonomy
     )
+    studies = load_studies(content_root / "studies.yaml", projects, experiments, reports, research_taxonomy)
     catalog = Catalog(
         categories=categories,
         research_stages=research_stages,
         research_taxonomy=research_taxonomy,
         projects=projects,
         reports=reports,
+        experiments=experiments,
         studies=studies,
         featured_report_id=featured_report_id,
     )
-    from .knowledge import load_knowledge
-    from .knowledge_sync import KnowledgeSyncError
+    from research_site.knowledge import load_knowledge
+    from research_site.knowledge_sync import KnowledgeSyncError
 
     try:
         knowledge = load_knowledge(
@@ -1243,6 +1480,7 @@ def load_catalog(content_root: Path) -> Catalog:
         research_taxonomy=catalog.research_taxonomy,
         projects=catalog.projects,
         reports=catalog.reports,
+        experiments=catalog.experiments,
         studies=catalog.studies,
         featured_report_id=catalog.featured_report_id,
         homepage=_load_homepage(content_root / "highlights.yaml", catalog),

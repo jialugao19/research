@@ -1,1646 +1,416 @@
-schema_version: 1
+schema_version: 2
 studies:
-  - id: reference-baseline
-    project: prediction-nn-1min
-    taxonomy_path: model/baseline
-    title: Reference Baseline
-    status: completed
-    maturity: signal-only
-    updated_at: 2026-07-01
-    method: Minute-level GRU baseline
-    dataset: stock1m full test
-    decision_state: retain
-    primary_metric: test-pooled-ic
-    objective: Establish a minute-level reference baseline with complete checkpoints, full-test evaluation, and report artifacts.
-    summary: The robust selector chose the 20k checkpoint; test pooled IC was 0.07034.
-    decision: Retain as a historical close-label signal anchor, not as evidence for portfolio cost or capacity.
-    caveats:
-      - This establishes signal quality only; net portfolio performance remains unproven.
-    metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.0703447025
-        format: decimal
-        decimals: 4
-        context: test_full, single reference run
-      - id: selected-checkpoint
-        label: Selected checkpoint
-        value: 20000
-        format: integer
-        context: robust selector
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/reference-baseline/results.yaml
-    featured: false
-
-  - id: reference-baseline-v2
-    project: prediction-nn-1min
-    taxonomy_path: model/baseline
-    title: B+VWAP Signal Baseline
-    status: completed
-    maturity: signal-only
-    updated_at: 2026-07-21
-    method: Paired VWAP endpoint comparison
-    dataset: stock1m paired_vwap_valid
-    decision_state: promote
-    primary_metric: vwap-test-ic
-    objective: The old baseline used close returns even though close labels do not fully align with an executable interval. This experiment fixes the paired_vwap_valid rows, changes only the future-return endpoint to VWAP, and retains close labels on the same rows as a paired control.
-    summary: VWAP and close variants use identical splits and training protocols across three seeds. For seed13, VWAP test IC is 0.07445 versus 0.06051 for close, a 0.01395 gain; the other paired seed deltas are also positive. Signal quality improves, but 10-minute net annual return remains negative.
-    decision: Promote B+VWAP as the current signal baseline, but not as an execution-ready portfolio baseline.
-    caveats:
-      - A native inference_test manifest is missing, and execution and cost gates have not passed.
-      - Ten-minute net annual return is negative; gross results cannot substitute for it.
-    metrics:
-      - id: vwap-test-ic
-        label: B+VWAP test IC
-        value: 0.0744533729
-        format: decimal
-        decimals: 4
-        context: seed13, paired_vwap_valid
-      - id: close-control-ic
-        label: Paired close IC
-        value: 0.0605061430
-        format: decimal
-        decimals: 4
-        context: seed13, identical row set
-      - id: ic-delta
-        label: Paired IC delta
-        value: 0.0139472299
-        format: decimal
-        decimals: 4
-        context: VWAP minus close
-      - id: net-annual-return
-        label: 10m net annual return
-        value: -99.48
-        format: percent
-        decimals: 2
-        context: portfolio gate, seed13
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/reference-baseline-v2/results.yaml
-    featured: true
-
-  - id: optimize-1min-model
-    project: prediction-nn-1min
-    taxonomy_path: model/baseline
-    title: Final 1min Architecture Evaluation
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-07-25
-    method: GRU / MLP architecture screen
-    dataset: stock1m · seeds 7/11/13
-    decision_state: retain
-    primary_metric: test-pooled-ic
-    objective: The former default used GRU384×2 with two 512-unit MLP layers and roughly 1.81 million parameters, yet capacity did not improve out-of-sample stability. Eighteen smaller GRU/MLP candidates were screened under one budget, then GRU192×2 last-hidden and attention representations were compared across seeds 7, 11, and 13.
-    summary: GRU192×2 last-hidden beats attention on both test pooled IC and Rank IC across all three seeds. Mean pooled IC is 0.07895 and mean Rank IC is 0.04651 versus 0.07066 test IC for attention. The retained model has 342,337 parameters, about one fifth of the old model.
-    decision: Retain GRU192×2 MLP[] last-hidden; do not promote attention or TCN.
-    caveats:
-      - This is architecture and signal-selection evidence, not proof of net trading performance.
-    metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC mean
-        value: 0.0789459452
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/13
-      - id: test-rank-ic
-        label: Test Rank IC mean
-        value: 0.0465149687
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/13
-      - id: attention-test-ic
-        label: Attention test IC
-        value: 0.0706621299
-        format: decimal
-        decimals: 5
-        context: three-seed control
-      - id: parameters
-        label: Trainable parameters
-        value: 342337
-        format: integer
-        context: retained last-hidden model
-      - id: baseline-parameters
-        label: Previous baseline parameters
-        value: 1808129
-        format: integer
-        context: GRU384×2 + MLP512×512
-      - id: architecture-candidates
-        label: Architectures screened
-        value: 18
-        format: integer
-        context: fixed-budget 1min screen
-    report_ids: [0725-1min-model-screening-v2]
-    evidence_ref: exp-nn/0-select&report/experiments/optimize-1min-model/results.yaml
-    featured: true
-
-  - id: loss-function-1min
-    project: prediction-nn-1min
-    taxonomy_path: model/loss-function
-    title: 1min Loss Function Stage B
-    status: completed
-    maturity: developmental
-    updated_at: 2026-07-25
-    method: Loss-function screen
-    dataset: stock1m · seed7
-    decision_state: iterate
-    primary_metric: candidate-test-ic
-    objective: Compare MSE, correlation, moment, and prediction-scale constrained losses.
-    summary: In single-seed Stage B, mse_std_floor_0p1 reaches 0.07776 test IC versus 0.06888 for the MSE control.
-    decision: Promote only to a multi-seed Stage C candidate, not to the default loss.
-    caveats:
-      - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
-    metrics:
-      - id: candidate-test-ic
-        label: Candidate test IC
-        value: 0.0777618206
-        format: decimal
-        decimals: 5
-        context: mse_std_floor_0p1, seed7
-      - id: mse-test-ic
-        label: MSE control IC
-        value: 0.0688795701
-        format: decimal
-        decimals: 5
-        context: seed7, same-protocol control
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/loss-function-1min/results.yaml
-    featured: false
-
-  - id: baseline-1s-0720
-    project: prediction-nn-1s
-    taxonomy_path: prediction-evaluation/model-comparison
-    title: 1s GRU384 Baseline Evaluation
-    status: doing
-    maturity: developmental
-    updated_at: 2026-08-08
-    method: GRU384 + MLP512×512
-    dataset: stock1s/v2 fold0
-    decision_state: iterate
-    primary_metric: test-pooled-ic
-    objective: Second-level trades, quotes, and order flow carry more information, noise, and turnover than the minute-level mainline. The experiment audits 78 deduplicated stock1s/v2 features on fold0, trains GRU384 with a two-layer MLP512×512 head, and evaluates sample-level signals, key-universe aggregation, and 10-minute net portfolios in one chain.
-    summary: Fold0 contains 7,947,567 valid evaluation rows. Test pooled IC is 0.09842 and Rank IC is 0.09469, but the net candidate used test during selection. Its 10-minute net daily return is -0.168% and Sharpe is -18.27. The signal chain merits continued research, but tradability is not established.
-    decision: Keep 1s as an independent research line; correct selection policy and reduce turnover before promotion.
-    caveats:
-      - The cost and turnover candidate used test during selection and cannot support formal promotion.
-      - Ten-minute net daily return and Sharpe are negative; gross performance cannot be cited in isolation.
-    metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.0984152803
-        format: decimal
-        decimals: 5
-        context: fold0, 7,947,567 rows
-      - id: test-rank-ic
-        label: Test Rank IC
-        value: 0.0946858020
-        format: decimal
-        decimals: 5
-        context: fold0, 7,947,567 rows
-      - id: evaluation-rows
-        label: Evaluation rows
-        value: 7947567
-        format: integer
-        context: fold0 test set
-      - id: net-daily-return
-        label: 10m net daily return
-        value: -0.1679929498
-        format: percent
-        decimals: 3
-        context: c60_top05, test-selected
-      - id: net-sharpe
-        label: 10m net Sharpe
-        value: -18.2703766
-        format: number
-        decimals: 2
-        context: 59 trading days
-      - id: daily-turnover
-        label: Daily turnover
-        value: 7.9912119
-        format: number
-        decimals: 2
-        unit: x
-        context: c60_top05
-    report_ids:
-      - 0730-stock1s-feature-health-v2
-      - 0807-stock1s-fold0-full-evaluation
-      - 0807-stock1s-cost-turnover-sweep
-      - 0808-stock1s-p0-p4-research
-    evidence_ref: public-report/0807-stock1s-fold0-full-evaluation
-    featured: true
-
-  - id: baseline-main-20260622
-    project: prediction-nn-1min
-    taxonomy_path: model/baseline
-    title: Mainline Baseline Placeholder
-    status: doing
-    maturity: blocked
-    updated_at: 2026-07-25
-    method: Baseline registration audit
-    dataset: Mainline artifacts
-    decision_state: blocked
-    objective: Register configuration, run, and artifact facts for the mainline baseline.
-    summary: No completed and reproducible run with configuration, metrics, and artifacts has been located.
-    decision: Exclude from all comparisons until registration is complete.
-    caveats:
-      - The checkout was dirty during registration and only a report outline is available.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/baseline-main-20260622/results.yaml
-    featured: false
-
-  - id: test-all
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/universe/filters
-    title: Touch Test-All Diagnostic
-    status: archived
-    maturity: diagnostic
-    updated_at: 2026-07-25
-    method: Touch-train / full-test diagnostic
-    dataset: stock1m unfiltered test
-    decision_state: diagnostic
-    primary_metric: diagnostic-test-ic
-    objective: Record diagnostic results for touch-filtered training against an unfiltered test set.
-    summary: Test IC reaches 0.08884, but the full test universe differs from the main comparison matrix.
-    decision: Retain only as limit-pool diagnostic provenance; exclude it from all/touch/limit ranking.
-    caveats:
-      - Both the test universe and source checkout changed, so the result is not directly comparable.
-    metrics:
-      - id: diagnostic-test-ic
-        label: Diagnostic test IC
-        value: 0.088842
-        format: decimal
-        decimals: 5
-        context: unfiltered supervised test
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/test-all/results.yaml
-    featured: false
-
-  - id: limit-pool
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/universe/filters
-    title: Limit-State Sample Pool Comparison
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-07-11
-    method: Sample-pool comparison
-    dataset: stock1m all / touch / limit
-    decision_state: retain
-    primary_metric: touch-test-ic
-    objective: Compare all, touch, and limit supervised sample pools under one protocol.
-    summary: Touch achieves the highest test IC, top-prediction return, and ETF top95 hit rate in the main matrix.
-    decision: Prefer touch in the main matrix; retain test-all only as a non-comparable diagnostic.
-    caveats:
-      - Strategy metrics still rely on cost and execution proxies documented in the report.
-    metrics:
-      - id: touch-test-ic
-        label: Touch test IC
-        value: 0.0691368300
-        format: decimal
-        decimals: 5
-        context: all/touch/limit main matrix
-      - id: top-return
-        label: Top prediction return
-        value: 9.2415430
-        format: bps
-        decimals: 2
-        context: touch variant
-      - id: etf-hit
-        label: ETF top95 hit
-        value: 54.7272727
-        format: percent
-        decimals: 2
-        context: touch variant
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/limit-pool/results.yaml
-    featured: false
-
-  - id: near-zero-filter
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/data-clean/outlier
-    title: Near-Zero Filter Comparison
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-06-17
-    method: Return-feature filter screen
-    dataset: stock1m · seed7
-    decision_state: retain
-    primary_metric: best-test-ic
-    objective: Compare exact-zero and near-zero return-feature filters for signal quality and sample retention.
-    summary: ret-ge2-nz5e-4 has the highest test IC and top return; flat-ret123-oc has the highest top95 hit rate.
-    decision: Retain separate IC/return and hit-rate objectives rather than declaring one global winner.
-    caveats:
-      - Trading and cost metrics remain proxies and are not equivalent to live returns.
-    metrics:
-      - id: best-test-ic
-        label: Best test IC
-        value: 0.0707367617
-        format: decimal
-        decimals: 5
-        context: ret-ge2-nz5e-4
-      - id: best-top-return
-        label: Best top return
-        value: 10.2584750
-        format: bps
-        decimals: 2
-        context: ret-ge2-nz5e-4
-      - id: best-etf-hit
-        label: Best ETF top95 hit
-        value: 55.3337306
-        format: percent
-        decimals: 2
-        context: flat-ret123-oc
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/near-zero-filter/results.yaml
-    featured: false
-
-  - id: learning-rate
-    project: prediction-nn-1min
-    taxonomy_path: model/optimization
-    title: Learning Rate and Scheduler
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-06-26
-    method: Learning-rate / scheduler screen
-    dataset: stock1m · seeds 7/11/19
-    decision_state: retain
-    primary_metric: mean-test-ic
-    objective: Select a stable learning rate and scheduler under a fixed final-step protocol.
-    summary: warmup_cosine with lr=0.009 averages 0.07354 test IC across seeds 7/11/19.
-    decision: Use warmup_cosine + 0.009 for later runs with the same model, batch, data, and training length.
-    caveats:
-      - Re-run the local learning-rate neighborhood after changes to architecture, batch, split, or training length.
-    metrics:
-      - id: mean-test-ic
-        label: Mean test IC
-        value: 0.0735400370
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/19
-      - id: test-ic-std
-        label: Test IC std
-        value: 0.0019912445
-        format: decimal
-        decimals: 5
-        context: three seeds
-      - id: final-iter
-        label: Final iteration
-        value: 110000
-        format: integer
-        context: fixed final-step protocol
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/learning-rate/results.yaml
-    featured: false
-
-  - id: rolling-purged-val
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/data-clean/validation-split
-    title: Rolling/Purged Validation Stability
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-06-28
-    method: Rolling purged validation
-    dataset: stock1m · three folds
-    decision_state: retain
-    primary_metric: validation-ic-mean
-    objective: Test whether validation IC decays materially across three rolling periods.
-    summary: Mean pooled validation IC is 0.06590 across three folds with a 0.00455 range; no material late-period collapse is observed.
-    decision: Do not replace the architecture solely for temporal decay; trading decisions still require portfolio-level validation.
-    caveats:
-      - Test is retained only as a pipeline contract, not as selection or trading evidence.
-    metrics:
-      - id: validation-ic-mean
-        label: Validation IC mean
-        value: 0.065898
-        format: decimal
-        decimals: 5
-        context: 3 rolling/purged folds
-      - id: validation-ic-range
-        label: Validation IC range
-        value: 0.004547
-        format: decimal
-        decimals: 5
-        context: max minus min
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/rolling-purged-val/results.yaml
-    featured: false
-
-  - id: val-select
-    project: prediction-nn-1min
-    taxonomy_path: prediction-evaluation/robustness/checkpoint
-    title: Robust Checkpoint Selection Rule
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-06-29
-    method: Robust checkpoint selector
-    dataset: stock1m rolling / purged folds
-    decision_state: retain
-    primary_metric: selected-checkpoint
-    objective: A single-window validation argmax can follow short-term noise and create hidden overfitting after repeated test inspection. This experiment scores checkpoints across three rolling/purged folds and the final 20 trading days using mean IC minus 0.5 standard deviations, then selects the earlier of the top two.
-    summary: The rule selects 20k without reading test ranking and keeps 30k as an aggressive control. In a one-time test audit, the 20k checkpoint has zero regret versus the post-hoc optimum. This supports freezing the selector, not iterating it on the same test set.
-    decision: Use 20k as the robust default; retain 30k only as an aggressive comparison.
-    caveats:
-      - The same test audit must not be reused to tune the selector.
-    metrics:
-      - id: selected-checkpoint
-        label: Robust checkpoint
-        value: 20000
-        format: integer
-        context: earliest top-2
-      - id: mean-test-ic
-        label: Mean test IC
-        value: 0.059220
-        format: decimal
-        decimals: 5
-        context: robust 20k winner
-      - id: top-decile-return
-        label: Mean top-decile return
-        value: 5.235391
-        format: bps
-        decimals: 2
-        context: robust 20k winner
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/val-select/results.yaml
-    featured: true
-
-  - id: capacity-robust-sampling
-    project: prediction-nn-1min
-    taxonomy_path: model/optimization
-    title: Capacity and Robust Sampling
-    status: completed
-    maturity: developmental
-    updated_at: 2026-06-28
-    method: Capacity and sampling screen
-    dataset: stock1m · single validation period
-    decision_state: iterate
-    primary_metric: small-model-best-val-ic
-    objective: Test whether lower capacity, dropout, robust losses, and decorrelated sampling reduce early overfitting.
-    summary: All five variants peak at 10k validation IC. Lower capacity improves late-checkpoint retention but does not delay the peak.
-    decision: Prioritize smaller models and early stopping; do not expand Huber/clip or the current decorrelated sampler.
-    caveats:
-      - Only one validation period is covered; rolling/purged confirmation is still required.
-    metrics:
-      - id: small-model-best-val-ic
-        label: Small model best val IC
-        value: 0.0793455647
-        format: decimal
-        decimals: 5
-        context: GRU192 + MLP256, 10k
-      - id: small-model-gap-60k
-        label: Train–val gap at 60k
-        value: 0.2915384650
-        format: decimal
-        decimals: 4
-        context: reduced-capacity variant
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/capacity-robust-sampling/results.yaml
-    featured: false
-
-  - id: prediction-calibration
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/label
-    title: Label Noise and Prediction Calibration
-    status: completed
-    maturity: developmental
-    updated_at: 2026-07-08
-    method: Paired endpoint / label study
-    dataset: stock1m paired samples
-    decision_state: iterate
-    primary_metric: vwap-test-ic
-    objective: Evaluate VWAP endpoints and robust label treatments for signal and calibration on paired samples.
-    summary: The VWAP endpoint improves IC, Rank IC, top-bottom spread, and calibration error versus paired close. No A3 variant passes promotion gates.
-    decision: Retain the A2 VWAP direction for multi-seed validation; do not promote A3 robust-label variants.
-    caveats:
-      - The current screen uses one seed, and volatility normalization also changes the valid row set.
-    metrics:
-      - id: vwap-test-ic
-        label: VWAP paired test IC
-        value: 0.0761556237
-        format: decimal
-        decimals: 5
-        context: vwap_vwap_intersection
-      - id: close-test-ic
-        label: Close paired test IC
-        value: 0.0532774338
-        format: decimal
-        decimals: 5
-        context: control_close_intersection
-      - id: spread-delta
-        label: Top-bottom spread delta
-        value: 1.9782819
-        format: bps
-        decimals: 2
-        context: VWAP minus paired close
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/prediction-calibration/results.yaml
-    featured: false
-
-  - id: generalization-rolling-stride
-    project: prediction-nn-1min
-    taxonomy_path: prediction-evaluation/robustness/monthly
-    title: Rolling Year and Endpoint Stride
-    status: completed
-    maturity: developmental
-    updated_at: 2026-07-11
-    method: Rolling-year / stride comparison
-    dataset: stock1m rolling years
-    decision_state: iterate
-    objective: Test the effects of calendar-year retraining and endpoint stride on cross-period signals.
-    summary: Stride5 is close to the standard reference. Rolling-year results vary materially, and the original stride10 selector fails after selecting iter0.
-    decision: Retain stride5 as a development candidate; treat the stride10 10k recovery as post-hoc diagnosis only.
-    caveats:
-      - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/generalization-rolling-stride/results.yaml
-    featured: false
-
-  - id: generalization-adjacent-window
-    project: prediction-nn-1min
-    taxonomy_path: prediction-evaluation/robustness
-    title: Adjacent-Window Sampling
-    status: completed
-    maturity: developmental
-    updated_at: 2026-07-10
-    method: Endpoint sampling comparison
-    dataset: stock1m partial 2024 test
-    decision_state: iterate
-    objective: Compare dense and block60/block70 endpoint sampling.
-    summary: Dense has the highest pooled IC in the single-seed screen, while block70 epoch has stronger Rank IC and reported gap.
-    decision: Keep block70 as a development suggestion only; do not replace dense.
-    caveats:
-      - The result uses one seed and only part of the 2024 test period.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window/results.yaml
-    featured: false
-
-  - id: generalization-adjacent-window-multiseed
-    project: prediction-nn-1min
-    taxonomy_path: prediction-evaluation/robustness
-    title: Adjacent-Window Multi-Seed Check
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-07-11
-    method: Multi-seed sampling validation
-    dataset: stock1m · seeds 7/17/27
-    decision_state: reject
-    primary_metric: dense-test-ic
-    objective: Confirm Dense versus Block70 epoch stability across seeds 7/17/27.
-    summary: Dense has higher mean test IC and materially lower variance. Block70 reduces the gap only for seed7.
-    decision: Do not promote Block70 epoch under the current protocol; retain Dense.
-    caveats:
-      - OOS dates remain development folds, and comparisons match optimizer steps rather than effective exposure.
-    metrics:
-      - id: dense-test-ic
-        label: Dense test IC mean
-        value: 0.0779182436
-        format: decimal
-        decimals: 5
-        context: seeds 7/17/27
-      - id: block70-test-ic
-        label: Block70 test IC mean
-        value: 0.0642507174
-        format: decimal
-        decimals: 5
-        context: seeds 7/17/27
-      - id: dense-ic-std
-        label: Dense IC std
-        value: 0.0001382819
-        format: decimal
-        decimals: 5
-        context: three seeds
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window-multiseed/results.yaml
-    featured: false
-
-  - id: generalization-block70-checkpoint-curve
-    project: prediction-nn-1min
-    taxonomy_path: prediction-evaluation/robustness/checkpoint
-    title: Block70 Checkpoint Curve Diagnostic
-    status: completed
-    maturity: diagnostic
-    updated_at: 2026-07-11
-    method: Checkpoint-curve audit
-    dataset: stock1m Block70 · 11 checkpoints
-    decision_state: diagnostic
-    objective: Inspect eleven checkpoints along the Block70 epoch curve for overtraining behavior.
-    summary: Test IC declines after 30k while the generalization gap widens.
-    decision: Use only to diagnose overtraining, not to select a production checkpoint.
-    caveats:
-      - Test metrics have been viewed for every checkpoint, creating test exposure.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/generalization-block70-checkpoint-curve/results.yaml
-    featured: false
-
-  - id: main-combo-integration
-    project: prediction-nn-1min
-    taxonomy_path: model/integration
-    title: Main Combo Integration Matrix
-    status: completed
-    maturity: blocked
-    updated_at: 2026-07-11
-    method: Controlled integration matrix
-    dataset: stock1m · seed7
-    decision_state: blocked
-    objective: Combine touch, ret-ge2, and their interaction in one seed7 matrix.
-    summary: The unfiltered baseline wins; none of the three modifications improves test pooled IC.
-    decision: Retain the negative result. Registered run roots have been cleaned, so any further comparison requires a rerun.
-    caveats:
-      - Only report evidence remains; all registered cache run roots are missing.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/main-combo-integration/results.yaml
-    featured: false
-
-  - id: zero-aware-normalization
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/data-clean/normalization
-    title: Zero-Aware Transform Comparison
-    status: completed
-    maturity: blocked
-    updated_at: 2026-07-11
-    method: Zero-aware transform screen
-    dataset: stock1m F24
-    decision_state: blocked
-    objective: Compare four zero-aware feature transforms.
-    summary: Three F24 variants cluster near 0.0722–0.0725 test IC, but a no-transform control is missing.
-    decision: Make no improvement claim until the off control and model-card consistency are restored.
-    caveats:
-      - F24 model-card metadata does not match the prepared data.
-    metrics: []
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/zero-aware-normalization/results.yaml
-    featured: false
-
-  - id: l2-features
-    project: prediction-nn-1min
-    taxonomy_path: feature-engineering/order-book-l2
-    title: L2 Feature Attribution
-    status: archived
-    maturity: blocked
-    updated_at: 2026-07-11
-    method: L2 feature ablation
-    dataset: stock1m + snapshot fast12
-    decision_state: blocked
-    primary_metric: observed-all-fast12-ic
-    objective: Evaluate the contribution of snapshot fast12 L2 features against the stock1m baseline.
-    summary: all_fast12 shows approximately 0.0805 test IC, but experiment arms use an 11-vs-1-vs-11 checkpoint-candidate policy.
-    decision: Preserve the observation but block cross-arm attribution claims.
-    caveats:
-      - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
-    metrics:
-      - id: observed-all-fast12-ic
-        label: Observed all_fast12 IC
-        value: 0.0805
-        format: decimal
-        decimals: 4
-        context: non-attributable observation
-    report_ids: [0702-l2-ablation-v2]
-    evidence_ref: exp-nn/0-select&report/experiments/l2-features/results.yaml
-    featured: false
-
-  - id: feature-cleaning-bundle-0609
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/data-clean
-    title: Historical Feature Cleaning Bundle
-    status: archived
-    maturity: archived
-    updated_at: 2026-07-11
-    method: Historical artifact audit
-    dataset: stock1m F15 archived run
-    decision_state: archived
-    primary_metric: historical-test-ic
-    objective: Preserve results and reproducibility gaps for a historical F15 feature-cleaning run.
-    summary: Historical test IC is 0.07389, but exact launch overrides and artifacts are missing.
-    decision: Retain as provenance only, not as a current baseline.
-    caveats:
-      - The current artifact root and exact NN_* launch configuration are missing.
-    metrics:
-      - id: historical-test-ic
-        label: Historical test IC
-        value: 0.073889
-        format: decimal
-        decimals: 5
-        context: archived F15 run
-      - id: historical-top-hit
-        label: Historical top95 hit
-        value: 47.60
-        format: percent
-        decimals: 2
-        context: archived report
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/feature-cleaning-bundle-0609/results.yaml
-    featured: false
-
-  - id: combo-touch-nz-lr
-    project: prediction-nn-1min
-    taxonomy_path: model/integration
-    title: Touch + Near-Zero + LR Combo
-    status: archived
-    maturity: archived
-    updated_at: 2026-07-11
-    method: Combined-filter experiment
-    dataset: stock1m superseded run
-    decision_state: archived
-    primary_metric: old-lr-test-ic
-    objective: Test the touch and near-zero combination at lr=0.009.
-    summary: The intended combination did not complete; only the old-learning-rate arm reproduced the existing 0.06248 result.
-    decision: Superseded by main-combo-integration and excluded from current comparisons.
-    caveats:
-      - No usable evidence exists for the target lr=0.009 combination, and the observed run root is missing.
-    metrics:
-      - id: old-lr-test-ic
-        label: Old-LR observed IC
-        value: 0.062477
-        format: decimal
-        decimals: 5
-        context: superseded arm
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/combo-touch-nz-lr/results.yaml
-    featured: false
-
-  - id: index500-clean-benchmark
-    project: index500-predict
-    taxonomy_path: prediction-evaluation/summary/ic
-    title: Index500 Clean Benchmark
-    status: completed
-    maturity: developmental
-    updated_at: 2026-05-02
-    method: Two-stage ETF mapping backtest
-    dataset: CSI 500 / 510500 ETF · 2024-02–2025-12
-    decision_state: iterate
-    primary_metric: etf-test-ic
-    objective: Validate the stock-alpha, basket aggregation, basis model, ETF forecast, and non-overlapping 30-minute backtest chain.
-    summary: ETF test IC is 0.10765. The validation-selected piecewise map returns 70.62% versus 59.55% for close-path long ETF.
-    decision: Retain piecewise as the current candidate; add costs, slippage, and rolling validation next.
-    caveats:
-      - Returns exclude transaction costs and slippage and are not tradable results.
-      - The report uses two different excess benchmarks; do not compare them across tables.
-    metrics:
-      - id: etf-test-ic
-        label: ETF test IC
-        value: 0.107647
-        format: decimal
-        decimals: 5
-        context: 2024-02 to 2025-12
-      - id: etf-rank-ic
-        label: ETF Rank IC
-        value: 0.037103
-        format: decimal
-        decimals: 5
-        context: selected two-stage model
-      - id: strategy-return
-        label: Piecewise return
-        value: 70.62
-        format: percent
-        decimals: 2
-        context: excludes costs and slippage
-      - id: max-drawdown
-        label: Max drawdown
-        value: -6.70
-        format: percent
-        decimals: 2
-        context: piecewise mapping
-    report_ids: [0502-index-6backtest-v2]
-    evidence_ref: public-report/0502-index-6backtest
-    featured: true
-
-  - id: limit-t1-strategy
-    project: limit-0729
-    taxonomy_path: strategy/execution
-    title: T+1 Strategy Gate Review
-    status: completed
-    maturity: developmental
-    updated_at: 2026-07-31
-    method: Walk-forward T+1 backtest
-    dataset: A-share first-limit · 2025–2026
-    decision_state: reject
-    primary_metric: annual-return
-    objective: Test 20/30/50bp stressed costs and simulation gates after fixing rules, fills, and mechanical exits.
-    summary: At 30bp, validation plus test annual return is 2.85% with a 60% win rate; the return gate fails.
-    decision: Do not enter simulation. Expand the frozen test and improve net returns first.
-    caveats:
-      - The frozen test contains one trade and cannot establish stability.
-      - Actual L2 data is unavailable after 2025-06-30, so fill results include model extrapolation.
-    metrics:
-      - id: annual-return
-        label: 30bp annual return
-        value: 2.85
-        format: percent
-        decimals: 2
-        context: validation + frozen test, 15 trades
-      - id: win-rate
-        label: Win rate
-        value: 60.00
-        format: percent
-        decimals: 2
-        context: validation + frozen test, 15 trades
-      - id: max-drawdown
-        label: Max drawdown
-        value: -2.26
-        format: percent
-        decimals: 2
-        context: 30bp pressure cost
-      - id: frozen-test-trades
-        label: Frozen-test trades
-        value: 1
-        format: integer
-        context: 2025–2026 frozen test
-    report_ids: [0731-limit-t1-strategy-v2]
-    evidence_ref: public-report/0731-limit-t1-strategy
-    featured: true
-
-  - id: shouban-report-gate
-    project: shouban2
-    taxonomy_path: strategy/execution
-    title: Historical Report Publication Gate
-    status: doing
-    maturity: blocked
-    updated_at: 2026-08-02
-    method: Publication provenance audit
-    dataset: Historical MHTML artifacts
-    decision_state: blocked
-    objective: Confirm ownership of historical First Board Top-K results and rebuild a standalone static report.
-    summary: A 0310 MHTML candidate was found, but it references local Streamlit resources and cannot be published as a static report.
-    decision: Keep the project entry; extract quantitative conclusions only after rebuilding self-contained HTML from source artifacts.
-    caveats:
-      - Do not infer final results or win rate from the MHTML filename.
-    metrics: []
-    report_ids: []
-    evidence_ref: archive-audit/0310-shouban2-firstboard-topk-v1
-    featured: true
-
-  - id: crypto-alpha-archive
-    project: alphas
-    taxonomy_path: feature-engineering/factor-discovery
-    title: Historical Evidence Inventory
-    status: archived
-    maturity: archived
-    updated_at: 2026-08-02
-    method: Historical evidence inventory
-    dataset: Crypto minute data · provenance incomplete
-    decision_state: archived
-    objective: Inventory historical crypto-alpha code, reports, and reproducibility evidence.
-    summary: No quantitative snapshot or static report has passed review.
-    decision: Keep the project archived and add results only when provenance and evaluation contracts are explicit.
-    caveats:
-      - Directory presence does not prove experiment completion or reusable results.
-    metrics: []
-    report_ids: []
-    evidence_ref: workspace-audit/alphas
-    featured: true
-
-  - id: genetic-factor-0327
-    project: genetic-factor-auto-3
-    taxonomy_path: feature-engineering/factor-discovery
-    title: Genetic Factor Search and Re-evaluation
-    status: completed
-    maturity: developmental
-    updated_at: 2026-03-27
-    method: GPU genetic search + re-evaluation
-    dataset: Crypto factors · 250-day review
-    decision_state: iterate
-    primary_metric: large-sample-ic
-    objective: Measure GPU genetic-search throughput and re-evaluate small-sample winners over 250 days.
-    summary: Thirty generations average about 21,218 factors/s. The best small-sample IC is 0.10487, while the best of 200 candidates falls to 0.04252 in the 250-day review.
-    decision: Retain candidates after large-sample review; do not treat the small-sample maximum as final factor quality.
-    caveats:
-      - The existing table-only HTML does not pass the strict report gate requiring embedded figures.
-    metrics:
-      - id: generations
-        label: Generations
-        value: 30
-        format: integer
-        context: GPU genetic search
-      - id: factors-per-second
-        label: Average throughput
-        value: 21217.9314
-        format: number
-        decimals: 1
-        unit: factors/s
-        context: 30 generations
-      - id: small-sample-ic
-        label: Best small-sample IC
-        value: 0.1048683152
-        format: decimal
-        decimals: 5
-        context: search sample
-      - id: large-sample-ic
-        label: Best 250-day IC
-        value: 0.0425236635
-        format: decimal
-        decimals: 5
-        context: 200 candidates re-evaluated
-    report_ids: []
-    evidence_ref: genetic-factor-auto-3/report/report.html
-    featured: true
-
-  - id: factor-daily-topk-0407
-    project: factor-daily
-    taxonomy_path: prediction-evaluation/robustness/top-k-percent
-    title: Daily Factor Top10 Backtest
-    status: completed
-    maturity: developmental
-    updated_at: 2026-04-07
-    method: Cost-aware Top10 factor backtest
-    dataset: A-share daily · 2021–2024
-    decision_state: reject
-    primary_metric: best-total-return
-    objective: Compare daily factors under one liquidity, winsorization, ranking, Top10, and turnover-cost contract.
-    summary: All eight factors have negative net total returns over 2021–2024; the best Sharpe remains -0.0266.
-    decision: Preserve the negative result and revisit portfolio construction, turnover, and factor direction before expansion.
-    caveats:
-      - Positive IC does not imply a profitable net Top10 portfolio.
-    metrics:
-      - id: factor-count
-        label: Factors evaluated
-        value: 8
-        format: integer
-        context: 2021–2024 Top10 report
-      - id: best-total-return
-        label: Best total return
-        value: -3.0460
-        format: percent
-        decimals: 2
-        context: volatility_trend_composite
-      - id: best-sharpe
-        label: Best Sharpe
-        value: -0.026593
-        format: number
-        decimals: 3
-        context: volatility_trend_composite
-      - id: best-max-drawdown
-        label: Max drawdown
-        value: -63.6763
-        format: percent
-        decimals: 2
-        context: best-Sharpe factor
-    report_ids: []
-    evidence_ref: factor-daily/reports/0407/topk_backtest_report.html
-    featured: true
-
-  - id: aq2-v16
-    project: aq2
-    taxonomy_path: data-engineering/data-clean
-    title: Cross-Day Full-Market Reconstruction v16
-    status: completed
-    maturity: diagnostic
-    updated_at: 2026-07-29
-    method: Deterministic reconstruction regression
-    dataset: A-share L2 · 14,025 security-days
-    decision_state: retain
-    primary_metric: candidate-mismatch
-    objective: Re-evaluate legal boundaries and opening-auction rule revisions with frozen source and identical denominators.
-    summary: All 14,025 security-days and 54,176,260 ticks complete with zero processing and invariant errors; candidate mismatches fall by 89,103 rows.
-    decision: Retain v16 as the current rule-regression baseline and prioritize opening-auction and visible-volume residuals.
-    caveats:
-      - Candidate boundaries use contemporaneous truth and are not an independent prediction-accuracy measure.
-      - A 24.0992% candidate mismatch rate shows material reconstruction issues remain.
-    metrics:
-      - id: security-days
-        label: Security-days
-        value: 14025
-        format: integer
-        context: 3 full-market dates
-      - id: snapshot-ticks
-        label: Snapshot ticks
-        value: 54176260
-        format: integer
-        context: v16 full rerun
-      - id: v13-candidate-mismatch
-        label: v13 candidate mismatch
-        value: 24.2637
-        format: percent
-        decimals: 4
-        context: truth-assisted legal boundary
-      - id: candidate-mismatch
-        label: Candidate mismatch
-        value: 24.0992
-        format: percent
-        decimals: 4
-        context: truth-assisted legal boundary
-      - id: reduced-rows
-        label: Reduced mismatches
-        value: 89103
-        format: integer
-        context: v16 versus v13
-    report_ids: []
-    evidence_ref: AQ2/README.md
-    featured: true
-
-  - id: ashare-1s-coverage
-    project: ashare-1s
-    taxonomy_path: data/tick
-    title: Stock1s/v2 Coverage Snapshot
-    status: doing
-    maturity: developmental
-    updated_at: 2026-08-02
-    method: Coverage and audit inventory
-    dataset: stock1s/v2 · 2021–2025
-    decision_state: iterate
-    primary_metric: coverage-files
-    objective: Inventory daily files, manifests, audits, and annual coverage gaps.
-    summary: The dataset has 960 coverage files and manifests plus 956 audits, spanning 2021-01-04 to 2025-12-31.
-    decision: Continue maintaining the data product; explain and close the 2024 gap before formal cross-year experiments.
-    caveats:
-      - Only four files cover 2024, so the first and last dates do not imply continuous complete coverage.
-    metrics:
-      - id: coverage-files
-        label: Coverage files
-        value: 960
-        format: integer
-        context: 2021-01-04 to 2025-12-31
-      - id: manifests
-        label: Daily manifests
-        value: 960
-        format: integer
-        context: stock1s/v2
-      - id: audits
-        label: Daily audits
-        value: 956
-        format: integer
-        context: four fewer than coverage files
-      - id: coverage-2024
-        label: 2024 coverage files
-        value: 4
-        format: integer
-        context: material annual gap
-    report_ids: []
-    evidence_ref: workspace-audit/ashare-1s-v2-2026-08-02
-    featured: true
-
-  - id: index-data-evidence
-    project: get-index-data
-    taxonomy_path: data/index-weight
-    title: Data Coverage Evidence Backlog
-    status: doing
-    maturity: blocked
-    updated_at: 2026-08-02
-    method: Coverage / freshness audit
-    dataset: Index constituents, weights, ETF mappings
-    decision_state: blocked
-    objective: Establish coverage and freshness snapshots for index constituents, weights, and ETF mappings.
-    summary: No reviewed coverage or update-success metric is registered.
-    decision: Keep the data entry point and publish health conclusions only after metrics are available.
-    caveats:
-      - Directory or configuration presence does not prove complete current data.
-    metrics: []
-    report_ids: []
-    evidence_ref: workspace-audit/get-index-data
-    featured: true
-
-  - id: market-data-evidence
-    project: get-data
-    taxonomy_path: data
-    title: Pipeline Coverage Evidence Backlog
-    status: doing
-    maturity: blocked
-    updated_at: 2026-08-02
-    method: Dataset registry audit
-    dataset: Daily / minute / calendar / market mirror
-    decision_state: blocked
-    objective: Register coverage and latest successful runs for daily, minute, calendar, and market-mirror datasets.
-    summary: No unified public data-coverage snapshot exists.
-    decision: Keep the infrastructure entry point and add dates, gaps, and freshness by dataset.
-    caveats:
-      - Pipeline code does not prove that current data has no gaps.
-    metrics: []
-    report_ids: []
-    evidence_ref: workspace-audit/get-data
-    featured: true
-
-  - id: tdx-data-source-v1
-    project: tdx-data-source
-    taxonomy_path: data/minute-bar
-    title: TDX Data Source Capability and Load Review
-    status: doing
-    maturity: diagnostic
-    updated_at: 2026-08-05
-    method: Capability-aware endpoint sweep
-    dataset: TDX · 1,800-symbol and 5,211-symbol sweeps
-    decision_state: retain
-    primary_metric: market-sweep-p95
-    objective: Validate operating boundaries for direct one-minute bars, capability-aware live transactions, historical quorum archives, and ExHQ futures.
-    summary: Three independent transaction endpoints complete repeated 1,800-symbol sweeps with 1,800 nonempty responses, zero failures, and 1.289s p95. A 5,211-symbol market sweep returns 5,199 nonempty and 12 valid-empty responses with zero failures and 3.638s p95.
-    decision: Continue auditing the transaction pool on a 10-second cadence. Live Predictor remains on direct one-minute bars; a single effective bar endpoint is not high availability.
-    caveats:
-      - Direct bars currently have one effective endpoint and one failure domain.
-      - Transaction snapshots have no trade ID or second-level event time; integrity still depends on overlap and bounded backfill.
-      - The service has no built-in auth or TLS and requires a trusted proxy before external exposure.
-    metrics:
-      - id: quorum-threshold
-        label: History quorum
-        value: 2
-        format: integer
-        unit: / 3
-        context: exact response agreement
-      - id: transaction-endpoints
-        label: Valid transaction endpoints
-        value: 3
-        format: integer
-        context: independent endpoint failure domains
-      - id: basket-sweep-p95
-        label: 1,800-symbol sweep p95
-        value: 1.289
-        format: number
-        decimals: 3
-        unit: s
-        context: three consecutive complete sweeps
-      - id: market-sweep-p95
-        label: 5,211-symbol sweep p95
-        value: 3.638
-        format: number
-        decimals: 3
-        unit: s
-        context: 5,199 nonempty, 12 valid empty, 0 failed
-    report_ids: []
-    evidence_ref: tdx-data-source/doc/design.md
-    featured: true
-
-  - id: snapshot-visualizer-evidence
-    project: snapshot-visualizer2
-    title: Visualization Evidence Backlog
-    status: doing
-    maturity: blocked
-    updated_at: 2026-08-02
-    method: Static demonstration audit
-    dataset: Sanitized order-book snapshot
-    decision_state: blocked
-    objective: Create a stable static example and review note for order-book snapshot diagnostics.
-    summary: Application and build artifacts exist, but no static research report has passed review.
-    decision: Keep the interactive-tool entry and later generate a static demonstration from one sanitized sample.
-    caveats:
-      - Next build files are not research results and cannot be copied directly as a public report.
-    metrics: []
-    report_ids: []
-    evidence_ref: workspace-audit/snapshot-visualizer2
-    featured: true
-
-  - id: webpage5-factor-reports
-    project: webpage5
-    title: Factor Report Output Inventory
-    status: doing
-    maturity: developmental
-    updated_at: 2026-08-02
-    method: Artifact inventory
-    dataset: Expression-factor report outputs
-    decision_state: iterate
-    primary_metric: factor-reports
-    objective: Inventory the expression-factor chain from computation through report output.
-    summary: Seven factor-evaluation HTML outputs exist in the project directory.
-    decision: Show platform output scale first; merge batch statistics only after factor-generation cache provenance is confirmed.
-    caveats:
-      - Report count does not establish factor validity; each performance claim still requires report-level review.
-    metrics:
-      - id: factor-reports
-        label: Factor report outputs
-        value: 7
-        format: integer
-        context: project-local HTML reports
-    report_ids: []
-    evidence_ref: webpage5/factors
-    featured: true
-
-  - id: live-predictor-live-quality
-    project: live-predictor
-    taxonomy_path: prediction-evaluation/summary/ic
-    title: 2026-08-05 Live Prediction Quality
-    status: completed
-    maturity: diagnostic
-    updated_at: 2026-08-05
-    method: Causal shadow evaluation
-    dataset: 1,800 constituents / three ETFs · 2026-08-05
-    decision_state: observe
-    primary_metric: morning-win-rate
-    objective: Validate direct minute data, inference, three-ETF aggregation, and causal post-event evaluation for 1,800 constituents.
-    summary: The system produced 156 three-ETF predictions from 10:39 to 11:30, all matured by 13:10. All 1,800 securities succeeded with zero failures; aggregate morning direction accuracy was 48.98%.
-    decision: The data and evaluation chain passes this gate. Keep the model shadow_candidate and non-actionable; do not enter paper or live execution.
-    caveats:
-      - One effective direct-bar endpoint means throughput does not establish node-level high availability.
-      - One morning of overlapping ten-minute windows cannot establish stability or significance.
-      - Constituent-basket returns are not equivalent to executable ETF returns.
-    metrics:
-      - id: predictions
-        label: Matured predictions
-        value: 156
-        format: integer
-        context: 52 minutes × 3 ETFs
-      - id: successful-symbols
-        label: Successful symbols
-        value: 1800
-        format: integer
-        context: direct-bar backfill gate
-      - id: request-throughput
-        label: Direct-bar throughput
-        value: 542.35
-        format: number
-        decimals: 2
-        unit: symbols/s
-        context: one effective endpoint
-      - id: morning-win-rate
-        label: Morning direction win rate
-        value: 48.98
-        format: percent
-        decimals: 2
-        context: 48 correct / 98 decided
-    report_ids: [0805-live-predictor-quality]
-    evidence_ref: live-predictor/reports/20260805T140155+0800_report.html
-    featured: true
-
-  - id: ipcheck-evidence
-    project: ipcheck
-    title: Operational Evidence Backlog
-    status: doing
-    maturity: blocked
-    updated_at: 2026-08-02
-    method: Operational evidence audit
-    dataset: Sanitized runtime checks
-    decision_state: blocked
-    objective: Record the latest check, address changes, and notification-delivery outcome.
-    summary: No reviewed runtime-success or delivery metric is available.
-    decision: Keep the tool entry and publish only sanitized operational-health summaries.
-    caveats:
-      - Never publish specific IPs, notification targets, or credentials.
-    metrics: []
-    report_ids: []
-    evidence_ref: workspace-audit/ipcheck
-    featured: true
-
-  - id: day-pure-batch-1min
-    project: prediction-nn-1min
-    taxonomy_path: model/batch
-    title: Date-pure Batch Sampling Feasibility
-    status: completed
-    maturity: developmental
-    updated_at: 2026-08-11
-    method: Single-date weighted batch sampler · seed7 · one equivalent epoch
-    dataset: stock1m · 727/37/205 train/validation/test days
-    decision_state: iterate
-    primary_metric: test-pooled-ic
-    objective: Determine whether every training batch can be restricted to one trading date while preserving the frozen 1min training, checkpoint-selection, and full-evaluation contract.
-    summary: All 1,374 recorded purity samples contained exactly one date. Validation-only selection chose step 30,000; full-test pooled IC was 0.10388 and Rank IC was 0.06425 over 176,945,440 rows.
-    decision: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit mixed-date one-epoch control and additional seeds are run.
-    caveats:
-      - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal sampler estimates.
-      - Signal diagnostics do not establish execution-ready net profitability.
-    metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.1038777019
-        format: decimal
-        decimals: 5
-        context: seed7 · selected step 30,000 · 176,945,440 rows
-      - id: test-rank-ic
-        label: Test Rank IC
-        value: 0.0642453585
-        format: decimal
-        decimals: 5
-        context: same full-test universe
-      - id: purity-samples
-        label: Date-pure batches audited
-        value: 1374
-        format: integer
-        context: unique_dates=1 and top_date_share=1 throughout
-      - id: top-prediction-return
-        label: Top prediction return
-        value: 8.02
-        format: bps
-        decimals: 2
-        context: signal-quality diagnostic
-    report_ids: [0811-day-pure-batch-1min]
-    evidence_ref: exp-nn/0-select&report/experiments/day-pure-batch-1min/results.yaml
-    featured: true
-
-  - id: multiscale-market-features-1min
-    project: prediction-nn-1min
-    taxonomy_path: feature-engineering/feature-set-audit
-    related_taxonomy_paths:
-      - feature-engineering/ohlcva
-      - feature-engineering/realized-volatility
-      - feature-engineering/high-low-range
-      - feature-engineering/ols-total-trend
-      - feature-engineering/endpoint-return
-      - feature-engineering/liquidity
-      - feature-engineering/market
-    title: Multiscale Feature-family Ablation
-    status: completed
-    maturity: developmental
-    updated_at: 2026-08-14
-    method: Matched add-one family ablation · seed7 · fixed 63-column tensor
-    dataset: stock1m · common 727/37/205 split · corrected 10-minute label
-    decision_state: iterate
-    primary_metric: relative-liquidity-test-ic
-    objective: Separate the contribution of appended market, relative-strength/liquidity, volatility/range, and trend/return families under identical rows, sampler order, model shape, budget, and validation-only selection.
-    summary: Relative-strength/liquidity9 is the strongest completed family at 0.09818 test IC and 0.07589 Rank IC. Volatility/range12 and trend/return12 also beat legacy14; market16 hit the preregistered train-validation gap gate before test. The all-63 reference underperformed legacy14.
-    decision: Retain the three non-market families as multi-seed candidates, reject the full-63 bundle as a monotonic improvement claim, and keep market16 test metrics unread after the gate.
-    caveats:
-      - Single-seed family add-one results do not estimate retraining variance, field-level contribution, or interactions among passing families.
-      - The earlier full-63 run changed label, features, sampler, and row universe together and is not comparable to historical baselines.
-    metrics:
-      - id: relative-liquidity-test-ic
-        label: Relative/liquidity9 test IC
-        value: 0.0981825662
-        format: decimal
-        decimals: 5
-        context: 23 active features · seed7
-      - id: relative-liquidity-rank-ic
-        label: Relative/liquidity9 Rank IC
-        value: 0.0758862387
-        format: decimal
-        decimals: 5
-        context: matched full-test evaluation
-      - id: legacy14-test-ic
-        label: Legacy14 control IC
-        value: 0.0899505737
-        format: decimal
-        decimals: 5
-        context: same rows, order, model, and budget
-      - id: full63-test-ic
-        label: Full63 reference IC
-        value: 0.0614963898
-        format: decimal
-        decimals: 5
-        context: combined treatment · not a causal baseline comparison
-      - id: market16-gap
-        label: Market16 train–validation Rank IC gap
-        value: 0.3287979409
-        format: decimal
-        decimals: 4
-        context: preregistered gate at step 6,762 · test not read
-    report_ids: [0812-multiscale-63feature-evaluation, 0814-feature-family-ablation]
-    evidence_ref: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
-    featured: true
-
-  - id: baseline-1min-0813
-    project: prediction-nn-1min
-    taxonomy_path: model/baseline
-    title: Native v2 Baseline Engineering Gate
-    status: doing
-    maturity: diagnostic
-    updated_at: 2026-08-20
-    method: Native 63-feature contract and maintained synthetic leakage checks
-    dataset: synthetic causal diagnostic · formal stock1m run not started
-    decision_state: diagnostic
-    primary_metric: proper-causal-r2
-    objective: Validate the production-chain v2 contract and leakage checks before running a formal 63-feature prediction baseline.
-    summary: The maintained sanity check separates a proper causal construction from shuffled and shifted controls, but no formal training, checkpoint selection, IC evaluation, or research report is registered.
-    decision: Keep this entry engineering-only and exclude it from model-quality and trading comparisons until a formal native v2 run is registered.
-    caveats:
-      - Synthetic R² is a pipeline sanity metric, not evidence of stock-return predictability.
-      - The registry remains insufficient for a formal reuse or comparability claim.
-    metrics:
-      - id: proper-causal-r2
-        label: Proper causal synthetic R²
-        value: 0.9997001664
-        format: decimal
-        decimals: 4
-        context: maintained leakage diagnostic only
-      - id: shuffled-control-r2
-        label: Shuffled-label control R²
-        value: -0.4458755565
-        format: decimal
-        decimals: 4
-        context: negative control
-      - id: shifted-control-r2
-        label: Shifted-label control R²
-        value: -0.0832539244
-        format: decimal
-        decimals: 4
-        context: negative control
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/baseline-1min-0813/results.yaml
-    featured: false
-
-  - id: baseline-1s-v2
-    project: prediction-nn-1s
-    taxonomy_path: prediction-evaluation/model-comparison
-    title: OHLCV-only Stock1s v2 Full Evaluation
-    status: completed
-    maturity: decision-ready
-    updated_at: 2026-08-20
-    method: 42-feature OHLCV-only GRU · validation-only early stopping · fixed 10 bps cohort backtest
-    dataset: stock1s v2 · 165,740,198 full-test endpoints
-    decision_state: reject
-    primary_metric: test-pooled-ic
-    objective: Evaluate an independent simplified second-level data and training contract without treating it as a direct uplift comparison to the legacy stock1s fold0 line.
-    summary: Full-test pooled IC is 0.00925 and Rank IC is 0.00464, although mean timestamp Rank IC is 0.04770. The fixed 10 bps cohort backtest loses 95.14% cumulatively with annualized Sharpe -92.55.
-    decision: Reject the selected checkpoint for deployment. Any continuation requires preregistered isolated ablations, turnover-aware objectives, and a frozen test policy.
-    caveats:
-      - The OHLCV-only v2 data, features, sequence, label, and training contract differ from baseline-1s-0720 and cannot support a direct uplift claim.
-      - Positive timestamp-level rank correlation does not offset the sharply negative fixed-cost portfolio result.
-    metrics:
-      - id: test-pooled-ic
-        label: Full-test pooled IC
-        value: 0.0092485066
-        format: decimal
-        decimals: 5
-        context: selected step 20,000 · 165,740,198 endpoints
-      - id: test-rank-ic
-        label: Full-test Rank IC
-        value: 0.0046431500
-        format: decimal
-        decimals: 5
-        context: same full-test universe
-      - id: timestamp-rank-ic
-        label: Mean timestamp Rank IC
-        value: 0.0476965051
-        format: decimal
-        decimals: 5
-        context: cross-sectional timestamp aggregation
-      - id: cumulative-net-return
-        label: 10 bps cumulative net return
-        value: -95.1361692727
-        format: percent
-        decimals: 2
-        context: fixed cohort rule · 204 dates
-      - id: net-sharpe
-        label: Annualized net Sharpe
-        value: -92.5492966226
-        format: number
-        decimals: 2
-        context: fixed 10 bps cohort backtest
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/baseline-1s-v2/results.yaml
-    featured: true
-
-  - id: crossday-rolling
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/data-clean/outlier/cross-session-window
-    title: Cross-session Rolling Boundary Diagnostics
-    status: doing
-    maturity: diagnostic
-    updated_at: 2026-08-20
-    method: A/B/C session-boundary identity, coverage, and distinctness gates
-    dataset: synthetic plus bounded real sample · 3 days × 128 stocks
-    decision_state: diagnostic
-    primary_metric: real-ac-max-diff
-    objective: Verify that carry and drop treatments match on common valid rows, that drop reduces coverage, and that shifted history is observably distinct before formal training.
-    summary: On 92,544 bounded real rows, carry and drop match exactly on 87,424 common rows; drop removes 5,120 feature rows and 2,540 sequences, while the shifted treatment differs by up to 0.96850. No model was trained.
-    decision: Retain the boundary implementation as a passed pre-training gate, but do not choose an arm or claim model quality until matched formal runs exist.
-    caveats:
-      - There is no full prepared view, formal training, checkpoint selection, test IC, or comparison report.
-      - The implementation was untracked at registry capture, so the recorded HEAD alone cannot reproduce the diagnostic.
-    metrics:
-      - id: real-ac-max-diff
-        label: Carry vs shifted max difference
-        value: 0.9685039409
-        format: decimal
-        decimals: 4
-        context: bounded real gate · distinctness check
-      - id: real-ab-max-diff
-        label: Carry vs drop matched-row difference
-        value: 0.0
-        format: decimal
-        decimals: 1
-        context: 87,424 common rows
-      - id: deleted-feature-rows
-        label: Rows removed by drop treatment
-        value: 5120
-        format: integer
-        context: 254 valid session boundaries
-      - id: bounded-real-rows
-        label: Bounded real diagnostic rows
-        value: 92544
-        format: integer
-        context: 3 days × 128 stocks
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/crossday-rolling/results.yaml
-    featured: false
-
-  - id: horizon-labels
-    project: prediction-nn-1min
-    taxonomy_path: data-engineering/label
-    title: Matched 10/15/30-minute Label Ablation
-    status: completed
-    maturity: developmental
-    updated_at: 2026-08-20
-    method: Common 47-feature universe · seed7 · exact-epoch matched horizon ablation
-    dataset: stock1m · 154,254,282 common test rows per horizon
-    decision_state: iterate
-    primary_metric: h15-pooled-ic
-    objective: Isolate the effect of 10-, 15-, and 30-minute forward-return horizons while holding features, endpoints, split, model, seed, sampler, optimizer, and training budget fixed.
-    summary: H15 leads pooled IC at 0.09116 and equal-timestamp top-decile hit rate at 55.63%; h30 leads Rank IC at 0.07082 and top-bottom spread at 12.10 bps. Both spread gains over h10 are positive in a 10,000-replicate paired date bootstrap.
-    decision: Retain h15 and h30 as matched signal candidates for multi-seed and rolling-split confirmation; do not infer executable net profitability.
-    caveats:
-      - This is one seed and one temporal split; the paired bootstrap excludes retraining variance.
-      - Label base rates differ by horizon, so hit rates require horizon-specific context.
-    metrics:
-      - id: h15-pooled-ic
-        label: H15 pooled IC
-        value: 0.0911561104
-        format: decimal
-        decimals: 5
-        context: common full-test universe · selected step 20,000
-      - id: h30-rank-ic
-        label: H30 pooled Rank IC
-        value: 0.0708242169
-        format: decimal
-        decimals: 5
-        context: common full-test universe · selected step 50,000
-      - id: h15-top10-hit
-        label: H15 top-decile hit rate
-        value: 55.6337513596
-        format: percent
-        decimals: 2
-        context: equal-timestamp aggregation
-      - id: h30-top-bottom-spread
-        label: H30 top-bottom spread
-        value: 12.1032033947
-        format: bps
-        decimals: 2
-        context: equal-timestamp aggregation
-      - id: common-test-rows
-        label: Test rows per horizon
-        value: 154254282
-        format: integer
-        context: 205 days · 28,905 timestamps
-    report_ids: [0815-horizon-label-comparison]
-    evidence_ref: exp-nn/0-select&report/experiments/horizon-labels/results.yaml
-    featured: true
-
-  - id: market-sample
-    project: prediction-nn-1min
-    taxonomy_path: feature-engineering/market
-    title: Matched Market-context Sampling
-    status: completed
-    maturity: developmental
-    updated_at: 2026-08-25
-    method: Matched three-arm seed7 market-context comparison
-    dataset: stock1m · 176,134,322 shared test rows per arm
-    decision_state: iterate
-    primary_metric: panel-test-ic
-    objective: Compare a single-stock zero-context control, leave-one-out full-market panel mean/std, and timestamp-aligned 16D market features under one frozen data, model, seed, budget, selector, and backtest contract.
-    summary: Panel mean/std reaches 0.12598 pooled IC and 0.10279 Rank IC, ahead of the 0.08793/0.07807 baseline. Market16 reaches 0.07222/0.06016 and underperforms the baseline. All three 10-minute cost-aware backtests have negative Sharpe.
-    decision: Retain panel mean/std as the market-context signal candidate for multi-seed and rolling-split confirmation; reject market16 in this formulation and do not promote any arm to execution.
-    caveats:
-      - The comparison uses one seed and one temporal split.
-      - Signal gains do not establish executable net profitability.
-    metrics:
-      - {id: panel-test-ic, label: Panel test IC, value: 0.1259793871, format: decimal, decimals: 5, context: leave-one-out panel mean/std}
-      - {id: panel-rank-ic, label: Panel Rank IC, value: 0.1027934634, format: decimal, decimals: 5, context: shared full-test universe}
-      - {id: baseline-test-ic, label: Baseline test IC, value: 0.0879275915, format: decimal, decimals: 5, context: single-stock zero-context control}
-      - {id: market16-test-ic, label: Market16 test IC, value: 0.0722195610, format: decimal, decimals: 5, context: timestamp-level explicit market features}
-      - {id: panel-net-sharpe, label: Panel 10m net Sharpe, value: -39.5000121, format: number, decimals: 2, context: 10M CNY AUM cost model}
-      - {id: test-rows-per-arm, label: Test rows per arm, value: 176134322, format: integer, context: matched test universe}
-    report_ids: [0822-market-context-comparison, 0825-market-context-baseline, 0825-market-context-panel, 0825-market-context-market16]
-    evidence_ref: exp-nn/0-select&report/experiments/market-sample/results.yaml
-    featured: true
-
-  - id: 0825-feature-audit
-    project: prediction-nn-1min
-    taxonomy_path: feature-engineering/feature-set-audit
-    related_taxonomy_paths:
-      - feature-engineering/ohlcva
-      - feature-engineering/liquidity
-      - feature-engineering/market
-    title: 36D Feature-set Audit
-    status: completed
-    maturity: signal-only
-    updated_at: 2026-09-01
-    method: Seed7 exact-epoch 36D reference run
-    dataset: stock1m · 176,134,322 full-test rows
-    decision_state: retain
-    primary_metric: net-sharpe
-    objective: Complete the frozen 36D data, training, validation-only selection, full-test inference, and execution-aware backtest chain to establish a reusable feature reference.
-    summary: The run selected checkpoint 6,762 and completed full-test inference. Gross cumulative return is 2.6018, while the 10M net cumulative return is -0.9658 and net Sharpe is -60.14.
-    decision: Retain the artifact-backed 36D run as a future matched-ablation reference; do not claim feature uplift or execution readiness from this single arm.
-    caveats:
-      - No matched prior-feature control is part of the experiment.
-      - The two report files are not yet present in the immutable publication archive.
-    metrics:
-      - {id: net-sharpe, label: 10m net Sharpe, value: -60.1351751, format: number, decimals: 2, context: 10M CNY AUM cost model}
-      - {id: net-cumulative-return, label: Net cumulative return, value: -0.9657667390, format: number, decimals: 4, context: execution-aware backtest}
-      - {id: gross-cumulative-return, label: Gross cumulative return, value: 2.6018106988, format: number, decimals: 4, context: before costs}
-      - {id: selected-checkpoint, label: Selected checkpoint, value: 6762, format: integer, context: validation-only selection}
-      - {id: test-rows, label: Test rows, value: 176134322, format: integer, context: full-test inference}
-    report_ids: []
-    evidence_ref: exp-nn/0-select&report/experiments/0825-feature-audit/results.yaml
-    featured: true
-
-  - id: 0827-market-cs
-    project: prediction-nn-1min
-    taxonomy_path: feature-engineering/market
-    title: Market Cross-section Context
-    status: completed
-    maturity: developmental
-    updated_at: 2026-09-01
-    method: Matched seed7 five-arm market-panel comparison
-    dataset: stock1m · 176,134,322 shared test rows per completed arm
-    decision_state: iterate
-    primary_metric: latent-z-test-ic
-    objective: Compare no context, seven explicit cross-sectional ranks, standardized latent context, Deep Sets context, and induced attention under a fixed panel artifact, backbone, seed, selector, and backtest contract.
-    summary: Latent-z leads completed arms at 0.12734 test IC and 0.10245 Rank IC; CS rank reaches 0.12329/0.09283 and Deep Sets R2 reaches 0.12103/0.09098 versus the 0.08646/0.06417 control. Induced attention failed before test, and all completed arms have net Sharpe near -39 to -42.
-    decision: Retain latent-z, CS rank, and Deep Sets R2 as signal candidates for multi-seed and rolling comparisons; treat induced attention as a failed diagnostic and do not promote any arm to execution.
-    caveats:
-      - The comparison uses one seed and one temporal split.
-      - The attention smoke is diagnostic only and has no formal OOS result.
-    metrics:
-      - {id: latent-z-test-ic, label: Latent-z test IC, value: 0.1273446585, format: decimal, decimals: 5, context: completed-arm signal leader}
-      - {id: latent-z-rank-ic, label: Latent-z Rank IC, value: 0.1024517610, format: decimal, decimals: 5, context: shared full-test universe}
-      - {id: cs-rank-test-ic, label: CS rank test IC, value: 0.1232932522, format: decimal, decimals: 5, context: seven explicit ranks}
-      - {id: deep-sets-test-ic, label: Deep Sets R2 test IC, value: 0.1210304848, format: decimal, decimals: 5, context: eligible exact recovery}
-      - {id: control-test-ic, label: Control test IC, value: 0.0864617601, format: decimal, decimals: 5, context: no-context control}
-      - {id: latent-z-net-sharpe, label: Latent-z 10m net Sharpe, value: -39.2139249, format: number, decimals: 2, context: 10M CNY AUM cost model}
-    report_ids: [0831-market-cs-comparison, 0831-market-cs-control, 0831-market-cs-rank, 0831-market-cs-latent-z, 0831-market-cs-deep-sets, 0831-market-cs-induced-attention, 0830-market-cs-attention-smoke-r2]
-    evidence_ref: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
-    featured: true
+- id: strategy-execution
+  project_ids:
+  - route
+  - limit-0729
+  - shouban2
+  title: 交易规则与执行证据
+  question: 预测或交易规则在明确执行、成本和资金路径下支持什么结论?
+  taxonomy_path: strategy/execution
+  experiment_ids:
+  - us-route-top3-backtest-20261022
+  - limit-t1-strategy
+  - shouban-report-gate
+  report_ids: []
+  conclusion: Route 当前是带 selection bias 和持仓漂移限制的 Gross 回测; T+1 策略与首板报告属于不同合同. 这些证据不支持跨策略排名或统一实盘结论.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: strategy-top1-membership-cost
+  project_ids:
+  - prediction-nn-1min
+  title: 分钟 Top 1% 成本与可执行性
+  question: 固定 baseline 预测的动态 Top 1% 持仓对 A 股成本、滑点和停牌有多敏感?
+  taxonomy_path: strategy/execution
+  experiment_ids:
+  - top1-membership-cost-20261101
+  report_ids:
+  - 1101-top1-membership-cost
+  conclusion: 万一免五假设下, 0 bps 滑点期末 NAV 为 5.82, 5 bps 为 0.78; 无成交持仓按末次成交价估值. 结果是成本敏感性诊断, 尚不构成可执行策略证据.
+  caveats:
+  - 未模拟 T+1、整手、涨跌停或按 Close 实际成交的可行性.
+  - 期末 11 只无成交持仓在 0 bps 情景占 NAV 3.55%, 估值未验证可回收性.
+- id: model-baseline
+  project_ids:
+  - prediction-nn-1min
+  title: 预测模型与基线
+  question: 在明确的数据和选模合同内, 哪些模型能够提供可复验的预测信号?
+  taxonomy_path: model/baseline
+  experiment_ids:
+  - reference-baseline
+  - reference-baseline-v2
+  - optimize-1min-model
+  - baseline-main-20260622
+  - baseline-1min-0813
+  report_ids: []
+  conclusion: 小 GRU 的结构候选与 paired VWAP 标签基线具有各自合同内的正向证据. 历史 close 基线仅作参考; 工程合同验证不能替代正式 OOS 实验.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: model-loss-function
+  project_ids:
+  - prediction-nn-1min
+  title: 训练目标与泛化
+  question: 改变训练目标是否改善同口径的样本外预测?
+  taxonomy_path: model/loss-function
+  experiment_ids:
+  - loss-function-1min
+  report_ids: []
+  conclusion: Promote only to a multi-seed Stage C candidate, not to the default loss.
+  caveats:
+  - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
+- id: prediction-evaluation-model-comparison
+  project_ids:
+  - prediction-nn-1s
+  title: 秒级信号与执行边界
+  question: 秒级模型的条件信号能否通过稳健性、PIT 和执行验证?
+  taxonomy_path: prediction-evaluation/model-comparison
+  experiment_ids:
+  - baseline-1s-0720
+  - baseline-1s-v2
+  report_ids: []
+  conclusion: 秒级模型存在条件信号证据, 但 PIT、选择偏差与执行成本仍限制使用; 不据此与分钟模型直接排名或提升为交易策略.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-universe-filters
+  project_ids:
+  - prediction-nn-1min
+  title: 样本过滤与评估总体
+  question: 样本过滤是否改善信号, 差异是否来自 test universe 改变?
+  taxonomy_path: data-engineering/universe/filters
+  experiment_ids:
+  - test-all
+  - limit-pool
+  report_ids: []
+  conclusion: limit-pool 内 touch 的信号略优于 all, 更严格的 limit 未同步改善. train-filter/full-test 诊断改变了 test universe, 不能与过滤
+    test 的主矩阵直接比较.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-data-clean-outlier
+  project_ids:
+  - prediction-nn-1min
+  title: 异常与近零样本
+  question: 近零样本处理是否改善预测, 并保持样本口径可解释?
+  taxonomy_path: data-engineering/data-clean/outlier
+  experiment_ids:
+  - near-zero-filter
+  report_ids: []
+  conclusion: Retain separate IC/return and hit-rate objectives rather than declaring one global winner.
+  caveats:
+  - Trading and cost metrics remain proxies and are not equivalent to live returns.
+- id: model-optimization
+  project_ids:
+  - prediction-nn-1min
+  title: 训练预算与优化
+  question: 学习率、容量和采样变化是否带来稳健增益?
+  taxonomy_path: model/optimization
+  experiment_ids:
+  - learning-rate
+  - capacity-robust-sampling
+  report_ids: []
+  conclusion: 现有记录支持优先研究小模型与 early stopping; warmup-cosine 学习率建议只适用于原模型、batch、数据和预算合同.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-data-clean-validation-split
+  project_ids:
+  - prediction-nn-1min
+  title: 时间切分与泄漏
+  question: 验证切分是否保持时间因果性并支持稳健选择?
+  taxonomy_path: data-engineering/data-clean/validation-split
+  experiment_ids:
+  - rolling-purged-val
+  report_ids: []
+  conclusion: Do not replace the architecture solely for temporal decay; trading decisions still require portfolio-level
+    validation.
+  caveats:
+  - Test is retained only as a pipeline contract, not as selection or trading evidence.
+- id: prediction-evaluation-robustness-checkpoint
+  project_ids:
+  - prediction-nn-1min
+  title: Checkpoint 选择稳定性
+  question: 仅使用 validation 的 checkpoint 选择能否稳定推广到 test?
+  taxonomy_path: prediction-evaluation/robustness/checkpoint
+  experiment_ids:
+  - val-select
+  - generalization-block70-checkpoint-curve
+  report_ids: []
+  conclusion: 原 val-select 合同保留 20k 作为 robust 默认, 30k 仅作 aggressive 比较. Block70 曲线用于诊断过训练, 不用于选择生产 checkpoint.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-label
+  project_ids:
+  - prediction-nn-1min
+  title: 预测目标与持有区间
+  question: 标签端点和 horizon 如何影响同口径预测质量?
+  taxonomy_path: data-engineering/label
+  experiment_ids:
+  - prediction-calibration
+  - horizon-labels
+  report_ids: []
+  conclusion: A2 VWAP 方向值得多 seed 验证, A3 robust-label 未通过提升门槛. 独立 horizon 合同中 h15 的 pooled IC 较高, h30 的 RankIC 与
+    spread 较高; 不跨标签合同排名.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: prediction-evaluation-robustness-monthly
+  project_ids:
+  - prediction-nn-1min
+  title: 跨时间泛化
+  question: 预测质量在不同年份和时间窗口中是否稳定?
+  taxonomy_path: prediction-evaluation/robustness/monthly
+  experiment_ids:
+  - generalization-rolling-stride
+  report_ids: []
+  conclusion: Retain stride5 as a development candidate; treat the stride10 10k recovery as post-hoc diagnosis only.
+  caveats:
+  - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
+- id: prediction-evaluation-robustness
+  project_ids:
+  - prediction-nn-1min
+  title: 采样与多 seed 稳健性
+  question: 采样差异是否能在多 seed 和一致评估合同下复现?
+  taxonomy_path: prediction-evaluation/robustness
+  experiment_ids:
+  - generalization-adjacent-window
+  - generalization-adjacent-window-multiseed
+  report_ids: []
+  conclusion: Block70 的开发观察未通过当前多 seed 协议, 不替换 Dense. 后续比较需要保留预算和 exposure 的匹配边界.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: model-integration
+  project_ids:
+  - prediction-nn-1min
+  title: 候选组合能否叠加
+  question: 独立实验中的局部增益是否能在同合同组合中稳定叠加?
+  taxonomy_path: model/integration
+  experiment_ids:
+  - main-combo-integration
+  - combo-touch-nz-lr
+  report_ids: []
+  conclusion: 局部候选增益未稳定叠加, 保留 main-combo 的负面结果. 旧 combo 已被替代, 历史 run root 缺失使进一步 artifact 比较需要重跑.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-data-clean-normalization
+  project_ids:
+  - prediction-nn-1min
+  title: 归一化与零值语义
+  question: 归一化如何影响零值特征和样本外信号?
+  taxonomy_path: data-engineering/data-clean/normalization
+  experiment_ids:
+  - zero-aware-normalization
+  report_ids: []
+  conclusion: Make no improvement claim until the off control and model-card consistency are restored.
+  caveats:
+  - F24 model-card metadata does not match the prepared data.
+- id: feature-engineering-order-book-l2
+  project_ids:
+  - prediction-nn-1min
+  title: 订单簿增量信息
+  question: L2 特征是否提供独立于基线的预测增量?
+  taxonomy_path: feature-engineering/order-book-l2
+  experiment_ids:
+  - l2-features
+  report_ids: []
+  conclusion: Preserve the observation but block cross-arm attribution claims.
+  caveats:
+  - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
+- id: data-engineering-data-clean
+  project_ids:
+  - prediction-nn-1min
+  - aq2
+  title: 数据清洗与输入正确性
+  question: 数据处理和重建是否具备可验证的正确性证据?
+  taxonomy_path: data-engineering/data-clean
+  experiment_ids:
+  - feature-cleaning-bundle-0609
+  - aq2-v16
+  report_ids: []
+  conclusion: AQ2 v16 具备规则回归证据, 特征清洗历史档案只支持审计. 两者解决不同输入问题, 不混合解释为模型质量提升.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: prediction-evaluation-summary-ic
+  project_ids:
+  - index500-predict
+  - live-predictor
+  - prediction-nn-1min
+  title: 信号质量与使用边界
+  question: 现有预测指标支持哪些结论, 还缺哪些执行证据?
+  taxonomy_path: prediction-evaluation/summary/ic
+  experiment_ids:
+  - index500-clean-benchmark
+  - live-predictor-live-quality
+  - 0827-market-cs
+  report_ids: []
+  conclusion: ETF 映射、shadow prediction 与市场 context 的信号指标各有评估总体. 正向 IC 不等于执行净收益, 当前证据不能跨这些合同形成统一排名.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: feature-engineering-factor-discovery
+  project_ids:
+  - alphas
+  - genetic-factor-auto-3
+  title: 因子发现与复验
+  question: 搜索得到的因子是否具备独立复验和稳定性证据?
+  taxonomy_path: feature-engineering/factor-discovery
+  experiment_ids:
+  - crypto-alpha-archive
+  - genetic-factor-0327
+  report_ids: []
+  conclusion: 遗传搜索候选需经大样本复验, 小样本最大值不能代表最终因子质量; crypto 历史归档不提供新的有效性证据.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: prediction-evaluation-robustness-top-k-percent
+  project_ids:
+  - factor-daily
+  title: 尾部信号与成本
+  question: Top-k 信号在计入成本后是否仍有研究价值?
+  taxonomy_path: prediction-evaluation/robustness/top-k-percent
+  experiment_ids:
+  - factor-daily-topk-0407
+  report_ids: []
+  conclusion: Preserve the negative result and revisit portfolio construction, turnover, and factor direction before
+    expansion.
+  caveats:
+  - Positive IC does not imply a profitable net Top10 portfolio.
+- id: data-tick
+  project_ids:
+  - ashare-1s
+  title: 逐笔与秒级数据覆盖
+  question: 秒级数据是否具备可验证的覆盖和可复刻输入?
+  taxonomy_path: data/tick
+  experiment_ids:
+  - ashare-1s-coverage
+  report_ids: []
+  conclusion: Continue maintaining the data product; explain and close the 2024 gap before formal cross-year experiments.
+  caveats:
+  - Only four files cover 2024, so the first and last dates do not imply continuous complete coverage.
+- id: data-index-weight
+  project_ids:
+  - get-index-data
+  title: 指数权重数据
+  question: 指数数据的覆盖和时效性是否满足研究要求?
+  taxonomy_path: data/index-weight
+  experiment_ids:
+  - index-data-evidence
+  report_ids: []
+  conclusion: Keep the data entry point and publish health conclusions only after metrics are available.
+  caveats:
+  - Directory or configuration presence does not prove complete current data.
+- id: data
+  project_ids:
+  - get-data
+  title: 数据可用性
+  question: 研究所需的数据覆盖和更新证据是否完整?
+  taxonomy_path: data
+  experiment_ids:
+  - market-data-evidence
+  report_ids: []
+  conclusion: Keep the infrastructure entry point and add dates, gaps, and freshness by dataset.
+  caveats:
+  - Pipeline code does not prove that current data has no gaps.
+- id: data-minute-bar
+  project_ids:
+  - tdx-data-source
+  title: 分钟行情质量
+  question: 分钟行情采集和端点能力是否支持稳定研究?
+  taxonomy_path: data/minute-bar
+  experiment_ids:
+  - tdx-data-source-v1
+  report_ids: []
+  conclusion: Continue auditing the transaction pool on a 10-second cadence. Live Predictor remains on direct one-minute
+    bars; a single effective bar endpoint is not high availability.
+  caveats:
+  - Direct bars currently have one effective endpoint and one failure domain.
+  - Transaction snapshots have no trade ID or second-level event time; integrity still depends on overlap and bounded
+    backfill.
+  - The service has no built-in auth or TLS and requires a trusted proxy before external exposure.
+- id: infrastructure-snapshot-visualizer2
+  project_ids:
+  - snapshot-visualizer2
+  title: Visualization Evidence Backlog
+  question: Create a stable static example and review note for order-book snapshot diagnostics.
+  taxonomy_path: null
+  experiment_ids:
+  - snapshot-visualizer-evidence
+  report_ids: []
+  conclusion: Keep the interactive-tool entry and later generate a static demonstration from one sanitized sample.
+  caveats:
+  - Next build files are not research results and cannot be copied directly as a public report.
+- id: infrastructure-webpage5
+  project_ids:
+  - webpage5
+  title: Factor Report Output Inventory
+  question: Inventory the expression-factor chain from computation through report output.
+  taxonomy_path: null
+  experiment_ids:
+  - webpage5-factor-reports
+  report_ids: []
+  conclusion: Show platform output scale first; merge batch statistics only after factor-generation cache provenance
+    is confirmed.
+  caveats:
+  - Report count does not establish factor validity; each performance claim still requires report-level review.
+- id: infrastructure-ipcheck
+  project_ids:
+  - ipcheck
+  title: Operational Evidence Backlog
+  question: Record the latest check, address changes, and notification-delivery outcome.
+  taxonomy_path: null
+  experiment_ids:
+  - ipcheck-evidence
+  report_ids: []
+  conclusion: Keep the tool entry and publish only sanitized operational-health summaries.
+  caveats:
+  - Never publish specific IPs, notification targets, or credentials.
+- id: model-batch
+  project_ids:
+  - prediction-nn-1min
+  title: Batch 日期构成
+  question: 单日期 batch 的可行性和信号质量如何, 能否归因于日期纯度?
+  taxonomy_path: model/batch
+  experiment_ids:
+  - day-pure-batch-1min
+  report_ids: []
+  conclusion: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit
+    mixed-date one-epoch control and additional seeds are run.
+  caveats:
+  - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal
+    sampler estimates.
+  - Signal diagnostics do not establish execution-ready net profitability.
+- id: feature-engineering-feature-set-audit
+  project_ids:
+  - prediction-nn-1min
+  title: 特征组贡献
+  question: 新增特征族的预测贡献能否通过 matched ablation 归因?
+  taxonomy_path: feature-engineering/feature-set-audit
+  experiment_ids:
+  - multiscale-market-features-1min
+  - 0825-feature-audit
+  report_ids: []
+  conclusion: matched feature-family ablation 保留三个非 market 特征族作为多 seed 候选; full-63 不是单调改进证据. 独立 36D 单臂结果不能用于归因特征贡献.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: data-engineering-data-clean-outlier-cross-session-window
+  project_ids:
+  - prediction-nn-1min
+  title: 跨交易日窗口
+  question: 跨 session 窗口如何改变覆盖、身份和有效样本?
+  taxonomy_path: data-engineering/data-clean/outlier/cross-session-window
+  experiment_ids:
+  - crossday-rolling
+  report_ids: []
+  conclusion: Retain the boundary implementation as a passed pre-training gate, but do not choose an arm or claim
+    model quality until matched formal runs exist.
+  caveats:
+  - There is no full prepared view, formal training, checkpoint selection, test IC, or comparison report.
+  - The implementation was untracked at registry capture, so the recorded HEAD alone cannot reproduce the diagnostic.
+- id: feature-engineering-market
+  project_ids:
+  - prediction-nn-1min
+  title: 横截面与市场信息
+  question: 同一时点的市场信息能否改善个股预测, 并通过执行检验?
+  taxonomy_path: feature-engineering/market
+  experiment_ids:
+  - market-sample
+  - 0827-market-cs
+  report_ids: []
+  conclusion: panel mean/std、CS rank、latent-z 与 Deep Sets 存在各自 matched 合同内的信号增益. 五臂组中 latent-z 信号最高, 但所有完成臂成本后结果显著为负,
+    暂不提升到执行.
+  caveats:
+  - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.

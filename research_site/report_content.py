@@ -252,9 +252,11 @@ def load_report_source(path: Path) -> ReportSource:
             for child in token.children:
                 if child.type == "link_open":
                     _validate_link(child, path)
+    # Require a real image or a parsed Markdown table without skipping image validation.
     assets = tuple(sorted({_resolve_image(path, token) for token in _image_tokens(tokens)}))
-    if not assets:
-        raise ReportContentError(f"{path} must reference at least one raster report image")
+    has_table = any(token.type == "table_open" for token in tokens)
+    if not assets and not has_table:
+        raise ReportContentError(f"{path} must contain at least one raster report image or Markdown table")
     image_root = path.parent / "images"
     actual_assets = tuple(
         sorted(

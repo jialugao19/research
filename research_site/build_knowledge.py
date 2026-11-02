@@ -6,9 +6,9 @@ from typing import Any
 from jinja2 import Environment
 from markupsafe import Markup
 
-from .build_output import write_text
-from .catalog import Catalog, CatalogError
-from .knowledge import KnowledgeCatalog, render_knowledge_node_markdown
+from research_site.build_output import write_text
+from research_site.catalog import Catalog, CatalogError
+from research_site.knowledge import KnowledgeCatalog, render_knowledge_node_markdown
 
 
 def _related_concept_rows(

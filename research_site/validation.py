@@ -1,12 +1,14 @@
 from __future__ import annotations
 
+import json
+from hashlib import sha256
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlparse
 
-from .build import normalize_base_url
-from .catalog import Catalog, CatalogError
-from .publication import (
+from research_site.build import normalize_base_url
+from research_site.catalog import Catalog, CatalogError
+from research_site.publication import (
     FORBIDDEN_PUBLIC_BYTES,
     validate_public_reports,
     validate_rendered_markdown_report,
@@ -24,6 +26,8 @@ class _LinkParser(HTMLParser):
             self.links.append(values["href"] or "")
         if tag in {"script", "img"} and values.get("src"):
             self.links.append(values["src"] or "")
+        if tag in {"img", "source"} and values.get("srcset"):
+            self.links.extend(candidate.strip().split()[0] for candidate in values["srcset"].split(","))
 
 
 def _target_for_link(link: str, source: Path, output_root: Path, base_url: str) -> Path | None:
@@ -70,6 +74,10 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
         for redirect in project.legacy_topic_redirects
     )
     expected.extend(output_root / report.route / "index.html" for report in catalog.reports)
+    expected.extend(output_root / e.route / "index.html" for e in catalog.experiments)
+    expected.extend(output_root / study.route / "index.html" for study in catalog.studies)
+    expected.extend(output_root / name / "index.html" for name in ("studies", "experiments"))
+    expected.append(output_root / "research-images.json")
     expected.extend(
         (
             output_root / "projects" / "prediction-nn" / "index.html",
@@ -103,7 +111,12 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
     if missing:
         raise CatalogError("missing built site files: " + ", ".join(str(path) for path in missing[:5]))
 
+    # Legacy pages must remain byte-identical to their committed public copies.
     for report in catalog.reports:
+        if not report.is_markdown:
+            original = (site_root / "public" / report.route / "index.html").read_bytes()
+            if (output_root / report.route / "index.html").read_bytes() != original:
+                raise CatalogError(f"legacy published bytes changed for {report.id}")
         if report.is_markdown:
             validate_rendered_markdown_report(report, (output_root / report.route / "index.html").read_bytes())
 
@@ -112,6 +125,21 @@ def validate_built_site(catalog: Catalog, site_root: Path, output_root: Path, ba
         for forbidden in FORBIDDEN_PUBLIC_BYTES:
             if forbidden in public_data:
                 raise CatalogError(f"{data_name} contains forbidden public token {forbidden!r}")
+
+    # Validate original-image hashes and every responsive rendition.
+    images = json.loads((output_root / "research-images.json").read_text())
+    if set(images) != {e.id for e in catalog.experiments}:
+        raise CatalogError("research image manifest does not cover all experiments")
+    for eid, figures in images.items():
+        if len(figures) != len(catalog.experiment_by_id[eid].figures):
+            raise CatalogError(f"missing research figures for {eid}")
+        for figure in figures:
+            original = output_root / figure["original"]
+            if sha256(original.read_bytes()).hexdigest() != figure["sha256"]:
+                raise CatalogError(f"research figure checksum changed for {eid}")
+            for rendition in figure["renditions"]:
+                if not (output_root / rendition["path"]).is_file():
+                    raise CatalogError(f"missing responsive image for {eid}")
 
     link_errors: list[str] = []
     for html_path in output_root.rglob("*.html"):

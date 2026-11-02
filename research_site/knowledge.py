@@ -10,7 +10,7 @@ import yaml
 from latex2mathml.converter import convert
 from markdown_it import MarkdownIt
 
-from .knowledge_sync import KnowledgeSyncError, validate_quant_snapshot, validate_snapshot
+from research_site.knowledge_sync import KnowledgeSyncError, validate_quant_snapshot, validate_snapshot
 
 
 @dataclass(frozen=True)

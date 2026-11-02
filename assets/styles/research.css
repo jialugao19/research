@@ -1,0 +1,61 @@
+/* Research extends the inherited document system without redefining its tokens. */
+.research-project-list, .stage-summary-list, .experiment-list, .study-list { display: block; }
+.research-project-row, .stage-summary-row, .study-record, .experiment-record { margin: 0 0 32px; }
+.research-project-row > :is(h3, p, footer), .stage-summary-row > :is(h3, p, footer) { margin-block: 8px; }
+.research-project-row footer, .stage-summary-row footer, .experiment-record-meta { display: flex; flex-wrap: wrap; gap: 8px 16px; color: var(--muted); font-size: 13px; }
+.research-flow-hero { padding-bottom: 24px; }
+.hero-flow, .research-spine { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-block: 24px; padding: 0; list-style: none; }
+.hero-flow span, .research-spine a { display: flex; align-items: baseline; gap: 8px; }
+.hero-flow b, .stage-sequence { color: var(--accent); }
+.research-spine small { color: var(--muted); font-size: 12px; }
+.research-taxonomy-node { margin-top: 24px; scroll-margin-top: calc(var(--header-height) + 16px); }
+.research-taxonomy-node > .research-taxonomy-node { margin-left: 20px; }
+.experiment-context-list, .metric-list { margin: 16px 0; }
+.experiment-context-list > div { margin-bottom: 8px; }
+.experiment-context-list dt, .metric-list dt { font-weight: 600; }
+.experiment-context-list dd, .metric-list dd { margin-left: 0; }
+.metric-list { display: flex; flex-wrap: wrap; gap: 16px 32px; }
+.metric-list small { display: block; color: var(--muted); max-width: 28ch; }
+.experiment-section { margin-block: 24px; }
+.experiment-section :is(h4, p) { margin-block: 8px; }
+.experiment-related-topics a, .experiment-report-links a { display: block; padding-block: 3px; }
+.infrastructure-list > a, .split-project-list > article { display: block; margin-bottom: 28px; }
+.infrastructure-list :is(h3, p, small) { margin-block: 6px; }
+.sidebar-stage-list, .sidebar-taxonomy-branch { padding-left: 12px; list-style: none; }
+.sidebar-stage-row, .sidebar-taxonomy-row { display: flex; align-items: center; }
+.sidebar-stage-row > a, .sidebar-taxonomy-row > a { flex: 1; min-width: 0; }
+.sidebar-taxonomy-link { display: block; padding: 5px 8px; color: var(--muted); font-size: 13px; }
+.sidebar-taxonomy-toggle { flex: 0 0 28px; border: 0; background: transparent; color: var(--muted); cursor: pointer; }
+.sidebar-taxonomy-toggle span { display: inline-block; transition: transform 150ms; }
+.sidebar-taxonomy-toggle[aria-expanded="true"] span { transform: rotate(90deg); }
+.sidebar-taxonomy-link.is-current { color: var(--accent); }
+.research-filters { display: flex; flex-wrap: wrap; gap: 12px; margin-block: 20px; }
+.research-filters label { display: grid; flex: 1 1 150px; gap: 4px; font-size: 13px; }
+.research-filters :is(input, select) { min-width: 0; width: 100%; padding: 7px 9px; border: 1px solid var(--rule); border-radius: 4px; background: var(--paper); color: var(--ink); }
+.research-filters button { align-self: end; padding: 7px 12px; background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; cursor: pointer; }
+.research-count { color: var(--muted); font-size: 13px; }
+.research-table-scroll { max-width: 100%; overflow-x: auto; margin-block: 16px 24px; }
+.research-table { width: 100%; border-collapse: collapse; font-size: 14px; text-align: left; }
+.research-table :is(th, td) { padding: 9px 12px; vertical-align: top; border-bottom: 1px solid var(--rule); }
+.research-table th { font-weight: 600; background: var(--panel); }
+.research-table td small { display: block; color: var(--muted); max-width: 48ch; }
+.research-table .numeric { font-family: var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.research-figure { margin: 24px 0; }
+.research-figure img { width: auto; height: auto; max-width: 100%; }
+.research-figure figcaption { margin-top: 8px; color: var(--muted); font-size: 13px; }
+.research-figure a { cursor: zoom-in; }
+.entity-links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-block: 16px; }
+.research-limitations { padding-left: 20px; }
+[hidden] { display: none !important; }
+@media (max-width: 700px) {
+  .research-taxonomy-node > .research-taxonomy-node { margin-left: 10px; }
+  .research-table :is(th, td) { padding: 8px; }
+}
+/* Rich report content must stay inside the inherited document column. */
+.table-scroll { max-width: 100%; overflow-x: auto; }
+.research-table th small { display: block; color: var(--muted); font-weight: 400; }
+.research-table details { margin-top: 8px; }
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-taxonomy-toggle span { transition: none; }
+}
+.markdown { overflow-wrap: anywhere; }

@@ -3,11 +3,12 @@ from __future__ import annotations
 from collections import defaultdict
 from dataclasses import asdict, dataclass
 from hashlib import sha256
-import json
 import os
 from pathlib import Path
 
-from .catalog import Catalog
+import yaml
+
+from research_site.catalog import Catalog
 
 
 SKIP_DIRECTORIES = {
@@ -30,7 +31,15 @@ class AuditMatch:
     evidence: tuple[str, ...]
 
 
+@dataclass(frozen=True)
+class AuditSource:
+    project: str
+    evidence: str
+    experiment_id: str | None
+
+
 def _hash(path: Path) -> str:
+    # Hash source bytes without loading whole reports into memory.
     digest = sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
@@ -56,15 +65,38 @@ def _html_files(root: Path, max_bytes: int) -> list[Path]:
     return result
 
 
-def _central_catalog_by_hash(path: Path) -> dict[str, list[dict[str, object]]]:
-    if not path.is_file():
-        return {}
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    result: dict[str, list[dict[str, object]]] = defaultdict(list)
-    if isinstance(raw, list):
-        for item in raw:
-            if isinstance(item, dict) and isinstance(item.get("sha256"), str):
-                result[item["sha256"]].append(item)
+def _registry_reports_by_hash(
+    catalog: Catalog, registry_root: Path, max_bytes: int,
+) -> dict[str, list[AuditSource]]:
+    # Resolve project ownership from explicit experiment identifiers.
+    owners = {
+        experiment_id: project.id
+        for project in catalog.projects
+        for experiment_id in project.registry_experiments
+    }
+    report_index = yaml.safe_load((registry_root / "report-index.yaml").read_text(encoding="utf-8"))
+    result: dict[str, list[AuditSource]] = defaultdict(list)
+    for report in report_index["reports"]:
+        experiment_id = report["experiment_id"]
+        if experiment_id not in owners:
+            continue
+
+        # Inspect registered primary and mirror files; missing artifacts are expected.
+        for key in ("path", "repo_mirror_path"):
+            if key not in report:
+                continue
+            path = Path(report[key])
+            if path.suffix.lower() not in {".html", ".mhtml"} or not path.is_file():
+                continue
+            if path.stat().st_size > max_bytes:
+                continue
+            result[_hash(path)].append(
+                AuditSource(
+                    project=owners[experiment_id],
+                    evidence=f"nn-registry/{experiment_id}/{report['id']}",
+                    experiment_id=experiment_id,
+                )
+            )
     return result
 
 
@@ -72,18 +104,22 @@ def audit_report_ownership(
     catalog: Catalog,
     workspace_root: Path,
     archive_root: Path,
-    central_catalog: Path,
+    registry_root: Path,
     max_bytes: int = 25 * 1024 * 1024,
 ) -> list[AuditMatch]:
     """Match archive reports to current projects without modifying either source."""
-    current_by_hash: dict[str, list[tuple[str, Path]]] = defaultdict(list)
+    # Discover workspace reports and explicitly registered external artifacts.
+    current_by_hash: dict[str, list[AuditSource]] = defaultdict(list)
     for project in catalog.projects:
         for source_ref in project.source_refs:
             for path in _html_files(workspace_root / source_ref, max_bytes=max_bytes):
-                current_by_hash[_hash(path)].append((project.id, path))
-    central_by_hash = _central_catalog_by_hash(central_catalog)
+                current_by_hash[_hash(path)].append(
+                    AuditSource(project.id, str(path.relative_to(workspace_root)), None)
+                )
+    registry_by_hash = _registry_reports_by_hash(catalog, registry_root, max_bytes)
     manifest_by_file = {report.source_file: report for report in catalog.reports if report.source_file}
     matches: list[AuditMatch] = []
+    # Preserve approved ownership and add current hash evidence.
     for source_path in sorted(archive_root.iterdir(), key=lambda path: path.name):
         if not source_path.is_file() or source_path.suffix.lower() not in {".html", ".mhtml"}:
             continue
@@ -97,23 +133,19 @@ def audit_report_ownership(
             project = manifest_report.project
             match_method = "manual-manifest"
             evidence.append(manifest_report.match_evidence)
-        exact = current_by_hash.get(digest, [])
+        exact = current_by_hash.get(digest, []) + registry_by_hash.get(digest, [])
         if exact:
-            exact_projects = sorted({item[0] for item in exact})
-            if len(exact_projects) == 1:
+            exact_projects = sorted({source.project for source in exact})
+            if project is None and len(exact_projects) == 1:
                 project = exact_projects[0]
                 match_method = "sha256"
-            evidence.extend(str(path.relative_to(workspace_root)) for _, path in exact)
-        central = central_by_hash.get(digest, [])
-        if central:
-            experiment_ids = sorted(
-                {str(item.get("experiment_id")) for item in central if item.get("experiment_id")}
-            )
-            if project is None:
-                project = "prediction-nn"
-                subproject = experiment_ids[0] if len(experiment_ids) == 1 else None
-                match_method = "central-catalog"
-            evidence.extend(f"exp-nn:{experiment_id}" for experiment_id in experiment_ids)
+            experiment_ids = {
+                source.experiment_id for source in exact
+                if source.project == project and source.experiment_id is not None
+            }
+            if len(experiment_ids) == 1:
+                subproject = next(iter(experiment_ids))
+            evidence.extend(source.evidence for source in exact)
         matches.append(
             AuditMatch(
                 source_file=source_path.name,
