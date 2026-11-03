@@ -414,3 +414,53 @@ studies:
     暂不提升到执行.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+- id: overnight-signal-evidence
+  project_ids:
+  - astock-overnight
+  title: Overnight 排序信号与配置敏感性
+  question: 冻结 baseline、signal cutoff 和 bar_clv 消融支持什么排序结论?
+  taxonomy_path: prediction-evaluation/model-comparison
+  experiment_ids:
+  - overnight-baseline
+  - overnight-cutoff
+  - overnight-drop-bar-clv
+  report_ids:
+  - 0918-overnight-baseline
+  - 1103-overnight-signal-diagnostics
+  - 1015-overnight-cutoff-1350
+  - 1015-overnight-cutoff-comparison
+  - 1023-overnight-drop-bar-clv
+  conclusion: Baseline 存在排序信号, 13:50 未通过替换门槛; bar_clv 仅有单 arm Validation evidence.
+  caveats:
+  - 历史 2025 evidence 已被查看; 不跨样本、成本或 ledger 合同排名.
+- id: overnight-universe-policy
+  project_ids:
+  - astock-overnight
+  title: Overnight prediction universe
+  question: Signal-time 锁板过滤的变化来自直接过滤还是 retraining?
+  taxonomy_path: data-engineering/universe/filters
+  experiment_ids:
+  - overnight-limit-filter
+  report_ids:
+  - 0920-overnight-limit-filter
+  - 0920-overnight-limit-comparison
+  conclusion: 直接过滤影响很小, extreme tail 的变化主要来自 retraining, 单 seed evidence 不支持提升.
+  caveats:
+  - 历史 2025 evidence 已被查看; 不跨样本、成本或 ledger 合同排名.
+- id: overnight-execution-evidence
+  project_ids:
+  - astock-overnight
+  title: Overnight 记账、成本与容量
+  question: 信号能否在正确 ledger、成本和成交约束下形成可推广策略?
+  taxonomy_path: strategy/execution
+  experiment_ids:
+  - overnight-strategy
+  - overnight-ledger-audit
+  report_ids:
+  - 1014-overnight-strategy
+  - 1014-overnight-strategy-review
+  - 1016-overnight-ledger-audit
+  conclusion: Corrected ledger 与独立 replay 支持记账一致性, 但无共同通过净收益和 80% fill 的 reference-cost
+    AUM.
+  caveats:
+  - 历史 2025 evidence 已被查看; 不跨样本、成本或 ledger 合同排名.

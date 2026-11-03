@@ -2006,3 +2006,155 @@ experiments:
     - report_id: 0831-market-cs-comparison
       image_index: 1
       title: Validation pooled IC by checkpoint
+  - id: overnight-baseline
+    experiment_type: baseline
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: prediction-evaluation/model-comparison
+    title: 冻结 baseline 与 signal diagnostics
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 固定 Dual-GRU 与 checkpoint, 评价 daily RankIC、decile、tail 和 delay decay.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 冻结 baseline 与 signal diagnostics
+    summary: Baseline historical 2025 RankIC 0.114489, corrected Validation Q10 gross
+      return 20.1322%.
+    decision: 保留 baseline 作为信号研究基准, 不构成 production promotion.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 0918-overnight-baseline
+    - 1103-overnight-signal-diagnostics
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-limit-filter
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: data-engineering/universe/filters
+    title: Signal-time 锁板过滤
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 区分固定预测直接过滤与过滤 Train 后重新训练的效果.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Signal-time 锁板过滤
+    summary: 直接过滤对 Test 指标几乎无影响, retraining 的 extreme-tail 改善缺少多 seed 证据.
+    decision: 保留 prediction-universe policy 的语义差异, 不认定为 performance upgrade.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 0920-overnight-limit-filter
+    - 0920-overnight-limit-comparison
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-strategy
+    experiment_type: backtest
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: strategy/execution
+    title: Overnight 成本与容量
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 冻结预测, 使用 available-cash event ledger、lot rounding、reference costs 和独立 replay.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Overnight 成本与容量
+    summary: 没有同时通过 development 与 historical confirmation 净收益及 80% fill gate 的 AUM.
+    decision: CONTINUE_RESEARCH, 需要新 forward evidence.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1014-overnight-strategy
+    - 1014-overnight-strategy-review
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-cutoff
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: prediction-evaluation/model-comparison
+    title: 13:50 vs 13:58 signal cutoff
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 同时报告 full-arm、matched intersection、CSI1800 与 published tail membership.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 13:50 vs 13:58 signal cutoff
+    summary: 13:50 的 Validation 与 historical 2025 RankIC 均下降; corrected Validation Q10
+      gross return 10.7110%.
+    decision: 保留 13:58 baseline, 不依据已查看的 2025 tail PnL 选择 cutoff.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1015-overnight-cutoff-1350
+    - 1015-overnight-cutoff-comparison
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-ledger-audit
+    experiment_type: evaluation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: strategy/execution
+    title: Long-only ledger 独立审计
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 从 frozen predictions 与价格独立 replay, 核验 eligibility、event order、cash identity
+      与 cost grid.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Long-only ledger 独立审计
+    summary: 修复 split eligibility 与 initial-NAV drawdown, historical 2025 gross 路径不变.
+    decision: Validation all-market Q10 使用 corrected values, 其他 cohort 不推算更正.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1016-overnight-ledger-audit
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-drop-bar-clv
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: feature-engineering/feature-set-audit
+    title: 删除 bar_clv 单因子消融
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 删除 bar_clv 后重新物化、训练、预测和评价; 仅报告本 arm Validation.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 删除 bar_clv 单因子消融
+    summary: Validation RankIC 0.0961, Q10 gross return 21.14%, CNY 1m reference net
+      return -60.36%.
+    decision: 保留为单 arm Validation evidence, 不声明相对 baseline 改善.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1023-overnight-drop-bar-clv
+    evidence_ref: astock-overnight/reports
+    featured: false

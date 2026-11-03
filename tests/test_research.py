@@ -35,8 +35,8 @@ def built(catalog, tmp_path_factory):
 
 def test_questions_are_separate_and_cross_linked(catalog):
     # A canonical experiment can answer several questions across project contexts.
-    assert len(catalog.experiments) == 49
-    assert len(catalog.studies) == 31
+    assert len(catalog.experiments) == 55
+    assert len(catalog.studies) == 34
     questions = catalog.studies_for_experiment("0827-market-cs")
     assert {s.id for s in questions} == {"feature-engineering-market", "prediction-evaluation-summary-ic"}
     shared = catalog.study_by_id["prediction-evaluation-summary-ic"]

@@ -162,7 +162,7 @@ projects:
     status: active
     description: Full-market A-share overnight cross-sectional ranking from a 13:58 signal to a 14:00 entry and next-session exit contract.
     objective: Determine whether point-in-time minute and daily factors support stable overnight stock ranking under explicit eligibility, delayed-exit, and split rules.
-    review_summary: The formal 2025 one-shot test reports 0.11449 all-market daily mean Rank IC and 23.72% gross Q10 return. Costs, price impact, borrow constraints, and a signal-limit filter review remain outside the current promotion evidence.
+    review_summary: 冻结 baseline historical 2025 RankIC 为 0.11449, Q10 gross return 为 23.72%. Corrected ledger、成本、容量与 independent review 已发布; reference-cost AUM 无共同通过净收益与 80% fill 的区域, 结论为 CONTINUE_RESEARCH.
     source_refs: [astock-overnight]
     stages:
       - {id: data, state: documented, summary: The 2021-2025 minute market, daily references, index weights, and point-in-time security states are audited and versioned.}
@@ -170,7 +170,7 @@ projects:
       - {id: feature-engineering, state: documented, summary: Core v1 contains fixed minute-stock, minute-market, daily-stock, and daily-market factor definitions.}
       - {id: model, state: documented, summary: A dual-GRU late-fusion baseline consumes separate minute and daily sequences under a frozen training contract.}
       - {id: prediction-evaluation, state: documented, summary: Validation and one-shot test results include daily Rank IC, deciles, concentration, and CSI1800 reranking.}
-      - {id: strategy, state: in-progress, summary: Gross long-only cohorts are reported, but costs, price impact, and execution promotion gates remain open.}
+      - {id: strategy, state: in-progress, summary: Corrected event ledger、成本和容量已完成研究与独立 review; production promotion gate 未通过, 仍需新 forward evidence.}
   - id: m3-cn
     title: M3-CN Event Model
     category: forecasting-models
