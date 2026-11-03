@@ -31,9 +31,9 @@ def test_repository_catalog_is_valid() -> None:
     assert len(catalog.research_projects) == 20
     assert len(catalog.infrastructure_projects) == 4
     assert len(catalog.knowledge_projects) == 2
-    assert len(catalog.experiments) == 49
-    assert len(catalog.reports) == 33
-    assert len(catalog.current_reports) == 26
+    assert len(catalog.experiments) == 55
+    assert len(catalog.reports) == 43
+    assert len(catalog.current_reports) == 36
     assert catalog.featured_report_id == "0807-stock1s-fold0-full-evaluation"
     assert catalog.featured_report is catalog.report_by_id["0807-stock1s-fold0-full-evaluation"]
     assert catalog.report_by_id["0802-stock1s-gru384-v2"].revision_of == "0802-stock1s-gru384"
@@ -111,7 +111,7 @@ def test_repository_catalog_is_valid() -> None:
     assert catalog.experiment_by_id["day-pure-batch-1min"].stage == "model"
     assert catalog.experiment_by_id["rolling-purged-val"].stage == "data-engineering"
     assert catalog.experiment_by_id["ashare-1s-coverage"].stage == "data"
-    assert sum(bool(experiment.taxonomy_path) for experiment in catalog.experiments) == 46
+    assert sum(bool(experiment.taxonomy_path) for experiment in catalog.experiments) == 52
     assert all(
         not experiment.taxonomy_path
         for experiment in catalog.experiments

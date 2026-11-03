@@ -551,7 +551,7 @@ def test_catalog_json_keeps_internal_presentation_fields_private(root_build) -> 
     assert '"research_taxonomy"' in payload
     assert '"subproject"' not in payload
     assert '"tracks"' not in payload
-    assert payload.count('"is_current": true') == 26
+    assert payload.count('"is_current": true') == 36
 
 
 def test_atomic_build_preserves_previous_output_when_validation_fails(tmp_path: Path) -> None:
