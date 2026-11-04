@@ -499,3 +499,417 @@ reports:
     bundle_sha256: e72d383d5e3a1e4eb13d7b251a2a44934e79688aecf5aebb6ea968ecee5563ef
     match_method: manual
     match_evidence: astock-overnight/reports/drop-bar-clv-only/report-briefing.html
+  - id: 1103-reference-baseline-full-070110
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-reference-baseline-full-070110/report.md
+    bundle_sha256: 49ac92873a795a47bbcfae935a839b0d3f9cfdce77c1df3e6fcc4e72bc2a34d7
+    match_method: sha256
+    match_evidence: nn-registry/reference-baseline/reference-baseline-full-070110
+
+  - id: 1103-multiscale-market-features-1min-ablation-legacy14-081320
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-multiscale-market-features-1min-ablation-legacy14-081320/report.md
+    bundle_sha256: a2dc6a14ec7c4cd2c79771205f5431ce6f6fb852f1ae292ec291158382595b06
+    match_method: sha256
+    match_evidence: nn-registry/multiscale-market-features-1min/multiscale-market-features-1min-ablation-legacy14-081320
+
+  - id: 1103-multiscale-market-features-1min-ablation-relative-liquidity9-081322
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-multiscale-market-features-1min-ablation-relative-liquidity9-081322/report.md
+    bundle_sha256: e66b1109caef03d676b405edf72069bee37d32094332a99f92a295783db78fce
+    match_method: sha256
+    match_evidence: nn-registry/multiscale-market-features-1min/multiscale-market-features-1min-ablation-relative-liquidity9-081322
+
+  - id: 1103-multiscale-market-features-1min-ablation-volatility-range12-081400
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-multiscale-market-features-1min-ablation-volatility-range12-081400/report.md
+    bundle_sha256: eed8c0cb680b7cf4309a63c344eef9d54db9fe82ad5a8d06a8bf46281c2a32bc
+    match_method: sha256
+    match_evidence: nn-registry/multiscale-market-features-1min/multiscale-market-features-1min-ablation-volatility-range12-081400
+
+  - id: 1103-multiscale-market-features-1min-ablation-trend-return12-081402
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-multiscale-market-features-1min-ablation-trend-return12-081402/report.md
+    bundle_sha256: 8ab8f609685fee7e214527dc02f639720fe33aab19140b1ee408005b4fa94262
+    match_method: sha256
+    match_evidence: nn-registry/multiscale-market-features-1min/multiscale-market-features-1min-ablation-trend-return12-081402
+
+  - id: 1103-reference-baseline-v2-full-071714
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-reference-baseline-v2-full-071714/report.md
+    bundle_sha256: a1068cd42fb4df766dd0541950029eb36aed2fd49c6564fca33f8d6e97d5cb7d
+    match_method: sha256
+    match_evidence: nn-registry/reference-baseline-v2/reference-baseline-v2-full-071714
+
+  - id: 1103-reference-baseline-v2-bvwap-comparison-0717
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-reference-baseline-v2-bvwap-comparison-0717/report.md
+    bundle_sha256: 30798e8cd27819c3184ca4b082aaeb2264ee5b15c1458988258c79ddb4a4cc9e
+    match_method: sha256
+    match_evidence: nn-registry/reference-baseline-v2/reference-baseline-v2-bvwap-comparison-0717
+
+  - id: 1103-optimize-1min-model-final-comparison-072504
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-optimize-1min-model-final-comparison-072504/report.md
+    bundle_sha256: 8ddb1bc0ad6eabf88af52051618c38296534a195bafcbd8eeec3bc62ab271fcb
+    match_method: sha256
+    match_evidence: nn-registry/optimize-1min-model/optimize-1min-model-final-comparison-072504
+    revision_of: 0725-1min-model-screening-v2
+
+  - id: 1103-loss-function-1min-final-comparison-072821
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-loss-function-1min-final-comparison-072821/report.md
+    bundle_sha256: 8c124a7f1a31aee0f09e588082064cdcf151b5be275f28b088e1849f97e5da94
+    match_method: sha256
+    match_evidence: nn-registry/loss-function-1min/loss-function-1min-final-comparison-072821
+
+  - id: 1103-test-all-touch-test-all-061318
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-test-all-touch-test-all-061318/report.md
+    bundle_sha256: 7fdc938e6be7ddd5964388edd07f1eb801b5f179b764e09003b1b54faa2867fc
+    match_method: sha256
+    match_evidence: nn-registry/test-all/test-all-touch-test-all-061318
+
+  - id: 1103-limit-pool-comparison-061513
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-limit-pool-comparison-061513/report.md
+    bundle_sha256: 7d9a2bbae4c6b22e7f3d8080decc8f0f7b129ea949a1124090e7648f4bc45397
+    match_method: sha256
+    match_evidence: nn-registry/limit-pool/limit-pool-comparison-061513
+
+  - id: 1103-near-zero-filter-comparison-061720
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-near-zero-filter-comparison-061720/report.md
+    bundle_sha256: 0de5ebcd00443f4a996cdcc0a2fbda8d6f7921447f61e82179ad64005724b183
+    match_method: sha256
+    match_evidence: nn-registry/near-zero-filter/near-zero-filter-comparison-061720
+
+  - id: 1103-capacity-robust-sampling-self-constrained-html
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-capacity-robust-sampling-self-constrained-html/report.md
+    bundle_sha256: 347b7449d5bb8849683f3187f18036592a019f492224980eb913fc6333dc5b02
+    match_method: sha256
+    match_evidence: nn-registry/capacity-robust-sampling/capacity-robust-sampling-self-constrained-html
+
+  - id: 1103-prediction-calibration-label-noise-070814
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-prediction-calibration-label-noise-070814/report.md
+    bundle_sha256: df590722fe6b8a52364cf69f4244cdd547f65085947c82d0deed7c2252bc0bfa
+    match_method: sha256
+    match_evidence: nn-registry/prediction-calibration/prediction-calibration-label-noise-070814
+
+  - id: 1103-generalization-rolling-stride-comparison-070913
+    project: prediction-nn-1min
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-generalization-rolling-stride-comparison-070913/report.md
+    bundle_sha256: ba654f813cb7d653882ef7e88734a815eaf29843e893b0dde7d479310c331323
+    match_method: sha256
+    match_evidence: nn-registry/generalization-rolling-stride/generalization-rolling-stride-comparison-070913
+
+  - id: 1103-generalization-adjacent-window-comparison
+    project: prediction-nn-1min
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-generalization-adjacent-window-comparison/report.md
+    bundle_sha256: cecdd1defde689e559650164416896bf96212ca905e4e23902f9731d4a72d47f
+    match_method: sha256
+    match_evidence: nn-registry/generalization-adjacent-window/generalization-adjacent-window-comparison
+
+  - id: 1103-generalization-adjacent-window-multiseed-comparison
+    project: prediction-nn-1min
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-generalization-adjacent-window-multiseed-comparison/report.md
+    bundle_sha256: d7a745390efa6f87b59576618732b0550aefb73c1f9a03ad64f56290000e0a1c
+    match_method: sha256
+    match_evidence: nn-registry/generalization-adjacent-window-multiseed/generalization-adjacent-window-multiseed-comparison
+
+  - id: 1103-generalization-block70-checkpoint-curve-report
+    project: prediction-nn-1min
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-generalization-block70-checkpoint-curve-report/report.md
+    bundle_sha256: b716d8e3ff0c95c5384225c16167ca698e6bb0f11e73eacf9b5361a79d573c4a
+    match_method: sha256
+    match_evidence: nn-registry/generalization-block70-checkpoint-curve/generalization-block70-checkpoint-curve-report
+
+  - id: 1103-main-combo-integration-baseline-062916
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-main-combo-integration-baseline-062916/report.md
+    bundle_sha256: 22e87cd336b337cff044bec952b6aedaf059287ce716fd03abce53e0fb6bd4ce
+    match_method: sha256
+    match_evidence: nn-registry/main-combo-integration/main-combo-integration-baseline-062916
+
+  - id: 1103-main-combo-integration-touch-063004
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-main-combo-integration-touch-063004/report.md
+    bundle_sha256: c363831e6cb90b7382f0289f74c6d1449c5add48179ed698f2aa25bc1db1e853
+    match_method: sha256
+    match_evidence: nn-registry/main-combo-integration/main-combo-integration-touch-063004
+
+  - id: 1103-main-combo-integration-ret-ge2-063008
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-main-combo-integration-ret-ge2-063008/report.md
+    bundle_sha256: 081579682c30175160153cd130a3b82091c5ebdb469533fd5477a5f94c28e59a
+    match_method: sha256
+    match_evidence: nn-registry/main-combo-integration/main-combo-integration-ret-ge2-063008
+
+  - id: 1103-main-combo-integration-touch-ret-ge2-063012
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-main-combo-integration-touch-ret-ge2-063012/report.md
+    bundle_sha256: a4dd7abff8128924556a60827ba9b2184ceaaebe01cda0f5f0bfeb7d59e79601
+    match_method: sha256
+    match_evidence: nn-registry/main-combo-integration/main-combo-integration-touch-ret-ge2-063012
+
+  - id: 1103-main-combo-integration-baseline-verification-063022
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-main-combo-integration-baseline-verification-063022/report.md
+    bundle_sha256: 1e7444f1d254c448f5a8bc8c9ad2922c95fdfce305bde95657f588ca026cd42a
+    match_method: sha256
+    match_evidence: nn-registry/main-combo-integration/main-combo-integration-baseline-verification-063022
+
+  - id: 1103-zero-aware-normalization-comparison
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-zero-aware-normalization-comparison/report.md
+    bundle_sha256: d8b56be80de2b0ce066bb66ce5f43ab8263602396a1cf89b7089921839d7dc0e
+    match_method: sha256
+    match_evidence: nn-registry/zero-aware-normalization/zero-aware-normalization-comparison
+
+  - id: 1103-l2-features-attribution-070312
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-l2-features-attribution-070312/report.md
+    bundle_sha256: cdacaaaa9625e0edf5b8d3089e89e47064aaf08dfe8c7419987b2abd95fa1de2
+    match_method: sha256
+    match_evidence: nn-registry/l2-features/l2-features-attribution-070312
+    revision_of: 0702-l2-ablation-v2
+
+  - id: 1103-l2-features-leave-one-out-070312
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-l2-features-leave-one-out-070312/report.md
+    bundle_sha256: edffec6dd49fc3e8f0a83f4222a63dca57d15e007bb0f2d37aef261e16152eac
+    match_method: sha256
+    match_evidence: nn-registry/l2-features/l2-features-leave-one-out-070312
+
+  - id: 1103-feature-cleaning-0609-04-061018
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-feature-cleaning-0609-04-061018/report.md
+    bundle_sha256: e5d6361dba7370084981cb3bfcb4800f1f280e7f128af5fd1e9caa5c784f6801
+    match_method: sha256
+    match_evidence: nn-registry/feature-cleaning-bundle-0609/feature-cleaning-0609-04-061018
+
+  - id: 1103-baseline-1s-v2-full-report-0812
+    project: prediction-nn-1s
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1s/1103-baseline-1s-v2-full-report-0812/report.md
+    bundle_sha256: 1d91c9a47e33d49bbd6785d1f10e43ce1acc7e8a4b07e5bc15b629b1b1d91643
+    match_method: sha256
+    match_evidence: nn-registry/baseline-1s-v2/baseline-1s-v2-full-report-0812
+
+  - id: 1103-0825-feature-audit-model-report-0827
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0825-feature-audit-model-report-0827/report.md
+    bundle_sha256: 0d7540920212121fda89201309109d810bf6a0a2728d0fd09c9419504e0c3bbc
+    match_method: sha256
+    match_evidence: nn-registry/0825-feature-audit/0825-feature-audit-model-report-0827
+
+  - id: 1103-0825-feature-audit-portfolio-report-0827
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0825-feature-audit-portfolio-report-0827/report.md
+    bundle_sha256: 371b06f19971bfa042671724d5de2471e8e9ec42efd5a01e4f7f79e209f94052
+    match_method: sha256
+    match_evidence: nn-registry/0825-feature-audit/0825-feature-audit-portfolio-report-0827
+
+  - id: 1103-0827-market-cs-comparison-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-comparison-0831/report.md
+    bundle_sha256: b9d49626d02c6fe5e4589459f41986d29f7c32825ec6728fb7718dee881aee0e
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-comparison-0831
+    revision_of: 0831-market-cs-comparison
+
+  - id: 1103-0827-market-cs-control-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-control-0831/report.md
+    bundle_sha256: 0a4b84d90796ded799e5f987bd8d1c4351394d53ea1da7bfbe3255dc54ee661d
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-control-0831
+    revision_of: 0831-market-cs-control
+
+  - id: 1103-0827-market-cs-cs-rank-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-cs-rank-0831/report.md
+    bundle_sha256: ddd1252f308639d2a90dc05ac58c00716e25d8807f6f89a37e49f85d21ab7964
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-cs-rank-0831
+    revision_of: 0831-market-cs-rank
+
+  - id: 1103-0827-market-cs-latent-z-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-latent-z-0831/report.md
+    bundle_sha256: 242f1d64fb7bb982a75790994fd08b203236df09b00766811f3cb5e99b937d9c
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-latent-z-0831
+    revision_of: 0831-market-cs-latent-z
+
+  - id: 1103-0827-market-cs-deep-sets-r2-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-deep-sets-r2-0831/report.md
+    bundle_sha256: 2c7f7681ac41aab94cfeff5855b0b7a5613836e015ff42aea59167313d9cecfa
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-deep-sets-r2-0831
+    revision_of: 0831-market-cs-deep-sets
+
+  - id: 1103-0827-market-cs-induced-attention-failed-0831
+    project: prediction-nn-1min
+    stage: feature-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0827-market-cs-induced-attention-failed-0831/report.md
+    bundle_sha256: ac2941f4856ae6b558a2236b2d890a11eb779575153cec3e8970cea4001ba849
+    match_method: sha256
+    match_evidence: nn-registry/0827-market-cs/0827-market-cs-induced-attention-failed-0831
+    revision_of: 0831-market-cs-induced-attention
+
+  - id: 1103-0903-model-full-report
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-0903-model-full-report/report.md
+    bundle_sha256: 2d7255cba8a159b3aa10a19e604a138a120a7930b03a636a7b360726753fd971
+    match_method: sha256
+    match_evidence: nn-registry/0903-model/0903-model-full-report
+
+  - id: 1103-combo-touch-nz-lr-old-lr-062701
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-combo-touch-nz-lr-old-lr-062701/report.md
+    bundle_sha256: 46dc75ca313f8c8657ce6e0723b1a646bc91ab89754460f7ac5e9ced19028bec
+    match_method: sha256
+    match_evidence: nn-registry/combo-touch-nz-lr/combo-touch-nz-lr-old-lr-062701
+
+  - id: 1103-baseline-main-20260622-registry-evidence
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-baseline-main-20260622-registry-evidence/report.md
+    bundle_sha256: a1061368823990b5effa00d193427b736abb81480624ae168b57e99b4b395df8
+    match_method: path-evidence
+    match_evidence: nn-registry/baseline-main-20260622/results.yaml
+
+  - id: 1103-learning-rate-registry-evidence
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-learning-rate-registry-evidence/report.md
+    bundle_sha256: d8dce00e612793db09ace940183a761e3f8bb40248ea26c0183602e71393a997
+    match_method: path-evidence
+    match_evidence: nn-registry/learning-rate/results.yaml
+
+  - id: 1103-rolling-purged-val-registry-evidence
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-rolling-purged-val-registry-evidence/report.md
+    bundle_sha256: ae6c4a49360c5d46c69cbc9af1420c3bc0e9d70c2c3bfec956d9f1cea844a5e5
+    match_method: path-evidence
+    match_evidence: nn-registry/rolling-purged-val/results.yaml
+
+  - id: 1103-val-select-registry-evidence
+    project: prediction-nn-1min
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-val-select-registry-evidence/report.md
+    bundle_sha256: 4b4c4059772db3757c44cd99cf85aa2b4abfe95e8188cd4807b8a48aa15f270c
+    match_method: path-evidence
+    match_evidence: nn-registry/val-select/results.yaml
+
+  - id: 1103-baseline-1min-0813-registry-evidence
+    project: prediction-nn-1min
+    stage: model
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-baseline-1min-0813-registry-evidence/report.md
+    bundle_sha256: 126da1cb6d93d1c1ae75c28ed5bf779fd80a7b708a4b3e2ec26a0efaa10c6cbd
+    match_method: path-evidence
+    match_evidence: nn-registry/baseline-1min-0813/results.yaml
+
+  - id: 1103-crossday-rolling-registry-evidence
+    project: prediction-nn-1min
+    stage: data-engineering
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-crossday-rolling-registry-evidence/report.md
+    bundle_sha256: db3f1a14bca9d375d8234c7f73cea2cd6263eb9bedb3b487f2c4131c59c1d58c
+    match_method: path-evidence
+    match_evidence: nn-registry/crossday-rolling/results.yaml
+
+  - id: 1103-nn-registry-summary
+    project: prediction-nn-1min
+    related_project_ids:
+    - prediction-nn-1s
+    stage: prediction-evaluation
+    format: markdown
+    content_file: report-docs/prediction-nn-1min/1103-nn-registry-summary/report.md
+    bundle_sha256: d4fc42c309923a3ded7d6c939f63a17acf517960932ab2a830d6c0aeae00df97
+    match_method: manual
+    match_evidence: nn-registry/experiment-index.yaml

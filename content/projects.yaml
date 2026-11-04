@@ -22,13 +22,7 @@ projects:
     status: active
     description: Minute-level A-share return forecasting across data contracts, features, models, validation, and execution gates.
     objective: Determine whether information available before prediction time consistently forecasts cross-sectional returns over a future holding period under a reproducible and comparable contract.
-    review_summary: >-
-      The 1min registry includes date-pure batching, matched feature-family ablations,
-      a 10/15/30-minute horizon comparison, a completed 36D feature reference, and two
-      market-context studies. B+VWAP is the signal baseline, GRU192×2 last-hidden is the
-      compact architecture, and learned panel context leads the latest matched signal
-      comparisons; the new Top 1% cost diagnostic is sensitive to slippage and does
-      not pass an execution gate.
+    review_summary: "1min历史实验已按研究问题补齐报告关联. B+VWAP, compact GRU和market context有各自合同内的信号证据; 新登记0903-model的test IC/RankIC为0.127044/0.101201, 成本后结果仍负. 历史成功不因当前artifact缺失而改变."
     source_refs: []
     registry_experiments:
       - 0825-feature-audit
@@ -110,11 +104,7 @@ projects:
     status: active
     description: Second-level A-share forecasting over independent stock1s contracts, order-flow features, neural models, fold evaluation, turnover, and costs.
     objective: Test whether trades, quotes, and order flow add stable forecasting power under an independent data, selection, and cost contract.
-    review_summary: >-
-      The legacy fold0 result has strong pooled IC and Rank IC, but its portfolio
-      candidate used test during selection and remains net-negative. The independent
-      OHLCV-only v2 contract yields weak pooled IC and a sharply negative 10 bps
-      backtest. Both contracts remain research-only.
+    review_summary: "Fold0条件信号与独立OHLCV-only v2均为历史成功实验. 后者全量test pooled IC为0.009249, 固定10bps回测净累计收益−95.14%. 两个合同不直接排名, 当前artifact可得性与执行结论分别解释."
     source_refs: []
     registry_experiments:
       - baseline-1s-0720

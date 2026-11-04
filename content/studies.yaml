@@ -42,10 +42,21 @@ studies:
   - optimize-1min-model
   - baseline-main-20260622
   - baseline-1min-0813
-  report_ids: []
+  - 0903-model
+  report_ids:
+  - 1103-reference-baseline-full-070110
+  - 1103-reference-baseline-v2-full-071714
+  - 1103-reference-baseline-v2-bvwap-comparison-0717
+  - 1103-optimize-1min-model-final-comparison-072504
+  - 1103-baseline-main-20260622-registry-evidence
+  - 1103-baseline-1min-0813-registry-evidence
+  - 1103-0903-model-full-report
+  - 1103-nn-registry-summary
   conclusion: 小 GRU 的结构候选与 paired VWAP 标签基线具有各自合同内的正向证据. 历史 close 基线仅作参考; 工程合同验证不能替代正式 OOS 实验.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: model-loss-function
   project_ids:
   - prediction-nn-1min
@@ -54,10 +65,14 @@ studies:
   taxonomy_path: model/loss-function
   experiment_ids:
   - loss-function-1min
-  report_ids: []
+  report_ids:
+  - 1103-loss-function-1min-final-comparison-072821
+  - 1103-nn-registry-summary
   conclusion: Promote only to a multi-seed Stage C candidate, not to the default loss.
   caveats:
   - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: prediction-evaluation-model-comparison
   project_ids:
   - prediction-nn-1s
@@ -67,10 +82,18 @@ studies:
   experiment_ids:
   - baseline-1s-0720
   - baseline-1s-v2
-  report_ids: []
+  report_ids:
+  - 0730-stock1s-feature-health-v2
+  - 0807-stock1s-fold0-full-evaluation
+  - 0807-stock1s-cost-turnover-sweep
+  - 0808-stock1s-p0-p4-research
+  - 1103-baseline-1s-v2-full-report-0812
+  - 1103-nn-registry-summary
   conclusion: 秒级模型存在条件信号证据, 但 PIT、选择偏差与执行成本仍限制使用; 不据此与分钟模型直接排名或提升为交易策略.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-universe-filters
   project_ids:
   - prediction-nn-1min
@@ -80,11 +103,16 @@ studies:
   experiment_ids:
   - test-all
   - limit-pool
-  report_ids: []
+  report_ids:
+  - 1103-test-all-touch-test-all-061318
+  - 1103-limit-pool-comparison-061513
+  - 1103-nn-registry-summary
   conclusion: limit-pool 内 touch 的信号略优于 all, 更严格的 limit 未同步改善. train-filter/full-test 诊断改变了 test universe, 不能与过滤
     test 的主矩阵直接比较.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-data-clean-outlier
   project_ids:
   - prediction-nn-1min
@@ -93,10 +121,14 @@ studies:
   taxonomy_path: data-engineering/data-clean/outlier
   experiment_ids:
   - near-zero-filter
-  report_ids: []
+  report_ids:
+  - 1103-near-zero-filter-comparison-061720
+  - 1103-nn-registry-summary
   conclusion: Retain separate IC/return and hit-rate objectives rather than declaring one global winner.
   caveats:
   - Trading and cost metrics remain proxies and are not equivalent to live returns.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: model-optimization
   project_ids:
   - prediction-nn-1min
@@ -106,10 +138,15 @@ studies:
   experiment_ids:
   - learning-rate
   - capacity-robust-sampling
-  report_ids: []
+  report_ids:
+  - 1103-learning-rate-registry-evidence
+  - 1103-capacity-robust-sampling-self-constrained-html
+  - 1103-nn-registry-summary
   conclusion: 现有记录支持优先研究小模型与 early stopping; warmup-cosine 学习率建议只适用于原模型、batch、数据和预算合同.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-data-clean-validation-split
   project_ids:
   - prediction-nn-1min
@@ -118,11 +155,15 @@ studies:
   taxonomy_path: data-engineering/data-clean/validation-split
   experiment_ids:
   - rolling-purged-val
-  report_ids: []
+  report_ids:
+  - 1103-rolling-purged-val-registry-evidence
+  - 1103-nn-registry-summary
   conclusion: Do not replace the architecture solely for temporal decay; trading decisions still require portfolio-level
     validation.
   caveats:
   - Test is retained only as a pipeline contract, not as selection or trading evidence.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: prediction-evaluation-robustness-checkpoint
   project_ids:
   - prediction-nn-1min
@@ -132,10 +173,15 @@ studies:
   experiment_ids:
   - val-select
   - generalization-block70-checkpoint-curve
-  report_ids: []
+  report_ids:
+  - 1103-val-select-registry-evidence
+  - 1103-generalization-block70-checkpoint-curve-report
+  - 1103-nn-registry-summary
   conclusion: 原 val-select 合同保留 20k 作为 robust 默认, 30k 仅作 aggressive 比较. Block70 曲线用于诊断过训练, 不用于选择生产 checkpoint.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-label
   project_ids:
   - prediction-nn-1min
@@ -145,11 +191,16 @@ studies:
   experiment_ids:
   - prediction-calibration
   - horizon-labels
-  report_ids: []
+  report_ids:
+  - 1103-prediction-calibration-label-noise-070814
+  - 0815-horizon-label-comparison
+  - 1103-nn-registry-summary
   conclusion: A2 VWAP 方向值得多 seed 验证, A3 robust-label 未通过提升门槛. 独立 horizon 合同中 h15 的 pooled IC 较高, h30 的 RankIC 与
     spread 较高; 不跨标签合同排名.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: prediction-evaluation-robustness-monthly
   project_ids:
   - prediction-nn-1min
@@ -158,10 +209,14 @@ studies:
   taxonomy_path: prediction-evaluation/robustness/monthly
   experiment_ids:
   - generalization-rolling-stride
-  report_ids: []
+  report_ids:
+  - 1103-generalization-rolling-stride-comparison-070913
+  - 1103-nn-registry-summary
   conclusion: Retain stride5 as a development candidate; treat the stride10 10k recovery as post-hoc diagnosis only.
   caveats:
   - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: prediction-evaluation-robustness
   project_ids:
   - prediction-nn-1min
@@ -171,10 +226,15 @@ studies:
   experiment_ids:
   - generalization-adjacent-window
   - generalization-adjacent-window-multiseed
-  report_ids: []
+  report_ids:
+  - 1103-generalization-adjacent-window-comparison
+  - 1103-generalization-adjacent-window-multiseed-comparison
+  - 1103-nn-registry-summary
   conclusion: Block70 的开发观察未通过当前多 seed 协议, 不替换 Dense. 后续比较需要保留预算和 exposure 的匹配边界.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: model-integration
   project_ids:
   - prediction-nn-1min
@@ -184,10 +244,19 @@ studies:
   experiment_ids:
   - main-combo-integration
   - combo-touch-nz-lr
-  report_ids: []
+  report_ids:
+  - 1103-main-combo-integration-baseline-062916
+  - 1103-main-combo-integration-touch-063004
+  - 1103-main-combo-integration-ret-ge2-063008
+  - 1103-main-combo-integration-touch-ret-ge2-063012
+  - 1103-main-combo-integration-baseline-verification-063022
+  - 1103-combo-touch-nz-lr-old-lr-062701
+  - 1103-nn-registry-summary
   conclusion: 局部候选增益未稳定叠加, 保留 main-combo 的负面结果. 旧 combo 已被替代, 历史 run root 缺失使进一步 artifact 比较需要重跑.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-data-clean-normalization
   project_ids:
   - prediction-nn-1min
@@ -196,10 +265,14 @@ studies:
   taxonomy_path: data-engineering/data-clean/normalization
   experiment_ids:
   - zero-aware-normalization
-  report_ids: []
+  report_ids:
+  - 1103-zero-aware-normalization-comparison
+  - 1103-nn-registry-summary
   conclusion: Make no improvement claim until the off control and model-card consistency are restored.
   caveats:
   - F24 model-card metadata does not match the prepared data.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: feature-engineering-order-book-l2
   project_ids:
   - prediction-nn-1min
@@ -208,10 +281,15 @@ studies:
   taxonomy_path: feature-engineering/order-book-l2
   experiment_ids:
   - l2-features
-  report_ids: []
+  report_ids:
+  - 1103-l2-features-attribution-070312
+  - 1103-l2-features-leave-one-out-070312
+  - 1103-nn-registry-summary
   conclusion: Preserve the observation but block cross-arm attribution claims.
   caveats:
   - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-data-clean
   project_ids:
   - prediction-nn-1min
@@ -222,10 +300,14 @@ studies:
   experiment_ids:
   - feature-cleaning-bundle-0609
   - aq2-v16
-  report_ids: []
+  report_ids:
+  - 1103-feature-cleaning-0609-04-061018
+  - 1103-nn-registry-summary
   conclusion: AQ2 v16 具备规则回归证据, 特征清洗历史档案只支持审计. 两者解决不同输入问题, 不混合解释为模型质量提升.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: prediction-evaluation-summary-ic
   project_ids:
   - index500-predict
@@ -238,10 +320,20 @@ studies:
   - index500-clean-benchmark
   - live-predictor-live-quality
   - 0827-market-cs
-  report_ids: []
+  report_ids:
+  - 1103-0827-market-cs-comparison-0831
+  - 1103-0827-market-cs-control-0831
+  - 1103-0827-market-cs-cs-rank-0831
+  - 1103-0827-market-cs-latent-z-0831
+  - 1103-0827-market-cs-deep-sets-r2-0831
+  - 1103-0827-market-cs-induced-attention-failed-0831
+  - 0830-market-cs-attention-smoke-r2
+  - 1103-nn-registry-summary
   conclusion: ETF 映射、shadow prediction 与市场 context 的信号指标各有评估总体. 正向 IC 不等于执行净收益, 当前证据不能跨这些合同形成统一排名.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: feature-engineering-factor-discovery
   project_ids:
   - alphas
@@ -366,13 +458,17 @@ studies:
   taxonomy_path: model/batch
   experiment_ids:
   - day-pure-batch-1min
-  report_ids: []
+  report_ids:
+  - 0811-day-pure-batch-1min
+  - 1103-nn-registry-summary
   conclusion: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit
     mixed-date one-epoch control and additional seeds are run.
   caveats:
   - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal
     sampler estimates.
   - Signal diagnostics do not establish execution-ready net profitability.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: feature-engineering-feature-set-audit
   project_ids:
   - prediction-nn-1min
@@ -382,10 +478,21 @@ studies:
   experiment_ids:
   - multiscale-market-features-1min
   - 0825-feature-audit
-  report_ids: []
+  report_ids:
+  - 0812-multiscale-63feature-evaluation
+  - 0814-feature-family-ablation
+  - 1103-multiscale-market-features-1min-ablation-legacy14-081320
+  - 1103-multiscale-market-features-1min-ablation-relative-liquidity9-081322
+  - 1103-multiscale-market-features-1min-ablation-volatility-range12-081400
+  - 1103-multiscale-market-features-1min-ablation-trend-return12-081402
+  - 1103-0825-feature-audit-model-report-0827
+  - 1103-0825-feature-audit-portfolio-report-0827
+  - 1103-nn-registry-summary
   conclusion: matched feature-family ablation 保留三个非 market 特征族作为多 seed 候选; full-63 不是单调改进证据. 独立 36D 单臂结果不能用于归因特征贡献.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: data-engineering-data-clean-outlier-cross-session-window
   project_ids:
   - prediction-nn-1min
@@ -394,12 +501,16 @@ studies:
   taxonomy_path: data-engineering/data-clean/outlier/cross-session-window
   experiment_ids:
   - crossday-rolling
-  report_ids: []
+  report_ids:
+  - 1103-crossday-rolling-registry-evidence
+  - 1103-nn-registry-summary
   conclusion: Retain the boundary implementation as a passed pre-training gate, but do not choose an arm or claim
     model quality until matched formal runs exist.
   caveats:
   - There is no full prepared view, formal training, checkpoint selection, test IC, or comparison report.
   - The implementation was untracked at registry capture, so the recorded HEAD alone cannot reproduce the diagnostic.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: feature-engineering-market
   project_ids:
   - prediction-nn-1min
@@ -409,11 +520,27 @@ studies:
   experiment_ids:
   - market-sample
   - 0827-market-cs
-  report_ids: []
+  - 0903-model
+  report_ids:
+  - 0822-market-context-comparison
+  - 0825-market-context-baseline
+  - 0825-market-context-panel
+  - 0825-market-context-market16
+  - 1103-0827-market-cs-comparison-0831
+  - 1103-0827-market-cs-control-0831
+  - 1103-0827-market-cs-cs-rank-0831
+  - 1103-0827-market-cs-latent-z-0831
+  - 1103-0827-market-cs-deep-sets-r2-0831
+  - 1103-0827-market-cs-induced-attention-failed-0831
+  - 0830-market-cs-attention-smoke-r2
+  - 1103-0903-model-full-report
+  - 1103-nn-registry-summary
   conclusion: panel mean/std、CS rank、latent-z 与 Deep Sets 存在各自 matched 合同内的信号增益. 五臂组中 latent-z 信号最高, 但所有完成臂成本后结果显著为负,
     暂不提升到执行.
   caveats:
   - 跨实验数值仅按各自登记口径展示; matched 比较以实验内的明确合同为准.
+  - 历史成功/失败按流程完成判断; 当前artifact缺失、负增益与执行门未通过单独解释.
+
 - id: overnight-signal-evidence
   project_ids:
   - astock-overnight
