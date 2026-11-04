@@ -22,13 +22,7 @@ projects:
     status: active
     description: Minute-level A-share return forecasting across data contracts, features, models, validation, and execution gates.
     objective: Determine whether information available before prediction time consistently forecasts cross-sectional returns over a future holding period under a reproducible and comparable contract.
-    review_summary: >-
-      The 1min registry includes date-pure batching, matched feature-family ablations,
-      a 10/15/30-minute horizon comparison, a completed 36D feature reference, and two
-      market-context studies. B+VWAP is the signal baseline, GRU192×2 last-hidden is the
-      compact architecture, and learned panel context leads the latest matched signal
-      comparisons; the new Top 1% cost diagnostic is sensitive to slippage and does
-      not pass an execution gate.
+    review_summary: "1min历史实验已按研究问题补齐报告关联. B+VWAP, compact GRU和market context有各自合同内的信号证据; 新登记0903-model的test IC/RankIC为0.127044/0.101201, 成本后结果仍负. 历史成功不因当前artifact缺失而改变."
     source_refs: []
     registry_experiments:
       - 0825-feature-audit
@@ -110,11 +104,7 @@ projects:
     status: active
     description: Second-level A-share forecasting over independent stock1s contracts, order-flow features, neural models, fold evaluation, turnover, and costs.
     objective: Test whether trades, quotes, and order flow add stable forecasting power under an independent data, selection, and cost contract.
-    review_summary: >-
-      The legacy fold0 result has strong pooled IC and Rank IC, but its portfolio
-      candidate used test during selection and remains net-negative. The independent
-      OHLCV-only v2 contract yields weak pooled IC and a sharply negative 10 bps
-      backtest. Both contracts remain research-only.
+    review_summary: "Fold0条件信号与独立OHLCV-only v2均为历史成功实验. 后者全量test pooled IC为0.009249, 固定10bps回测净累计收益−95.14%. 两个合同不直接排名, 当前artifact可得性与执行结论分别解释."
     source_refs: []
     registry_experiments:
       - baseline-1s-0720
@@ -162,7 +152,7 @@ projects:
     status: active
     description: Full-market A-share overnight cross-sectional ranking from a 13:58 signal to a 14:00 entry and next-session exit contract.
     objective: Determine whether point-in-time minute and daily factors support stable overnight stock ranking under explicit eligibility, delayed-exit, and split rules.
-    review_summary: The formal 2025 one-shot test reports 0.11449 all-market daily mean Rank IC and 23.72% gross Q10 return. Costs, price impact, borrow constraints, and a signal-limit filter review remain outside the current promotion evidence.
+    review_summary: 冻结 baseline historical 2025 RankIC 为 0.11449, Q10 gross return 为 23.72%. Corrected ledger、成本、容量与 independent review 已发布; reference-cost AUM 无共同通过净收益与 80% fill 的区域, 结论为 CONTINUE_RESEARCH.
     source_refs: [astock-overnight]
     stages:
       - {id: data, state: documented, summary: The 2021-2025 minute market, daily references, index weights, and point-in-time security states are audited and versioned.}
@@ -170,7 +160,7 @@ projects:
       - {id: feature-engineering, state: documented, summary: Core v1 contains fixed minute-stock, minute-market, daily-stock, and daily-market factor definitions.}
       - {id: model, state: documented, summary: A dual-GRU late-fusion baseline consumes separate minute and daily sequences under a frozen training contract.}
       - {id: prediction-evaluation, state: documented, summary: Validation and one-shot test results include daily Rank IC, deciles, concentration, and CSI1800 reranking.}
-      - {id: strategy, state: in-progress, summary: Gross long-only cohorts are reported, but costs, price impact, and execution promotion gates remain open.}
+      - {id: strategy, state: in-progress, summary: Corrected event ledger、成本和容量已完成研究与独立 review; production promotion gate 未通过, 仍需新 forward evidence.}
   - id: m3-cn
     title: M3-CN Event Model
     category: forecasting-models

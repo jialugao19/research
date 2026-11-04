@@ -305,8 +305,9 @@ def test_homepage_shows_latest_report_once_per_project(root_build) -> None:
     assert "Index500 Predict 研究报告" in index
     assert "Live Predictor 实时预测质量报告" in index
     assert "L2 Features Ablation vs Stock1m Baseline" not in index
-    assert "L2 Features Ablation vs Stock1m Baseline" in reports
-    assert "0702-l2-ablation-v2" in reports
+    assert "L2 历史结果与归因边界" in reports
+    assert "1103-l2-features-attribution-070312" in reports
+    assert "0702-l2-ablation-v2" not in reports
     assert "reports/prediction-nn/0702-l2-ablation/" not in reports
 
 
@@ -551,7 +552,7 @@ def test_catalog_json_keeps_internal_presentation_fields_private(root_build) -> 
     assert '"research_taxonomy"' in payload
     assert '"subproject"' not in payload
     assert '"tracks"' not in payload
-    assert payload.count('"is_current": true') == 26
+    assert payload.count('"is_current": true') == 73
 
 
 def test_atomic_build_preserves_previous_output_when_validation_fails(tmp_path: Path) -> None:

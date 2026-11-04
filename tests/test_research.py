@@ -35,8 +35,8 @@ def built(catalog, tmp_path_factory):
 
 def test_questions_are_separate_and_cross_linked(catalog):
     # A canonical experiment can answer several questions across project contexts.
-    assert len(catalog.experiments) == 49
-    assert len(catalog.studies) == 31
+    assert len(catalog.experiments) == 56
+    assert len(catalog.studies) == 34
     questions = catalog.studies_for_experiment("0827-market-cs")
     assert {s.id for s in questions} == {"feature-engineering-market", "prediction-evaluation-summary-ic"}
     shared = catalog.study_by_id["prediction-evaluation-summary-ic"]
@@ -67,13 +67,14 @@ def test_question_integrity_rejects_broken_relations(catalog, tmp_path, kind):
 
 def test_reports_and_experiments_support_shared_associations(catalog):
     # Resolve both sides of many-to-many links without copying entities.
+    report_id = "1103-0827-market-cs-comparison-0831"
     first = catalog.experiment_by_id["0827-market-cs"]
     second = replace(catalog.experiment_by_id["0825-feature-audit"], report_ids=first.report_ids)
     first = replace(first, related_project_ids=("prediction-nn-1s",))
     shared = replace(catalog, experiments=tuple(first if e.id == first.id else second if e.id == second.id else e for e in catalog.experiments))
     assert first in shared.experiments_for_project("prediction-nn-1s")
-    assert {e.id for e in shared.experiments_for_report("0831-market-cs-comparison")} == {first.id, second.id}
-    report = replace(catalog.report_by_id["0831-market-cs-comparison"], related_project_ids=("prediction-nn-1s",))
+    assert {e.id for e in shared.experiments_for_report(report_id)} == {first.id, second.id}
+    report = replace(catalog.report_by_id[report_id], related_project_ids=("prediction-nn-1s",))
     shared = replace(shared, reports=tuple(report if r.id == report.id else r for r in catalog.reports))
     assert report in shared.reports_for_project("prediction-nn-1s")
 

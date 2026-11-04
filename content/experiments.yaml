@@ -87,29 +87,33 @@ experiments:
     title: Reference Baseline
     status: completed
     maturity: signal-only
-    updated_at: 2026-07-01
+    updated_at: 2026-11-03
     method: Minute-level GRU baseline
     dataset: stock1m full test
     decision_state: retain
     primary_metric: test-pooled-ic
-    objective: Establish a minute-level reference baseline with complete checkpoints, full-test evaluation, and report artifacts.
-    summary: The robust selector chose the 20k checkpoint; test pooled IC was 0.07034.
+    objective: Establish a minute-level reference baseline with complete checkpoints, full-test evaluation, and report
+      artifacts.
+    summary: 20k checkpoint 的 full-test pooled IC 为 0.0703447025, 保留为历史 close-label 锚点. 当前 run artifact 缺失只限制复现.
     decision: Retain as a historical close-label signal anchor, not as evidence for portfolio cost or capacity.
     caveats:
-      - This establishes signal quality only; net portfolio performance remains unproven.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - This establishes signal quality only; net portfolio performance remains unproven.
     metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.0703447025
-        format: decimal
-        decimals: 4
-        context: test_full, single reference run
-      - id: selected-checkpoint
-        label: Selected checkpoint
-        value: 20000
-        format: integer
-        context: robust selector
-    report_ids: []
+    - id: test-pooled-ic
+      label: Test pooled IC
+      value: 0.0703447025
+      format: decimal
+      decimals: 4
+      context: test_full, single reference run
+    - id: selected-checkpoint
+      label: Selected checkpoint
+      value: 20000
+      format: integer
+      context: robust selector
+    report_ids:
+    - 1103-reference-baseline-full-070110
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/reference-baseline/results.yaml
     featured: false
 
@@ -121,43 +125,50 @@ experiments:
     title: B+VWAP Signal Baseline
     status: completed
     maturity: signal-only
-    updated_at: 2026-07-21
+    updated_at: 2026-11-03
     method: Paired VWAP endpoint comparison
     dataset: stock1m paired_vwap_valid
     decision_state: promote
     primary_metric: vwap-test-ic
-    objective: The old baseline used close returns even though close labels do not fully align with an executable interval. This experiment fixes the paired_vwap_valid rows, changes only the future-return endpoint to VWAP, and retains close labels on the same rows as a paired control.
-    summary: VWAP and close variants use identical splits and training protocols across three seeds. For seed13, VWAP test IC is 0.07445 versus 0.06051 for close, a 0.01395 gain; the other paired seed deltas are also positive. Signal quality improves, but 10-minute net annual return remains negative.
+    objective: The old baseline used close returns even though close labels do not fully align with an executable
+      interval. This experiment fixes the paired_vwap_valid rows, changes only the future-return endpoint to VWAP,
+      and retains close labels on the same rows as a paired control.
+    summary: 相同 paired_vwap_valid 样本上 VWAP 相对 close 的三个 paired seed IC 增量均为正. seed13 为 0.0744533729 vs 0.0605061430.
+      成本后结果仍负.
     decision: Promote B+VWAP as the current signal baseline, but not as an execution-ready portfolio baseline.
     caveats:
-      - A native inference_test manifest is missing, and execution and cost gates have not passed.
-      - Ten-minute net annual return is negative; gross results cannot substitute for it.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - A native inference_test manifest is missing, and execution and cost gates have not passed.
+    - Ten-minute net annual return is negative; gross results cannot substitute for it.
     metrics:
-      - id: vwap-test-ic
-        label: B+VWAP test IC
-        value: 0.0744533729
-        format: decimal
-        decimals: 4
-        context: seed13, paired_vwap_valid
-      - id: close-control-ic
-        label: Paired close IC
-        value: 0.0605061430
-        format: decimal
-        decimals: 4
-        context: seed13, identical row set
-      - id: ic-delta
-        label: Paired IC delta
-        value: 0.0139472299
-        format: decimal
-        decimals: 4
-        context: VWAP minus close
-      - id: net-annual-return
-        label: 10m net annual return
-        value: -99.48
-        format: percent
-        decimals: 2
-        context: portfolio gate, seed13
-    report_ids: []
+    - id: vwap-test-ic
+      label: B+VWAP test IC
+      value: 0.0744533729
+      format: decimal
+      decimals: 4
+      context: seed13, paired_vwap_valid
+    - id: close-control-ic
+      label: Paired close IC
+      value: 0.060506143
+      format: decimal
+      decimals: 4
+      context: seed13, identical row set
+    - id: ic-delta
+      label: Paired IC delta
+      value: 0.0139472299
+      format: decimal
+      decimals: 4
+      context: VWAP minus close
+    - id: net-annual-return
+      label: 10m net annual return
+      value: -99.48
+      format: percent
+      decimals: 2
+      context: portfolio gate, seed13
+    report_ids:
+    - 1103-reference-baseline-v2-full-071714
+    - 1103-reference-baseline-v2-bvwap-comparison-0717
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/reference-baseline-v2/results.yaml
     featured: true
 
@@ -169,51 +180,57 @@ experiments:
     title: Final 1min Architecture Evaluation
     status: completed
     maturity: decision-ready
-    updated_at: 2026-07-25
+    updated_at: 2026-11-03
     method: GRU / MLP architecture screen
     dataset: stock1m · seeds 7/11/13
     decision_state: retain
     primary_metric: test-pooled-ic
-    objective: The former default used GRU384×2 with two 512-unit MLP layers and roughly 1.81 million parameters, yet capacity did not improve out-of-sample stability. Eighteen smaller GRU/MLP candidates were screened under one budget, then GRU192×2 last-hidden and attention representations were compared across seeds 7, 11, and 13.
-    summary: GRU192×2 last-hidden beats attention on both test pooled IC and Rank IC across all three seeds. Mean pooled IC is 0.07895 and mean Rank IC is 0.04651 versus 0.07066 test IC for attention. The retained model has 342,337 parameters, about one fifth of the old model.
+    objective: The former default used GRU384×2 with two 512-unit MLP layers and roughly 1.81 million parameters,
+      yet capacity did not improve out-of-sample stability. Eighteen smaller GRU/MLP candidates were screened under
+      one budget, then GRU192×2 last-hidden and attention representations were compared across seeds 7, 11, and 13.
+    summary: GRU192×2 last-hidden 在 seeds 7/11/13 的 IC 和 RankIC 均优于 attention, 平均 test IC 为 0.0789459. TCN 的 seed7
+      gate 未通过.
     decision: Retain GRU192×2 MLP[] last-hidden; do not promote attention or TCN.
     caveats:
-      - This is architecture and signal-selection evidence, not proof of net trading performance.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - This is architecture and signal-selection evidence, not proof of net trading performance.
     metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC mean
-        value: 0.0789459452
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/13
-      - id: test-rank-ic
-        label: Test Rank IC mean
-        value: 0.0465149687
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/13
-      - id: attention-test-ic
-        label: Attention test IC
-        value: 0.0706621299
-        format: decimal
-        decimals: 5
-        context: three-seed control
-      - id: parameters
-        label: Trainable parameters
-        value: 342337
-        format: integer
-        context: retained last-hidden model
-      - id: baseline-parameters
-        label: Previous baseline parameters
-        value: 1808129
-        format: integer
-        context: GRU384×2 + MLP512×512
-      - id: architecture-candidates
-        label: Architectures screened
-        value: 18
-        format: integer
-        context: fixed-budget 1min screen
-    report_ids: [0725-1min-model-screening-v2]
+    - id: test-pooled-ic
+      label: Test pooled IC mean
+      value: 0.0789459452
+      format: decimal
+      decimals: 5
+      context: seeds 7/11/13
+    - id: test-rank-ic
+      label: Test Rank IC mean
+      value: 0.0465149687
+      format: decimal
+      decimals: 5
+      context: seeds 7/11/13
+    - id: attention-test-ic
+      label: Attention test IC
+      value: 0.0706621299
+      format: decimal
+      decimals: 5
+      context: three-seed control
+    - id: parameters
+      label: Trainable parameters
+      value: 342337
+      format: integer
+      context: retained last-hidden model
+    - id: baseline-parameters
+      label: Previous baseline parameters
+      value: 1808129
+      format: integer
+      context: GRU384×2 + MLP512×512
+    - id: architecture-candidates
+      label: Architectures screened
+      value: 18
+      format: integer
+      context: fixed-budget 1min screen
+    report_ids:
+    - 1103-optimize-1min-model-final-comparison-072504
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/optimize-1min-model/results.yaml
     featured: true
 
@@ -225,30 +242,34 @@ experiments:
     title: 1min Loss Function Stage B
     status: completed
     maturity: developmental
-    updated_at: 2026-07-25
+    updated_at: 2026-11-03
     method: Loss-function screen
     dataset: stock1m · seed7
     decision_state: iterate
     primary_metric: candidate-test-ic
     objective: Compare MSE, correlation, moment, and prediction-scale constrained losses.
-    summary: In single-seed Stage B, mse_std_floor_0p1 reaches 0.07776 test IC versus 0.06888 for the MSE control.
+    summary: Stage B seed7 的 mse_std_floor_0p1 test IC 为 0.0777618206, 高于 MSE 的 0.0688795701. 这是单 seed 筛选, 输出 scale
+      问题未完全解决.
     decision: Promote only to a multi-seed Stage C candidate, not to the default loss.
     caveats:
-      - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - This is a seed7 screen; prediction volatility remains materially below target volatility for every variant.
     metrics:
-      - id: candidate-test-ic
-        label: Candidate test IC
-        value: 0.0777618206
-        format: decimal
-        decimals: 5
-        context: mse_std_floor_0p1, seed7
-      - id: mse-test-ic
-        label: MSE control IC
-        value: 0.0688795701
-        format: decimal
-        decimals: 5
-        context: seed7, same-protocol control
-    report_ids: []
+    - id: candidate-test-ic
+      label: Candidate test IC
+      value: 0.0777618206
+      format: decimal
+      decimals: 5
+      context: mse_std_floor_0p1, seed7
+    - id: mse-test-ic
+      label: MSE control IC
+      value: 0.0688795701
+      format: decimal
+      decimals: 5
+      context: seed7, same-protocol control
+    report_ids:
+    - 1103-loss-function-1min-final-comparison-072821
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/loss-function-1min/results.yaml
     featured: false
 
@@ -260,62 +281,67 @@ experiments:
     title: 1s GRU384 Baseline Evaluation
     status: doing
     maturity: developmental
-    updated_at: 2026-08-08
+    updated_at: 2026-11-03
     method: GRU384 + MLP512×512
     dataset: stock1s/v2 fold0
     decision_state: iterate
     primary_metric: test-pooled-ic
-    objective: Second-level trades, quotes, and order flow carry more information, noise, and turnover than the minute-level mainline. The experiment audits 78 deduplicated stock1s/v2 features on fold0, trains GRU384 with a two-layer MLP512×512 head, and evaluates sample-level signals, key-universe aggregation, and 10-minute net portfolios in one chain.
-    summary: Fold0 contains 7,947,567 valid evaluation rows. Test pooled IC is 0.09842 and Rank IC is 0.09469, but the net candidate used test during selection. Its 10-minute net daily return is -0.168% and Sharpe is -18.27. The signal chain merits continued research, but tradability is not established.
+    objective: Second-level trades, quotes, and order flow carry more information, noise, and turnover than the minute-level
+      mainline. The experiment audits 78 deduplicated stock1s/v2 features on fold0, trains GRU384 with a two-layer
+      MLP512×512 head, and evaluates sample-level signals, key-universe aggregation, and 10-minute net portfolios
+      in one chain.
+    summary: Fold0 step194640 的 conditional timestamp test IC 为 0.1068132851. Coverage selection bias 与成本后负收益仍限制使用,
+      不与独立 OHLCV-only v2 直接排名.
     decision: Keep 1s as an independent research line; correct selection policy and reduce turnover before promotion.
     caveats:
-      - The cost and turnover candidate used test during selection and cannot support formal promotion.
-      - Ten-minute net daily return and Sharpe are negative; gross performance cannot be cited in isolation.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The cost and turnover candidate used test during selection and cannot support formal promotion.
+    - Ten-minute net daily return and Sharpe are negative; gross performance cannot be cited in isolation.
     metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.0984152803
-        format: decimal
-        decimals: 5
-        context: fold0, 7,947,567 rows
-      - id: test-rank-ic
-        label: Test Rank IC
-        value: 0.0946858020
-        format: decimal
-        decimals: 5
-        context: fold0, 7,947,567 rows
-      - id: evaluation-rows
-        label: Evaluation rows
-        value: 7947567
-        format: integer
-        context: fold0 test set
-      - id: net-daily-return
-        label: 10m net daily return
-        value: -0.1679929498
-        format: percent
-        decimals: 3
-        context: c60_top05, test-selected
-      - id: net-sharpe
-        label: 10m net Sharpe
-        value: -18.2703766
-        format: number
-        decimals: 2
-        context: 59 trading days
-      - id: daily-turnover
-        label: Daily turnover
-        value: 7.9912119
-        format: number
-        decimals: 2
-        unit: x
-        context: c60_top05
+    - id: test-pooled-ic
+      label: Test pooled IC
+      value: 0.0984152803
+      format: decimal
+      decimals: 5
+      context: fold0, 7,947,567 rows
+    - id: test-rank-ic
+      label: Test Rank IC
+      value: 0.094685802
+      format: decimal
+      decimals: 5
+      context: fold0, 7,947,567 rows
+    - id: evaluation-rows
+      label: Evaluation rows
+      value: 7947567
+      format: integer
+      context: fold0 test set
+    - id: net-daily-return
+      label: 10m net daily return
+      value: -0.1679929498
+      format: percent
+      decimals: 3
+      context: c60_top05, test-selected
+    - id: net-sharpe
+      label: 10m net Sharpe
+      value: -18.2703766
+      format: number
+      decimals: 2
+      context: 59 trading days
+    - id: daily-turnover
+      label: Daily turnover
+      value: 7.9912119
+      format: number
+      decimals: 2
+      unit: x
+      context: c60_top05
     report_ids:
-      - 0730-stock1s-feature-health-v2
-      - 0807-stock1s-fold0-full-evaluation
-      - 0807-stock1s-cost-turnover-sweep
-      - 0808-stock1s-p0-p4-research
+    - 0730-stock1s-feature-health-v2
+    - 0807-stock1s-fold0-full-evaluation
+    - 0807-stock1s-cost-turnover-sweep
+    - 0808-stock1s-p0-p4-research
+    - 1103-nn-registry-summary
     evidence_ref: public-report/0807-stock1s-fold0-full-evaluation
     featured: true
-
     figures:
     - report_id: 0807-stock1s-fold0-full-evaluation
       image_index: 1
@@ -332,17 +358,20 @@ experiments:
     title: Mainline Baseline Placeholder
     status: doing
     maturity: blocked
-    updated_at: 2026-07-25
+    updated_at: 2026-11-03
     method: Baseline registration audit
     dataset: Mainline artifacts
     decision_state: blocked
     objective: Register configuration, run, and artifact facts for the mainline baseline.
-    summary: No completed and reproducible run with configuration, metrics, and artifacts has been located.
-    decision: Exclude from all comparisons until registration is complete.
+    summary: 在 REPORT、网站及当前 checkout 中未定位到可归属于该实验的独立正式报告. 历史 capacity 报告引用它的数据目录, 不能据此确认其自身训练成功或失败.
+    decision: 正式结果身份待核对. 历史capacity报告只证明曾复用该数据目录; 不据此断言此实验失败或从未运行.
     caveats:
-      - The checkout was dirty during registration and only a report outline is available.
+    - '历史结果: 待核对. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - 登记时checkout为dirty. 已确认历史capacity实验引用过其data root, 但未找到可确认独立run身份的正式模型报告.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-baseline-main-20260622-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/baseline-main-20260622/results.yaml
     featured: false
 
@@ -354,24 +383,27 @@ experiments:
     title: Touch Test-All Diagnostic
     status: archived
     maturity: diagnostic
-    updated_at: 2026-07-25
+    updated_at: 2026-11-03
     method: Touch-train / full-test diagnostic
     dataset: stock1m unfiltered test
     decision_state: diagnostic
     primary_metric: diagnostic-test-ic
     objective: Record diagnostic results for touch-filtered training against an unfiltered test set.
-    summary: Test IC reaches 0.08884, but the full test universe differs from the main comparison matrix.
+    summary: touch-test-all 诊断已产出, test pooled IC 为 0.088842. 它采用未过滤 test universe, 不能与 all/touch/limit 主矩阵直接排序.
     decision: Retain only as limit-pool diagnostic provenance; exclude it from all/touch/limit ranking.
     caveats:
-      - Both the test universe and source checkout changed, so the result is not directly comparable.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Both the test universe and source checkout changed, so the result is not directly comparable.
     metrics:
-      - id: diagnostic-test-ic
-        label: Diagnostic test IC
-        value: 0.088842
-        format: decimal
-        decimals: 5
-        context: unfiltered supervised test
-    report_ids: []
+    - id: diagnostic-test-ic
+      label: Diagnostic test IC
+      value: 0.088842
+      format: decimal
+      decimals: 5
+      context: unfiltered supervised test
+    report_ids:
+    - 1103-test-all-touch-test-all-061318
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/test-all/results.yaml
     featured: false
 
@@ -383,36 +415,40 @@ experiments:
     title: Limit-State Sample Pool Comparison
     status: completed
     maturity: decision-ready
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Sample-pool comparison
     dataset: stock1m all / touch / limit
     decision_state: retain
     primary_metric: touch-test-ic
     objective: Compare all, touch, and limit supervised sample pools under one protocol.
-    summary: Touch achieves the highest test IC, top-prediction return, and ETF top95 hit rate in the main matrix.
+    summary: all/touch/limit 主矩阵已完成. touch 的 test pooled IC 为 0.0691368, all 为 0.0686563. 改变总体的 touch-test-all 单列解释.
     decision: Prefer touch in the main matrix; retain test-all only as a non-comparable diagnostic.
     caveats:
-      - Strategy metrics still rely on cost and execution proxies documented in the report.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Strategy metrics still rely on cost and execution proxies documented in the report.
     metrics:
-      - id: touch-test-ic
-        label: Touch test IC
-        value: 0.0691368300
-        format: decimal
-        decimals: 5
-        context: all/touch/limit main matrix
-      - id: top-return
-        label: Top prediction return
-        value: 9.2415430
-        format: bps
-        decimals: 2
-        context: touch variant
-      - id: etf-hit
-        label: ETF top95 hit
-        value: 54.7272727
-        format: percent
-        decimals: 2
-        context: touch variant
-    report_ids: []
+    - id: touch-test-ic
+      label: Touch test IC
+      value: 0.06913683
+      format: decimal
+      decimals: 5
+      context: all/touch/limit main matrix
+    - id: top-return
+      label: Top prediction return
+      value: 9.241543
+      format: bps
+      decimals: 2
+      context: touch variant
+    - id: etf-hit
+      label: ETF top95 hit
+      value: 54.7272727
+      format: percent
+      decimals: 2
+      context: touch variant
+    report_ids:
+    - 1103-test-all-touch-test-all-061318
+    - 1103-limit-pool-comparison-061513
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/limit-pool/results.yaml
     featured: false
 
@@ -424,36 +460,40 @@ experiments:
     title: Near-Zero Filter Comparison
     status: completed
     maturity: decision-ready
-    updated_at: 2026-06-17
+    updated_at: 2026-11-03
     method: Return-feature filter screen
     dataset: stock1m · seed7
     decision_state: retain
     primary_metric: best-test-ic
     objective: Compare exact-zero and near-zero return-feature filters for signal quality and sample retention.
-    summary: ret-ge2-nz5e-4 has the highest test IC and top return; flat-ret123-oc has the highest top95 hit rate.
+    summary: 三臂 full train/evaluation 已完成. ret-ge2-nz5e-4 在 pooled IC 与高预测组收益上领先, flat-ret123-oc 在 hit-rate 指标上领先,
+      不合成单一 winner.
     decision: Retain separate IC/return and hit-rate objectives rather than declaring one global winner.
     caveats:
-      - Trading and cost metrics remain proxies and are not equivalent to live returns.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Trading and cost metrics remain proxies and are not equivalent to live returns.
     metrics:
-      - id: best-test-ic
-        label: Best test IC
-        value: 0.0707367617
-        format: decimal
-        decimals: 5
-        context: ret-ge2-nz5e-4
-      - id: best-top-return
-        label: Best top return
-        value: 10.2584750
-        format: bps
-        decimals: 2
-        context: ret-ge2-nz5e-4
-      - id: best-etf-hit
-        label: Best ETF top95 hit
-        value: 55.3337306
-        format: percent
-        decimals: 2
-        context: flat-ret123-oc
-    report_ids: []
+    - id: best-test-ic
+      label: Best test IC
+      value: 0.0707367617
+      format: decimal
+      decimals: 5
+      context: ret-ge2-nz5e-4
+    - id: best-top-return
+      label: Best top return
+      value: 10.258475
+      format: bps
+      decimals: 2
+      context: ret-ge2-nz5e-4
+    - id: best-etf-hit
+      label: Best ETF top95 hit
+      value: 55.3337306
+      format: percent
+      decimals: 2
+      context: flat-ret123-oc
+    report_ids:
+    - 1103-near-zero-filter-comparison-061720
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/near-zero-filter/results.yaml
     featured: false
 
@@ -465,35 +505,38 @@ experiments:
     title: Learning Rate and Scheduler
     status: completed
     maturity: decision-ready
-    updated_at: 2026-06-26
+    updated_at: 2026-11-03
     method: Learning-rate / scheduler screen
     dataset: stock1m · seeds 7/11/19
     decision_state: retain
     primary_metric: mean-test-ic
     objective: Select a stable learning rate and scheduler under a fixed final-step protocol.
-    summary: warmup_cosine with lr=0.009 averages 0.07354 test IC across seeds 7/11/19.
+    summary: 固定 final iter110000 协议支持 warmup_cosine、lr=0.009, seeds 7/11/19 平均 test IC 为 0.0735400370. 更高学习率中的发散臂单列为失败.
     decision: Use warmup_cosine + 0.009 for later runs with the same model, batch, data, and training length.
     caveats:
-      - Re-run the local learning-rate neighborhood after changes to architecture, batch, split, or training length.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Re-run the local learning-rate neighborhood after changes to architecture, batch, split, or training length.
     metrics:
-      - id: mean-test-ic
-        label: Mean test IC
-        value: 0.0735400370
-        format: decimal
-        decimals: 5
-        context: seeds 7/11/19
-      - id: test-ic-std
-        label: Test IC std
-        value: 0.0019912445
-        format: decimal
-        decimals: 5
-        context: three seeds
-      - id: final-iter
-        label: Final iteration
-        value: 110000
-        format: integer
-        context: fixed final-step protocol
-    report_ids: []
+    - id: mean-test-ic
+      label: Mean test IC
+      value: 0.073540037
+      format: decimal
+      decimals: 5
+      context: seeds 7/11/19
+    - id: test-ic-std
+      label: Test IC std
+      value: 0.0019912445
+      format: decimal
+      decimals: 5
+      context: three seeds
+    - id: final-iter
+      label: Final iteration
+      value: 110000
+      format: integer
+      context: fixed final-step protocol
+    report_ids:
+    - 1103-learning-rate-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/learning-rate/results.yaml
     featured: false
 
@@ -505,30 +548,33 @@ experiments:
     title: Rolling/Purged Validation Stability
     status: completed
     maturity: decision-ready
-    updated_at: 2026-06-28
+    updated_at: 2026-11-03
     method: Rolling purged validation
     dataset: stock1m · three folds
     decision_state: retain
     primary_metric: validation-ic-mean
     objective: Test whether validation IC decays materially across three rolling periods.
-    summary: Mean pooled validation IC is 0.06590 across three folds with a 0.00455 range; no material late-period collapse is observed.
-    decision: Do not replace the architecture solely for temporal decay; trading decisions still require portfolio-level validation.
+    summary: 三个 rolling/purged fold 已记录验证 IC 0.0642117、0.0647218、0.0687591. 当前源报告和 run artifact 缺失, 不改变历史完成事实.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - Test is retained only as a pipeline contract, not as selection or trading evidence.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Test is retained only as a pipeline contract, not as selection or trading evidence.
     metrics:
-      - id: validation-ic-mean
-        label: Validation IC mean
-        value: 0.065898
-        format: decimal
-        decimals: 5
-        context: 3 rolling/purged folds
-      - id: validation-ic-range
-        label: Validation IC range
-        value: 0.004547
-        format: decimal
-        decimals: 5
-        context: max minus min
-    report_ids: []
+    - id: validation-ic-mean
+      label: Validation IC mean
+      value: 0.065898
+      format: decimal
+      decimals: 5
+      context: 3 rolling/purged folds
+    - id: validation-ic-range
+      label: Validation IC range
+      value: 0.004547
+      format: decimal
+      decimals: 5
+      context: max minus min
+    report_ids:
+    - 1103-rolling-purged-val-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/rolling-purged-val/results.yaml
     featured: false
 
@@ -540,35 +586,40 @@ experiments:
     title: Robust Checkpoint Selection Rule
     status: completed
     maturity: decision-ready
-    updated_at: 2026-06-29
+    updated_at: 2026-11-03
     method: Robust checkpoint selector
     dataset: stock1m rolling / purged folds
     decision_state: retain
     primary_metric: selected-checkpoint
-    objective: A single-window validation argmax can follow short-term noise and create hidden overfitting after repeated test inspection. This experiment scores checkpoints across three rolling/purged folds and the final 20 trading days using mean IC minus 0.5 standard deviations, then selects the earlier of the top two.
-    summary: The rule selects 20k without reading test ranking and keeps 30k as an aggressive control. In a one-time test audit, the 20k checkpoint has zero regret versus the post-hoc optimum. This supports freezing the selector, not iterating it on the same test set.
+    objective: A single-window validation argmax can follow short-term noise and create hidden overfitting after repeated
+      test inspection. This experiment scores checkpoints across three rolling/purged folds and the final 20 trading
+      days using mean IC minus 0.5 standard deviations, then selects the earlier of the top two.
+    summary: 历史 full-grid audit 支持三 fold、最后20个验证日、IC mean−0.5 std、earliest top2 的选择规则. 该 audit 的 test 已被查看, 不能视为新的盲选验证.
     decision: Use 20k as the robust default; retain 30k only as an aggressive comparison.
     caveats:
-      - The same test audit must not be reused to tune the selector.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The same test audit must not be reused to tune the selector.
     metrics:
-      - id: selected-checkpoint
-        label: Robust checkpoint
-        value: 20000
-        format: integer
-        context: earliest top-2
-      - id: mean-test-ic
-        label: Mean test IC
-        value: 0.059220
-        format: decimal
-        decimals: 5
-        context: robust 20k winner
-      - id: top-decile-return
-        label: Mean top-decile return
-        value: 5.235391
-        format: bps
-        decimals: 2
-        context: robust 20k winner
-    report_ids: []
+    - id: selected-checkpoint
+      label: Robust checkpoint
+      value: 20000
+      format: integer
+      context: earliest top-2
+    - id: mean-test-ic
+      label: Mean test IC
+      value: 0.05922
+      format: decimal
+      decimals: 5
+      context: robust 20k winner
+    - id: top-decile-return
+      label: Mean top-decile return
+      value: 5.235391
+      format: bps
+      decimals: 2
+      context: robust 20k winner
+    report_ids:
+    - 1103-val-select-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/val-select/results.yaml
     featured: true
 
@@ -580,30 +631,33 @@ experiments:
     title: Capacity and Robust Sampling
     status: completed
     maturity: developmental
-    updated_at: 2026-06-28
+    updated_at: 2026-11-03
     method: Capacity and sampling screen
     dataset: stock1m · single validation period
     decision_state: iterate
     primary_metric: small-model-best-val-ic
     objective: Test whether lower capacity, dropout, robust losses, and decorrelated sampling reduce early overfitting.
-    summary: All five variants peak at 10k validation IC. Lower capacity improves late-checkpoint retention but does not delay the peak.
-    decision: Prioritize smaller models and early stopping; do not expand Huber/clip or the current decorrelated sampler.
+    summary: 五臂 validation 矩阵已完成. 所有臂均在10k达到峰值, 降低容量改善后期保持率但未推迟峰值. 当前 run artifact 缺失只限制复现.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - Only one validation period is covered; rolling/purged confirmation is still required.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Only one validation period is covered; rolling/purged confirmation is still required.
     metrics:
-      - id: small-model-best-val-ic
-        label: Small model best val IC
-        value: 0.0793455647
-        format: decimal
-        decimals: 5
-        context: GRU192 + MLP256, 10k
-      - id: small-model-gap-60k
-        label: Train–val gap at 60k
-        value: 0.2915384650
-        format: decimal
-        decimals: 4
-        context: reduced-capacity variant
-    report_ids: []
+    - id: small-model-best-val-ic
+      label: Small model best val IC
+      value: 0.0793455647
+      format: decimal
+      decimals: 5
+      context: GRU192 + MLP256, 10k
+    - id: small-model-gap-60k
+      label: Train–val gap at 60k
+      value: 0.291538465
+      format: decimal
+      decimals: 4
+      context: reduced-capacity variant
+    report_ids:
+    - 1103-capacity-robust-sampling-self-constrained-html
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/capacity-robust-sampling/results.yaml
     featured: false
 
@@ -615,36 +669,40 @@ experiments:
     title: Label Noise and Prediction Calibration
     status: completed
     maturity: developmental
-    updated_at: 2026-07-08
+    updated_at: 2026-11-03
     method: Paired endpoint / label study
     dataset: stock1m paired samples
     decision_state: iterate
     primary_metric: vwap-test-ic
     objective: Evaluate VWAP endpoints and robust label treatments for signal and calibration on paired samples.
-    summary: The VWAP endpoint improves IC, Rank IC, top-bottom spread, and calibration error versus paired close. No A3 variant passes promotion gates.
+    summary: 相同 paired_vwap_valid 总体上的 A2 VWAP endpoint 改动提高 IC、RankIC 和 spread. A3 robust-label 方案未通过 calibration
+      promotion gate, 属于已完成的负结果.
     decision: Retain the A2 VWAP direction for multi-seed validation; do not promote A3 robust-label variants.
     caveats:
-      - The current screen uses one seed, and volatility normalization also changes the valid row set.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The current screen uses one seed, and volatility normalization also changes the valid row set.
     metrics:
-      - id: vwap-test-ic
-        label: VWAP paired test IC
-        value: 0.0761556237
-        format: decimal
-        decimals: 5
-        context: vwap_vwap_intersection
-      - id: close-test-ic
-        label: Close paired test IC
-        value: 0.0532774338
-        format: decimal
-        decimals: 5
-        context: control_close_intersection
-      - id: spread-delta
-        label: Top-bottom spread delta
-        value: 1.9782819
-        format: bps
-        decimals: 2
-        context: VWAP minus paired close
-    report_ids: []
+    - id: vwap-test-ic
+      label: VWAP paired test IC
+      value: 0.0761556237
+      format: decimal
+      decimals: 5
+      context: vwap_vwap_intersection
+    - id: close-test-ic
+      label: Close paired test IC
+      value: 0.0532774338
+      format: decimal
+      decimals: 5
+      context: control_close_intersection
+    - id: spread-delta
+      label: Top-bottom spread delta
+      value: 1.9782819
+      format: bps
+      decimals: 2
+      context: VWAP minus paired close
+    report_ids:
+    - 1103-prediction-calibration-label-noise-070814
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/prediction-calibration/results.yaml
     featured: false
 
@@ -656,17 +714,21 @@ experiments:
     title: Rolling Year and Endpoint Stride
     status: completed
     maturity: developmental
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Rolling-year / stride comparison
     dataset: stock1m rolling years
     decision_state: iterate
     objective: Test the effects of calendar-year retraining and endpoint stride on cross-period signals.
-    summary: Stride5 is close to the standard reference. Rolling-year results vary materially, and the original stride10 selector fails after selecting iter0.
-    decision: Retain stride5 as a development candidate; treat the stride10 10k recovery as post-hoc diagnosis only.
+    summary: Rolling/stride 比较已完成. stride5 接近 reference, 原 stride10 selector 选择 iter0; 10k recovery 属于 post hoc 诊断.
+      不同年份的 fold 不直接排名.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Variants use different test years and only seed7, so no unified conclusion versus baseline is valid.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-generalization-rolling-stride-comparison-070913
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/generalization-rolling-stride/results.yaml
     featured: false
 
@@ -678,17 +740,20 @@ experiments:
     title: Adjacent-Window Sampling
     status: completed
     maturity: developmental
-    updated_at: 2026-07-10
+    updated_at: 2026-11-03
     method: Endpoint sampling comparison
     dataset: stock1m partial 2024 test
     decision_state: iterate
     objective: Compare dense and block60/block70 endpoint sampling.
-    summary: Dense has the highest pooled IC in the single-seed screen, while block70 epoch has stronger Rank IC and reported gap.
-    decision: Keep block70 as a development suggestion only; do not replace dense.
+    summary: 单 seed 比较中 dense 的 pooled IC 最高, block70 epoch 的 block 方法 RankIC 和 gap 较好. Test 只覆盖至2024-07-26, 不与全年参考直接比较.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - The result uses one seed and only part of the 2024 test period.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The result uses one seed and only part of the 2024 test period.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-generalization-adjacent-window-comparison
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window/results.yaml
     featured: false
 
@@ -700,36 +765,40 @@ experiments:
     title: Adjacent-Window Multi-Seed Check
     status: completed
     maturity: decision-ready
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Multi-seed sampling validation
     dataset: stock1m · seeds 7/17/27
     decision_state: reject
     primary_metric: dense-test-ic
     objective: Confirm Dense versus Block70 epoch stability across seeds 7/17/27.
-    summary: Dense has higher mean test IC and materially lower variance. Block70 reduces the gap only for seed7.
-    decision: Do not promote Block70 epoch under the current protocol; retain Dense.
+    summary: Seeds 7/17/27 中 Dense 的平均 test IC 为 0.0779182, Block70 epoch 为 0.0642507; Block70 pooled-IC win rate
+      为0/3. 负增益不构成流程失败.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - OOS dates remain development folds, and comparisons match optimizer steps rather than effective exposure.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - OOS dates remain development folds, and comparisons match optimizer steps rather than effective exposure.
     metrics:
-      - id: dense-test-ic
-        label: Dense test IC mean
-        value: 0.0779182436
-        format: decimal
-        decimals: 5
-        context: seeds 7/17/27
-      - id: block70-test-ic
-        label: Block70 test IC mean
-        value: 0.0642507174
-        format: decimal
-        decimals: 5
-        context: seeds 7/17/27
-      - id: dense-ic-std
-        label: Dense IC std
-        value: 0.0001382819
-        format: decimal
-        decimals: 5
-        context: three seeds
-    report_ids: []
+    - id: dense-test-ic
+      label: Dense test IC mean
+      value: 0.0779182436
+      format: decimal
+      decimals: 5
+      context: seeds 7/17/27
+    - id: block70-test-ic
+      label: Block70 test IC mean
+      value: 0.0642507174
+      format: decimal
+      decimals: 5
+      context: seeds 7/17/27
+    - id: dense-ic-std
+      label: Dense IC std
+      value: 0.0001382819
+      format: decimal
+      decimals: 5
+      context: three seeds
+    report_ids:
+    - 1103-generalization-adjacent-window-multiseed-comparison
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/generalization-adjacent-window-multiseed/results.yaml
     featured: false
 
@@ -741,17 +810,21 @@ experiments:
     title: Block70 Checkpoint Curve Diagnostic
     status: completed
     maturity: diagnostic
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Checkpoint-curve audit
     dataset: stock1m Block70 · 11 checkpoints
     decision_state: diagnostic
     objective: Inspect eleven checkpoints along the Block70 epoch curve for overtraining behavior.
-    summary: Test IC declines after 30k while the generalization gap widens.
-    decision: Use only to diagnose overtraining, not to select a production checkpoint.
+    summary: 11个 checkpoint 的诊断已完成. Block70 epoch 早期达峰, 后期 test IC 下降且 gap 扩大. 全曲线 test exposure 使其不能作为 blind checkpoint
+      selection.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - Test metrics have been viewed for every checkpoint, creating test exposure.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Test metrics have been viewed for every checkpoint, creating test exposure.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-generalization-block70-checkpoint-curve-report
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/generalization-block70-checkpoint-curve/results.yaml
     featured: false
 
@@ -763,17 +836,24 @@ experiments:
     title: Main Combo Integration Matrix
     status: completed
     maturity: blocked
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Controlled integration matrix
     dataset: stock1m · seed7
     decision_state: blocked
     objective: Combine touch, ret-ge2, and their interaction in one seed7 matrix.
-    summary: The unfiltered baseline wins; none of the three modifications improves test pooled IC.
-    decision: Retain the negative result. Registered run roots have been cleaned, so any further comparison requires a rerun.
+    summary: 四臂 seed7 比较与 baseline verification 已完成. 未过滤 baseline 的 test IC 为0.075855, 高于 touch、ret-ge2 及其组合, 不支持局部增益直接叠加.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - Only report evidence remains; all registered cache run roots are missing.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Only report evidence remains; all registered cache run roots are missing.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-main-combo-integration-baseline-062916
+    - 1103-main-combo-integration-touch-063004
+    - 1103-main-combo-integration-ret-ge2-063008
+    - 1103-main-combo-integration-touch-ret-ge2-063012
+    - 1103-main-combo-integration-baseline-verification-063022
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/main-combo-integration/results.yaml
     featured: false
 
@@ -785,17 +865,20 @@ experiments:
     title: Zero-Aware Transform Comparison
     status: completed
     maturity: blocked
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Zero-aware transform screen
     dataset: stock1m F24
     decision_state: blocked
     objective: Compare four zero-aware feature transforms.
-    summary: Three F24 variants cluster near 0.0722–0.0725 test IC, but a no-transform control is missing.
-    decision: Make no improvement claim until the off control and model-card consistency are restored.
+    summary: 四个 zero-aware transform 已有历史结果, F24 三臂 IC 约为0.0722-0.0725. 缺少 off control 且旧 model card 有不一致, 不能据此归因增益.
+    decision: 保留已成功完成的历史实验与原结论. 当前artifact缺失只限制原流程复现, 不否定报告和登记数值. 比较边界按原合同解释.
     caveats:
-      - F24 model-card metadata does not match the prepared data.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - F24 model-card metadata does not match the prepared data.
     metrics: []
-    report_ids: []
+    report_ids:
+    - 1103-zero-aware-normalization-comparison
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/zero-aware-normalization/results.yaml
     featured: false
 
@@ -807,24 +890,29 @@ experiments:
     title: L2 Feature Attribution
     status: archived
     maturity: blocked
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: L2 feature ablation
     dataset: stock1m + snapshot fast12
     decision_state: blocked
     primary_metric: observed-all-fast12-ic
     objective: Evaluate the contribution of snapshot fast12 L2 features against the stock1m baseline.
-    summary: all_fast12 shows approximately 0.0805 test IC, but experiment arms use an 11-vs-1-vs-11 checkpoint-candidate policy.
+    summary: L2 训练和评估已产生历史结果, all_fast12 观察 test IC 为0.0805. Baseline/LOO 与 only/all_fast12 的 checkpoint 候选数为11 vs
+      1, 因而贡献归因无效, 不等于实验流程失败.
     decision: Preserve the observation but block cross-arm attribution claims.
     caveats:
-      - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Feature content is confounded with checkpoint training depth; a uniform-policy rerun is required.
     metrics:
-      - id: observed-all-fast12-ic
-        label: Observed all_fast12 IC
-        value: 0.0805
-        format: decimal
-        decimals: 4
-        context: non-attributable observation
-    report_ids: [0702-l2-ablation-v2]
+    - id: observed-all-fast12-ic
+      label: Observed all_fast12 IC
+      value: 0.0805
+      format: decimal
+      decimals: 4
+      context: non-attributable observation
+    report_ids:
+    - 1103-l2-features-attribution-070312
+    - 1103-l2-features-leave-one-out-070312
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/l2-features/results.yaml
     featured: false
 
@@ -836,30 +924,33 @@ experiments:
     title: Historical Feature Cleaning Bundle
     status: archived
     maturity: archived
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Historical artifact audit
     dataset: stock1m F15 archived run
     decision_state: archived
     primary_metric: historical-test-ic
     objective: Preserve results and reproducibility gaps for a historical F15 feature-cleaning run.
-    summary: Historical test IC is 0.07389, but exact launch overrides and artifacts are missing.
+    summary: F15 feature-cleaning full report 保留了历史训练与评估结果. 精确 launch overrides 和当前 run artifact 不齐, 该版本不作为当前 baseline.
     decision: Retain as provenance only, not as a current baseline.
     caveats:
-      - The current artifact root and exact NN_* launch configuration are missing.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The current artifact root and exact NN_* launch configuration are missing.
     metrics:
-      - id: historical-test-ic
-        label: Historical test IC
-        value: 0.073889
-        format: decimal
-        decimals: 5
-        context: archived F15 run
-      - id: historical-top-hit
-        label: Historical top95 hit
-        value: 47.60
-        format: percent
-        decimals: 2
-        context: archived report
-    report_ids: []
+    - id: historical-test-ic
+      label: Historical test IC
+      value: 0.073889
+      format: decimal
+      decimals: 5
+      context: archived F15 run
+    - id: historical-top-hit
+      label: Historical top95 hit
+      value: 47.6
+      format: percent
+      decimals: 2
+      context: archived report
+    report_ids:
+    - 1103-feature-cleaning-0609-04-061018
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/feature-cleaning-bundle-0609/results.yaml
     featured: false
 
@@ -871,24 +962,27 @@ experiments:
     title: Touch + Near-Zero + LR Combo
     status: archived
     maturity: archived
-    updated_at: 2026-07-11
+    updated_at: 2026-11-03
     method: Combined-filter experiment
     dataset: stock1m superseded run
     decision_state: archived
     primary_metric: old-lr-test-ic
     objective: Test the touch and near-zero combination at lr=0.009.
-    summary: The intended combination did not complete; only the old-learning-rate arm reproduced the existing 0.06248 result.
+    summary: old-LR touch-ret-ge2 arm 已完成, test IC 为0.062477, 与 main-combo 的同臂为同一历史证据. 计划中的 lr=0.009 arm 未定位结果, 不对其判定失败.
     decision: Superseded by main-combo-integration and excluded from current comparisons.
     caveats:
-      - No usable evidence exists for the target lr=0.009 combination, and the observed run root is missing.
+    - '历史结果: 历史成功, 限 old-LR arm. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - No usable evidence exists for the target lr=0.009 combination, and the observed run root is missing.
     metrics:
-      - id: old-lr-test-ic
-        label: Old-LR observed IC
-        value: 0.062477
-        format: decimal
-        decimals: 5
-        context: superseded arm
-    report_ids: []
+    - id: old-lr-test-ic
+      label: Old-LR observed IC
+      value: 0.062477
+      format: decimal
+      decimals: 5
+      context: superseded arm
+    report_ids:
+    - 1103-combo-touch-nz-lr-old-lr-062701
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/combo-touch-nz-lr/results.yaml
     featured: false
 
@@ -1445,42 +1539,49 @@ experiments:
     title: Date-pure Batch Sampling Feasibility
     status: completed
     maturity: developmental
-    updated_at: 2026-08-11
+    updated_at: 2026-11-03
     method: Single-date weighted batch sampler · seed7 · one equivalent epoch
     dataset: stock1m · 727/37/205 train/validation/test days
     decision_state: iterate
     primary_metric: test-pooled-ic
-    objective: Determine whether every training batch can be restricted to one trading date while preserving the frozen 1min training, checkpoint-selection, and full-evaluation contract.
-    summary: All 1,374 recorded purity samples contained exactly one date. Validation-only selection chose step 30,000; full-test pooled IC was 0.10388 and Rank IC was 0.06425 over 176,945,440 rows.
-    decision: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit mixed-date one-epoch control and additional seeds are run.
+    objective: Determine whether every training batch can be restricted to one trading date while preserving the frozen
+      1min training, checkpoint-selection, and full-evaluation contract.
+    summary: 一个 epoch 的 date-pure 训练完成68659 steps, 1374次 purity 采样均为单日. Selected iter30000 test IC/RankIC 为0.103878/0.064245;
+      缺 matched mixed-date control.
+    decision: Retain the sampler as a feasible treatment, but do not attribute uplift to date purity until a same-commit
+      mixed-date one-epoch control and additional seeds are run.
     caveats:
-      - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal sampler estimates.
-      - Signal diagnostics do not establish execution-ready net profitability.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - This is one seed and one split with no matched mixed-date control; historical baseline differences are not causal
+      sampler estimates.
+    - Signal diagnostics do not establish execution-ready net profitability.
     metrics:
-      - id: test-pooled-ic
-        label: Test pooled IC
-        value: 0.1038777019
-        format: decimal
-        decimals: 5
-        context: seed7 · selected step 30,000 · 176,945,440 rows
-      - id: test-rank-ic
-        label: Test Rank IC
-        value: 0.0642453585
-        format: decimal
-        decimals: 5
-        context: same full-test universe
-      - id: purity-samples
-        label: Date-pure batches audited
-        value: 1374
-        format: integer
-        context: unique_dates=1 and top_date_share=1 throughout
-      - id: top-prediction-return
-        label: Top prediction return
-        value: 8.02
-        format: bps
-        decimals: 2
-        context: signal-quality diagnostic
-    report_ids: [0811-day-pure-batch-1min]
+    - id: test-pooled-ic
+      label: Test pooled IC
+      value: 0.1038777019
+      format: decimal
+      decimals: 5
+      context: seed7 · selected step 30,000 · 176,945,440 rows
+    - id: test-rank-ic
+      label: Test Rank IC
+      value: 0.0642453585
+      format: decimal
+      decimals: 5
+      context: same full-test universe
+    - id: purity-samples
+      label: Date-pure batches audited
+      value: 1374
+      format: integer
+      context: unique_dates=1 and top_date_share=1 throughout
+    - id: top-prediction-return
+      label: Top prediction return
+      value: 8.02
+      format: bps
+      decimals: 2
+      context: signal-quality diagnostic
+    report_ids:
+    - 0811-day-pure-batch-1min
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/day-pure-batch-1min/results.yaml
     featured: true
 
@@ -1490,59 +1591,72 @@ experiments:
     project: prediction-nn-1min
     taxonomy_path: feature-engineering/feature-set-audit
     related_taxonomy_paths:
-      - feature-engineering/ohlcva
-      - feature-engineering/realized-volatility
-      - feature-engineering/high-low-range
-      - feature-engineering/ols-total-trend
-      - feature-engineering/endpoint-return
-      - feature-engineering/liquidity
-      - feature-engineering/market
+    - feature-engineering/ohlcva
+    - feature-engineering/realized-volatility
+    - feature-engineering/high-low-range
+    - feature-engineering/ols-total-trend
+    - feature-engineering/endpoint-return
+    - feature-engineering/liquidity
+    - feature-engineering/market
     title: Multiscale Feature-family Ablation
     status: completed
     maturity: developmental
-    updated_at: 2026-08-14
+    updated_at: 2026-11-03
     method: Matched add-one family ablation · seed7 · fixed 63-column tensor
     dataset: stock1m · common 727/37/205 split · corrected 10-minute label
     decision_state: iterate
     primary_metric: relative-liquidity-test-ic
-    objective: Separate the contribution of appended market, relative-strength/liquidity, volatility/range, and trend/return families under identical rows, sampler order, model shape, budget, and validation-only selection.
-    summary: Relative-strength/liquidity9 is the strongest completed family at 0.09818 test IC and 0.07589 Rank IC. Volatility/range12 and trend/return12 also beat legacy14; market16 hit the preregistered train-validation gap gate before test. The all-63 reference underperformed legacy14.
-    decision: Retain the three non-market families as multi-seed candidates, reject the full-63 bundle as a monotonic improvement claim, and keep market16 test metrics unread after the gate.
+    objective: Separate the contribution of appended market, relative-strength/liquidity, volatility/range, and trend/return
+      families under identical rows, sampler order, model shape, budget, and validation-only selection.
+    summary: 修正 mixed-normalization 评估后 full63 test IC/RankIC 为0.061496/0.051659. Matched family ablation 中 relative/liquidity9
+      为0.098183/0.075886; market16 在训练 gate 停止, 未读取 test.
+    decision: Retain the three non-market families as multi-seed candidates, reject the full-63 bundle as a monotonic
+      improvement claim, and keep market16 test metrics unread after the gate.
     caveats:
-      - Single-seed family add-one results do not estimate retraining variance, field-level contribution, or interactions among passing families.
-      - The earlier full-63 run changed label, features, sampler, and row universe together and is not comparable to historical baselines.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Single-seed family add-one results do not estimate retraining variance, field-level contribution, or interactions
+      among passing families.
+    - The earlier full-63 run changed label, features, sampler, and row universe together and is not comparable to
+      historical baselines.
     metrics:
-      - id: relative-liquidity-test-ic
-        label: Relative/liquidity9 test IC
-        value: 0.0981825662
-        format: decimal
-        decimals: 5
-        context: 23 active features · seed7
-      - id: relative-liquidity-rank-ic
-        label: Relative/liquidity9 Rank IC
-        value: 0.0758862387
-        format: decimal
-        decimals: 5
-        context: matched full-test evaluation
-      - id: legacy14-test-ic
-        label: Legacy14 control IC
-        value: 0.0899505737
-        format: decimal
-        decimals: 5
-        context: same rows, order, model, and budget
-      - id: full63-test-ic
-        label: Full63 reference IC
-        value: 0.0614963898
-        format: decimal
-        decimals: 5
-        context: combined treatment · not a causal baseline comparison
-      - id: market16-gap
-        label: Market16 train–validation Rank IC gap
-        value: 0.3287979409
-        format: decimal
-        decimals: 4
-        context: preregistered gate at step 6,762 · test not read
-    report_ids: [0812-multiscale-63feature-evaluation, 0814-feature-family-ablation]
+    - id: relative-liquidity-test-ic
+      label: Relative/liquidity9 test IC
+      value: 0.0981825662
+      format: decimal
+      decimals: 5
+      context: 23 active features · seed7
+    - id: relative-liquidity-rank-ic
+      label: Relative/liquidity9 Rank IC
+      value: 0.0758862387
+      format: decimal
+      decimals: 5
+      context: matched full-test evaluation
+    - id: legacy14-test-ic
+      label: Legacy14 control IC
+      value: 0.0899505737
+      format: decimal
+      decimals: 5
+      context: same rows, order, model, and budget
+    - id: full63-test-ic
+      label: Full63 reference IC
+      value: 0.0614963898
+      format: decimal
+      decimals: 5
+      context: combined treatment · not a causal baseline comparison
+    - id: market16-gap
+      label: Market16 train–validation Rank IC gap
+      value: 0.3287979409
+      format: decimal
+      decimals: 4
+      context: preregistered gate at step 6,762 · test not read
+    report_ids:
+    - 0812-multiscale-63feature-evaluation
+    - 0814-feature-family-ablation
+    - 1103-multiscale-market-features-1min-ablation-legacy14-081320
+    - 1103-multiscale-market-features-1min-ablation-relative-liquidity9-081322
+    - 1103-multiscale-market-features-1min-ablation-volatility-range12-081400
+    - 1103-multiscale-market-features-1min-ablation-trend-return12-081402
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/multiscale-market-features-1min-ablation/results.yaml
     featured: true
 
@@ -1554,37 +1668,42 @@ experiments:
     title: Native v2 Baseline Engineering Gate
     status: doing
     maturity: diagnostic
-    updated_at: 2026-08-20
+    updated_at: 2026-11-03
     method: Native 63-feature contract and maintained synthetic leakage checks
-    dataset: synthetic causal diagnostic · formal stock1m run not started
+    dataset: synthetic causal diagnostic; 正式stock1m结果身份待核对
     decision_state: diagnostic
     primary_metric: proper-causal-r2
-    objective: Validate the production-chain v2 contract and leakage checks before running a formal 63-feature prediction baseline.
-    summary: The maintained sanity check separates a proper causal construction from shuffled and shifted controls, but no formal training, checkpoint selection, IC evaluation, or research report is registered.
-    decision: Keep this entry engineering-only and exclude it from model-quality and trading comparisons until a formal native v2 run is registered.
+    objective: Validate the production-chain v2 contract and leakage checks before running a formal 63-feature prediction
+      baseline.
+    summary: Native v2 的 causal/shuffled/shifted synthetic sanity 已成功, R²为0.999700/−0.445876/−0.083254. 独立正式63D模型报告仍未定位,
+      不写成训练失败.
+    decision: 保留已成功的sanity或boundary diagnostics. 正式模型结果仍待核对, 不记为历史失败.
     caveats:
-      - Synthetic R² is a pipeline sanity metric, not evidence of stock-return predictability.
-      - The registry remains insufficient for a formal reuse or comparability claim.
+    - '历史结果: 历史成功, 限 sanity. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - Synthetic R²是pipeline sanity指标, 不代表股票收益预测质量.
+    - 本轮未定位到可确认身份的独立63D正式模型报告, 不据此断言历史上未执行.
     metrics:
-      - id: proper-causal-r2
-        label: Proper causal synthetic R²
-        value: 0.9997001664
-        format: decimal
-        decimals: 4
-        context: maintained leakage diagnostic only
-      - id: shuffled-control-r2
-        label: Shuffled-label control R²
-        value: -0.4458755565
-        format: decimal
-        decimals: 4
-        context: negative control
-      - id: shifted-control-r2
-        label: Shifted-label control R²
-        value: -0.0832539244
-        format: decimal
-        decimals: 4
-        context: negative control
-    report_ids: []
+    - id: proper-causal-r2
+      label: Proper causal synthetic R²
+      value: 0.9997001664
+      format: decimal
+      decimals: 4
+      context: maintained leakage diagnostic only
+    - id: shuffled-control-r2
+      label: Shuffled-label control R²
+      value: -0.4458755565
+      format: decimal
+      decimals: 4
+      context: negative control
+    - id: shifted-control-r2
+      label: Shifted-label control R²
+      value: -0.0832539244
+      format: decimal
+      decimals: 4
+      context: negative control
+    report_ids:
+    - 1103-baseline-1min-0813-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/baseline-1min-0813/results.yaml
     featured: false
 
@@ -1596,49 +1715,56 @@ experiments:
     title: OHLCV-only Stock1s v2 Full Evaluation
     status: completed
     maturity: decision-ready
-    updated_at: 2026-08-20
+    updated_at: 2026-11-03
     method: 42-feature OHLCV-only GRU · validation-only early stopping · fixed 10 bps cohort backtest
     dataset: stock1s v2 · 165,740,198 full-test endpoints
     decision_state: reject
     primary_metric: test-pooled-ic
-    objective: Evaluate an independent simplified second-level data and training contract without treating it as a direct uplift comparison to the legacy stock1s fold0 line.
-    summary: Full-test pooled IC is 0.00925 and Rank IC is 0.00464, although mean timestamp Rank IC is 0.04770. The fixed 10 bps cohort backtest loses 95.14% cumulatively with annualized Sharpe -92.55.
-    decision: Reject the selected checkpoint for deployment. Any continuation requires preregistered isolated ablations, turnover-aware objectives, and a frozen test policy.
+    objective: Evaluate an independent simplified second-level data and training contract without treating it as a
+      direct uplift comparison to the legacy stock1s fold0 line.
+    summary: 独立42D OHLCV-only v2 完成全量165740198个 test endpoint. pooled IC/RankIC 为0.009249/0.004643; 固定10 bps回测净累计收益−95.14%,
+      不支持部署.
+    decision: Reject the selected checkpoint for deployment. Any continuation requires preregistered isolated ablations,
+      turnover-aware objectives, and a frozen test policy.
     caveats:
-      - The OHLCV-only v2 data, features, sequence, label, and training contract differ from baseline-1s-0720 and cannot support a direct uplift claim.
-      - Positive timestamp-level rank correlation does not offset the sharply negative fixed-cost portfolio result.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The OHLCV-only v2 data, features, sequence, label, and training contract differ from baseline-1s-0720 and cannot
+      support a direct uplift claim.
+    - Positive timestamp-level rank correlation does not offset the sharply negative fixed-cost portfolio result.
     metrics:
-      - id: test-pooled-ic
-        label: Full-test pooled IC
-        value: 0.0092485066
-        format: decimal
-        decimals: 5
-        context: selected step 20,000 · 165,740,198 endpoints
-      - id: test-rank-ic
-        label: Full-test Rank IC
-        value: 0.0046431500
-        format: decimal
-        decimals: 5
-        context: same full-test universe
-      - id: timestamp-rank-ic
-        label: Mean timestamp Rank IC
-        value: 0.0476965051
-        format: decimal
-        decimals: 5
-        context: cross-sectional timestamp aggregation
-      - id: cumulative-net-return
-        label: 10 bps cumulative net return
-        value: -95.1361692727
-        format: percent
-        decimals: 2
-        context: fixed cohort rule · 204 dates
-      - id: net-sharpe
-        label: Annualized net Sharpe
-        value: -92.5492966226
-        format: number
-        decimals: 2
-        context: fixed 10 bps cohort backtest
-    report_ids: []
+    - id: test-pooled-ic
+      label: Full-test pooled IC
+      value: 0.0092485066
+      format: decimal
+      decimals: 5
+      context: selected step 20,000 · 165,740,198 endpoints
+    - id: test-rank-ic
+      label: Full-test Rank IC
+      value: 0.00464315
+      format: decimal
+      decimals: 5
+      context: same full-test universe
+    - id: timestamp-rank-ic
+      label: Mean timestamp Rank IC
+      value: 0.0476965051
+      format: decimal
+      decimals: 5
+      context: cross-sectional timestamp aggregation
+    - id: cumulative-net-return
+      label: 10 bps cumulative net return
+      value: -95.1361692727
+      format: percent
+      decimals: 2
+      context: fixed cohort rule · 204 dates
+    - id: net-sharpe
+      label: Annualized net Sharpe
+      value: -92.5492966226
+      format: number
+      decimals: 2
+      context: fixed 10 bps cohort backtest
+    report_ids:
+    - 1103-baseline-1s-v2-full-report-0812
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/baseline-1s-v2/results.yaml
     featured: true
 
@@ -1650,41 +1776,45 @@ experiments:
     title: Cross-session Rolling Boundary Diagnostics
     status: doing
     maturity: diagnostic
-    updated_at: 2026-08-20
+    updated_at: 2026-11-03
     method: A/B/C session-boundary identity, coverage, and distinctness gates
     dataset: synthetic plus bounded real sample · 3 days × 128 stocks
     decision_state: diagnostic
     primary_metric: real-ac-max-diff
-    objective: Verify that carry and drop treatments match on common valid rows, that drop reduces coverage, and that shifted history is observably distinct before formal training.
-    summary: On 92,544 bounded real rows, carry and drop match exactly on 87,424 common rows; drop removes 5,120 feature rows and 2,540 sequences, while the shifted treatment differs by up to 0.96850. No model was trained.
-    decision: Retain the boundary implementation as a passed pre-training gate, but do not choose an arm or claim model quality until matched formal runs exist.
+    objective: Verify that carry and drop treatments match on common valid rows, that drop reduces coverage, and that
+      shifted history is observably distinct before formal training.
+    summary: A/B/C synthetic 与3日×128股票诊断成功. 真实 matched A/B差值为0, A/C最大差0.968504, B减少5120个 feature rows. 正式模型比较报告仍未定位.
+    decision: 保留已成功的sanity或boundary diagnostics. 正式模型结果仍待核对, 不记为历史失败.
     caveats:
-      - There is no full prepared view, formal training, checkpoint selection, test IC, or comparison report.
-      - The implementation was untracked at registry capture, so the recorded HEAD alone cannot reproduce the diagnostic.
+    - '历史结果: 历史成功, 限 boundary diagnostics. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - 本轮未定位到可确认身份的全量prepared view, 正式训练, checkpoint selection或test comparison报告.
+    - 登记时实现未tracked, 当时HEAD不足以单独复现诊断; 该事实不改变已通过的诊断结果.
     metrics:
-      - id: real-ac-max-diff
-        label: Carry vs shifted max difference
-        value: 0.9685039409
-        format: decimal
-        decimals: 4
-        context: bounded real gate · distinctness check
-      - id: real-ab-max-diff
-        label: Carry vs drop matched-row difference
-        value: 0.0
-        format: decimal
-        decimals: 1
-        context: 87,424 common rows
-      - id: deleted-feature-rows
-        label: Rows removed by drop treatment
-        value: 5120
-        format: integer
-        context: 254 valid session boundaries
-      - id: bounded-real-rows
-        label: Bounded real diagnostic rows
-        value: 92544
-        format: integer
-        context: 3 days × 128 stocks
-    report_ids: []
+    - id: real-ac-max-diff
+      label: Carry vs shifted max difference
+      value: 0.9685039409
+      format: decimal
+      decimals: 4
+      context: bounded real gate · distinctness check
+    - id: real-ab-max-diff
+      label: Carry vs drop matched-row difference
+      value: 0.0
+      format: decimal
+      decimals: 1
+      context: 87,424 common rows
+    - id: deleted-feature-rows
+      label: Rows removed by drop treatment
+      value: 5120
+      format: integer
+      context: 254 valid session boundaries
+    - id: bounded-real-rows
+      label: Bounded real diagnostic rows
+      value: 92544
+      format: integer
+      context: 3 days × 128 stocks
+    report_ids:
+    - 1103-crossday-rolling-registry-evidence
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/crossday-rolling/results.yaml
     featured: false
 
@@ -1696,51 +1826,55 @@ experiments:
     title: Matched 10/15/30-minute Label Ablation
     status: completed
     maturity: developmental
-    updated_at: 2026-08-20
+    updated_at: 2026-11-03
     method: Common 47-feature universe · seed7 · exact-epoch matched horizon ablation
     dataset: stock1m · 154,254,282 common test rows per horizon
     decision_state: iterate
     primary_metric: h15-pooled-ic
-    objective: Isolate the effect of 10-, 15-, and 30-minute forward-return horizons while holding features, endpoints, split, model, seed, sampler, optimizer, and training budget fixed.
-    summary: H15 leads pooled IC at 0.09116 and equal-timestamp top-decile hit rate at 55.63%; h30 leads Rank IC at 0.07082 and top-bottom spread at 12.10 bps. Both spread gains over h10 are positive in a 10,000-replicate paired date bootstrap.
-    decision: Retain h15 and h30 as matched signal candidates for multi-seed and rolling-split confirmation; do not infer executable net profitability.
+    objective: Isolate the effect of 10-, 15-, and 30-minute forward-return horizons while holding features, endpoints,
+      split, model, seed, sampler, optimizer, and training budget fixed.
+    summary: 相同 test endpoints 上 h10/h15/h30 pooled IC 为0.076663/0.091156/0.090441. Horizon 改变收益分布, 不把IC或标签收益直接解释成净交易提升.
+    decision: Retain h15 and h30 as matched signal candidates for multi-seed and rolling-split confirmation; do not
+      infer executable net profitability.
     caveats:
-      - This is one seed and one temporal split; the paired bootstrap excludes retraining variance.
-      - Label base rates differ by horizon, so hit rates require horizon-specific context.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - This is one seed and one temporal split; the paired bootstrap excludes retraining variance.
+    - Label base rates differ by horizon, so hit rates require horizon-specific context.
     metrics:
-      - id: h15-pooled-ic
-        label: H15 pooled IC
-        value: 0.0911561104
-        format: decimal
-        decimals: 5
-        context: common full-test universe · selected step 20,000
-      - id: h30-rank-ic
-        label: H30 pooled Rank IC
-        value: 0.0708242169
-        format: decimal
-        decimals: 5
-        context: common full-test universe · selected step 50,000
-      - id: h15-top10-hit
-        label: H15 top-decile hit rate
-        value: 55.6337513596
-        format: percent
-        decimals: 2
-        context: equal-timestamp aggregation
-      - id: h30-top-bottom-spread
-        label: H30 top-bottom spread
-        value: 12.1032033947
-        format: bps
-        decimals: 2
-        context: equal-timestamp aggregation
-      - id: common-test-rows
-        label: Test rows per horizon
-        value: 154254282
-        format: integer
-        context: 205 days · 28,905 timestamps
-    report_ids: [0815-horizon-label-comparison]
+    - id: h15-pooled-ic
+      label: H15 pooled IC
+      value: 0.0911561104
+      format: decimal
+      decimals: 5
+      context: common full-test universe · selected step 20,000
+    - id: h30-rank-ic
+      label: H30 pooled Rank IC
+      value: 0.0708242169
+      format: decimal
+      decimals: 5
+      context: common full-test universe · selected step 50,000
+    - id: h15-top10-hit
+      label: H15 top-decile hit rate
+      value: 55.6337513596
+      format: percent
+      decimals: 2
+      context: equal-timestamp aggregation
+    - id: h30-top-bottom-spread
+      label: H30 top-bottom spread
+      value: 12.1032033947
+      format: bps
+      decimals: 2
+      context: equal-timestamp aggregation
+    - id: common-test-rows
+      label: Test rows per horizon
+      value: 154254282
+      format: integer
+      context: 205 days · 28,905 timestamps
+    report_ids:
+    - 0815-horizon-label-comparison
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/horizon-labels/results.yaml
     featured: true
-
     comparison_scope: Common 47-feature endpoint universe, seed7, 59216 steps, validation-only selection, 154254282
       test rows; horizon is the treatment.
     arms:
@@ -1814,25 +1948,62 @@ experiments:
     title: Matched Market-context Sampling
     status: completed
     maturity: developmental
-    updated_at: 2026-08-25
+    updated_at: 2026-11-03
     method: Matched three-arm seed7 market-context comparison
     dataset: stock1m · 176,134,322 shared test rows per arm
     decision_state: iterate
     primary_metric: panel-test-ic
-    objective: Compare a single-stock zero-context control, leave-one-out full-market panel mean/std, and timestamp-aligned 16D market features under one frozen data, model, seed, budget, selector, and backtest contract.
-    summary: Panel mean/std reaches 0.12598 pooled IC and 0.10279 Rank IC, ahead of the 0.08793/0.07807 baseline. Market16 reaches 0.07222/0.06016 and underperforms the baseline. All three 10-minute cost-aware backtests have negative Sharpe.
-    decision: Retain panel mean/std as the market-context signal candidate for multi-seed and rolling-split confirmation; reject market16 in this formulation and do not promote any arm to execution.
+    objective: Compare a single-stock zero-context control, leave-one-out full-market panel mean/std, and timestamp-aligned
+      16D market features under one frozen data, model, seed, budget, selector, and backtest contract.
+    summary: 'Matched 三臂 test IC: baseline 0.087928、panel mean/std 0.125979、market16 0.072220. 单 seed、单 split, 三臂10M净Sharpe均负.'
+    decision: Retain panel mean/std as the market-context signal candidate for multi-seed and rolling-split confirmation;
+      reject market16 in this formulation and do not promote any arm to execution.
     caveats:
-      - The comparison uses one seed and one temporal split.
-      - Signal gains do not establish executable net profitability.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The comparison uses one seed and one temporal split.
+    - Signal gains do not establish executable net profitability.
     metrics:
-      - {id: panel-test-ic, label: Panel test IC, value: 0.1259793871, format: decimal, decimals: 5, context: leave-one-out panel mean/std}
-      - {id: panel-rank-ic, label: Panel Rank IC, value: 0.1027934634, format: decimal, decimals: 5, context: shared full-test universe}
-      - {id: baseline-test-ic, label: Baseline test IC, value: 0.0879275915, format: decimal, decimals: 5, context: single-stock zero-context control}
-      - {id: market16-test-ic, label: Market16 test IC, value: 0.0722195610, format: decimal, decimals: 5, context: timestamp-level explicit market features}
-      - {id: panel-net-sharpe, label: Panel 10m net Sharpe, value: -39.5000121, format: number, decimals: 2, context: 10M CNY AUM cost model}
-      - {id: test-rows-per-arm, label: Test rows per arm, value: 176134322, format: integer, context: matched test universe}
-    report_ids: [0822-market-context-comparison, 0825-market-context-baseline, 0825-market-context-panel, 0825-market-context-market16]
+    - id: panel-test-ic
+      label: Panel test IC
+      value: 0.1259793871
+      format: decimal
+      decimals: 5
+      context: leave-one-out panel mean/std
+    - id: panel-rank-ic
+      label: Panel Rank IC
+      value: 0.1027934634
+      format: decimal
+      decimals: 5
+      context: shared full-test universe
+    - id: baseline-test-ic
+      label: Baseline test IC
+      value: 0.0879275915
+      format: decimal
+      decimals: 5
+      context: single-stock zero-context control
+    - id: market16-test-ic
+      label: Market16 test IC
+      value: 0.072219561
+      format: decimal
+      decimals: 5
+      context: timestamp-level explicit market features
+    - id: panel-net-sharpe
+      label: Panel 10m net Sharpe
+      value: -39.5000121
+      format: number
+      decimals: 2
+      context: 10M CNY AUM cost model
+    - id: test-rows-per-arm
+      label: Test rows per arm
+      value: 176134322
+      format: integer
+      context: matched test universe
+    report_ids:
+    - 0822-market-context-comparison
+    - 0825-market-context-baseline
+    - 0825-market-context-panel
+    - 0825-market-context-market16
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/market-sample/results.yaml
     featured: true
 
@@ -1842,30 +2013,60 @@ experiments:
     project: prediction-nn-1min
     taxonomy_path: feature-engineering/feature-set-audit
     related_taxonomy_paths:
-      - feature-engineering/ohlcva
-      - feature-engineering/liquidity
-      - feature-engineering/market
+    - feature-engineering/ohlcva
+    - feature-engineering/liquidity
+    - feature-engineering/market
     title: 36D Feature-set Audit
     status: completed
     maturity: signal-only
-    updated_at: 2026-09-01
+    updated_at: 2026-11-03
     method: Seed7 exact-epoch 36D reference run
     dataset: stock1m · 176,134,322 full-test rows
     decision_state: retain
     primary_metric: net-sharpe
-    objective: Complete the frozen 36D data, training, validation-only selection, full-test inference, and execution-aware backtest chain to establish a reusable feature reference.
-    summary: The run selected checkpoint 6,762 and completed full-test inference. Gross cumulative return is 2.6018, while the 10M net cumulative return is -0.9658 and net Sharpe is -60.14.
-    decision: Retain the artifact-backed 36D run as a future matched-ablation reference; do not claim feature uplift or execution readiness from this single arm.
+    objective: Complete the frozen 36D data, training, validation-only selection, full-test inference, and execution-aware
+      backtest chain to establish a reusable feature reference.
+    summary: 36D单臂完成全链路, iter6762覆盖176134322行test. Gross累计收益260.18%, 10M net累计收益−96.58%. 无 matched旧特征control, 中央结果未记录pooled
+      IC scalar.
+    decision: Retain the artifact-backed 36D run as a future matched-ablation reference; do not claim feature uplift
+      or execution readiness from this single arm.
     caveats:
-      - No matched prior-feature control is part of the experiment.
-      - The two report files are not yet present in the immutable publication archive.
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - No matched prior-feature control is part of the experiment.
+    - The two report files are not yet present in the immutable publication archive.
     metrics:
-      - {id: net-sharpe, label: 10m net Sharpe, value: -60.1351751, format: number, decimals: 2, context: 10M CNY AUM cost model}
-      - {id: net-cumulative-return, label: Net cumulative return, value: -0.9657667390, format: number, decimals: 4, context: execution-aware backtest}
-      - {id: gross-cumulative-return, label: Gross cumulative return, value: 2.6018106988, format: number, decimals: 4, context: before costs}
-      - {id: selected-checkpoint, label: Selected checkpoint, value: 6762, format: integer, context: validation-only selection}
-      - {id: test-rows, label: Test rows, value: 176134322, format: integer, context: full-test inference}
-    report_ids: []
+    - id: net-sharpe
+      label: 10m net Sharpe
+      value: -60.1351751
+      format: number
+      decimals: 2
+      context: 10M CNY AUM cost model
+    - id: net-cumulative-return
+      label: Net cumulative return
+      value: -0.965766739
+      format: number
+      decimals: 4
+      context: execution-aware backtest
+    - id: gross-cumulative-return
+      label: Gross cumulative return
+      value: 2.6018106988
+      format: number
+      decimals: 4
+      context: before costs
+    - id: selected-checkpoint
+      label: Selected checkpoint
+      value: 6762
+      format: integer
+      context: validation-only selection
+    - id: test-rows
+      label: Test rows
+      value: 176134322
+      format: integer
+      context: full-test inference
+    report_ids:
+    - 1103-0825-feature-audit-model-report-0827
+    - 1103-0825-feature-audit-portfolio-report-0827
+    - 1103-nn-registry-summary
     evidence_ref: exp-nn/0-select&report/experiments/0825-feature-audit/results.yaml
     featured: true
 
@@ -1877,28 +2078,70 @@ experiments:
     title: Market Cross-section Context
     status: completed
     maturity: developmental
-    updated_at: 2026-09-01
+    updated_at: 2026-11-03
     method: Matched seed7 five-arm market-panel comparison
     dataset: stock1m · 176,134,322 shared test rows per completed arm
     decision_state: iterate
     primary_metric: latent-z-test-ic
-    objective: Compare no context, seven explicit cross-sectional ranks, standardized latent context, Deep Sets context, and induced attention under a fixed panel artifact, backbone, seed, selector, and backtest contract.
-    summary: Latent-z leads completed arms at 0.12734 test IC and 0.10245 Rank IC; CS rank reaches 0.12329/0.09283 and Deep Sets R2 reaches 0.12103/0.09098 versus the 0.08646/0.06417 control. Induced attention failed before test, and all completed arms have net Sharpe near -39 to -42.
-    decision: Retain latent-z, CS rank, and Deep Sets R2 as signal candidates for multi-seed and rolling comparisons; treat induced attention as a failed diagnostic and do not promote any arm to execution.
+    objective: Compare no context, seven explicit cross-sectional ranks, standardized latent context, Deep Sets context,
+      and induced attention under a fixed panel artifact, backbone, seed, selector, and backtest contract.
+    summary: Control/CS rank/latent-z/Deep Sets R2 test IC为0.086462/0.123293/0.127345/0.121030. Induced attention
+      在test前失败; Deep Sets经历中断后R2成功恢复. 四个完成臂10M净Sharpe均负.
+    decision: Retain latent-z, CS rank, and Deep Sets R2 as signal candidates for multi-seed and rolling comparisons;
+      treat induced attention as a failed diagnostic and do not promote any arm to execution.
     caveats:
-      - The comparison uses one seed and one temporal split.
-      - The attention smoke is diagnostic only and has no formal OOS result.
+    - '历史结果: 历史成功, 四臂完成. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - The comparison uses one seed and one temporal split.
+    - The attention smoke is diagnostic only and has no formal OOS result.
     metrics:
-      - {id: latent-z-test-ic, label: Latent-z test IC, value: 0.1273446585, format: decimal, decimals: 5, context: completed-arm signal leader}
-      - {id: latent-z-rank-ic, label: Latent-z Rank IC, value: 0.1024517610, format: decimal, decimals: 5, context: shared full-test universe}
-      - {id: cs-rank-test-ic, label: CS rank test IC, value: 0.1232932522, format: decimal, decimals: 5, context: seven explicit ranks}
-      - {id: deep-sets-test-ic, label: Deep Sets R2 test IC, value: 0.1210304848, format: decimal, decimals: 5, context: eligible exact recovery}
-      - {id: control-test-ic, label: Control test IC, value: 0.0864617601, format: decimal, decimals: 5, context: no-context control}
-      - {id: latent-z-net-sharpe, label: Latent-z 10m net Sharpe, value: -39.2139249, format: number, decimals: 2, context: 10M CNY AUM cost model}
-    report_ids: [0831-market-cs-comparison, 0831-market-cs-control, 0831-market-cs-rank, 0831-market-cs-latent-z, 0831-market-cs-deep-sets, 0831-market-cs-induced-attention, 0830-market-cs-attention-smoke-r2]
+    - id: latent-z-test-ic
+      label: Latent-z test IC
+      value: 0.1273446585
+      format: decimal
+      decimals: 5
+      context: completed-arm signal leader
+    - id: latent-z-rank-ic
+      label: Latent-z Rank IC
+      value: 0.102451761
+      format: decimal
+      decimals: 5
+      context: shared full-test universe
+    - id: cs-rank-test-ic
+      label: CS rank test IC
+      value: 0.1232932522
+      format: decimal
+      decimals: 5
+      context: seven explicit ranks
+    - id: deep-sets-test-ic
+      label: Deep Sets R2 test IC
+      value: 0.1210304848
+      format: decimal
+      decimals: 5
+      context: eligible exact recovery
+    - id: control-test-ic
+      label: Control test IC
+      value: 0.0864617601
+      format: decimal
+      decimals: 5
+      context: no-context control
+    - id: latent-z-net-sharpe
+      label: Latent-z 10m net Sharpe
+      value: -39.2139249
+      format: number
+      decimals: 2
+      context: 10M CNY AUM cost model
+    report_ids:
+    - 1103-0827-market-cs-comparison-0831
+    - 1103-0827-market-cs-control-0831
+    - 1103-0827-market-cs-cs-rank-0831
+    - 1103-0827-market-cs-latent-z-0831
+    - 1103-0827-market-cs-deep-sets-r2-0831
+    - 1103-0827-market-cs-induced-attention-failed-0831
+    - 0830-market-cs-attention-smoke-r2
+    - 1103-nn-registry-summary
+    - 0831-market-cs-comparison
     evidence_ref: exp-nn/0-select&report/experiments/0827-market-cs/results.yaml
     featured: true
-
     comparison_scope: Matched seed7 panel, split, label, backbone, optimizer, budget and validation-only selection;
       Deep Sets uses eligible R2 recovery. Signal gains do not imply net trading gains.
     arms:
@@ -2006,3 +2249,208 @@ experiments:
     - report_id: 0831-market-cs-comparison
       image_index: 1
       title: Validation pooled IC by checkpoint
+
+  - id: overnight-baseline
+    experiment_type: baseline
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: prediction-evaluation/model-comparison
+    title: 冻结 baseline 与 signal diagnostics
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 固定 Dual-GRU 与 checkpoint, 评价 daily RankIC、decile、tail 和 delay decay.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 冻结 baseline 与 signal diagnostics
+    summary: Baseline historical 2025 RankIC 0.114489, corrected Validation Q10 gross
+      return 20.1322%.
+    decision: 保留 baseline 作为信号研究基准, 不构成 production promotion.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 0918-overnight-baseline
+    - 1103-overnight-signal-diagnostics
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-limit-filter
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: data-engineering/universe/filters
+    title: Signal-time 锁板过滤
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 区分固定预测直接过滤与过滤 Train 后重新训练的效果.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Signal-time 锁板过滤
+    summary: 直接过滤对 Test 指标几乎无影响, retraining 的 extreme-tail 改善缺少多 seed 证据.
+    decision: 保留 prediction-universe policy 的语义差异, 不认定为 performance upgrade.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 0920-overnight-limit-filter
+    - 0920-overnight-limit-comparison
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-strategy
+    experiment_type: backtest
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: strategy/execution
+    title: Overnight 成本与容量
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 冻结预测, 使用 available-cash event ledger、lot rounding、reference costs 和独立 replay.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Overnight 成本与容量
+    summary: 没有同时通过 development 与 historical confirmation 净收益及 80% fill gate 的 AUM.
+    decision: CONTINUE_RESEARCH, 需要新 forward evidence.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1014-overnight-strategy
+    - 1014-overnight-strategy-review
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-cutoff
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: prediction-evaluation/model-comparison
+    title: 13:50 vs 13:58 signal cutoff
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 同时报告 full-arm、matched intersection、CSI1800 与 published tail membership.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 13:50 vs 13:58 signal cutoff
+    summary: 13:50 的 Validation 与 historical 2025 RankIC 均下降; corrected Validation Q10
+      gross return 10.7110%.
+    decision: 保留 13:58 baseline, 不依据已查看的 2025 tail PnL 选择 cutoff.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1015-overnight-cutoff-1350
+    - 1015-overnight-cutoff-comparison
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-ledger-audit
+    experiment_type: evaluation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: strategy/execution
+    title: Long-only ledger 独立审计
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 从 frozen predictions 与价格独立 replay, 核验 eligibility、event order、cash identity
+      与 cost grid.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: Long-only ledger 独立审计
+    summary: 修复 split eligibility 与 initial-NAV drawdown, historical 2025 gross 路径不变.
+    decision: Validation all-market Q10 使用 corrected values, 其他 cohort 不推算更正.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1016-overnight-ledger-audit
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: overnight-drop-bar-clv
+    experiment_type: ablation
+    model: Dual-GRU
+    project: astock-overnight
+    taxonomy_path: feature-engineering/feature-set-audit
+    title: 删除 bar_clv 单因子消融
+    status: completed
+    maturity: diagnostic
+    updated_at: 2026-11-03
+    method: 删除 bar_clv 后重新物化、训练、预测和评价; 仅报告本 arm Validation.
+    dataset: Train 2021-2023; Validation 2024 excluding Sep-Oct; historical 2025 only
+      when explicitly reported
+    decision_state: diagnostic
+    objective: 删除 bar_clv 单因子消融
+    summary: Validation RankIC 0.0961, Q10 gross return 21.14%, CNY 1m reference net
+      return -60.36%.
+    decision: 保留为单 arm Validation evidence, 不声明相对 baseline 改善.
+    caveats:
+    - 2025 已被历史结果查看, 不再作为 untouched Test; drop bar_clv 未运行 2025 Test.
+    - 旧 Validation ledger 数值的更正以独立 audit 为准, 不跨 cohort 或跨模型推算.
+    metrics: []
+    report_ids:
+    - 1023-overnight-drop-bar-clv
+    evidence_ref: astock-overnight/reports
+    featured: false
+  - id: 0903-model
+    experiment_type: baseline
+    model: GRU
+    project: prediction-nn-1min
+    taxonomy_path: model/baseline
+    related_taxonomy_paths:
+    - feature-engineering/market
+    title: 41D latent-z 冻结模型
+    status: completed
+    maturity: signal-only
+    updated_at: 2026-11-03
+    method: 41D physical features + latent-z full-market context
+    dataset: stock1m · full 2024-03-01 to 2024-12-31 test
+    decision_state: retain
+    primary_metric: test-pooled-ic
+    objective: 验证冻结的41D latent-z模型, 并记录其作为shadow inference来源的边界.
+    summary: 41D latent-z selected iter105343 的full-test IC/RankIC为0.1270440556/0.1012013681. 10M净累计收益−93.66%, 仅支持冻结的shadow
+      inference与研究比较.
+    decision: 保留已完成的历史结果与shadow inference来源; 成本后亏损不支持实盘执行.
+    caveats:
+    - '历史结果: 历史成功. Artifact可得性不改变历史成功/失败, lifecycle和comparison限制单独解释.'
+    - 单seed, 单split. Live SH/SZ universe排除BJ, 与训练panel存在差异.
+    metrics:
+    - id: test-pooled-ic
+      label: Test pooled IC
+      value: 0.12704405556619108
+      format: decimal
+      decimals: 6
+      context: selected iter105343; full 176134322-row test
+    - id: test-rank-ic
+      label: Test pooled RankIC
+      value: 0.10120136812729569
+      format: decimal
+      decimals: 6
+      context: same selected checkpoint and test universe
+    - id: net-cumulative-return
+      label: 10M net cumulative return
+      value: -93.65923739678504
+      format: percent
+      decimals: 2
+      context: historical execution-aware backtest; percent units
+    - id: net-sharpe
+      label: 10M net annualized Sharpe
+      value: -36.95772099869453
+      format: decimal
+      decimals: 2
+      context: same historical backtest
+    report_ids:
+    - 1103-0903-model-full-report
+    - 1103-nn-registry-summary
+    evidence_ref: exp-nn/0-select&report/experiments/0903-model/results.yaml
+    featured: false

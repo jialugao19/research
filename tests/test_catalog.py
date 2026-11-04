@@ -31,9 +31,9 @@ def test_repository_catalog_is_valid() -> None:
     assert len(catalog.research_projects) == 20
     assert len(catalog.infrastructure_projects) == 4
     assert len(catalog.knowledge_projects) == 2
-    assert len(catalog.experiments) == 49
-    assert len(catalog.reports) == 33
-    assert len(catalog.current_reports) == 26
+    assert len(catalog.experiments) == 56
+    assert len(catalog.reports) == 88
+    assert len(catalog.current_reports) == 73
     assert catalog.featured_report_id == "0807-stock1s-fold0-full-evaluation"
     assert catalog.featured_report is catalog.report_by_id["0807-stock1s-fold0-full-evaluation"]
     assert catalog.report_by_id["0802-stock1s-gru384-v2"].revision_of == "0802-stock1s-gru384"
@@ -104,20 +104,26 @@ def test_repository_catalog_is_valid() -> None:
     assert catalog.report_by_id["0807-stock1s-fold0-full-evaluation"].route == (
         "reports/prediction-nn/0807-stock1s-fold0-full-evaluation/"
     )
-    assert catalog.experiment_by_id["horizon-labels"].report_ids == ("0815-horizon-label-comparison",)
+    assert catalog.experiment_by_id["horizon-labels"].report_ids == (
+        "0815-horizon-label-comparison", "1103-nn-registry-summary",
+    )
     assert catalog.experiment_by_id["market-sample"].primary_metric_id == "panel-test-ic"
-    assert catalog.experiment_by_id["0825-feature-audit"].report_ids == ()
+    assert catalog.experiment_by_id["0825-feature-audit"].report_ids == (
+        "1103-0825-feature-audit-model-report-0827",
+        "1103-0825-feature-audit-portfolio-report-0827",
+        "1103-nn-registry-summary",
+    )
     assert catalog.experiment_by_id["day-pure-batch-1min"].taxonomy_path == ("model", "batch")
     assert catalog.experiment_by_id["day-pure-batch-1min"].stage == "model"
     assert catalog.experiment_by_id["rolling-purged-val"].stage == "data-engineering"
     assert catalog.experiment_by_id["ashare-1s-coverage"].stage == "data"
-    assert sum(bool(experiment.taxonomy_path) for experiment in catalog.experiments) == 46
+    assert sum(bool(experiment.taxonomy_path) for experiment in catalog.experiments) == 53
     assert all(
         not experiment.taxonomy_path
         for experiment in catalog.experiments
         if catalog.project_by_id[experiment.project].section == "infrastructure"
     )
-    assert len(catalog.experiment_by_id["0827-market-cs"].report_ids) == 7
+    assert len(catalog.experiment_by_id["0827-market-cs"].report_ids) == 9
     assert catalog.report_by_id["0831-market-cs-comparison"].source_file == (
         "0831-market-cs-research/index.html"
     )
